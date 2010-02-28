@@ -5,9 +5,9 @@ class Game {
 
     Game();
 
-    void CalcPuzzle(int);
-    void DrawPuzzle(int);
-    void DrawMattoc(int);
+    void CalcPuzzle();
+    void DrawPuzzle();
+    void DrawMattoc();
     void Initialize();
     void DoMainLoop();
 
@@ -16,10 +16,10 @@ class Game {
     /* vars from original 2004 state of game */
     int Puzzle_PositionX,
         Puzzle_PositionY,
-		Mattoc_PositionX,
-		Mattoc_PositionY,
+	Mattoc_PositionX,
+	Mattoc_PositionY,
         VertBar_PositionX,
-		HorBar_PositionY,
+	HorBar_PositionY,
         level,
         level_size,
         mapX,
@@ -30,13 +30,9 @@ class Game {
         erase,
         hitcheck,
         check,
-		cnt,
-		quit;
+	quit;
 
     char
-        TEMPMAP[16][16];
-
-    unsigned char
         MattocShowFrame,
         HitMattocShowFrame,
         EraseShowFrame,
@@ -59,5 +55,7 @@ class Game {
     GB_Background BG;
 
     /* temporary map for puzzle - to be replaced by a mechanism which loads bitmaps from icon folders and converts them to puzzles */
-    char puzzleMap[16][16];
+    char
+        puzzleMap[16][16],
+        tempMap[16][16];
 };

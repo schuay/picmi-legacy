@@ -1,25 +1,21 @@
 #include "Game.h"
 
-#define LEVEL 10
+void Game::CalcPuzzle() {
+        int 
+	    i, j, 
+	    x, y, 
+	    col[100][20], col_len[100]; 
+	    
+	char 
+	    row[100][100],
+	    s[10];
 
-void Game::CalcPuzzle(int level) {
-        int rows, i, j, x, y, col[100][20], col_len[100]; char row[100][100];
-        char s[10];
-
-        int level_size = 0;
-
-	// Definera storleken på pusslet - 5x5, 10x10, 15x15
-
-        if(level >= 1) level_size = 5;
-        if(level >= 5) level_size = 10;
-        if(level >= 10) level_size = 15;
-
-        // Kalkylera horisontellt
-	// puzzleMap = char med pussel, se Levels.cpp
-
+	    
+	/* calculate the numbers to show in columns and rows */
         for(i=0;i<level_size;i++) {
             int cnt = 0;
             char *p=row[i];
+	    
             for(j=0;j<=level_size;j++) {
                 if (j<level_size && puzzleMap[i][j]=='#') {
                     cnt++;
@@ -92,17 +88,10 @@ void Game::CalcPuzzle(int level) {
 	}
 }
 
-void Game::DrawPuzzle(int level) {
-    int level_size = 0;
+void Game::DrawPuzzle() {
 
-        // Rita ut alla block
-	// Räkna ut vilken level det är och rita sedan ut bakgrund och nät
-
-	if(level >= 10)
-	{
-		FIFTEEN.GB_SetXY(Puzzle_PositionX,Puzzle_PositionY);
-		FIFTEEN.GB_ShowSprite(0,0);
-	}
+    FIFTEEN.GB_SetXY(Puzzle_PositionX,Puzzle_PositionY);
+    FIFTEEN.GB_ShowSprite(0,0);
 
     for(int yy=0;yy<level_size;yy++) {
         for(int xx=0;xx<level_size;xx++) {
@@ -110,12 +99,12 @@ void Game::DrawPuzzle(int level) {
         // Kika in på låtsaskartan vart vi har slagit in
         // klossen och kika ifall vi träffat rätt
 
-            if(TEMPMAP[yy][xx] == '#') {
+            if(tempMap[yy][xx] == '#') {
                 PushedBlock.GB_SetXY(Puzzle_PositionX+xx*12,Puzzle_PositionY+yy*12);
                 PushedBlock.GB_ShowSprite(0,0);
             }
 
-            if(TEMPMAP[yy][xx] == 'X') {
+            if(tempMap[yy][xx] == 'X') {
                 CheckedBlock.GB_SetXY(Puzzle_PositionX+xx*12,Puzzle_PositionY+yy*12);
                 CheckedBlock.GB_ShowSprite(0,0);
             }
@@ -123,12 +112,8 @@ void Game::DrawPuzzle(int level) {
     }
 }
 
-void Game::DrawMattoc(int level) {
+void Game::DrawMattoc() {
 	int	newx, newy, newvert_x, newhor_y, newhit;
-
-        if(level >= 1) level_size = 5;
-        if(level >= 5) level_size = 10;
-        if(level >= 10) level_size = 15;
 
 		if(GB_GetKey(SDLK_LEFT) == 1) {
 			if(Mattoc_PositionX != Puzzle_PositionX) {
@@ -185,36 +170,36 @@ void Game::DrawMattoc(int level) {
 				realY = Puzzle_PositionY+mapY*12;
 				if(puzzleMap[mapY][mapX] != '#') {
 
-					if(TEMPMAP[mapY][mapX] == '#') {
-						TEMPMAP[mapY][mapX] = ' ';
+					if(tempMap[mapY][mapX] == '#') {
+						tempMap[mapY][mapX] = ' ';
 						break;
 					} else {
-						TEMPMAP[mapY][mapX] = '#';
+						tempMap[mapY][mapX] = '#';
 						break;
 					}
 
 				} else {
-					if(TEMPMAP[mapY][mapX] == '#') {
-						TEMPMAP[mapY][mapX] = ' ';
+					if(tempMap[mapY][mapX] == '#') {
+						tempMap[mapY][mapX] = ' ';
 						break;
 					} else {
-						TEMPMAP[mapY][mapX] = '#';
+						tempMap[mapY][mapX] = '#';
 						break;
 					}
 				}
 			}
 
-			if(TEMPMAP[mapY][mapX] != '#') 	erase = 1;
+			if(tempMap[mapY][mapX] != '#') 	erase = 1;
 			else if(puzzleMap[mapY][mapX] != '#') {
 				hitcheck = 1;
-				TEMPMAP[mapY][mapX] = '#';
+				tempMap[mapY][mapX] = '#';
 			} else hit = 1;
             GB_GetEvents();
 		}
 
 		if(GB_GetKey(SDLK_RSHIFT) == 1 && !GB_GetKey(SDLK_RCTRL)) {
-			if (TEMPMAP[mapY][mapX] == 'X') erase = 1;
-			else if (TEMPMAP[mapY][mapX] != 'X') check = 1;
+			if (tempMap[mapY][mapX] == 'X') erase = 1;
+			else if (tempMap[mapY][mapX] != 'X') check = 1;
             GB_GetEvents();
 		}
 
@@ -244,7 +229,7 @@ void Game::DrawMattoc(int level) {
 
 
 	if(erase == 1) {
-        if(TEMPMAP[mapY][mapX] == ' ') {
+        if(tempMap[mapY][mapX] == ' ') {
             EraseBlock.GB_ShowSprite(0,EraseBlockShowFrame);
             SDL_Delay(50);
             EraseBlockShowFrame++;
@@ -265,7 +250,7 @@ void Game::DrawMattoc(int level) {
         //			erase = 0;
         //			EraseShowFrame = 0;
         //		}
-            TEMPMAP[mapY][mapX] = ' ';
+            tempMap[mapY][mapX] = ' ';
         }
 	}
 
@@ -288,7 +273,7 @@ void Game::DrawMattoc(int level) {
 		if(CheckShowFrame == 6) {
 			check = 0;
 			CheckShowFrame = 0;
-			TEMPMAP[mapY][mapX] = 'X';
+			tempMap[mapY][mapX] = 'X';
 		}
 	}
 
@@ -343,22 +328,21 @@ void Game::Initialize() {
 Game::Game() {
 
     puzzleMap = {
-       "## # # ### # # ",
-       "# # # # #      ",
-       "###############",
-       "# # # # #      ",
-       "###    ##      ",
-       "# #######      ",
-       "###    ##      ",
-       "# #    ##      ",
-       "###    ##      ",
-       "#       #      ",
-       "# # #          ",
-       "#       #      ",
-       " # #           ",
-       " #       #     ",
-       "# #     #      ",
-       "# #     #      "};
+        "##.#.#.###.#.#.",
+        "#.#.#.#.#......",
+        "###############",
+        "#.#.#.#.#......",
+        "###....##......",
+        "#.#######......",
+        "###....##......",
+        "#.#....##......",
+        "###....##......",
+        "#.......#......",
+        "#.#.#..........",
+        "#.......#......",
+        ".#.#...........",
+        ".#.......#.....",
+        "#.#.....#......"};
 
     Puzzle_PositionX = 117;
     Puzzle_PositionY = 107;
@@ -366,14 +350,13 @@ Game::Game() {
     Mattoc_PositionY = Puzzle_PositionY;
     VertBar_PositionX = Puzzle_PositionX;
     HorBar_PositionY = Puzzle_PositionY;
-    level_size = 0;
+    level_size = 15;
     mapX = 0;
     mapY = 0;
     hit = 0;
     erase = 0;
     hitcheck = 0;
     check = 0;
-    cnt = 0;
     quit = 0;
 
     MattocShowFrame = 0;
@@ -384,8 +367,8 @@ Game::Game() {
 }
 
 void Game::DoMainLoop() {
-    BG.GB_ShowBackground();
-    CalcPuzzle(LEVEL);
-    DrawPuzzle(LEVEL);
-    DrawMattoc(LEVEL);
+    BG.GB_ShowBackground();     //should be removed, all it does it paint a black background
+    CalcPuzzle();
+    DrawPuzzle();
+    DrawMattoc();
 }

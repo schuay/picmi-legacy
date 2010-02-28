@@ -44,7 +44,6 @@ void GB_System::Quit()
 {
    if( AudioEnabled == 1 )
    {
-     GB_Music::GB_StopMusic();
      GB_CloseMixer();
    }
 
