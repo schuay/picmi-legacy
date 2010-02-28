@@ -5,7 +5,7 @@ class Game {
 
     Game();
 
-    void CalcPuzzle();
+    void DrawStreaks();
     void DrawPuzzle();
     void DrawMattoc();
     void Initialize();
@@ -21,7 +21,7 @@ class Game {
         VertBar_PositionX,
 	HorBar_PositionY,
         level,
-        level_size,
+        level_size,         //the length of a level side (currently levels must be square)
         mapX,
         mapY,
         realX,

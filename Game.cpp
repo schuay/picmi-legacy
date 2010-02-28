@@ -1,91 +1,71 @@
 #include "Game.h"
+#include <vector>
+#include <sstream>
+#include <iostream>
 
-void Game::CalcPuzzle() {
-        int 
-	    i, j, 
-	    x, y, 
-	    col[100][20], col_len[100]; 
-	    
-	char 
-	    row[100][100],
-	    s[10];
+#define CELLLENGTH 12
 
-	    
-	/* calculate the numbers to show in columns and rows */
-        for(i=0;i<level_size;i++) {
-            int cnt = 0;
-            char *p=row[i];
-	    
-            for(j=0;j<=level_size;j++) {
-                if (j<level_size && puzzleMap[i][j]=='#') {
-                    cnt++;
-                }
-                else if (cnt) {
-                    if (cnt>=10) *p++=cnt/10+'0';
-                    *p++=cnt%10+'0';
-                    cnt=0;
-                }
-                *p=0;
+void Game::DrawStreaks() {
+    int i, j, lenOfCurrRowStreak, lenOfCurrColStreak;
+    
+    std::vector<int>
+            rowStreaks[level_size],
+            colStreaks[level_size];
+    
+    /* calculate the numbers to show in rows and columns*/
+    for(i=0;i<level_size;i++) {
+        lenOfCurrRowStreak = 0;
+        lenOfCurrColStreak = 0;
+        
+        for(j=0;j<level_size;j++) {
+
+            /* rows */
+            if (puzzleMap[i][j]=='#')
+                lenOfCurrRowStreak++;
+            else if (lenOfCurrRowStreak > 0) {
+                rowStreaks[i].push_back(lenOfCurrRowStreak);
+                lenOfCurrRowStreak=0;
+            }
+
+            /* cols */
+            if (puzzleMap[j][i]=='#')
+                lenOfCurrColStreak++;
+            else if (lenOfCurrColStreak > 0) {
+                colStreaks[i].push_back(lenOfCurrColStreak);
+                lenOfCurrColStreak=0;
             }
         }
 
-        // Kalkylera vertikalt
+        if (lenOfCurrRowStreak > 0)
+            rowStreaks[i].push_back(lenOfCurrRowStreak);
 
-        for(i=0;i<level_size;i++) {
-            col_len[i]=0; // antalet tal i den här kolumnen
-            int cnt=0;
-            for(j=0;j<=level_size;j++) {
-                if (j<level_size && puzzleMap[j][i]=='#') cnt++;
-                else if (cnt) {
-                       col[i][col_len[i]++]=cnt;
-                        cnt=0;
-                }
-            }
-        }
+        if (lenOfCurrColStreak > 0)
+            colStreaks[i].push_back(lenOfCurrColStreak);
+    }
 
-        // Fixa till vertikalt och skriv ut
+    /* draw row streaks */
+    for (i=0;i<level_size;i++) {
+        std::stringstream out;
 
-        for(i=0;i<level_size;i++) {
-            if (!col_len[i]) col[i][col_len[i]++]=0;
+        for (j=0;j<rowStreaks[i].size();j++)
+            out << rowStreaks[i][j] << ' ';
 
-            for(j=0;j<col_len[i];j++) {
-                char *p=s;
+        GB_DrawText(out.str().c_str(),
+                    Puzzle_PositionX-10*out.str().length()-5,
+                    Puzzle_PositionY+i*CELLLENGTH-3);
+    }
 
-                if (col[i][j]>=10) *p++=col[i][j]/10+'0';
+    /* draw col streaks */
+    for (i=0;i<level_size;i++) {
+        std::stringstream out;
 
-                *p++=col[i][j]%10+'0';
-                *p=0;
-                if (col[i][j]>=10) {
-                    x=Puzzle_PositionX+i*12-9;
-                } else {
-                    x=Puzzle_PositionX+i*12-3;
-                }
+        for (j=0;j<colStreaks[i].size();j++)
+            out << colStreaks[i][j] << ' ';
 
-                y=Puzzle_PositionY+j*12-col_len[i]*12-12;
-
-                // TODO: Kolla ifall col[] innehåller nummer större än 10,
-                // flytta numret aningen åt vänster och siffrorna ihop
-
-                GB_DrawText(s, x, y);
-            }
-        }
-
-        // Om en rad är helt tom, skriv ut 0
-
-        for(i=0;i<level_size;i++) {
-            if (!row[i][0]) { row[i][0]='0'; row[i][1]=0; }
-        }
-
-        // Skriv ut horizontellt pussel
-
-
-	for(i=0;i<level_size;i++) {
-	// Om innehållet i row[] innehåller nummer som är större än 10,
-	// skriv ut siffrorna närmre varandra -- Omvandla row till int för
-	// att kika
-
-		GB_DrawText(("%s\n",row[i]),Puzzle_PositionX-10*strlen(row[i])-12,Puzzle_PositionY+i*12-3);
-	}
+        GB_DrawTextVert(out.str().c_str(),
+                    Puzzle_PositionX+i*CELLLENGTH-4,
+                    Puzzle_PositionY-10*out.str().length()-5);
+    }
 }
 
 void Game::DrawPuzzle() {
@@ -367,8 +347,8 @@ Game::Game() {
 }
 
 void Game::DoMainLoop() {
-    BG.GB_ShowBackground();     //should be removed, all it does it paint a black background
-    CalcPuzzle();
+    BG.GB_ShowBackground();
+    DrawStreaks();
     DrawPuzzle();
     DrawMattoc();
 }

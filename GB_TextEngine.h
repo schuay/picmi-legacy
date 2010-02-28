@@ -33,7 +33,11 @@ void GB_DrawCharacter( int Character, int X, int Y );
 
 // Draw a string to the screen at the coordinates WXStart and WYStart
 
-void GB_DrawText( char *TextToDraw, int WXStart, int WYStart );
+void GB_DrawText( const char *TextToDraw, int WXStart, int WYStart );
+
+// Draw a string vertically to the screen at the coordinates WXStart and WYStart
+
+void GB_DrawTextVert( const char *TextToDraw, int WXStart, int WYStart );
 
 #endif
 

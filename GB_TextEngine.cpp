@@ -68,7 +68,7 @@ void GB_DrawCharacter( int Character, int X, int Y )
 
 // Draw a string to the screen at the coordinates WXStart and WYStart
 
-void GB_DrawText( char *TextToDraw, int WXStart, int WYStart )
+void GB_DrawText( const char *TextToDraw, int WXStart, int WYStart )
 {
 
   int GB_DTX, GB_DTCharacter;
@@ -88,6 +88,32 @@ void GB_DrawText( char *TextToDraw, int WXStart, int WYStart )
     if( GB_DTCharacter == '?' ) GB_DTCharacter = 223;
 
     GB_DrawCharacter( GB_DTCharacter, ((GB_DTX*10)+WXStart), WYStart );
+    GB_DTX++;
+  }
+}
+
+// Draw a string vertically to the screen at the coordinates WXStart and WYStart
+
+void GB_DrawTextVert( const char *TextToDraw, int WXStart, int WYStart )
+{
+
+  int GB_DTX, GB_DTCharacter;
+
+  GB_DTX = 0;
+
+  for( unsigned int i = 0; i < strlen(TextToDraw); i++ )
+  {
+    GB_DTCharacter = TextToDraw[i];
+
+    if( GB_DTCharacter == '?' ) GB_DTCharacter = 196;
+    if( GB_DTCharacter == '?' ) GB_DTCharacter = 228;
+    if( GB_DTCharacter == '?' ) GB_DTCharacter = 214;
+    if( GB_DTCharacter == '?' ) GB_DTCharacter = 246;
+    if( GB_DTCharacter == '?' ) GB_DTCharacter = 220;
+    if( GB_DTCharacter == '?' ) GB_DTCharacter = 252;
+    if( GB_DTCharacter == '?' ) GB_DTCharacter = 223;
+
+    GB_DrawCharacter( GB_DTCharacter, WXStart, ((GB_DTX*10)+WYStart) );
     GB_DTX++;
   }
 }
