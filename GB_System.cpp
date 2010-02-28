@@ -82,8 +82,8 @@ void GB_System::WaitFrame()
    if ( Diff > 0)
    {
       // I'm too fast, wait...
-      SDL_Delay( Diff );
-      LostFrames = 0;
+   //   SDL_Delay( Diff );
+   //   LostFrames = 0;
    }
    else
    {

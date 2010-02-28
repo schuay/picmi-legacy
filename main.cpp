@@ -1,10 +1,234 @@
 #include "GameBlade.h"
 
-// My own includes
 
-#include "Variables.cpp"
-#include "Levels.cpp"
-#include "Puzzle.cpp"
+
+ char puzz_1[5][6] = {
+      " ### ",
+      "## ##",
+      "## ##",
+      "## ##",
+      " ### "};
+
+  char puzz_2[5][6] = {
+      "  ## ",
+      " #  #",
+      "   # ",
+      "  #  ",
+      " ####"};
+
+  char puzz_3[16][16] = {
+       "## # # ### # # ",
+       "# # # # #      ",
+       "###############",
+       "# # # # #      ",
+       "###    ##      ",
+       "# #######      ",
+       "###    ##      ",
+       "# #    ##      ",
+       "###    ##      ",
+       "#	#      ",
+       "# #	#      ",
+       "#       #      ",
+       "# #	#      ",
+       "#       #      ",
+       "# #     #      "};
+
+
+
+  char puzz_4[15][16] = {
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               ",
+       "               "};
+
+
+int             Puzzle_PositionX = 117, Puzzle_PositionY = 107,
+		Mattoc_PositionX = Puzzle_PositionX,
+		Mattoc_PositionY = Puzzle_PositionY,
+                VertBar_PositionX = Puzzle_PositionX,
+		HorBar_PositionY = Puzzle_PositionY,
+
+		Locked_X, Locked_Y,
+		plane,
+                level, level_size = 0, mapX = 0, mapY = 0, realX, realY,
+                miss, hit = 0, erase = 0, hitcheck = 0, check = 0,
+		cnt = 0, startlir = 0, start = 0, quit = 0, direction = 0,
+		animatestart, animatequit,
+		count, tempcount, done;
+char            TEMPMAP[15][16];
+unsigned char   MattocShowFrame = 0, HitMattocShowFrame = 0,
+		EraseShowFrame = 0, CheckShowFrame = 0,
+		EraseBlockShowFrame = 0,
+		StartShowFrame = 0, QuitShowFrame = 0;
+
+GB_Sprite Black;
+GB_Background BG;
+
+GB_Sprite FOUR, TEN, SIXTEEN;
+
+GB_Sprite Block;
+GB_Sprite PushedBlock;
+GB_Sprite CheckedBlock;
+
+GB_Sprite Mattoc;
+GB_Sprite HitMattoc;
+GB_Sprite Erase;
+GB_Sprite EraseBlock;
+GB_Sprite Check;
+
+GB_Sprite HorBar;
+GB_Sprite VertBar;
+
+GB_Sprite Start;
+GB_Sprite Quit;
+GB_Sprite Title;
+
+GB_Sound Bip;
+GB_Sound Hit;
+
+
+// Pusselmotorn
+// CalcPuzzle(level) -- enkel svårighetsgrad 1-5, medel 5-10, svår 10--
+
+void CalcPuzzle(int level) {
+        int rows, i, j, x, y, col[100][20], col_len[100]; char row[100][100];
+        char s[10];
+
+        int level_size = 0;
+
+	// Definera storleken på pusslet - 5x5, 10x10, 15x15
+
+        if(level >= 1) level_size = 5;
+        if(level >= 5) level_size = 10;
+        if(level >= 10) level_size = 15;
+
+        // Kalkylera horisontellt
+	// Puzz_3 = char med pussel, se Levels.cpp
+
+        for(i=0;i<level_size;i++) {
+            int cnt = 0;
+            count = 0;
+            char *p=row[i];
+            for(j=0;j<=level_size;j++) {
+                if (j<level_size && puzz_3[i][j]=='#') {
+                    cnt++;
+                    count++;
+                }
+                else if (cnt) {
+                    if (cnt>=10) *p++=cnt/10+'0';
+                    *p++=cnt%10+'0';
+                    cnt=0;
+                }
+                *p=0;
+            }
+        }
+
+        // Kalkylera vertikalt
+
+        for(i=0;i<level_size;i++) {
+            col_len[i]=0; // antalet tal i den här kolumnen
+            int cnt=0;
+            for(j=0;j<=level_size;j++) {
+                if (j<level_size && puzz_3[j][i]=='#') cnt++;
+                else if (cnt) {
+                       col[i][col_len[i]++]=cnt;
+                        cnt=0;
+                }
+            }
+        }
+
+        // Fixa till vertikalt och skriv ut
+
+        for(i=0;i<level_size;i++) {
+            if (!col_len[i]) col[i][col_len[i]++]=0;
+
+            for(j=0;j<col_len[i];j++) {
+                char *p=s;
+
+                if (col[i][j]>=10) *p++=col[i][j]/10+'0';
+
+                *p++=col[i][j]%10+'0';
+                *p=0;
+                if (col[i][j]>=10) {
+                    x=Puzzle_PositionX+i*12-9;
+                } else {
+                    x=Puzzle_PositionX+i*12-3;
+                }
+
+                y=Puzzle_PositionY+j*12-col_len[i]*12-12;
+
+                // TODO: Kolla ifall col[] innehåller nummer större än 10,
+                // flytta numret aningen åt vänster och siffrorna ihop
+
+                GB_DrawText(s, x, y);
+            }
+        }
+
+        // Om en rad är helt tom, skriv ut 0
+
+        for(i=0;i<level_size;i++) {
+            if (!row[i][0]) { row[i][0]='0'; row[i][1]=0; }
+        }
+
+        // Skriv ut horizontellt pussel
+
+
+	for(i=0;i<level_size;i++) {
+	// Om innehållet i row[] innehåller nummer som är större än 10,
+	// skriv ut siffrorna närmre varandra -- Omvandla row till int för
+	// att kika
+
+		GB_DrawText(("%s\n",row[i]),Puzzle_PositionX-10*strlen(row[i])-12,Puzzle_PositionY+i*12-3);
+	}
+}
+
+// Rita ut det kalkylerade pusslet
+// DrawPuzzle(level)
+
+void DrawPuzzle(int level) {
+    int level_size = 0;
+	tempcount = 0;
+
+        // Rita ut alla block
+	// Räkna ut vilken level det är och rita sedan ut bakgrund och nät
+
+	if(level >= 10)
+	{
+		SIXTEEN.GB_SetXY(Puzzle_PositionX,Puzzle_PositionY);
+		SIXTEEN.GB_ShowSprite(0,0);
+	}
+
+    for(int yy=0;yy<level_size;yy++) {
+        for(int xx=0;xx<level_size;xx++) {
+
+        // Kika in på låtsaskartan vart vi har slagit in
+        // klossen och kika ifall vi träffat rätt
+
+            if(TEMPMAP[yy][xx] == '#') {
+                PushedBlock.GB_SetXY(Puzzle_PositionX+xx*12,Puzzle_PositionY+yy*12);
+                PushedBlock.GB_ShowSprite(0,0);
+            }
+
+            if(TEMPMAP[yy][xx] == 'X') {
+                CheckedBlock.GB_SetXY(Puzzle_PositionX+xx*12,Puzzle_PositionY+yy*12);
+                CheckedBlock.GB_ShowSprite(0,0);
+            }
+        }
+
+    }
+}
+
 
 void DrawMattoc(int level) {
 	int	newx, newy, newvert_x, newhor_y, newhit;
@@ -74,8 +298,8 @@ void DrawMattoc(int level) {
 					} else {
 						TEMPMAP[mapY][mapX] = '#';
 						break;
-					}			
-		
+					}
+
 				} else {
 					if(TEMPMAP[mapY][mapX] == '#') {
 						TEMPMAP[mapY][mapX] = ' ';
@@ -86,12 +310,12 @@ void DrawMattoc(int level) {
 					}
 				}
 			}
-		
+
 			if(TEMPMAP[mapY][mapX] != '#') 	erase = 1;
 			else if(puzz_3[mapY][mapX] != '#') {
 				hitcheck = 1;
 				TEMPMAP[mapY][mapX] = '#';
-			} else hit = 1;	
+			} else hit = 1;
 		GB_GetEvents();
 		}
 
@@ -149,7 +373,7 @@ void DrawMattoc(int level) {
 //			EraseShowFrame = 0;
 //		}
 	TEMPMAP[mapY][mapX] = ' ';
-	 
+
 	}
 	}
 
@@ -162,7 +386,7 @@ void DrawMattoc(int level) {
 			HitMattocShowFrame = 0;
 			check = 1;
 		}
-	
+
 	}
 
 	if(check == 1) {
@@ -174,21 +398,12 @@ void DrawMattoc(int level) {
 			CheckShowFrame = 0;
 			TEMPMAP[mapY][mapX] = 'X';
 		}
-	} 
+	}
 
 	HorBar.GB_ShowSprite(0,0);
 	VertBar.GB_ShowSprite(0,0);
 
 if(check == 0 && hitcheck == 0 && erase == 0) GB_GetEvents();
-}
-
-int intro(void) {
-double i;
-
-Start.GB_SetXY(100,100);
-
-Start.GB_ShowSprite(0,0);
-
 }
 
 int main(void) {
@@ -198,11 +413,11 @@ int main(void) {
 	GB_SetupSDL_Video();
 	GB_SetupSDL_Audio();
 	GB_LoadTextBitmap();
-	
+
 	char TEMPMAP[level_size][level_size];
-	
+
 	FOUR.GB_LoadSprite("gfx/FOUR.bmp",1);
-	TEN.GB_LoadSprite("gfx/TEN.BMP",1);	
+	TEN.GB_LoadSprite("gfx/TEN.BMP",1);
 	SIXTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp",1);
 	SIXTEEN.GB_SetColorKey(255,0,255);
 
@@ -210,11 +425,11 @@ int main(void) {
 	Block.GB_SetColorKey(255,0,255);
 	PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1);
 	CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp",1);
-	
+
 	HorBar.GB_LoadSprite("gfx/horcursor.bmp", 1);       // Load horizontal bar
 //	HorBar.GB_SetAlpha(100);
 	HorBar.GB_SetColorKey(255,0,255);
-	
+
 	VertBar.GB_LoadSprite("gfx/vertcursor.bmp", 1);       // Load vertical bar
 //	VertBar.GB_SetAlpha(100);
 	VertBar.GB_SetColorKey(255,0,255);
@@ -227,10 +442,10 @@ int main(void) {
 
 	Check.GB_LoadSprite("gfx/check.bmp", 1, 7);
 	Check.GB_SetColorKey(255,0,255);
-	
+
 	Erase.GB_LoadSprite("gfx/erase.bmp", 1, 4);
 	Erase.GB_SetColorKey(255,0,255);
-	
+
 	EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4);
 	EraseBlock.GB_SetColorKey(255,0,255);
 
@@ -283,3 +498,4 @@ int main(void) {
 
 	return 0;
 }
+
