@@ -19,12 +19,10 @@ void Game::CalcPuzzle(int level) {
 
         for(i=0;i<level_size;i++) {
             int cnt = 0;
-            count = 0;
             char *p=row[i];
             for(j=0;j<=level_size;j++) {
                 if (j<level_size && puzzleMap[i][j]=='#') {
                     cnt++;
-                    count++;
                 }
                 else if (cnt) {
                     if (cnt>=10) *p++=cnt/10+'0';
@@ -96,15 +94,14 @@ void Game::CalcPuzzle(int level) {
 
 void Game::DrawPuzzle(int level) {
     int level_size = 0;
-	tempcount = 0;
 
         // Rita ut alla block
 	// Räkna ut vilken level det är och rita sedan ut bakgrund och nät
 
 	if(level >= 10)
 	{
-		SIXTEEN.GB_SetXY(Puzzle_PositionX,Puzzle_PositionY);
-		SIXTEEN.GB_ShowSprite(0,0);
+		FIFTEEN.GB_SetXY(Puzzle_PositionX,Puzzle_PositionY);
+		FIFTEEN.GB_ShowSprite(0,0);
 	}
 
     for(int yy=0;yy<level_size;yy++) {
@@ -302,28 +299,23 @@ void Game::DrawMattoc(int level) {
 }
 
 void Game::Initialize() {
-    // Initiate audio, video and the text
+
+    /* Initiate audio, video and the text */
 
 	GB_SetupSDL_Video();
 	GB_SetupSDL_Audio();
 	GB_LoadTextBitmap();
 
-	FOUR.GB_LoadSprite("gfx/FOUR.bmp",1);
-	TEN.GB_LoadSprite("gfx/TEN.BMP",1);
-	SIXTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp",1);
-	SIXTEEN.GB_SetColorKey(255,0,255);
+	FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp",1);
+	FIFTEEN.GB_SetColorKey(255,0,255);
 
-	Block.GB_LoadSprite("gfx/block.bmp", 1);
-	Block.GB_SetColorKey(255,0,255);
 	PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1);
 	CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp",1);
 
 	HorBar.GB_LoadSprite("gfx/horcursor.bmp", 1);       // Load horizontal bar
-//	HorBar.GB_SetAlpha(100);
 	HorBar.GB_SetColorKey(255,0,255);
 
 	VertBar.GB_LoadSprite("gfx/vertcursor.bmp", 1);       // Load vertical bar
-//	VertBar.GB_SetAlpha(100);
 	VertBar.GB_SetColorKey(255,0,255);
 
 	Mattoc.GB_LoadSprite("gfx/mattoc.bmp", 1, 4);
@@ -341,25 +333,11 @@ void Game::Initialize() {
 	EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4);
 	EraseBlock.GB_SetColorKey(255,0,255);
 
-	Title.GB_LoadSprite("gfx/title.bmp", 1);
-
- 	Start.GB_LoadSprite("gfx/start.bmp", 1, 6);
-	Start.GB_SetColorKey(255,0,255);
-//	Start.GB_EnableSmoothing();
-
 	BG.GB_LoadBackground("gfx/FIFTEEN.bmp");
 
  	Quit.GB_LoadSprite("gfx/quit.bmp", 1, 5);
 	Quit.GB_SetColorKey(255,0,255);
 	Quit.GB_SetXY(486,400);
-
-	Black.GB_LoadSprite("gfx/black.bmp", 1);
-
-	Bip.GB_LoadSound("sfx/bip.wav");
-	Hit.GB_LoadSound("sfx/hit.wav");
-
-	animatestart = 1;
-	animatequit = 0;
 }
 
 Game::Game() {
@@ -396,28 +374,18 @@ Game::Game() {
     hitcheck = 0;
     check = 0;
     cnt = 0;
-    startlir = 0;
-    start = 0;
     quit = 0;
-    direction = 0;
 
     MattocShowFrame = 0;
     HitMattocShowFrame = 0;
     EraseShowFrame = 0;
     CheckShowFrame = 0;
     EraseBlockShowFrame = 0;
-    StartShowFrame = 0;
-    QuitShowFrame = 0;
 }
 
 void Game::DoMainLoop() {
-    if(startlir == 1) {
-        BG.GB_ShowBackground();
-        CalcPuzzle(LEVEL);
-        DrawPuzzle(LEVEL);
-        DrawMattoc(LEVEL);
-
-    } else {
-        startlir = 1;
-    }
+    BG.GB_ShowBackground();
+    CalcPuzzle(LEVEL);
+    DrawPuzzle(LEVEL);
+    DrawMattoc(LEVEL);
 }

@@ -20,49 +20,31 @@ class Game {
 		Mattoc_PositionY,
         VertBar_PositionX,
 		HorBar_PositionY,
-		Locked_X,
-		Locked_Y,
-		plane,
         level,
         level_size,
         mapX,
         mapY,
         realX,
         realY,
-        miss,
         hit,
         erase,
         hitcheck,
         check,
 		cnt,
-		startlir,
-		start,
-		quit,
-		direction,
-		animatestart,
-		animatequit,
-		count,
-		tempcount,
-		done;
+		quit;
 
     char
-        TEMPMAP[15][15];
+        TEMPMAP[16][16];
 
     unsigned char
         MattocShowFrame,
         HitMattocShowFrame,
         EraseShowFrame,
         CheckShowFrame,
-        EraseBlockShowFrame,
-        StartShowFrame,
-        QuitShowFrame;
+        EraseBlockShowFrame;
 
     GB_Sprite
-        Black,
-        FOUR,
-        TEN,
-        SIXTEEN,
-        Block,
+        FIFTEEN,
         PushedBlock,
         CheckedBlock,
         Mattoc,
@@ -72,14 +54,9 @@ class Game {
         Check,
         HorBar,
         VertBar,
-        Start,
-        Quit,
-        Title;
+        Quit;
 
     GB_Background BG;
-
-    GB_Sound Bip;
-    GB_Sound Hit;
 
     /* temporary map for puzzle - to be replaced by a mechanism which loads bitmaps from icon folders and converts them to puzzles */
     char puzzleMap[16][16];
