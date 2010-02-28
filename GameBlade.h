@@ -43,15 +43,11 @@
 
 #include "GB_VideoSystem.h"      // Setting video mode, freeing surfaces
 #include "GB_AudioSystem.h"      // Initializing the audio device and mixer, closing the mixer
-#include "GB_GameInfo.h"         // Printing info about your game to the console
 #include "GB_Sprites.h"          // Loading a sprite, displaying it and the necessary class to wrap it up
 #include "GB_Backgrounds.h"      // Class and functions for loading and displaying a fullscreen background
-#include "GB_Music.h"            // Playing and stopping the background music
-#include "GB_Sounds.h"           // Class for loading and playing a sound file
 #include "GB_TextEngine.h"       // Loading a bitmap font and displaying a text or a single character
 #include "GB_Events.h"           // Filtering events like key presses and quit signals
 #include "GB_System.h"           // Quitting the GameBlade
-#include "SDL_rotozoom.h"        // Use SDL_rotozoom for rotation and zooming 
-#include "GB_Collision.h"	 // Class for collision detection
+#include "SDL_rotozoom.h"        // Use SDL_rotozoom for rotation and zooming
 
 #endif

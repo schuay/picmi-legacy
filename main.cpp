@@ -2,9 +2,9 @@
 #include "Game.h"
 
 int main(void) {
-    Game game;
 
-    game.Initialize();
+    Game game;
+    game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
 
 	while(!GB_QuitEvent() && !GB_GetKey(SDLK_ESCAPE)) {
 		GB_ClearScreen();
