@@ -1,5 +1,5 @@
-This project was originally started by Tobias Hellgren (see http://www.thanius.com/picross/). 
-Currently it is being developed by Jakob Gruber (jakob@gruber.kabelnet@at)
+This project was originally started by Tobias Hellgren ( see http://www.thanius.com/picross/ ). 
+Currently it is being developed by Jakob Gruber ( jakob@gruber.kabelnet@at )
 
 Currently, I'm planning on 
  * getting this into a playable state
@@ -11,4 +11,4 @@ Currently, I'm planning on
  * once this is working we will need a menu system and some polish.
 
 I'm also thinking of doing a rewrite if this implementation turns out to be too 
-limiting (fixed puzzle sizes, puzzles must be squared, etc.)
+limiting ( fixed puzzle sizes, puzzles must be squared, etc. )
