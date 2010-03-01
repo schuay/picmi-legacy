@@ -49,4 +49,8 @@
 #include "GB_TextEngine.h"       // Loading a bitmap font and displaying a text or a single character
 #include "GB_System.h"           // Quitting the GameBlade
 
+// Section 4: Custom
+
+#include "PicrossException.h"
+
 #endif

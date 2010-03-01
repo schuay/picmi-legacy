@@ -12,6 +12,13 @@
 
 #include <string>
 #include <vector>
+#include "PicrossException.h"
+
+#define MAP_FALSE '.'
+#define MAP_TRUE '#'
+#define MAP_CLEAN '.'
+#define MAP_MARKED 'X'
+#define MAP_HIT 'H'
 
 class Puzzle
 {

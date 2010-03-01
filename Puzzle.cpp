@@ -12,6 +12,9 @@
 Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
         ColStreaks(NULL), RowStreaks(NULL), Map(NULL), BoardState(NULL)
 {
+    if (map.length() < w*h)
+        throw PicrossException("Input map has incorrect size");
+
     Width = w;
     Height = h;
 
@@ -19,10 +22,12 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
     BoardState = new char[w*h];
 
     for (unsigned int i=0; i < w*h; i++)
-        BoardState[i] = '.';
+        BoardState[i] = MAP_CLEAN;
 
     for (unsigned int i=0; i < w*h; i++)
-        Map[i] = map[i];
+        if (map[i] == MAP_TRUE ogit sta| map[i] == MAP_FALSE)
+            Map[i] = map[i];
+        else throw PicrossException("Illegal character in input map");
 
     CalculateStreaks();
 }
@@ -41,40 +46,43 @@ Puzzle::~Puzzle() {
 }
 
 void Puzzle::CalculateStreaks() {
-    unsigned int i, j,
-        lenOfCurrRowStreak, lenOfCurrColStreak;
+    unsigned int
+            i, j,
+            lenOfCurrRowStreak,
+            lenOfCurrColStreak;
 
     RowStreaks = new std::vector<int>[Height];
     ColStreaks = new std::vector<int>[Width];
 
-    /* TODO: calc separately, the following only works for square puzzles */
-
-    /* calculate the numbers to show in rows and columns*/
-    for(i=0; i < Height; i++) {
+    /* calculate the numbers to show in rows */
+    for(i = 0; i < Height; i++) {
         lenOfCurrRowStreak = 0;
-        lenOfCurrColStreak = 0;
 
-        for(j=0; j < Width; j++) {
-
-            /* rows */
-            if (Map[j*Width + i] == '#')
+        for(j = 0; j < Width; j++) {
+            if (Map[i*Width + j] == MAP_TRUE)
                 lenOfCurrRowStreak++;
             else if (lenOfCurrRowStreak > 0) {
                 RowStreaks[i].push_back(lenOfCurrRowStreak);
                 lenOfCurrRowStreak = 0;
             }
+        }
 
-            /* cols */
-            if (Map[i*Width + j] == '#')
+        if (lenOfCurrRowStreak > 0)
+            RowStreaks[i].push_back(lenOfCurrRowStreak);
+    }
+
+    /* calculate the numbers to show in columns */
+    for(i = 0; i < Width; i++) {
+        lenOfCurrColStreak = 0;
+
+        for(j = 0; j < Height; j++) {
+            if (Map[j*Width + i] == MAP_TRUE)
                 lenOfCurrColStreak++;
             else if (lenOfCurrColStreak > 0) {
                 ColStreaks[i].push_back(lenOfCurrColStreak);
                 lenOfCurrColStreak = 0;
             }
         }
-
-        if (lenOfCurrRowStreak > 0)
-            RowStreaks[i].push_back(lenOfCurrRowStreak);
 
         if (lenOfCurrColStreak > 0)
             ColStreaks[i].push_back(lenOfCurrColStreak);

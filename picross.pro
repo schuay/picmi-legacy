@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     GB_Backgrounds.cpp \
     GB_AudioSystem.cpp \
     Game.cpp \
-    Puzzle.cpp
+    Puzzle.cpp \
+    PicrossException.cpp
 HEADERS += GB_VideoSystem.h \
     GB_TextEngine.h \
     GB_Definitions.h \
@@ -26,7 +27,8 @@ HEADERS += GB_VideoSystem.h \
     GB_Globals.h \
     Game.h \
     GameBlade.h \
-    Puzzle.h
+    Puzzle.h \
+    PicrossException.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_mixer \
