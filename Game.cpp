@@ -8,9 +8,6 @@
  ***************************************************************************/
 
 #include "Game.h"
-#include <vector>
-#include <sstream>
-#include <iostream>
 
 #define CELLLENGTH 12
 #define PUZZLE_POSX 117
@@ -23,79 +20,16 @@ bool Game::GetQuit() {
     return quit;
 }
 
-void Game::DrawStreaks() {
-    unsigned int i, j,
-        lenOfCurrRowStreak, lenOfCurrColStreak;
-    
-    std::vector<int>
-        rowStreaks[currentPuzzle->Height],
-        colStreaks[currentPuzzle->Width];
-    
-    /* calculate the numbers to show in rows and columns*/
-    for(i=0;i<currentPuzzle->Height;i++) {
-        lenOfCurrRowStreak = 0;
-        lenOfCurrColStreak = 0;
-        
-        for(j=0;j<currentPuzzle->Width;j++) {
-
-            /* rows */
-            if (currentPuzzle->Map[j*currentPuzzle->Width + i]=='#')
-                lenOfCurrRowStreak++;
-            else if (lenOfCurrRowStreak > 0) {
-                rowStreaks[i].push_back(lenOfCurrRowStreak);
-                lenOfCurrRowStreak=0;
-            }
-
-            /* cols */
-            if (currentPuzzle->Map[i*currentPuzzle->Width + j]=='#')
-                lenOfCurrColStreak++;
-            else if (lenOfCurrColStreak > 0) {
-                colStreaks[i].push_back(lenOfCurrColStreak);
-                lenOfCurrColStreak=0;
-            }
-        }
-
-        if (lenOfCurrRowStreak > 0)
-            rowStreaks[i].push_back(lenOfCurrRowStreak);
-
-        if (lenOfCurrColStreak > 0)
-            colStreaks[i].push_back(lenOfCurrColStreak);
-    }
-
-    /* draw row streaks */
-    for (i=0;i<currentPuzzle->Height;i++) {
-        std::stringstream out;
-
-        for (j=0;j<rowStreaks[i].size();j++)
-            out << rowStreaks[i][j] << ' ';
-
-        GB_DrawText(out.str().c_str(),
-                    PUZZLE_POSX-10*out.str().length()-5,
-                    PUZZLE_POSY+i*CELLLENGTH-3);
-    }
-
-    /* draw col streaks */
-    for (i=0;i<currentPuzzle->Width;i++) {
-        std::stringstream out;
-
-        for (j=0;j<colStreaks[i].size();j++)
-            out << colStreaks[i][j] << ' ';
-
-        GB_DrawTextVert(out.str().c_str(),
-                    PUZZLE_POSX+i*CELLLENGTH-4,
-                    PUZZLE_POSY-10*out.str().length()-5);
-    }
-}
-
 void Game::ProcessDrawing() {
+    unsigned int i, j;
 
     /* game board */
 
     FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
     FIFTEEN.GB_ShowSprite(0,0);
 
-    for (unsigned int j=0;j<currentPuzzle->Width;j++) {
-        for (unsigned int i=0;i<currentPuzzle->Height;i++) {
+    for (j = 0; j < currentPuzzle->Width; j++) {
+        for (i = 0; i < currentPuzzle->Height; i++) {
             if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == 'H') {
                 PushedBlock.GB_SetXY(PUZZLE_POSX+i*CELLLENGTH,PUZZLE_POSY+j*CELLLENGTH);
                 PushedBlock.GB_ShowSprite(0,0);
@@ -104,6 +38,31 @@ void Game::ProcessDrawing() {
                 CheckedBlock.GB_ShowSprite(0,0);
             }
         }
+    }
+
+
+    /* draw row streaks */
+    for (i = 0; i < currentPuzzle->Height; i++) {
+        std::stringstream out;
+
+        for (j = 0; j < currentPuzzle->RowStreaks[i].size(); j++)
+            out << currentPuzzle->RowStreaks[i][j] << ' ';
+
+        GB_DrawText(out.str().c_str(),
+                    PUZZLE_POSX-10*out.str().length()-5,
+                    PUZZLE_POSY+i*CELLLENGTH-3);
+    }
+
+    /* draw col streaks */
+    for (i = 0; i < currentPuzzle->Width; i++) {
+        std::stringstream out;
+
+        for (j = 0; j < currentPuzzle->ColStreaks[i].size(); j++)
+            out << currentPuzzle->ColStreaks[i][j] << ' ';
+
+        GB_DrawTextVert(out.str().c_str(),
+                    PUZZLE_POSX+i*CELLLENGTH-4,
+                    PUZZLE_POSY-10*out.str().length()-5);
     }
 
 
@@ -330,10 +289,6 @@ Game::~Game() {
 
 void Game::DoMainLoop() {
     BG.GB_ShowBackground();
-
     ProcessLogic();
-
-    DrawStreaks();
-
     ProcessDrawing();
 }

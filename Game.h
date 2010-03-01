@@ -10,13 +10,16 @@
 #include "GameBlade.h"
 #include "Puzzle.h"
 
+#include <vector>
+#include <sstream>
+#include <iostream>
+
 class Game {
     public:
 
     Game();
     ~Game();
 
-    void DrawStreaks();
     void ProcessDrawing();
     void ProcessLogic();
     void Initialize();
@@ -25,7 +28,7 @@ class Game {
 
     private:
 
-    int HandleMouseEvent(int,int,int);
+    int HandleMouseEvent(int, int, int);
 
     unsigned int
         mapX,

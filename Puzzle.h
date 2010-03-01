@@ -11,12 +11,17 @@
 #define PUZZLE_H
 
 #include <string>
+#include <vector>
 
 class Puzzle
 {
 public:
     Puzzle(unsigned int, unsigned int, std::string);
     ~Puzzle();
+
+    std::vector<int>
+            *ColStreaks,
+            *RowStreaks;
 
     char
             *Map,
@@ -25,6 +30,9 @@ public:
     unsigned int
             Width,
             Height;
+
+private:
+    void CalculateStreaks();
 };
 
 #endif // PUZZLE_H
