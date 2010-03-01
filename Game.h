@@ -25,18 +25,14 @@ class Game {
 
     private:
 
+    int HandleMouseEvent(int,int,int);
+
     unsigned int
-        level_size,         //the length of a level side (currently levels must be square)
         mapX,
         mapY;
 
     /* vars from original 2004 state of game */
-    int level,
-        hit,
-        erase,
-        hitcheck,
-        check,
-        MattocShowFrame,
+    int MattocShowFrame,
         HitMattocShowFrame,
         EraseShowFrame,
         CheckShowFrame,

@@ -15,6 +15,9 @@
 #define CELLLENGTH 12
 #define PUZZLE_POSX 117
 #define PUZZLE_POSY 107
+#define OP_NONE 0
+#define OP_HIT 1
+#define OP_MARK 2
 
 bool Game::GetQuit() {
     return quit;
@@ -25,15 +28,15 @@ void Game::DrawStreaks() {
         lenOfCurrRowStreak, lenOfCurrColStreak;
     
     std::vector<int>
-        rowStreaks[level_size],
-        colStreaks[level_size];
+        rowStreaks[currentPuzzle->Height],
+        colStreaks[currentPuzzle->Width];
     
     /* calculate the numbers to show in rows and columns*/
-    for(i=0;i<level_size;i++) {
+    for(i=0;i<currentPuzzle->Height;i++) {
         lenOfCurrRowStreak = 0;
         lenOfCurrColStreak = 0;
         
-        for(j=0;j<level_size;j++) {
+        for(j=0;j<currentPuzzle->Width;j++) {
 
             /* rows */
             if (currentPuzzle->Map[j*currentPuzzle->Width + i]=='#')
@@ -60,7 +63,7 @@ void Game::DrawStreaks() {
     }
 
     /* draw row streaks */
-    for (i=0;i<level_size;i++) {
+    for (i=0;i<currentPuzzle->Height;i++) {
         std::stringstream out;
 
         for (j=0;j<rowStreaks[i].size();j++)
@@ -72,7 +75,7 @@ void Game::DrawStreaks() {
     }
 
     /* draw col streaks */
-    for (i=0;i<level_size;i++) {
+    for (i=0;i<currentPuzzle->Width;i++) {
         std::stringstream out;
 
         for (j=0;j<colStreaks[i].size();j++)
@@ -91,8 +94,8 @@ void Game::ProcessDrawing() {
     FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
     FIFTEEN.GB_ShowSprite(0,0);
 
-    for (unsigned int j=0;j<level_size;j++) {
-        for (unsigned int i=0;i<level_size;i++) {
+    for (unsigned int j=0;j<currentPuzzle->Width;j++) {
+        for (unsigned int i=0;i<currentPuzzle->Height;i++) {
             if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == 'H') {
                 PushedBlock.GB_SetXY(PUZZLE_POSX+i*CELLLENGTH,PUZZLE_POSY+j*CELLLENGTH);
                 PushedBlock.GB_ShowSprite(0,0);
@@ -117,19 +120,37 @@ void Game::ProcessDrawing() {
     Check.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH+12);
 
     /* draw movable objects */
-    if (hit == 0 && erase == 0 && check == 0 && hitcheck == 0) {
-        Mattoc.GB_ShowSprite(0,(MattocShowFrame/2)%4);
-        SDL_Delay(30);
-        MattocShowFrame++;
-    }
+
+    Mattoc.GB_ShowSprite(0,(MattocShowFrame/2)%4);
+    SDL_Delay(30);
+    MattocShowFrame++;
+}
+
+int Game::HandleMouseEvent(int x, int y, int btn) {
+    int _mapX, _mapY;
+
+    _mapX = (x - PUZZLE_POSX) / CELLLENGTH;
+    _mapY = (y - PUZZLE_POSY) / CELLLENGTH;
+
+    if (_mapX < 0 || _mapX >= currentPuzzle->Width ||
+        _mapY < 0 || _mapY >= currentPuzzle->Height)
+        return OP_NONE;
+
+    mapX = _mapX;
+    mapY = _mapY;
+
+    if (btn == SDL_BUTTON_LEFT)
+        return OP_HIT;
+    else if (btn == SDL_BUTTON_RIGHT)
+        return OP_MARK;
+
+    return OP_NONE;
 }
 
 void Game::ProcessLogic() {
     int	dx = 0,
-        dy = 0;
-    bool
-        hit = false,
-        mark = false;
+        dy = 0,
+        op = OP_NONE;
 
 
     /* process input */
@@ -157,19 +178,24 @@ void Game::ProcessLogic() {
                 break;
             case SDLK_RCTRL:
             case SDLK_LCTRL:
-                hit = true;
+                op = OP_HIT;
                 break;
             case SDLK_RSHIFT:
             case SDLK_LSHIFT:
-                mark = true;
+                op = OP_MARK;
                 break;
             default:
                 break;
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
+            op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
             break;
         case SDL_MOUSEMOTION:
+            if (ev.motion.state & SDL_BUTTON(1))
+                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_LEFT);
+            else if (ev.motion.state & SDL_BUTTON(3))
+                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT);
             break;
          default:
             break;
@@ -177,22 +203,22 @@ void Game::ProcessLogic() {
     }
 
     /* movement logic */
-    if (mapX + dx < level_size &&
+    if (mapX + dx < currentPuzzle->Width &&
         mapX + dx >= 0)
         mapX += dx;
-    if (mapY + dy < level_size &&
+    if (mapY + dy < currentPuzzle->Height &&
         mapY + dy >= 0)
         mapY += dy;
 
     /* hit/mark logic: in tempMap, X == marked (as isNotBomb), H == hit (as isBomb), . == clear */
     if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == 'H') {}    /* we cannot mark spots that are already hit */
-    else if (mark) {
+    else if (op == OP_MARK) {
         if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == 'X')
             currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = '.';
         else
             currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = 'X';
     }
-    else if (hit) {                                 /* HIT */
+    else if (op == OP_HIT) {                                 /* HIT */
         if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == 'X')             /* was marked -> unmarked */
             currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = '.';
         else if (currentPuzzle->Map[mapX*currentPuzzle->Width + mapY] == '#')      /* if correct -> hit */
@@ -286,13 +312,8 @@ Game::Game() {
 
     currentPuzzle = new Puzzle(15, 15, puzzleInitializer.str());
 
-    level_size = 15;
     mapX = 0;
     mapY = 0;
-    hit = 0;
-    erase = 0;
-    hitcheck = 0;
-    check = 0;
 
     MattocShowFrame = 0;
     HitMattocShowFrame = 0;
