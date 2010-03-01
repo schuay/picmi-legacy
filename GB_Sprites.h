@@ -24,6 +24,7 @@
 #define _GB_SPRITES_H_
 
 #include "GameBlade.h"
+#include <string>
 
 // Class for loading a sprite from a file, setting it's color key and displaying it.
 // This class also takes care of frames.
@@ -61,7 +62,7 @@ class GB_Sprite
     GB_Sprite();
     ~GB_Sprite();
 
-    void GB_LoadSprite( char *, int HFrameNr = 1, int VFrameNr = 1 );
+    void GB_LoadSprite( std::string, int HFrameNr = 1, int VFrameNr = 1 );
     void GB_ShowSprite( int HFrameN, int VFrameN );
 
     void   GB_SetColorKey( Uint8, Uint8, Uint8 );

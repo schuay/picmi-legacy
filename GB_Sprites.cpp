@@ -23,6 +23,7 @@
 
 #include "GB_Sprites.h"
 #include <cstdlib>
+#include <string>
 
 // Class for loading a sprite from a file, setting it's color key and displaying it.
 // This class also takes care of frames.
@@ -69,8 +70,9 @@ GB_Sprite::~GB_Sprite()
 // function how it should divide the bitmap into frames. If you have only
 // one frame, pass 1 ( never pass 0! )
 
-void GB_Sprite::GB_LoadSprite( char *Filename, int HFrameNr /*= 1*/, int VFrameNr /*= 1*/ )
+void GB_Sprite::GB_LoadSprite( std::string fileName, int HFrameNr /*= 1*/, int VFrameNr /*= 1*/ )
 {
+  const char* Filename = fileName.c_str();
 
   if( DEBUGMESSAGELEVEL > 2 ) printf("- Loading the sprite %s\n\r", &Filename[0]);
 

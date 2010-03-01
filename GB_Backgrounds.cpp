@@ -23,6 +23,7 @@
 #include "GameBlade.h"
 
 #include <cstdlib>
+#include <string>
 
 // The class background provides a clean interface eleminating the need of taking
 // care for freeing surfaces, loading bitmaps etc.
@@ -32,8 +33,9 @@ GB_Background::~GB_Background()
   if( BackgroundSurface != NULL ) SDL_FreeSurface( BackgroundSurface );
 }
 
-void GB_Background::GB_LoadBackground( char *Filename )
+void GB_Background::GB_LoadBackground( std::string fileName )
 {
+  const char *Filename = fileName.c_str();
 
   if( DEBUGMESSAGELEVEL > 2 ) printf("- Loading the background %s\n\r", &Filename[0]);
 

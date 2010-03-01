@@ -8,11 +8,12 @@
 #define PUZZLE_POSY 107
 
 void Game::DrawStreaks() {
-    int i, j, lenOfCurrRowStreak, lenOfCurrColStreak;
+    unsigned int i, j,
+        lenOfCurrRowStreak, lenOfCurrColStreak;
     
     std::vector<int>
-            rowStreaks[level_size],
-            colStreaks[level_size];
+        rowStreaks[level_size],
+        colStreaks[level_size];
     
     /* calculate the numbers to show in rows and columns*/
     for(i=0;i<level_size;i++) {
@@ -77,8 +78,8 @@ void Game::ProcessDrawing() {
     FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
     FIFTEEN.GB_ShowSprite(0,0);
 
-    for (int yy=0;yy<level_size;yy++) {
-        for (int xx=0;xx<level_size;xx++) {
+    for (unsigned int yy=0;yy<level_size;yy++) {
+        for (unsigned int xx=0;xx<level_size;xx++) {
             if (tempMap[xx][yy] == 'H') {
                 PushedBlock.GB_SetXY(PUZZLE_POSX+xx*CELLLENGTH,PUZZLE_POSY+yy*CELLLENGTH);
                 PushedBlock.GB_ShowSprite(0,0);
@@ -251,8 +252,8 @@ Game::Game() {
     check = 0;
     quit = 0;
 
-    for (int i=0;i<level_size;i++)
-        for (int j=0;j<level_size;j++)
+    for (unsigned int i=0;i<level_size;i++)
+        for (unsigned int j=0;j<level_size;j++)
             tempMap[i][j] = '.';
 
     MattocShowFrame = 0;

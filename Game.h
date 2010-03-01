@@ -14,11 +14,13 @@ class Game {
 
     private:
 
-    /* vars from original 2004 state of game */
-    int level,
+    unsigned int
         level_size,         //the length of a level side (currently levels must be square)
         mapX,
-        mapY,
+        mapY;
+
+    /* vars from original 2004 state of game */
+    int level,
         hit,
         erase,
         hitcheck,

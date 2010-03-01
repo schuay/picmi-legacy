@@ -23,6 +23,8 @@
 #ifndef _GB_BACKGROUNDS_H_
 #define _GB_BACKGROUNDS_H_
 
+#include <string>
+
 // The class background provides a clean interface eleminating the need of taking
 // care for freeing surfaces, loading bitmaps etc.
 
@@ -33,7 +35,7 @@ class GB_Background
     Uint8 Alpha;
   public:
     ~GB_Background();
-    void GB_LoadBackground( char * );
+    void GB_LoadBackground( std::string );
     void GB_ShowBackground();
     void GB_SetAlpha( Uint8 );
     Uint8 GB_GetAlpha();
