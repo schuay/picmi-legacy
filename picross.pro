@@ -13,7 +13,6 @@ SOURCES += SDL_rotozoom.cpp \
     GB_TextEngine.cpp \
     GB_System.cpp \
     GB_Sprites.cpp \
-    GB_Events.cpp \
     GB_Backgrounds.cpp \
     GB_AudioSystem.cpp \
     Game.cpp \
@@ -27,7 +26,6 @@ HEADERS += SDL_rotozoom.h \
     GB_System.h \
     GB_Sprites.h \
     GB_Globals.h \
-    GB_Events.h \
     Game.h \
     GameBlade.h \
     Puzzle.h

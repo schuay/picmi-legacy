@@ -46,7 +46,6 @@
 #include "GB_Sprites.h"          // Loading a sprite, displaying it and the necessary class to wrap it up
 #include "GB_Backgrounds.h"      // Class and functions for loading and displaying a fullscreen background
 #include "GB_TextEngine.h"       // Loading a bitmap font and displaying a text or a single character
-#include "GB_Events.h"           // Filtering events like key presses and quit signals
 #include "GB_System.h"           // Quitting the GameBlade
 #include "SDL_rotozoom.h"        // Use SDL_rotozoom for rotation and zooming
 

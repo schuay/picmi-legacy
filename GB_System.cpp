@@ -53,10 +53,12 @@ void GB_System::Quit()
 
 void GB_System::Init( int InitSystems )
 {
-   GB_Events::GB_ResetKeys();
    GB_SetupSDL_Video();
    setFrameRate(30);
    if( InitSystems == GB_INIT_VIDEO_AND_AUDIO ) GB_SetupSDL_Audio();
+
+   SDL_EnableUNICODE(1);
+   SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 }
 
 void GB_System::setFrameRate( int SetFPS )

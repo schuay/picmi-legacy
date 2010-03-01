@@ -1,3 +1,12 @@
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 #include "Game.h"
 #include <vector>
 #include <sstream>
@@ -6,6 +15,10 @@
 #define CELLLENGTH 12
 #define PUZZLE_POSX 117
 #define PUZZLE_POSY 107
+
+bool Game::GetQuit() {
+    return quit;
+}
 
 void Game::DrawStreaks() {
     unsigned int i, j,
@@ -118,19 +131,50 @@ void Game::ProcessLogic() {
         hit = false,
         mark = false;
 
+
     /* process input */
-    if(GB_GetKey(SDLK_LEFT) == 1)
-        dx = -1;
-    else if (GB_GetKey(SDLK_RIGHT) == 1)
-        dx = 1;
-    else if (GB_GetKey(SDLK_UP) == 1)
-        dy = -1;
-    else if (GB_GetKey(SDLK_DOWN) == 1)
-        dy = 1;
-    else if(GB_GetKey(SDLK_RCTRL) == 1)     /* mark as isBomb */
-        hit = true;
-    else if(GB_GetKey(SDLK_RSHIFT) == 1)    /* mark as isNotBomb */
-        mark = true;
+
+    SDL_Event ev;
+
+    while (SDL_PollEvent(&ev) == 1) {
+        switch (ev.type) {
+        case SDL_KEYDOWN:
+            switch (ev.key.keysym.sym) {
+            case SDLK_ESCAPE:
+                quit = true;
+                break;
+            case SDLK_LEFT:
+                dx = -1;
+                break;
+            case SDLK_RIGHT:
+                dx = 1;
+                break;
+            case SDLK_UP:
+                dy = -1;
+                break;
+            case SDLK_DOWN:
+                dy = 1;
+                break;
+            case SDLK_RCTRL:
+            case SDLK_LCTRL:
+                hit = true;
+                break;
+            case SDLK_RSHIFT:
+            case SDLK_LSHIFT:
+                mark = true;
+                break;
+            default:
+                break;
+            }
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            break;
+        case SDL_MOUSEMOTION:
+            break;
+         default:
+            break;
+        }
+    }
 
     /* movement logic */
     if (mapX + dx < level_size &&
@@ -139,9 +183,6 @@ void Game::ProcessLogic() {
     if (mapY + dy < level_size &&
         mapY + dy >= 0)
         mapY += dy;
-
-    /* this resets key presses? */
-    GB_GetEvents();
 
     /* hit/mark logic: in tempMap, X == marked (as isNotBomb), H == hit (as isBomb), . == clear */
     if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == 'H') {}    /* we cannot mark spots that are already hit */
@@ -186,8 +227,7 @@ void Game::Initialize() {
 
     /* Initiate audio, video and the text */
 
-    GB_SetupSDL_Video();
-    GB_SetupSDL_Audio();
+    GB_Init(GB_INIT_VIDEO_AND_AUDIO);
     GB_LoadTextBitmap();
 
     FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp",1);
@@ -253,13 +293,14 @@ Game::Game() {
     erase = 0;
     hitcheck = 0;
     check = 0;
-    quit = 0;
 
     MattocShowFrame = 0;
     HitMattocShowFrame = 0;
     EraseShowFrame = 0;
     CheckShowFrame = 0;
     EraseBlockShowFrame = 0;
+
+    quit = false;
 }
 Game::~Game() {
     if (currentPuzzle)
