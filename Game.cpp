@@ -23,7 +23,7 @@ void Game::DrawStreaks() {
         for(j=0;j<level_size;j++) {
 
             /* rows */
-            if (puzzleMap[j][i]=='#')
+            if (currentPuzzle->Map[j*currentPuzzle->Width + i]=='#')
                 lenOfCurrRowStreak++;
             else if (lenOfCurrRowStreak > 0) {
                 rowStreaks[i].push_back(lenOfCurrRowStreak);
@@ -31,7 +31,7 @@ void Game::DrawStreaks() {
             }
 
             /* cols */
-            if (puzzleMap[i][j]=='#')
+            if (currentPuzzle->Map[i*currentPuzzle->Width + j]=='#')
                 lenOfCurrColStreak++;
             else if (lenOfCurrColStreak > 0) {
                 colStreaks[i].push_back(lenOfCurrColStreak);
@@ -78,13 +78,13 @@ void Game::ProcessDrawing() {
     FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
     FIFTEEN.GB_ShowSprite(0,0);
 
-    for (unsigned int yy=0;yy<level_size;yy++) {
-        for (unsigned int xx=0;xx<level_size;xx++) {
-            if (tempMap[xx][yy] == 'H') {
-                PushedBlock.GB_SetXY(PUZZLE_POSX+xx*CELLLENGTH,PUZZLE_POSY+yy*CELLLENGTH);
+    for (unsigned int j=0;j<level_size;j++) {
+        for (unsigned int i=0;i<level_size;i++) {
+            if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == 'H') {
+                PushedBlock.GB_SetXY(PUZZLE_POSX+i*CELLLENGTH,PUZZLE_POSY+j*CELLLENGTH);
                 PushedBlock.GB_ShowSprite(0,0);
-            } else if (tempMap[xx][yy] == 'X') {
-                CheckedBlock.GB_SetXY(PUZZLE_POSX+xx*CELLLENGTH,PUZZLE_POSY+yy*CELLLENGTH);
+            } else if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == 'X') {
+                CheckedBlock.GB_SetXY(PUZZLE_POSX+i*CELLLENGTH,PUZZLE_POSY+j*CELLLENGTH);
                 CheckedBlock.GB_ShowSprite(0,0);
             }
         }
@@ -144,20 +144,20 @@ void Game::ProcessLogic() {
     GB_GetEvents();
 
     /* hit/mark logic: in tempMap, X == marked (as isNotBomb), H == hit (as isBomb), . == clear */
-    if (tempMap[mapX][mapY] == 'H') {}    /* we cannot mark spots that are already hit */
+    if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == 'H') {}    /* we cannot mark spots that are already hit */
     else if (mark) {
-        if (tempMap[mapX][mapY] == 'X')
-            tempMap[mapX][mapY] = '.';
+        if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == 'X')
+            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = '.';
         else
-            tempMap[mapX][mapY] = 'X';
+            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = 'X';
     }
     else if (hit) {                                 /* HIT */
-        if (tempMap[mapX][mapY] == 'X')             /* was marked -> unmarked */
-            tempMap[mapX][mapY] = '.';
-        else if (puzzleMap[mapX][mapY] == '#')      /* if correct -> hit */
-            tempMap[mapX][mapY] = 'H';
-        else if (puzzleMap[mapX][mapY] == '.')      /* if incorrect -> marked */
-            tempMap[mapX][mapY] = 'X';
+        if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == 'X')             /* was marked -> unmarked */
+            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = '.';
+        else if (currentPuzzle->Map[mapX*currentPuzzle->Width + mapY] == '#')      /* if correct -> hit */
+            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = 'H';
+        else if (currentPuzzle->Map[mapX*currentPuzzle->Width + mapY] == '.')      /* if incorrect -> marked */
+            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = 'X';
     }
 
     /* ANIMATIONS
@@ -226,22 +226,25 @@ void Game::Initialize() {
 
 Game::Game() {
 
-    puzzleMap = {
-        "##.#.#.###.#.#.",
-        "#.#.#.#.#......",
-        "###############",
-        "#.#.#.#.#......",
-        "###....##......",
-        "#.#######......",
-        "###....##......",
-        "#.#....##......",
-        "###....##......",
-        "#.......#......",
-        "#.#.#..........",
-        "#.......#......",
-        ".#.#...........",
-        ".#.......#.....",
-        "#.#.....#......"};
+    std::stringstream puzzleInitializer;
+    puzzleInitializer <<
+        "##.#.#.###.#.#." <<
+        "#.#.#.#.#......" <<
+        "###############" <<
+        "#.#.#.#.#......" <<
+        "###....##......" <<
+        "#.#######......" <<
+        "###....##......" <<
+        "#.#....##......" <<
+        "###....##......" <<
+        "#.......#......" <<
+        "#.#.#.........." <<
+        "#.......#......" <<
+        ".#.#..........." <<
+        ".#.......#....." <<
+        "#.#.....#......";
+
+    currentPuzzle = new Puzzle(15, 15, puzzleInitializer.str());
 
     level_size = 15;
     mapX = 0;
@@ -252,17 +255,16 @@ Game::Game() {
     check = 0;
     quit = 0;
 
-    for (unsigned int i=0;i<level_size;i++)
-        for (unsigned int j=0;j<level_size;j++)
-            tempMap[i][j] = '.';
-
     MattocShowFrame = 0;
     HitMattocShowFrame = 0;
     EraseShowFrame = 0;
     CheckShowFrame = 0;
     EraseBlockShowFrame = 0;
 }
-Game::~Game() {}
+Game::~Game() {
+    if (currentPuzzle)
+        delete currentPuzzle;
+}
 
 void Game::DoMainLoop() {
     BG.GB_ShowBackground();

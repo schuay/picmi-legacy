@@ -1,4 +1,5 @@
 #include "GameBlade.h"
+#include "Puzzle.h"
 
 class Game {
     public:
@@ -47,8 +48,5 @@ class Game {
 
     GB_Background BG;
 
-    /* temporary map for puzzle - to be replaced by a mechanism which loads bitmaps from icon folders and converts them to puzzles */
-    char
-        puzzleMap[16][16],
-        tempMap[16][16];
+    Puzzle *currentPuzzle;
 };

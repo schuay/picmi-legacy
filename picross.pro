@@ -16,7 +16,8 @@ SOURCES += SDL_rotozoom.cpp \
     GB_Events.cpp \
     GB_Backgrounds.cpp \
     GB_AudioSystem.cpp \
-    Game.cpp
+    Game.cpp \
+    Puzzle.cpp
 HEADERS += SDL_rotozoom.h \
     GB_VideoSystem.h \
     GB_TextEngine.h \
@@ -28,7 +29,8 @@ HEADERS += SDL_rotozoom.h \
     GB_Globals.h \
     GB_Events.h \
     Game.h \
-    GameBlade.h
+    GameBlade.h \
+    Puzzle.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_mixer
