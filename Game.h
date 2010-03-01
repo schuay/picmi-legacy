@@ -4,6 +4,7 @@ class Game {
     public:
 
     Game();
+    ~Game();
 
     void DrawStreaks();
     void DrawPuzzle();
@@ -14,25 +15,15 @@ class Game {
     private:
 
     /* vars from original 2004 state of game */
-    int Puzzle_PositionX,
-        Puzzle_PositionY,
-	Mattoc_PositionX,
-	Mattoc_PositionY,
-        VertBar_PositionX,
-	HorBar_PositionY,
-        level,
+    int level,
         level_size,         //the length of a level side (currently levels must be square)
         mapX,
         mapY,
-        realX,
-        realY,
         hit,
         erase,
         hitcheck,
         check,
-	quit;
-
-    char
+        quit,
         MattocShowFrame,
         HitMattocShowFrame,
         EraseShowFrame,

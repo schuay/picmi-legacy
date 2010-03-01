@@ -4,6 +4,8 @@
 #include <iostream>
 
 #define CELLLENGTH 12
+#define PUZZLE_POSX 117
+#define PUZZLE_POSY 107
 
 void Game::DrawStreaks() {
     int i, j, lenOfCurrRowStreak, lenOfCurrColStreak;
@@ -51,8 +53,8 @@ void Game::DrawStreaks() {
             out << rowStreaks[i][j] << ' ';
 
         GB_DrawText(out.str().c_str(),
-                    Puzzle_PositionX-10*out.str().length()-5,
-                    Puzzle_PositionY+i*CELLLENGTH-3);
+                    PUZZLE_POSX-10*out.str().length()-5,
+                    PUZZLE_POSY+i*CELLLENGTH-3);
     }
 
     /* draw col streaks */
@@ -63,29 +65,26 @@ void Game::DrawStreaks() {
             out << colStreaks[i][j] << ' ';
 
         GB_DrawTextVert(out.str().c_str(),
-                    Puzzle_PositionX+i*CELLLENGTH-4,
-                    Puzzle_PositionY-10*out.str().length()-5);
+                    PUZZLE_POSX+i*CELLLENGTH-4,
+                    PUZZLE_POSY-10*out.str().length()-5);
     }
 }
 
 void Game::DrawPuzzle() {
 
-    FIFTEEN.GB_SetXY(Puzzle_PositionX,Puzzle_PositionY);
+    FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
     FIFTEEN.GB_ShowSprite(0,0);
 
     for(int yy=0;yy<level_size;yy++) {
         for(int xx=0;xx<level_size;xx++) {
 
-        // Kika in på låtsaskartan vart vi har slagit in
-        // klossen och kika ifall vi träffat rätt
-
             if(tempMap[yy][xx] == '#') {
-                PushedBlock.GB_SetXY(Puzzle_PositionX+xx*12,Puzzle_PositionY+yy*12);
+                PushedBlock.GB_SetXY(PUZZLE_POSX+xx*CELLLENGTH,PUZZLE_POSY+yy*CELLLENGTH);
                 PushedBlock.GB_ShowSprite(0,0);
             }
 
             if(tempMap[yy][xx] == 'X') {
-                CheckedBlock.GB_SetXY(Puzzle_PositionX+xx*12,Puzzle_PositionY+yy*12);
+                CheckedBlock.GB_SetXY(PUZZLE_POSX+xx*CELLLENGTH,PUZZLE_POSY+yy*CELLLENGTH);
                 CheckedBlock.GB_ShowSprite(0,0);
             }
         }
@@ -93,122 +92,72 @@ void Game::DrawPuzzle() {
 }
 
 void Game::DrawMattoc() {
-	int	newx, newy, newvert_x, newhor_y, newhit;
+    int	dx = 0,
+        dy = 0;
 
-		if(GB_GetKey(SDLK_LEFT) == 1) {
-			if(Mattoc_PositionX != Puzzle_PositionX) {
-				newx = Mattoc_PositionX-12;
-				mapX = mapX--;
-			}
-			else newx = Mattoc_PositionX;
-			if(VertBar_PositionX != Puzzle_PositionX) newvert_x = Mattoc_PositionX-12;
-			else newvert_x = Mattoc_PositionX;
-			Mattoc_PositionX = newx;
-			VertBar_PositionX = newvert_x;
-		}
+    /* movement logic */
+    if(GB_GetKey(SDLK_LEFT) == 1)
+        dx = -1;
+    else if (GB_GetKey(SDLK_RIGHT) == 1)
+        dx = 1;
+    else if (GB_GetKey(SDLK_UP) == 1)
+        dy = -1;
+    else if (GB_GetKey(SDLK_DOWN) == 1)
+        dy = 1;
 
-		if(GB_GetKey(SDLK_RIGHT) == 1) {
-			if(Mattoc_PositionX != Puzzle_PositionX+level_size*12-12) {
-				newx = Mattoc_PositionX+12;
-				mapX = mapX++;
+    if (mapX + dx < level_size &&
+        mapX + dx >= 0)
+        mapX += dx;
+    if (mapY + dy < level_size &&
+        mapY + dy >= 0)
+        mapY += dy;
 
-			}
-			else newx = Mattoc_PositionX;
-			if(VertBar_PositionX != Puzzle_PositionX+level_size*12-12) newvert_x = Mattoc_PositionX+12;
-                        else newvert_x = Mattoc_PositionX-1;
-			Mattoc_PositionX = newx;
-			VertBar_PositionX = newvert_x;
-		}
+    /* VertBar_Position... ? */
 
-		if(GB_GetKey(SDLK_UP) == 1) {
-			if(Mattoc_PositionY != Puzzle_PositionY-12) {
-				newy = Mattoc_PositionY-12;
-				mapY = mapY--;
-			}
-			else newy = Mattoc_PositionY;
-			if(HorBar_PositionY != Puzzle_PositionY) newhor_y = Mattoc_PositionY;
-			else newhor_y = Mattoc_PositionY+12;
-			Mattoc_PositionY = newy;
-			HorBar_PositionY = newhor_y;
-		}
+    /* marking logic */
 
-		if(GB_GetKey(SDLK_DOWN) == 1) {
-			if(Mattoc_PositionY != Puzzle_PositionY+level_size*12-28) {
-				newy = Mattoc_PositionY+12;
-				mapY = mapY++;
-			}
-			else newy = Mattoc_PositionY;
-			if(HorBar_PositionY != Puzzle_PositionY+level_size-12) newhor_y = Mattoc_PositionY+12;
-			else newhor_y = Mattoc_PositionY+12;
-			Mattoc_PositionY = newy;
-			HorBar_PositionY = newhor_y;
-		}
+    if(GB_GetKey(SDLK_RCTRL) == 1) {    /* mark as isBomb */
+    }
+    else if(GB_GetKey(SDLK_RSHIFT) == 1) {   /* mark as isNotBomb */
+    }
 
-		if(GB_GetKey(SDLK_RCTRL) == 1 && !GB_GetKey(SDLK_RSHIFT)) {
-			for(int i=0;i<level_size;i++) {
-				realX = Puzzle_PositionX+mapX*12;
-				realY = Puzzle_PositionY+mapY*12;
-				if(puzzleMap[mapY][mapX] != '#') {
+    /* this resets key presses? */
+    GB_GetEvents();
 
-					if(tempMap[mapY][mapX] == '#') {
-						tempMap[mapY][mapX] = ' ';
-						break;
-					} else {
-						tempMap[mapY][mapX] = '#';
-						break;
-					}
 
-				} else {
-					if(tempMap[mapY][mapX] == '#') {
-						tempMap[mapY][mapX] = ' ';
-						break;
-					} else {
-						tempMap[mapY][mapX] = '#';
-						break;
-					}
-				}
-			}
+    /* set movable object positions */
+    Mattoc.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH);
+    HitMattoc.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH);
 
-			if(tempMap[mapY][mapX] != '#') 	erase = 1;
-			else if(puzzleMap[mapY][mapX] != '#') {
-				hitcheck = 1;
-				tempMap[mapY][mapX] = '#';
-			} else hit = 1;
-            GB_GetEvents();
-		}
+    HorBar.GB_SetXY(PUZZLE_POSX-8,PUZZLE_POSY + mapY * CELLLENGTH-1);
+    VertBar.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY-8);
 
-		if(GB_GetKey(SDLK_RSHIFT) == 1 && !GB_GetKey(SDLK_RCTRL)) {
-			if (tempMap[mapY][mapX] == 'X') erase = 1;
-			else if (tempMap[mapY][mapX] != 'X') check = 1;
-            GB_GetEvents();
-		}
+    Erase.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH-5,PUZZLE_POSY + mapY * CELLLENGTH+10);
+    EraseBlock.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH-5,PUZZLE_POSY + mapY * CELLLENGTH+10);
 
-	Mattoc.GB_SetXY(Mattoc_PositionX,Mattoc_PositionY);
-	HorBar.GB_SetXY(Puzzle_PositionX-8,HorBar_PositionY-1);
-	VertBar.GB_SetXY(VertBar_PositionX,Puzzle_PositionY-8);
-	HitMattoc.GB_SetXY(Mattoc_PositionX-20,Mattoc_PositionY-12);
-	Erase.GB_SetXY(Mattoc_PositionX-5,Mattoc_PositionY+10);
-	EraseBlock.GB_SetXY(Mattoc_PositionX-5,Mattoc_PositionY+10);
-	Check.GB_SetXY(Mattoc_PositionX,Mattoc_PositionY+12);
+    Check.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH+12);
 
-	if(hit == 0 && erase == 0 && check == 0 && hitcheck == 0) {
+    /* draw movable objects */
+    if(hit == 0 && erase == 0 && check == 0 && hitcheck == 0) {
         Mattoc.GB_ShowSprite(0,(MattocShowFrame/2)%4);
         SDL_Delay(30);
         MattocShowFrame++;
-	}
+    }
 
-	if(hit == 1) {
+    /*
+
+    if(hit == 1) {
         HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);
         SDL_Delay(50);
         HitMattocShowFrame++;
-		if(HitMattocShowFrame == 5) {
-			hit = 0;
-			HitMattocShowFrame = 0;
-		}
-	}
+        if(HitMattocShowFrame == 5) {
+            hit = 0;
+            HitMattocShowFrame = 0;
+        }
+    }
 
 
-	if(erase == 1) {
+    if(erase == 1) {
         if(tempMap[mapY][mapX] == ' ') {
             EraseBlock.GB_ShowSprite(0,EraseBlockShowFrame);
             SDL_Delay(50);
@@ -218,49 +167,50 @@ void Game::DrawMattoc() {
                 EraseBlockShowFrame = 0;
             }
         } else {
-        //	Erase.GB_ShowSprite(0,EraseShowFrame);
-        //	SDL_Delay(50);
-        //	EraseShowFrame++;
-        //		if(hit == 1) {
-        //			EraseShowFrame = 0;
-        //			erase = 0;
-        //		}
-        //
-        //		if(EraseShowFrame == 4) {
-        //			erase = 0;
-        //			EraseShowFrame = 0;
-        //		}
+            //	Erase.GB_ShowSprite(0,EraseShowFrame);
+            //	SDL_Delay(50);
+            //	EraseShowFrame++;
+            //		if(hit == 1) {
+            //			EraseShowFrame = 0;
+            //			erase = 0;
+            //		}
+            //
+            //		if(EraseShowFrame == 4) {
+            //			erase = 0;
+            //			EraseShowFrame = 0;
+            //		}
             tempMap[mapY][mapX] = ' ';
         }
-	}
+    }
 
-	if(hitcheck == 1) {
+    if(hitcheck == 1) {
         HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);
         SDL_Delay(50);
         HitMattocShowFrame++;
-		if(HitMattocShowFrame == 7) {
-			hitcheck = 0;
-			HitMattocShowFrame = 0;
-			check = 1;
-		}
+        if(HitMattocShowFrame == 7) {
+            hitcheck = 0;
+            HitMattocShowFrame = 0;
+            check = 1;
+        }
+    }
 
-	}
-
-	if(check == 1) {
+    if(check == 1) {
         Check.GB_ShowSprite(0,CheckShowFrame);
         SDL_Delay(40);
         CheckShowFrame++;
-		if(CheckShowFrame == 6) {
-			check = 0;
-			CheckShowFrame = 0;
-			tempMap[mapY][mapX] = 'X';
-		}
-	}
+        if(CheckShowFrame == 6) {
+            check = 0;
+            CheckShowFrame = 0;
+            tempMap[mapY][mapX] = 'X';
+        }
+    }
 
-	HorBar.GB_ShowSprite(0,0);
-	VertBar.GB_ShowSprite(0,0);
+    HorBar.GB_ShowSprite(0,0);
+    VertBar.GB_ShowSprite(0,0);
 
     if(check == 0 && hitcheck == 0 && erase == 0) GB_GetEvents();
+
+    */
 }
 
 void Game::Initialize() {
@@ -324,12 +274,6 @@ Game::Game() {
         ".#.......#.....",
         "#.#.....#......"};
 
-    Puzzle_PositionX = 117;
-    Puzzle_PositionY = 107;
-    Mattoc_PositionX = Puzzle_PositionX;
-    Mattoc_PositionY = Puzzle_PositionY;
-    VertBar_PositionX = Puzzle_PositionX;
-    HorBar_PositionY = Puzzle_PositionY;
     level_size = 15;
     mapX = 0;
     mapY = 0;
@@ -339,12 +283,17 @@ Game::Game() {
     check = 0;
     quit = 0;
 
+    for (int i=0;i<level_size;i++)
+        for (int j=0;j<level_size;j++)
+            tempMap[i][j] = '.';
+
     MattocShowFrame = 0;
     HitMattocShowFrame = 0;
     EraseShowFrame = 0;
     CheckShowFrame = 0;
     EraseBlockShowFrame = 0;
 }
+Game::~Game() {}
 
 void Game::DoMainLoop() {
     BG.GB_ShowBackground();
