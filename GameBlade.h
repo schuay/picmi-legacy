@@ -30,6 +30,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_rotozoom.h>
 
 // Section 1: Declaration headers
 
@@ -47,6 +48,5 @@
 #include "GB_Backgrounds.h"      // Class and functions for loading and displaying a fullscreen background
 #include "GB_TextEngine.h"       // Loading a bitmap font and displaying a text or a single character
 #include "GB_System.h"           // Quitting the GameBlade
-#include "SDL_rotozoom.h"        // Use SDL_rotozoom for rotation and zooming
 
 #endif

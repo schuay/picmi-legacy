@@ -7,8 +7,7 @@ TARGET = picross
 CONFIG += console
 CONFIG -= app_bundle
 TEMPLATE = app
-SOURCES += SDL_rotozoom.cpp \
-    main.cpp \
+SOURCES += main.cpp \
     GB_VideoSystem.cpp \
     GB_TextEngine.cpp \
     GB_System.cpp \
@@ -17,8 +16,7 @@ SOURCES += SDL_rotozoom.cpp \
     GB_AudioSystem.cpp \
     Game.cpp \
     Puzzle.cpp
-HEADERS += SDL_rotozoom.h \
-    GB_VideoSystem.h \
+HEADERS += GB_VideoSystem.h \
     GB_TextEngine.h \
     GB_Definitions.h \
     GB_Backgrounds.h \
@@ -31,4 +29,5 @@ HEADERS += SDL_rotozoom.h \
     Puzzle.h
 unix:LIBS += -lSDL \
     -lSDL_image \
-    -lSDL_mixer
+    -lSDL_mixer \
+    -lSDL_gfx
