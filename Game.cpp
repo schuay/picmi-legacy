@@ -22,7 +22,7 @@ void Game::DrawStreaks() {
         for(j=0;j<level_size;j++) {
 
             /* rows */
-            if (puzzleMap[i][j]=='#')
+            if (puzzleMap[j][i]=='#')
                 lenOfCurrRowStreak++;
             else if (lenOfCurrRowStreak > 0) {
                 rowStreaks[i].push_back(lenOfCurrRowStreak);
@@ -30,7 +30,7 @@ void Game::DrawStreaks() {
             }
 
             /* cols */
-            if (puzzleMap[j][i]=='#')
+            if (puzzleMap[i][j]=='#')
                 lenOfCurrColStreak++;
             else if (lenOfCurrColStreak > 0) {
                 colStreaks[i].push_back(lenOfCurrColStreak);
@@ -70,59 +70,24 @@ void Game::DrawStreaks() {
     }
 }
 
-void Game::DrawPuzzle() {
+void Game::ProcessDrawing() {
+
+    /* game board */
 
     FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
     FIFTEEN.GB_ShowSprite(0,0);
 
-    for(int yy=0;yy<level_size;yy++) {
-        for(int xx=0;xx<level_size;xx++) {
-
-            if(tempMap[yy][xx] == '#') {
+    for (int yy=0;yy<level_size;yy++) {
+        for (int xx=0;xx<level_size;xx++) {
+            if (tempMap[xx][yy] == 'H') {
                 PushedBlock.GB_SetXY(PUZZLE_POSX+xx*CELLLENGTH,PUZZLE_POSY+yy*CELLLENGTH);
                 PushedBlock.GB_ShowSprite(0,0);
-            }
-
-            if(tempMap[yy][xx] == 'X') {
+            } else if (tempMap[xx][yy] == 'X') {
                 CheckedBlock.GB_SetXY(PUZZLE_POSX+xx*CELLLENGTH,PUZZLE_POSY+yy*CELLLENGTH);
                 CheckedBlock.GB_ShowSprite(0,0);
             }
         }
     }
-}
-
-void Game::DrawMattoc() {
-    int	dx = 0,
-        dy = 0;
-
-    /* movement logic */
-    if(GB_GetKey(SDLK_LEFT) == 1)
-        dx = -1;
-    else if (GB_GetKey(SDLK_RIGHT) == 1)
-        dx = 1;
-    else if (GB_GetKey(SDLK_UP) == 1)
-        dy = -1;
-    else if (GB_GetKey(SDLK_DOWN) == 1)
-        dy = 1;
-
-    if (mapX + dx < level_size &&
-        mapX + dx >= 0)
-        mapX += dx;
-    if (mapY + dy < level_size &&
-        mapY + dy >= 0)
-        mapY += dy;
-
-    /* VertBar_Position... ? */
-
-    /* marking logic */
-
-    if(GB_GetKey(SDLK_RCTRL) == 1) {    /* mark as isBomb */
-    }
-    else if(GB_GetKey(SDLK_RSHIFT) == 1) {   /* mark as isNotBomb */
-    }
-
-    /* this resets key presses? */
-    GB_GetEvents();
 
 
     /* set movable object positions */
@@ -138,77 +103,80 @@ void Game::DrawMattoc() {
     Check.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH+12);
 
     /* draw movable objects */
-    if(hit == 0 && erase == 0 && check == 0 && hitcheck == 0) {
+    if (hit == 0 && erase == 0 && check == 0 && hitcheck == 0) {
         Mattoc.GB_ShowSprite(0,(MattocShowFrame/2)%4);
         SDL_Delay(30);
         MattocShowFrame++;
     }
+}
 
-    /*
+void Game::ProcessLogic() {
+    int	dx = 0,
+        dy = 0;
+    bool
+        hit = false,
+        mark = false;
+
+    /* process input */
+    if(GB_GetKey(SDLK_LEFT) == 1)
+        dx = -1;
+    else if (GB_GetKey(SDLK_RIGHT) == 1)
+        dx = 1;
+    else if (GB_GetKey(SDLK_UP) == 1)
+        dy = -1;
+    else if (GB_GetKey(SDLK_DOWN) == 1)
+        dy = 1;
+    else if(GB_GetKey(SDLK_RCTRL) == 1)     /* mark as isBomb */
+        hit = true;
+    else if(GB_GetKey(SDLK_RSHIFT) == 1)    /* mark as isNotBomb */
+        mark = true;
+
+    /* movement logic */
+    if (mapX + dx < level_size &&
+        mapX + dx >= 0)
+        mapX += dx;
+    if (mapY + dy < level_size &&
+        mapY + dy >= 0)
+        mapY += dy;
+
+    /* this resets key presses? */
+    GB_GetEvents();
+
+    /* hit/mark logic: in tempMap, X == marked (as isNotBomb), H == hit (as isBomb), . == clear */
+    if (tempMap[mapX][mapY] == 'H') {}    /* we cannot mark spots that are already hit */
+    else if (mark) {
+        if (tempMap[mapX][mapY] == 'X')
+            tempMap[mapX][mapY] = '.';
+        else
+            tempMap[mapX][mapY] = 'X';
+    }
+    else if (hit) {                                 /* HIT */
+        if (tempMap[mapX][mapY] == 'X')             /* was marked -> unmarked */
+            tempMap[mapX][mapY] = '.';
+        else if (puzzleMap[mapX][mapY] == '#')      /* if correct -> hit */
+            tempMap[mapX][mapY] = 'H';
+        else if (puzzleMap[mapX][mapY] == '.')      /* if incorrect -> marked */
+            tempMap[mapX][mapY] = 'X';
+    }
+
+    /* ANIMATIONS
 
     if(hit == 1) {
-        HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);
-        SDL_Delay(50);
-        HitMattocShowFrame++;
-        if(HitMattocShowFrame == 5) {
-            hit = 0;
-            HitMattocShowFrame = 0;
-        }
+        HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);   // %5
     }
-
-
     if(erase == 1) {
         if(tempMap[mapY][mapX] == ' ') {
-            EraseBlock.GB_ShowSprite(0,EraseBlockShowFrame);
-            SDL_Delay(50);
-            EraseBlockShowFrame++;
-            if(EraseBlockShowFrame == 4) {
-                erase = 0;
-                EraseBlockShowFrame = 0;
-            }
+            EraseBlock.GB_ShowSprite(0,EraseBlockShowFrame);   // %4
         } else {
-            //	Erase.GB_ShowSprite(0,EraseShowFrame);
-            //	SDL_Delay(50);
-            //	EraseShowFrame++;
-            //		if(hit == 1) {
-            //			EraseShowFrame = 0;
-            //			erase = 0;
-            //		}
-            //
-            //		if(EraseShowFrame == 4) {
-            //			erase = 0;
-            //			EraseShowFrame = 0;
-            //		}
-            tempMap[mapY][mapX] = ' ';
+            //	Erase.GB_ShowSprite(0,EraseShowFrame);   // %4
         }
     }
-
     if(hitcheck == 1) {
-        HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);
-        SDL_Delay(50);
-        HitMattocShowFrame++;
-        if(HitMattocShowFrame == 7) {
-            hitcheck = 0;
-            HitMattocShowFrame = 0;
-            check = 1;
-        }
+        HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);   // %7
     }
-
     if(check == 1) {
-        Check.GB_ShowSprite(0,CheckShowFrame);
-        SDL_Delay(40);
-        CheckShowFrame++;
-        if(CheckShowFrame == 6) {
-            check = 0;
-            CheckShowFrame = 0;
-            tempMap[mapY][mapX] = 'X';
-        }
+        Check.GB_ShowSprite(0,CheckShowFrame);  // %6
     }
-
-    HorBar.GB_ShowSprite(0,0);
-    VertBar.GB_ShowSprite(0,0);
-
-    if(check == 0 && hitcheck == 0 && erase == 0) GB_GetEvents();
 
     */
 }
@@ -217,42 +185,42 @@ void Game::Initialize() {
 
     /* Initiate audio, video and the text */
 
-	GB_SetupSDL_Video();
-	GB_SetupSDL_Audio();
-	GB_LoadTextBitmap();
+    GB_SetupSDL_Video();
+    GB_SetupSDL_Audio();
+    GB_LoadTextBitmap();
 
-	FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp",1);
-	FIFTEEN.GB_SetColorKey(255,0,255);
+    FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp",1);
+    FIFTEEN.GB_SetColorKey(255,0,255);
 
-	PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1);
-	CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp",1);
+    PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1);
+    CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp",1);
 
-	HorBar.GB_LoadSprite("gfx/horcursor.bmp", 1);       // Load horizontal bar
-	HorBar.GB_SetColorKey(255,0,255);
+    HorBar.GB_LoadSprite("gfx/horcursor.bmp", 1);       // Load horizontal bar
+    HorBar.GB_SetColorKey(255,0,255);
 
-	VertBar.GB_LoadSprite("gfx/vertcursor.bmp", 1);       // Load vertical bar
-	VertBar.GB_SetColorKey(255,0,255);
+    VertBar.GB_LoadSprite("gfx/vertcursor.bmp", 1);       // Load vertical bar
+    VertBar.GB_SetColorKey(255,0,255);
 
-	Mattoc.GB_LoadSprite("gfx/mattoc.bmp", 1, 4);
-	Mattoc.GB_SetColorKey(255,0,255);
+    Mattoc.GB_LoadSprite("gfx/mattoc.bmp", 1, 4);
+    Mattoc.GB_SetColorKey(255,0,255);
 
-	HitMattoc.GB_LoadSprite("gfx/hitmattoc2.bmp", 1, 5);
-	HitMattoc.GB_SetColorKey(255,0,255);
+    HitMattoc.GB_LoadSprite("gfx/hitmattoc2.bmp", 1, 5);
+    HitMattoc.GB_SetColorKey(255,0,255);
 
-	Check.GB_LoadSprite("gfx/check.bmp", 1, 7);
-	Check.GB_SetColorKey(255,0,255);
+    Check.GB_LoadSprite("gfx/check.bmp", 1, 7);
+    Check.GB_SetColorKey(255,0,255);
 
-	Erase.GB_LoadSprite("gfx/erase.bmp", 1, 4);
-	Erase.GB_SetColorKey(255,0,255);
+    Erase.GB_LoadSprite("gfx/erase.bmp", 1, 4);
+    Erase.GB_SetColorKey(255,0,255);
 
-	EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4);
-	EraseBlock.GB_SetColorKey(255,0,255);
+    EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4);
+    EraseBlock.GB_SetColorKey(255,0,255);
 
-	BG.GB_LoadBackground("gfx/FIFTEEN.bmp");
+    BG.GB_LoadBackground("gfx/FIFTEEN.bmp");
 
- 	Quit.GB_LoadSprite("gfx/quit.bmp", 1, 5);
-	Quit.GB_SetColorKey(255,0,255);
-	Quit.GB_SetXY(486,400);
+    Quit.GB_LoadSprite("gfx/quit.bmp", 1, 5);
+    Quit.GB_SetColorKey(255,0,255);
+    Quit.GB_SetXY(486,400);
 }
 
 Game::Game() {
@@ -297,7 +265,10 @@ Game::~Game() {}
 
 void Game::DoMainLoop() {
     BG.GB_ShowBackground();
+
+    ProcessLogic();
+
     DrawStreaks();
-    DrawPuzzle();
-    DrawMattoc();
+
+    ProcessDrawing();
 }

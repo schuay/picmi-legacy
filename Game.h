@@ -7,8 +7,8 @@ class Game {
     ~Game();
 
     void DrawStreaks();
-    void DrawPuzzle();
-    void DrawMattoc();
+    void ProcessDrawing();
+    void ProcessLogic();
     void Initialize();
     void DoMainLoop();
 
