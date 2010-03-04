@@ -2,13 +2,19 @@ This project was originally started by Tobias Hellgren ( see http://www.thanius.
 Currently it is being developed by Jakob Gruber ( jakob@gruber.kabelnet@at )
 
 Currently, I'm planning on 
- * getting this into a playable state
- * implementing mouse control (this should be easy). 
-   Left click to mark, right click to unmark. Click on a column/row header to mark/unmark entire row.
+ * click on a column/row header to mark/unmark entire row.
  * implementing puzzle parsing from icon image files. We need to go through a specified folder 
    and analyze each file, discard unsuitable files, find a threshhold for all files and convert 
    them to 2-color bitmaps. Store the original files to display when the puzzle finishes.
  * once this is working we will need a menu system and some polish.
+ * timer
+ * high scores
+ * getting new gfx
+
+Implemented:
+ * getting this into a playable state
+ * implementing mouse control (this should be easy). 
+   Left click to mark, right click to unmark.
 
 I'm also thinking of doing a rewrite if this implementation turns out to be too 
 limiting ( fixed puzzle sizes, puzzles must be squared, etc. )
