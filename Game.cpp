@@ -93,9 +93,9 @@ void Game::ProcessDrawing() {
 
     /* draw movable objects */
 
-    Mattoc.GB_ShowSprite(0,(MattocShowFrame/2)%4);
-    SDL_Delay(30);
-    MattocShowFrame++;
+//    Mattoc.GB_ShowSprite(0,(MattocShowFrame/2)%4);
+//    SDL_Delay(30);
+//    MattocShowFrame++;
 }
 
 int Game::HandleMouseEvent(int x, int y, int btn, int event) {
