@@ -15,7 +15,7 @@
 #include <iostream>
 
 class Game {
-    public:
+public:
 
     Game();
     ~Game();
@@ -26,7 +26,7 @@ class Game {
     void DoMainLoop();
     bool GetQuit();
 
-    private:
+private:
 
     int HandleMouseEvent(int, int, int);
 
@@ -51,10 +51,7 @@ class Game {
         HitMattoc,
         Erase,
         EraseBlock,
-        Check,
-        HorBar,
-        VertBar,
-        Quit;
+        Check;
 
     GB_Background BG;
 
