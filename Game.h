@@ -28,20 +28,24 @@ public:
 
 private:
 
-    int HandleMouseEvent(int, int, int);
+    int HandleMouseEvent(int x, int y, int btn, int event);
 
     unsigned int
         mapX,
-        mapY;
+        mapY,
+        clickX,
+        clickY;
 
     /* vars from original 2004 state of game */
     int MattocShowFrame,
         HitMattocShowFrame,
         EraseShowFrame,
         CheckShowFrame,
-        EraseBlockShowFrame;
+        EraseBlockShowFrame,
+        dragDirection;
 
-    bool quit;
+    bool
+        quit;
 
     GB_Sprite
         FIFTEEN,

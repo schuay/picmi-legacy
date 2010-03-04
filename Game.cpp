@@ -16,6 +16,9 @@
 #define OP_HIT 1
 #define OP_MARK 2
 #define MAGNIFICATION_LEVEL 2
+#define DRAG_UNDEF -1
+#define DRAG_HOR 0
+#define DRAG_VER 1
 
 bool Game::GetQuit() {
     return quit;
@@ -80,11 +83,6 @@ void Game::ProcessDrawing() {
     HitMattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
                        PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL);
 
-    HorBar.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL - 8,
-                    PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL - 1);
-    VertBar.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
-                     PUZZLE_POSY*MAGNIFICATION_LEVEL-8);
-
     Erase.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
                    PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
     EraseBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
@@ -100,15 +98,44 @@ void Game::ProcessDrawing() {
     MattocShowFrame++;
 }
 
-int Game::HandleMouseEvent(int x, int y, int btn) {
+int Game::HandleMouseEvent(int x, int y, int btn, int event) {
     int _mapX, _mapY;
 
     _mapX = (x - PUZZLE_POSX * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
     _mapY = (y - PUZZLE_POSY * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
 
+    /* only handle mouse events in game board area */
     if (_mapX < 0 || _mapX >= currentPuzzle->Width ||
         _mapY < 0 || _mapY >= currentPuzzle->Height)
         return OP_NONE;
+
+    switch (event) {
+    case SDL_MOUSEBUTTONDOWN:
+        clickX = _mapX; /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
+        clickY = _mapY;
+        dragDirection = -1; /* reset drag direction */
+        break;
+    case SDL_MOUSEMOTION:
+        if ( (_mapX != clickX || _mapY != clickY) && dragDirection == -1 ) { /* calc drag direction */
+            unsigned int diffX = abs(clickX - _mapX);
+            unsigned int diffY = abs(clickY - _mapY);
+            if (diffX < diffY)
+                dragDirection = DRAG_VER;
+            else if (diffX > diffY)
+                dragDirection = DRAG_HOR;
+            else
+                dragDirection = DRAG_HOR;
+        }
+
+        if (dragDirection == DRAG_HOR)   /* adjust _mapX and _mapY according to dragDirection */
+            _mapY = mapY;
+        else if (dragDirection == DRAG_VER)
+            _mapX = mapX;
+
+        break;
+    default:
+        break;
+    }
 
     mapX = _mapX;
     mapY = _mapY;
@@ -163,13 +190,13 @@ void Game::ProcessLogic() {
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
+            op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button, SDL_MOUSEBUTTONDOWN);
             break;
         case SDL_MOUSEMOTION:
             if (ev.motion.state & SDL_BUTTON(1))
-                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_LEFT);
+                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_LEFT, SDL_MOUSEMOTION);
             else if (ev.motion.state & SDL_BUTTON(3))
-                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT);
+                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT, SDL_MOUSEMOTION);
             break;
          default:
             break;
@@ -236,12 +263,6 @@ void Game::Initialize() {
     PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
     CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
 
-    HorBar.GB_LoadSprite("gfx/horcursor.bmp", 1, 1, MAGNIFICATION_LEVEL);       // Load horizontal bar
-    HorBar.GB_SetColorKey(255,0,255);
-
-    VertBar.GB_LoadSprite("gfx/vertcursor.bmp", 1, 1, MAGNIFICATION_LEVEL);       // Load vertical bar
-    VertBar.GB_SetColorKey(255,0,255);
-
     Mattoc.GB_LoadSprite("gfx/mattoc.bmp", 1, 4, MAGNIFICATION_LEVEL);
     Mattoc.GB_SetColorKey(255,0,255);
 
@@ -258,10 +279,6 @@ void Game::Initialize() {
     EraseBlock.GB_SetColorKey(255,0,255);
 
     BG.GB_LoadBackground("gfx/FIFTEEN.bmp", MAGNIFICATION_LEVEL);
-
-    Quit.GB_LoadSprite("gfx/quit.bmp", 1, 5, MAGNIFICATION_LEVEL);
-    Quit.GB_SetColorKey(255,0,255);
-    Quit.GB_SetXY(486,400);
 }
 
 Game::Game() {
@@ -288,12 +305,15 @@ Game::Game() {
 
     mapX = 0;
     mapY = 0;
+    clickX = 0;
+    clickY = 0;
 
     MattocShowFrame = 0;
     HitMattocShowFrame = 0;
     EraseShowFrame = 0;
     CheckShowFrame = 0;
     EraseBlockShowFrame = 0;
+    dragDirection = DRAG_UNDEF;
 
     quit = false;
 }

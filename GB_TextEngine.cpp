@@ -34,7 +34,7 @@ void GB_LoadTextBitmap()
 
   if( GFXText == NULL )
   {
-    printf("! Error with loading surface GFXText: Graphics/Text.bmp cannot be loaded.");
+    printf("! Error with loading surface GFXText: gfx/8x8font.bmp cannot be loaded.");
     GB_FreeSurfaces();
     SDL_Quit();
     exit(1);
