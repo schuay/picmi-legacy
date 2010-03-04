@@ -58,9 +58,8 @@ private:
         HitMattoc,
         Erase,
         EraseBlock,
-        Check;
-
-    GB_Background BG;
+        Check,
+        BG;
 
     Puzzle *currentPuzzle;
 };

@@ -29,8 +29,10 @@ void Game::ProcessDrawing() {
 
     /* game board */
 
+    BG.GB_ShowSprite(0, 0);
+
     FIFTEEN.GB_SetXY(PUZZLE_POSX * MAGNIFICATION_LEVEL, PUZZLE_POSY * MAGNIFICATION_LEVEL);
-    FIFTEEN.GB_ShowSprite(0,0);
+    FIFTEEN.GB_ShowSprite(0, 0);
 
     for (i = 0; i < currentPuzzle->Height; i++) {
         for (j = 0; j < currentPuzzle->Width; j++) {
@@ -285,7 +287,7 @@ void Game::Initialize() {
     EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4, MAGNIFICATION_LEVEL);
     EraseBlock.GB_SetColorKey(255,0,255);
 
-    BG.GB_LoadBackground("gfx/FIFTEEN.bmp", MAGNIFICATION_LEVEL);
+    BG.GB_LoadSprite("gfx/FIFTEEN.bmp", 1, 1, MAGNIFICATION_LEVEL);
 }
 
 Game::Game() {
@@ -330,9 +332,6 @@ Game::~Game() {
 }
 
 void Game::DoMainLoop() {
-    BG.GB_ShowBackground();
-
     ProcessInput();
-
     ProcessDrawing();
 }

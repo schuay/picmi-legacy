@@ -1,3 +1,4 @@
 *.o
 picross
 *.pro.user
+Makefile

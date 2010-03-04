@@ -12,7 +12,6 @@ SOURCES += main.cpp \
     GB_TextEngine.cpp \
     GB_System.cpp \
     GB_Sprites.cpp \
-    GB_Backgrounds.cpp \
     GB_AudioSystem.cpp \
     Game.cpp \
     Puzzle.cpp \
@@ -20,7 +19,6 @@ SOURCES += main.cpp \
 HEADERS += GB_VideoSystem.h \
     GB_TextEngine.h \
     GB_Definitions.h \
-    GB_Backgrounds.h \
     GB_AudioSystem.h \
     GB_System.h \
     GB_Sprites.h \
