@@ -25,7 +25,7 @@
 
 // Identify your game and build
 
-#define GAMEBUILD "Tux Picross v.0.667"
+#define GAMEBUILD "Tux Picross v.0.1"
 
 // Definitions used for audio output
 

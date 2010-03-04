@@ -265,30 +265,30 @@ void Game::Initialize() {
 
     GB_Init(GB_INIT_VIDEO_AND_AUDIO, RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
 
-    GB_LoadTextBitmap("gfx/8x8font.bmp");
+    GB_LoadTextBitmap("/usr/share/tuxpicross/gfx/8x8font.bmp");
 
-    FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp", 1, 1, MAGNIFICATION_LEVEL);
+    FIFTEEN.GB_LoadSprite("/usr/share/tuxpicross/gfx/FIFTEEN-grid.bmp", 1, 1, MAGNIFICATION_LEVEL);
     FIFTEEN.GB_SetColorKey(255,0,255);
 
-    PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
-    CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
+    PushedBlock.GB_LoadSprite("/usr/share/tuxpicross/gfx/pushed_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
+    CheckedBlock.GB_LoadSprite("/usr/share/tuxpicross/gfx/checked_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
 
-    Mattoc.GB_LoadSprite("gfx/mattoc.bmp", 1, 4, MAGNIFICATION_LEVEL);
+    Mattoc.GB_LoadSprite("/usr/share/tuxpicross/gfx/mattoc.bmp", 1, 4, MAGNIFICATION_LEVEL);
     Mattoc.GB_SetColorKey(255,0,255);
 
-    HitMattoc.GB_LoadSprite("gfx/hitmattoc2.bmp", 1, 5, MAGNIFICATION_LEVEL);
+    HitMattoc.GB_LoadSprite("/usr/share/tuxpicross/gfx/hitmattoc2.bmp", 1, 5, MAGNIFICATION_LEVEL);
     HitMattoc.GB_SetColorKey(255,0,255);
 
-    Check.GB_LoadSprite("gfx/check.bmp", 1, 7, MAGNIFICATION_LEVEL);
+    Check.GB_LoadSprite("/usr/share/tuxpicross/gfx/check.bmp", 1, 7, MAGNIFICATION_LEVEL);
     Check.GB_SetColorKey(255,0,255);
 
-    Erase.GB_LoadSprite("gfx/erase.bmp", 1, 4, MAGNIFICATION_LEVEL);
+    Erase.GB_LoadSprite("/usr/share/tuxpicross/gfx/erase.bmp", 1, 4, MAGNIFICATION_LEVEL);
     Erase.GB_SetColorKey(255,0,255);
 
-    EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4, MAGNIFICATION_LEVEL);
+    EraseBlock.GB_LoadSprite("/usr/share/tuxpicross/gfx/erase_block.bmp", 1, 4, MAGNIFICATION_LEVEL);
     EraseBlock.GB_SetColorKey(255,0,255);
 
-    BG.GB_LoadSprite("gfx/FIFTEEN.bmp", 1, 1, MAGNIFICATION_LEVEL);
+    BG.GB_LoadSprite("/usr/share/tuxpicross/gfx/FIFTEEN.bmp", 1, 1, MAGNIFICATION_LEVEL);
 }
 
 Game::Game() {
