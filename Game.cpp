@@ -28,14 +28,14 @@ void Game::ProcessDrawing() {
     FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
     FIFTEEN.GB_ShowSprite(0,0);
 
-    for (j = 0; j < currentPuzzle->Width; j++) {
-        for (i = 0; i < currentPuzzle->Height; i++) {
+    for (i = 0; i < currentPuzzle->Height; i++) {
+        for (j = 0; j < currentPuzzle->Width; j++) {
             if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == MAP_HIT) {
-                PushedBlock.GB_SetXY(PUZZLE_POSX+i*CELLLENGTH,PUZZLE_POSY+j*CELLLENGTH);
+                PushedBlock.GB_SetXY(PUZZLE_POSX+j*CELLLENGTH,PUZZLE_POSY+i*CELLLENGTH);
                 PushedBlock.GB_ShowSprite(0,0);
             }
             else if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == MAP_MARKED) {
-                CheckedBlock.GB_SetXY(PUZZLE_POSX+i*CELLLENGTH,PUZZLE_POSY+j*CELLLENGTH);
+                CheckedBlock.GB_SetXY(PUZZLE_POSX+j*CELLLENGTH,PUZZLE_POSY+i*CELLLENGTH);
                 CheckedBlock.GB_ShowSprite(0,0);
             }
         }
@@ -171,20 +171,20 @@ void Game::ProcessLogic() {
         mapY += dy;
 
     /* hit/mark logic */
-    if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == MAP_HIT) {}    /* we cannot mark spots that are already hit */
+    if (currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] == MAP_HIT) {}    /* we cannot mark spots that are already hit */
     else if (op == OP_MARK) {
-        if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == MAP_MARKED)
-            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = MAP_CLEAN;
+        if (currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] == MAP_MARKED)
+            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_CLEAN;
         else
-            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = MAP_MARKED;
+            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_MARKED;
     }
     else if (op == OP_HIT) {                                 /* HIT */
-        if (currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] == MAP_MARKED)             /* was marked -> unmarked */
-            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = MAP_CLEAN;
-        else if (currentPuzzle->Map[mapX*currentPuzzle->Width + mapY] == MAP_TRUE)      /* if correct -> hit */
-            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = MAP_HIT;
-        else if (currentPuzzle->Map[mapX*currentPuzzle->Width + mapY] == MAP_FALSE)      /* if incorrect -> marked */
-            currentPuzzle->BoardState[mapX*currentPuzzle->Width + mapY] = MAP_MARKED;
+        if (currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] == MAP_MARKED)             /* was marked -> unmarked */
+            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_CLEAN;
+        else if (currentPuzzle->Map[mapY*currentPuzzle->Width + mapX] == MAP_TRUE)      /* if correct -> hit */
+            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_HIT;
+        else if (currentPuzzle->Map[mapY*currentPuzzle->Width + mapX] == MAP_FALSE)      /* if incorrect -> marked */
+            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_MARKED;
     }
 
     /* ANIMATIONS

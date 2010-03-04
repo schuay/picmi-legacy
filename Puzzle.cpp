@@ -25,7 +25,7 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
         BoardState[i] = MAP_CLEAN;
 
     for (unsigned int i=0; i < w*h; i++)
-        if (map[i] == MAP_TRUE ogit sta| map[i] == MAP_FALSE)
+        if (map[i] == MAP_TRUE || map[i] == MAP_FALSE)
             Map[i] = map[i];
         else throw PicrossException("Illegal character in input map");
 
