@@ -62,12 +62,14 @@ void Game::ProcessDrawing() {
         std::stringstream out;
 
         for (j = 0; j < currentPuzzle->ColStreaks[i].size(); j++) {
+            int drawLocation = currentPuzzle->ColStreaks[i].size() - j;
+
             out.str("");    //clear the stream
             out << currentPuzzle->ColStreaks[i][j];
 
             GB_DrawText(out.str().c_str(),
                         PUZZLE_POSX*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH - 4,
-                        PUZZLE_POSY*MAGNIFICATION_LEVEL - 10*j*2 - 15*MAGNIFICATION_LEVEL);
+                        PUZZLE_POSY*MAGNIFICATION_LEVEL - 10*drawLocation*2 - 5*MAGNIFICATION_LEVEL);
         }
     }
 
