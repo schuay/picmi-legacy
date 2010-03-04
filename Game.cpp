@@ -114,6 +114,8 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         clickX = _mapX; /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
         clickY = _mapY;
         dragDirection = -1; /* reset drag direction */
+        lastHandledMouseX = _mapX;  /* remember last handled tile so we only to a single op per tile on drags */
+        lastHandledMouseY = _mapY;
         break;
     case SDL_MOUSEMOTION:
         if ( (_mapX != clickX || _mapY != clickY) && dragDirection == -1 ) { /* calc drag direction */
@@ -132,6 +134,13 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         else if (dragDirection == DRAG_VER)
             _mapX = mapX;
 
+        if (lastHandledMouseX == _mapX && lastHandledMouseY == _mapY)
+            return OP_NONE; /* tile already handled, nothing to be done */
+        else {
+            lastHandledMouseX = _mapX;
+            lastHandledMouseY = _mapY;
+        }
+
         break;
     default:
         break;
@@ -145,18 +154,12 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
     else if (btn == SDL_BUTTON_RIGHT)
         return OP_MARK;
 
-    return OP_NONE;
+        return OP_NONE;
 }
 
-void Game::ProcessLogic() {
-    int	dx = 0,
-        dy = 0,
-        op = OP_NONE;
-
-
-    /* process input */
-
+void Game::ProcessInput() {
     SDL_Event ev;
+    int dx = 0, dy = 0, op = OP_NONE;
 
     while (SDL_PollEvent(&ev) == 1) {
         switch (ev.type) {
@@ -201,7 +204,11 @@ void Game::ProcessLogic() {
          default:
             break;
         }
+        ProcessLogic(dx, dy, op);
     }
+}
+
+void Game::ProcessLogic(int dx, int dy, int op) {
 
     /* movement logic */
     if (mapX + dx < currentPuzzle->Width &&
@@ -324,6 +331,8 @@ Game::~Game() {
 
 void Game::DoMainLoop() {
     BG.GB_ShowBackground();
-    ProcessLogic();
+
+    ProcessInput();
+
     ProcessDrawing();
 }

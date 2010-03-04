@@ -20,8 +20,7 @@ int main(void) {
 
 		game.DoMainLoop();
 
-		SDL_Flip(Screen);
-		GB_WaitFrame();
+                SDL_Flip(Screen);
 	}
 
 	GB_Quit();

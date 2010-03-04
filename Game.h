@@ -20,8 +20,9 @@ public:
     Game();
     ~Game();
 
+    void ProcessInput();
     void ProcessDrawing();
-    void ProcessLogic();
+    void ProcessLogic(int dx, int dy, int op);
     void Initialize();
     void DoMainLoop();
     bool GetQuit();
@@ -34,7 +35,9 @@ private:
         mapX,
         mapY,
         clickX,
-        clickY;
+        clickY,
+        lastHandledMouseX,
+        lastHandledMouseY;
 
     /* vars from original 2004 state of game */
     int MattocShowFrame,

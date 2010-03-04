@@ -28,33 +28,10 @@ class GB_System
  public:
    static void Quit();
    static void Init( int, int ResX = RESX, int ResY = RESY );
-   
-   // Set the desired frame rate for the game
-   static void setFrameRate(int FPS);
-   static int getFrameRate();
-   
-   static float getRealFrameRate();
-
-   // Waits the needed time to reach the FPS settled with setFrameRate()
-   static void WaitFrame();
-
-   // Gets the number of lost frames in the last call to WaitFrame
-   static float getLostFrames();
-
- private:
-   static float FPSDelay;
-   static Uint32 NextTime;
-   static int LostFrames;
-   static Uint32 LastTime;
-   static int FPS;
 };
 
 // For ease of use
 #define GB_Quit() GB_System::Quit()
 #define GB_Init(A,B,C) GB_System::Init(A,B,C)
-#define GB_SetFrameRate(A) GB_System::setFrameRate(A)
-#define GB_WaitFrame() GB_System::WaitFrame()
-#define GB_LostFrames() GB_System::getLostFrames()
-#define GB_GetCurrentFPS() GB_System::getRealFrameRate()
 
 #endif
