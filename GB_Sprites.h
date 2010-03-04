@@ -62,7 +62,7 @@ class GB_Sprite
     GB_Sprite();
     ~GB_Sprite();
 
-    void GB_LoadSprite( std::string, int HFrameNr = 1, int VFrameNr = 1 );
+    void GB_LoadSprite( std::string, int HFrameNr = 1, int VFrameNr = 1, int MagFactor = 1 );
     void GB_ShowSprite( int HFrameN, int VFrameN );
 
     void   GB_SetColorKey( Uint8, Uint8, Uint8 );

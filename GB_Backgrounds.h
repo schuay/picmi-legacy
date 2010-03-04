@@ -35,7 +35,7 @@ class GB_Background
     Uint8 Alpha;
   public:
     ~GB_Background();
-    void GB_LoadBackground( std::string );
+    void GB_LoadBackground( std::string, int MagFactor = 1 );
     void GB_ShowBackground();
     void GB_SetAlpha( Uint8 );
     Uint8 GB_GetAlpha();

@@ -27,7 +27,7 @@ class GB_System
 {
  public:
    static void Quit();
-   static void Init( int );
+   static void Init( int, int ResX = RESX, int ResY = RESY );
    
    // Set the desired frame rate for the game
    static void setFrameRate(int FPS);
@@ -51,7 +51,7 @@ class GB_System
 
 // For ease of use
 #define GB_Quit() GB_System::Quit()
-#define GB_Init(A) GB_System::Init(A)
+#define GB_Init(A,B,C) GB_System::Init(A,B,C)
 #define GB_SetFrameRate(A) GB_System::setFrameRate(A)
 #define GB_WaitFrame() GB_System::WaitFrame()
 #define GB_LostFrames() GB_System::getLostFrames()

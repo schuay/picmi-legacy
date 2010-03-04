@@ -33,13 +33,23 @@ GB_Background::~GB_Background()
   if( BackgroundSurface != NULL ) SDL_FreeSurface( BackgroundSurface );
 }
 
-void GB_Background::GB_LoadBackground( std::string fileName )
+void GB_Background::GB_LoadBackground( std::string fileName, int MagFactor )
 {
   const char *Filename = fileName.c_str();
 
   if( DEBUGMESSAGELEVEL > 2 ) printf("- Loading the background %s\n\r", &Filename[0]);
 
-  BackgroundSurface = IMG_Load(Filename);
+  if (MagFactor == 1)
+    BackgroundSurface = IMG_Load(Filename);
+  else {
+      SDL_Surface *TempSurface = IMG_Load(Filename);
+      if (TempSurface != NULL) {
+          SDL_Surface *RotoSurface = rotozoomSurface(TempSurface, 0, MagFactor, SMOOTHING_OFF);
+          BackgroundSurface = SDL_DisplayFormat(RotoSurface);   //needed for working color key
+          SDL_FreeSurface(RotoSurface);
+          SDL_FreeSurface(TempSurface);
+      }
+  }
 
   if( BackgroundSurface == NULL )
   {

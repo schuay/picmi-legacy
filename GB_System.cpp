@@ -51,9 +51,9 @@ void GB_System::Quit()
    SDL_Quit();
 }
 
-void GB_System::Init( int InitSystems )
+void GB_System::Init( int InitSystems, int ResX, int ResY )
 {
-   GB_SetupSDL_Video();
+   GB_SetupSDL_Video(ResX, ResY);
    setFrameRate(30);
    if( InitSystems == GB_INIT_VIDEO_AND_AUDIO ) GB_SetupSDL_Audio();
 

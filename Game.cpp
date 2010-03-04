@@ -15,6 +15,7 @@
 #define OP_NONE 0
 #define OP_HIT 1
 #define OP_MARK 2
+#define MAGNIFICATION_LEVEL 2
 
 bool Game::GetQuit() {
     return quit;
@@ -25,17 +26,19 @@ void Game::ProcessDrawing() {
 
     /* game board */
 
-    FIFTEEN.GB_SetXY(PUZZLE_POSX,PUZZLE_POSY);
+    FIFTEEN.GB_SetXY(PUZZLE_POSX * MAGNIFICATION_LEVEL, PUZZLE_POSY * MAGNIFICATION_LEVEL);
     FIFTEEN.GB_ShowSprite(0,0);
 
     for (i = 0; i < currentPuzzle->Height; i++) {
         for (j = 0; j < currentPuzzle->Width; j++) {
             if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == MAP_HIT) {
-                PushedBlock.GB_SetXY(PUZZLE_POSX+j*CELLLENGTH,PUZZLE_POSY+i*CELLLENGTH);
+                PushedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL,
+                                     PUZZLE_POSY*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL);
                 PushedBlock.GB_ShowSprite(0,0);
             }
             else if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == MAP_MARKED) {
-                CheckedBlock.GB_SetXY(PUZZLE_POSX+j*CELLLENGTH,PUZZLE_POSY+i*CELLLENGTH);
+                CheckedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL,
+                                      PUZZLE_POSY*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL);
                 CheckedBlock.GB_ShowSprite(0,0);
             }
         }
@@ -50,8 +53,8 @@ void Game::ProcessDrawing() {
             out << currentPuzzle->RowStreaks[i][j] << ' ';
 
         GB_DrawText(out.str().c_str(),
-                    PUZZLE_POSX-10*out.str().length()-5,
-                    PUZZLE_POSY+i*CELLLENGTH-3);
+                    PUZZLE_POSX*MAGNIFICATION_LEVEL - 10*out.str().length() - 5*MAGNIFICATION_LEVEL,
+                    PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH);
     }
 
     /* draw col streaks */
@@ -62,22 +65,29 @@ void Game::ProcessDrawing() {
             out << currentPuzzle->ColStreaks[i][j] << ' ';
 
         GB_DrawTextVert(out.str().c_str(),
-                    PUZZLE_POSX+i*CELLLENGTH-4,
-                    PUZZLE_POSY-10*out.str().length()-5);
+                    PUZZLE_POSX*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH - 4,
+                    PUZZLE_POSY*MAGNIFICATION_LEVEL - 10*out.str().length() - 5*MAGNIFICATION_LEVEL);
     }
 
 
     /* set movable object positions */
-    Mattoc.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH);
-    HitMattoc.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH);
+    Mattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
+                    PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL);
+    HitMattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
+                       PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL);
 
-    HorBar.GB_SetXY(PUZZLE_POSX-8,PUZZLE_POSY + mapY * CELLLENGTH-1);
-    VertBar.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY-8);
+    HorBar.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL - 8,
+                    PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL - 1);
+    VertBar.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
+                     PUZZLE_POSY*MAGNIFICATION_LEVEL-8);
 
-    Erase.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH-5,PUZZLE_POSY + mapY * CELLLENGTH+10);
-    EraseBlock.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH-5,PUZZLE_POSY + mapY * CELLLENGTH+10);
+    Erase.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
+                   PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
+    EraseBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
+                        PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
 
-    Check.GB_SetXY(PUZZLE_POSX + mapX * CELLLENGTH,PUZZLE_POSY + mapY * CELLLENGTH+12);
+    Check.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
+                   PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL+ 12);
 
     /* draw movable objects */
 
@@ -89,8 +99,8 @@ void Game::ProcessDrawing() {
 int Game::HandleMouseEvent(int x, int y, int btn) {
     int _mapX, _mapY;
 
-    _mapX = (x - PUZZLE_POSX) / CELLLENGTH;
-    _mapY = (y - PUZZLE_POSY) / CELLLENGTH;
+    _mapX = (x - PUZZLE_POSX * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
+    _mapY = (y - PUZZLE_POSY * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
 
     if (_mapX < 0 || _mapX >= currentPuzzle->Width ||
         _mapY < 0 || _mapY >= currentPuzzle->Height)
@@ -213,39 +223,39 @@ void Game::Initialize() {
 
     /* Initiate audio, video and the text */
 
-    GB_Init(GB_INIT_VIDEO_AND_AUDIO);
+    GB_Init(GB_INIT_VIDEO_AND_AUDIO, RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
     GB_LoadTextBitmap();
 
-    FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp",1);
+    FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp", 1, 1, MAGNIFICATION_LEVEL);
     FIFTEEN.GB_SetColorKey(255,0,255);
 
-    PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1);
-    CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp",1);
+    PushedBlock.GB_LoadSprite("gfx/pushed_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
+    CheckedBlock.GB_LoadSprite("gfx/checked_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
 
-    HorBar.GB_LoadSprite("gfx/horcursor.bmp", 1);       // Load horizontal bar
+    HorBar.GB_LoadSprite("gfx/horcursor.bmp", 1, 1, MAGNIFICATION_LEVEL);       // Load horizontal bar
     HorBar.GB_SetColorKey(255,0,255);
 
-    VertBar.GB_LoadSprite("gfx/vertcursor.bmp", 1);       // Load vertical bar
+    VertBar.GB_LoadSprite("gfx/vertcursor.bmp", 1, 1, MAGNIFICATION_LEVEL);       // Load vertical bar
     VertBar.GB_SetColorKey(255,0,255);
 
-    Mattoc.GB_LoadSprite("gfx/mattoc.bmp", 1, 4);
+    Mattoc.GB_LoadSprite("gfx/mattoc.bmp", 1, 4, MAGNIFICATION_LEVEL);
     Mattoc.GB_SetColorKey(255,0,255);
 
-    HitMattoc.GB_LoadSprite("gfx/hitmattoc2.bmp", 1, 5);
+    HitMattoc.GB_LoadSprite("gfx/hitmattoc2.bmp", 1, 5, MAGNIFICATION_LEVEL);
     HitMattoc.GB_SetColorKey(255,0,255);
 
-    Check.GB_LoadSprite("gfx/check.bmp", 1, 7);
+    Check.GB_LoadSprite("gfx/check.bmp", 1, 7, MAGNIFICATION_LEVEL);
     Check.GB_SetColorKey(255,0,255);
 
-    Erase.GB_LoadSprite("gfx/erase.bmp", 1, 4);
+    Erase.GB_LoadSprite("gfx/erase.bmp", 1, 4, MAGNIFICATION_LEVEL);
     Erase.GB_SetColorKey(255,0,255);
 
-    EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4);
+    EraseBlock.GB_LoadSprite("gfx/erase_block.bmp", 1, 4, MAGNIFICATION_LEVEL);
     EraseBlock.GB_SetColorKey(255,0,255);
 
-    BG.GB_LoadBackground("gfx/FIFTEEN.bmp");
+    BG.GB_LoadBackground("gfx/FIFTEEN.bmp", MAGNIFICATION_LEVEL);
 
-    Quit.GB_LoadSprite("gfx/quit.bmp", 1, 5);
+    Quit.GB_LoadSprite("gfx/quit.bmp", 1, 5, MAGNIFICATION_LEVEL);
     Quit.GB_SetColorKey(255,0,255);
     Quit.GB_SetXY(486,400);
 }

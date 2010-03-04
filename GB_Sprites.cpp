@@ -70,7 +70,7 @@ GB_Sprite::~GB_Sprite()
 // function how it should divide the bitmap into frames. If you have only
 // one frame, pass 1 ( never pass 0! )
 
-void GB_Sprite::GB_LoadSprite( std::string fileName, int HFrameNr /*= 1*/, int VFrameNr /*= 1*/ )
+void GB_Sprite::GB_LoadSprite( std::string fileName, int HFrameNr /*= 1*/, int VFrameNr /*= 1*/, int MagFactor /*= 1*/ )
 {
   const char* Filename = fileName.c_str();
 
@@ -78,7 +78,17 @@ void GB_Sprite::GB_LoadSprite( std::string fileName, int HFrameNr /*= 1*/, int V
 
   if( HFrameNr == 0 || VFrameNr == 0 ) printf("!Error! Never pass 0 as the second or third argument of GB_Sprite::GB_LoadSprite!!!\n" );
 
-  SpriteSurface = IMG_Load(Filename);
+  if (MagFactor == 1)
+    SpriteSurface = IMG_Load(Filename);
+  else {
+    SDL_Surface *TempSurface = IMG_Load(Filename);
+    if (TempSurface != NULL) {
+        SDL_Surface *RotoSurface = rotozoomSurface(TempSurface, 0, MagFactor, SMOOTHING_OFF);
+        SpriteSurface = SDL_DisplayFormat(RotoSurface);   //needed for working color key
+        SDL_FreeSurface(RotoSurface);
+        SDL_FreeSurface(TempSurface);
+    }
+  }
 
   if( SpriteSurface == NULL )
   {

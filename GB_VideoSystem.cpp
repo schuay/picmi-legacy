@@ -28,7 +28,7 @@ SDL_Surface *GFXText;
 int ScreenLocked = 0; 
 
 // Set the video mode according to the values in the Definitions.h header
-void GB_SetupSDL_Video()
+void GB_SetupSDL_Video( int ResX, int ResY)
 {
   if( SDL_Init( SDL_INIT_VIDEO ) == -1 )
   {
@@ -37,7 +37,7 @@ void GB_SetupSDL_Video()
     exit( -1 );
   }
 
-  Screen = SDL_SetVideoMode( RESX, RESY, 24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF | (FULLSCREEN?SDL_FULLSCREEN:0) );
+  Screen = SDL_SetVideoMode( ResX, ResY, 24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF | (FULLSCREEN?SDL_FULLSCREEN:0) );
 
   if( Screen == NULL )
   {
