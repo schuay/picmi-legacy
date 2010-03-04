@@ -264,7 +264,8 @@ void Game::Initialize() {
     /* Initiate audio, video and the text */
 
     GB_Init(GB_INIT_VIDEO_AND_AUDIO, RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
-    GB_LoadTextBitmap();
+
+    GB_LoadTextBitmap("gfx/8x8font.bmp");
 
     FIFTEEN.GB_LoadSprite("gfx/FIFTEEN-grid.bmp", 1, 1, MAGNIFICATION_LEVEL);
     FIFTEEN.GB_SetColorKey(255,0,255);

@@ -23,9 +23,13 @@
 #ifndef _GB_TEXTENGINE_H_
 #define _GB_TEXTENGINE_H_
 
+#include <cstdlib>
+#include <cstring>
+#include <string>
+
 // Load the standard font. Call this before drawing anything to the screen
 
-void GB_LoadTextBitmap();
+void GB_LoadTextBitmap(std::string);
 
 // Draw one single character to the screen
 
@@ -40,4 +44,3 @@ void GB_DrawText( const char *TextToDraw, int WXStart, int WYStart );
 void GB_DrawTextVert( const char *TextToDraw, int WXStart, int WYStart );
 
 #endif
-

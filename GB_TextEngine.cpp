@@ -20,21 +20,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "GameBlade.h" 
-#include <cstdlib>
-#include <cstring>
+#include "GameBlade.h"
 
 // Load the standard font. Call this before drawing anything to the screen
 
-void GB_LoadTextBitmap()
+void GB_LoadTextBitmap(std::string fileName)
 {
   if( DEBUGMESSAGELEVEL > 2 ) printf("- Loading the text bitmap (GFXText).\n\r");
 
-  GFXText = SDL_LoadBMP("gfx/8x8font.bmp");
+  GFXText = SDL_LoadBMP(fileName.c_str());
 
   if( GFXText == NULL )
   {
-    printf("! Error with loading surface GFXText: gfx/8x8font.bmp cannot be loaded.");
+    printf("! Error with loading surface GFXText: %s cannot be loaded.", fileName.c_str());
     GB_FreeSurfaces();
     SDL_Quit();
     exit(1);
