@@ -15,6 +15,7 @@ bool Game::GetQuit() {
 
 void Game::ProcessDrawing() {
     unsigned int i, j;
+    std::stringstream out;
 
     /* game board */
 
@@ -38,10 +39,15 @@ void Game::ProcessDrawing() {
         }
     }
 
+    /* draw timer */
+    unsigned int elapsedTime = time(NULL) - startTime;
+    out << elapsedTime + penaltyTime;
+    GB_DrawText(out.str().c_str(), 80*MAGNIFICATION_LEVEL - out.str().length()*10, 85*MAGNIFICATION_LEVEL);
+
 
     /* draw row streaks */
     for (i = 0; i < curPuzzle->Height; i++) {
-        std::stringstream out;
+        out.str("");
 
         for (j = 0; j < curPuzzle->RowStreaks[i].size(); j++)
             out << curPuzzle->RowStreaks[i][j] << ' ';
@@ -53,7 +59,7 @@ void Game::ProcessDrawing() {
 
     /* draw col streaks */
     for (i = 0; i < curPuzzle->Width; i++) {
-        std::stringstream out;
+        out.str("");
 
         for (j = 0; j < curPuzzle->ColStreaks[i].size(); j++) {
             int drawLocation = curPuzzle->ColStreaks[i].size() - j;
@@ -217,21 +223,20 @@ void Game::ProcessLogic(int dx, int dy, int op) {
             PUZSTATEP(currentLocation) = MAP_CLEAN;
         else if (PUZMAPP(currentLocation) == MAP_TRUE)      /* if correct -> hit */
             PUZSTATEP(currentLocation) = MAP_HIT;
-        else if (PUZMAPP(currentLocation) == MAP_FALSE)      /* if incorrect -> marked */
+        else if (PUZMAPP(currentLocation) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
             PUZSTATEP(currentLocation) = MAP_MARKED;
+            penaltyTime += 120*penaltyMultiplier++;
+        }
     }
 
     if (curPuzzle->GameWon()) {
-        printf("WIN!");
+        unsigned int elapsedTime = time(NULL) - startTime;
+        printf("Game solved in %u s (%u s real, %u s penalty)!", elapsedTime + penaltyTime, elapsedTime, penaltyTime);
         quit = true;
     }
 }
 
 void Game::Initialize() {
-
-    dragDirection = DRAG_UNDEF;
-
-    quit = false;
 
     /* Initiate audio, video and the text */
 
@@ -301,6 +306,17 @@ void Game::NewPuzzle(int type, unsigned int difficulty) {
         curPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
         break;
     }
+
+    /* initialize vars */
+
+    dragDirection = DRAG_UNDEF;
+
+    penaltyMultiplier = 1;
+    penaltyTime = 0;
+
+    quit = false;
+
+    startTime = time(NULL);
 }
 
 Game::Game() {

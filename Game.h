@@ -14,6 +14,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <time.h>
 
 #define CELLLENGTH 12
 #define PUZZLE_POSX 117
@@ -41,15 +42,16 @@ public:
     Game();
     ~Game();
 
-    void ProcessInput();
-    void ProcessDrawing();
-    void ProcessLogic(int dx, int dy, int op);
     void Initialize();
     void NewPuzzle(int type, unsigned int difficulty);
     void DoMainLoop();
     bool GetQuit();
 
 private:
+
+    void ProcessInput();
+    void ProcessDrawing();
+    void ProcessLogic(int dx, int dy, int op);
 
     int HandleMouseEvent(int x, int y, int btn, int event);
 
@@ -58,8 +60,12 @@ private:
         lastClickLocation,
         lastDragLocation;
 
-    /* vars from original 2004 state of game */
     int dragDirection;
+
+    unsigned int
+            startTime,
+            penaltyTime,
+            penaltyMultiplier;
 
     bool
         quit;
