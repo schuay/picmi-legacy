@@ -14,6 +14,19 @@
 #include <sstream>
 #include <iostream>
 
+#define CELLLENGTH 12
+#define PUZZLE_POSX 117
+#define PUZZLE_POSY 107
+#define OP_NONE 0
+#define OP_HIT 1
+#define OP_MARK 2
+#define MAGNIFICATION_LEVEL 2
+#define DRAG_UNDEF -1
+#define DRAG_HOR 0
+#define DRAG_VER 1
+#define PUZ_RAND 1
+#define PUZ_STAT 0
+
 class Game {
 public:
 
@@ -24,6 +37,7 @@ public:
     void ProcessDrawing();
     void ProcessLogic(int dx, int dy, int op);
     void Initialize();
+    void NewPuzzle(int type, unsigned int difficulty);
     void DoMainLoop();
     bool GetQuit();
 

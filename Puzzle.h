@@ -11,7 +11,10 @@
 #define PUZZLE_H
 
 #include <string>
+#include <cstring>
 #include <vector>
+#include <cstdlib>
+#include <time.h>
 #include "PicrossException.h"
 
 #define MAP_FALSE '.'
@@ -25,6 +28,10 @@ class Puzzle
 public:
     Puzzle(unsigned int, unsigned int, std::string);
     ~Puzzle();
+
+    static Puzzle *RandomPuzzle(unsigned int w, unsigned int h, unsigned int percentageFilled);
+
+    bool GameWon();
 
     std::vector<int>
             *ColStreaks,

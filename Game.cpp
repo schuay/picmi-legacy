@@ -9,17 +9,6 @@
 
 #include "Game.h"
 
-#define CELLLENGTH 12
-#define PUZZLE_POSX 117
-#define PUZZLE_POSY 107
-#define OP_NONE 0
-#define OP_HIT 1
-#define OP_MARK 2
-#define MAGNIFICATION_LEVEL 2
-#define DRAG_UNDEF -1
-#define DRAG_HOR 0
-#define DRAG_VER 1
-
 bool Game::GetQuit() {
     return quit;
 }
@@ -95,9 +84,8 @@ void Game::ProcessDrawing() {
 
     /* draw movable objects */
 
-//    Mattoc.GB_ShowSprite(0,(MattocShowFrame/2)%4);
-//    SDL_Delay(30);
-//    MattocShowFrame++;
+    Mattoc.GB_ShowSprite(0,0);
+
 }
 
 int Game::HandleMouseEvent(int x, int y, int btn, int event) {
@@ -237,6 +225,11 @@ void Game::ProcessLogic(int dx, int dy, int op) {
             currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_MARKED;
     }
 
+    if (currentPuzzle->GameWon()) {
+        printf("WIN!");
+        quit = true;
+    }
+
     /* ANIMATIONS
 
     if(hit == 1) {
@@ -261,6 +254,20 @@ void Game::ProcessLogic(int dx, int dy, int op) {
 
 void Game::Initialize() {
 
+    mapX = 0;
+    mapY = 0;
+    clickX = 0;
+    clickY = 0;
+
+    MattocShowFrame = 0;
+    HitMattocShowFrame = 0;
+    EraseShowFrame = 0;
+    CheckShowFrame = 0;
+    EraseBlockShowFrame = 0;
+    dragDirection = DRAG_UNDEF;
+
+    quit = false;
+
     /* Initiate audio, video and the text */
 
     GB_Init(GB_INIT_VIDEO_AND_AUDIO, RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
@@ -275,6 +282,7 @@ void Game::Initialize() {
 
     Mattoc.GB_LoadSprite("/usr/share/tuxpicross/gfx/mattoc.bmp", 1, 4, MAGNIFICATION_LEVEL);
     Mattoc.GB_SetColorKey(255,0,255);
+    Mattoc.GB_SetAlpha(150);
 
     HitMattoc.GB_LoadSprite("/usr/share/tuxpicross/gfx/hitmattoc2.bmp", 1, 5, MAGNIFICATION_LEVEL);
     HitMattoc.GB_SetColorKey(255,0,255);
@@ -291,41 +299,47 @@ void Game::Initialize() {
     BG.GB_LoadSprite("/usr/share/tuxpicross/gfx/FIFTEEN.bmp", 1, 1, MAGNIFICATION_LEVEL);
 }
 
-Game::Game() {
+void Game::NewPuzzle(int type, unsigned int difficulty) {
+
+    if (currentPuzzle) {
+        delete currentPuzzle;
+        currentPuzzle = NULL;
+    }
 
     std::stringstream puzzleInitializer;
-    puzzleInitializer <<
-        "##.#.#.###.#.#." <<
-        "#.#.#.#.#......" <<
-        "###############" <<
-        "#.#.#.#.#......" <<
-        "###....##......" <<
-        "#.#######......" <<
-        "###....##......" <<
-        "#.#....##......" <<
-        "###....##......" <<
-        "#.......#......" <<
-        "#.#.#.........." <<
-        "#.......#......" <<
-        ".#.#..........." <<
-        ".#.......#....." <<
-        "#.#.....#......";
 
-    currentPuzzle = new Puzzle(15, 15, puzzleInitializer.str());
+    switch (type) {
+    case PUZ_STAT:
+        puzzleInitializer <<
+            "##.#.#.###.#.#." <<
+            "#.#.#.#.#......" <<
+            "###############" <<
+            "#.#.#.#.#......" <<
+            "###....##......" <<
+            "#.#######......" <<
+            "###....##......" <<
+            "#.#....##......" <<
+            "###....##......" <<
+            "#.......#......" <<
+            "#.#.#.........." <<
+            "#.......#......" <<
+            ".#.#..........." <<
+            ".#.......#....." <<
+            "#.#.....#......";
 
-    mapX = 0;
-    mapY = 0;
-    clickX = 0;
-    clickY = 0;
+        currentPuzzle = new Puzzle(15, 15, puzzleInitializer.str());
+        break;
+    case PUZ_RAND:
+        currentPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
+        break;
+    default:
+        currentPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
+        break;
+    }
+}
 
-    MattocShowFrame = 0;
-    HitMattocShowFrame = 0;
-    EraseShowFrame = 0;
-    CheckShowFrame = 0;
-    EraseBlockShowFrame = 0;
-    dragDirection = DRAG_UNDEF;
-
-    quit = false;
+Game::Game() {
+    currentPuzzle = NULL;
 }
 Game::~Game() {
     if (currentPuzzle)

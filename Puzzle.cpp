@@ -33,7 +33,6 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
 }
 
 Puzzle::~Puzzle() {
-
     if (Map)
         delete[] Map;
     if (BoardState)
@@ -43,6 +42,20 @@ Puzzle::~Puzzle() {
         delete[] ColStreaks;
     if (RowStreaks)
         delete[] RowStreaks;
+}
+
+bool Puzzle::GameWon() {
+    int mapFilled = 0, stateFilled = 0;
+
+    for (int i = 0; i<strlen(Map); i++)
+        if (Map[i] == MAP_TRUE)
+            mapFilled++;
+
+    for (int i = 0; i<strlen(BoardState); i++)
+        if (BoardState[i] == MAP_HIT)
+            stateFilled++;
+
+    return (mapFilled == stateFilled);
 }
 
 void Puzzle::CalculateStreaks() {
@@ -87,4 +100,29 @@ void Puzzle::CalculateStreaks() {
         if (lenOfCurrColStreak > 0)
             ColStreaks[i].push_back(lenOfCurrColStreak);
     }
+}
+
+Puzzle* Puzzle::RandomPuzzle(unsigned int w, unsigned int h, unsigned int percentageFilled) {
+
+    if (percentageFilled > 99)
+        return new Puzzle(w, h, std::string(w*h, MAP_TRUE));
+
+    std::string map(w*h, '.');
+    int cellsToFill = w*h*percentageFilled/100,
+        randX, randY;
+
+    srand(time(NULL));
+
+    for (int i=0; i<cellsToFill; i++) {
+
+        do {
+            randX = rand() % w;
+            randY = rand() % h;
+        }
+        while (map[randY*w + randX] != MAP_FALSE);
+
+        map[randY*w + randX] = MAP_TRUE;
+    }
+
+    return new Puzzle(w, h, map);
 }
