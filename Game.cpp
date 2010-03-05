@@ -23,16 +23,16 @@ void Game::ProcessDrawing() {
     FIFTEEN.GB_SetXY(PUZZLE_POSX * MAGNIFICATION_LEVEL, PUZZLE_POSY * MAGNIFICATION_LEVEL);
     FIFTEEN.GB_ShowSprite(0, 0);
 
-    for (i = 0; i < currentPuzzle->Height; i++) {
-        for (j = 0; j < currentPuzzle->Width; j++) {
-            if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == MAP_HIT) {
-                PushedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL,
-                                     PUZZLE_POSY*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL);
+    for (i = 0; i < curPuzzle->Width; i++) {
+        for (j = 0; j < curPuzzle->Height; j++) {
+            if (PUZSTATE(i,j) == MAP_HIT) {
+                PushedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL,
+                                     PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL);
                 PushedBlock.GB_ShowSprite(0,0);
             }
-            else if (currentPuzzle->BoardState[i*currentPuzzle->Width + j] == MAP_MARKED) {
-                CheckedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL,
-                                      PUZZLE_POSY*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL);
+            else if (PUZSTATE(i,j) == MAP_MARKED) {
+                CheckedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL,
+                                      PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL);
                 CheckedBlock.GB_ShowSprite(0,0);
             }
         }
@@ -40,11 +40,11 @@ void Game::ProcessDrawing() {
 
 
     /* draw row streaks */
-    for (i = 0; i < currentPuzzle->Height; i++) {
+    for (i = 0; i < curPuzzle->Height; i++) {
         std::stringstream out;
 
-        for (j = 0; j < currentPuzzle->RowStreaks[i].size(); j++)
-            out << currentPuzzle->RowStreaks[i][j] << ' ';
+        for (j = 0; j < curPuzzle->RowStreaks[i].size(); j++)
+            out << curPuzzle->RowStreaks[i][j] << ' ';
 
         GB_DrawText(out.str().c_str(),
                     PUZZLE_POSX*MAGNIFICATION_LEVEL - 10*out.str().length() - 5*MAGNIFICATION_LEVEL,
@@ -52,14 +52,14 @@ void Game::ProcessDrawing() {
     }
 
     /* draw col streaks */
-    for (i = 0; i < currentPuzzle->Width; i++) {
+    for (i = 0; i < curPuzzle->Width; i++) {
         std::stringstream out;
 
-        for (j = 0; j < currentPuzzle->ColStreaks[i].size(); j++) {
-            int drawLocation = currentPuzzle->ColStreaks[i].size() - j;
+        for (j = 0; j < curPuzzle->ColStreaks[i].size(); j++) {
+            int drawLocation = curPuzzle->ColStreaks[i].size() - j;
 
             out.str("");    //clear the stream
-            out << currentPuzzle->ColStreaks[i][j];
+            out << curPuzzle->ColStreaks[i][j];
 
             GB_DrawText(out.str().c_str(),
                         PUZZLE_POSX*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH - 4,
@@ -69,18 +69,18 @@ void Game::ProcessDrawing() {
 
 
     /* set movable object positions */
-    Mattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
-                    PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL);
-    HitMattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
-                       PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL);
+    Mattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
+                    PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL);
+    HitMattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
+                       PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL);
 
-    Erase.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
-                   PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
-    EraseBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
-                        PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
+    Erase.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
+                   PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
+    EraseBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
+                        PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
 
-    Check.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + mapX*CELLLENGTH*MAGNIFICATION_LEVEL,
-                   PUZZLE_POSY*MAGNIFICATION_LEVEL + mapY*CELLLENGTH*MAGNIFICATION_LEVEL+ 12);
+    Check.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
+                   PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL+ 12);
 
     /* draw movable objects */
 
@@ -89,28 +89,26 @@ void Game::ProcessDrawing() {
 }
 
 int Game::HandleMouseEvent(int x, int y, int btn, int event) {
-    int _mapX, _mapY;
+    Point _currentLocation;
 
-    _mapX = (x - PUZZLE_POSX * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
-    _mapY = (y - PUZZLE_POSY * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
+    _currentLocation.x = (x - PUZZLE_POSX * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
+    _currentLocation.y = (y - PUZZLE_POSY * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL);
 
     /* only handle mouse events in game board area */
-    if (_mapX < 0 || _mapX >= currentPuzzle->Width ||
-        _mapY < 0 || _mapY >= currentPuzzle->Height)
+    if (_currentLocation.x < 0 || _currentLocation.x >= curPuzzle->Width ||
+        _currentLocation.y < 0 || _currentLocation.y >= curPuzzle->Height)
         return OP_NONE;
 
     switch (event) {
     case SDL_MOUSEBUTTONDOWN:
-        clickX = _mapX; /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
-        clickY = _mapY;
+        lastClickLocation = _currentLocation; /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
         dragDirection = -1; /* reset drag direction */
-        lastHandledMouseX = _mapX;  /* remember last handled tile so we only to a single op per tile on drags */
-        lastHandledMouseY = _mapY;
+        lastDragLocation = _currentLocation;  /* remember last handled tile so we only to a single op per tile on drags */
         break;
     case SDL_MOUSEMOTION:
-        if ( (_mapX != clickX || _mapY != clickY) && dragDirection == -1 ) { /* calc drag direction */
-            unsigned int diffX = abs(clickX - _mapX);
-            unsigned int diffY = abs(clickY - _mapY);
+        if ( _currentLocation != lastClickLocation && dragDirection == -1 ) { /* calc drag direction */
+            unsigned int diffX = abs(lastClickLocation.x - _currentLocation.x);
+            unsigned int diffY = abs(lastClickLocation.y - _currentLocation.y);
             if (diffX < diffY)
                 dragDirection = DRAG_VER;
             else if (diffX > diffY)
@@ -119,16 +117,15 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
                 dragDirection = DRAG_HOR;
         }
 
-        if (dragDirection == DRAG_HOR)   /* adjust _mapX and _mapY according to dragDirection */
-            _mapY = mapY;
+        if (dragDirection == DRAG_HOR)   /* adjust _currentLocation according to dragDirection */
+            _currentLocation.y = currentLocation.y;
         else if (dragDirection == DRAG_VER)
-            _mapX = mapX;
+            _currentLocation.x = currentLocation.x;
 
-        if (lastHandledMouseX == _mapX && lastHandledMouseY == _mapY)
+        if (lastDragLocation == _currentLocation)
             return OP_NONE; /* tile already handled, nothing to be done */
         else {
-            lastHandledMouseX = _mapX;
-            lastHandledMouseY = _mapY;
+            lastDragLocation = _currentLocation;
         }
 
         break;
@@ -136,8 +133,7 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         break;
     }
 
-    mapX = _mapX;
-    mapY = _mapY;
+    currentLocation = _currentLocation;
 
     if (btn == SDL_BUTTON_LEFT)
         return OP_HIT;
@@ -201,69 +197,38 @@ void Game::ProcessInput() {
 void Game::ProcessLogic(int dx, int dy, int op) {
 
     /* movement logic */
-    if (mapX + dx < currentPuzzle->Width &&
-        mapX + dx >= 0)
-        mapX += dx;
-    if (mapY + dy < currentPuzzle->Height &&
-        mapY + dy >= 0)
-        mapY += dy;
+    if (currentLocation.x + dx < curPuzzle->Width &&
+        currentLocation.x + dx >= 0)
+        currentLocation.x += dx;
+    if (currentLocation.y + dy < curPuzzle->Height &&
+        currentLocation.y + dy >= 0)
+        currentLocation.y += dy;
 
     /* hit/mark logic */
-    if (currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] == MAP_HIT) {}    /* we cannot mark spots that are already hit */
+    if (PUZSTATEP(currentLocation) == MAP_HIT) {}    /* we cannot mark spots that are already hit */
     else if (op == OP_MARK) {
-        if (currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] == MAP_MARKED)
-            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_CLEAN;
+        if (PUZSTATEP(currentLocation) == MAP_MARKED)
+            PUZSTATEP(currentLocation) = MAP_CLEAN;
         else
-            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_MARKED;
+            PUZSTATEP(currentLocation) = MAP_MARKED;
     }
     else if (op == OP_HIT) {                                 /* HIT */
-        if (currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] == MAP_MARKED)             /* was marked -> unmarked */
-            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_CLEAN;
-        else if (currentPuzzle->Map[mapY*currentPuzzle->Width + mapX] == MAP_TRUE)      /* if correct -> hit */
-            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_HIT;
-        else if (currentPuzzle->Map[mapY*currentPuzzle->Width + mapX] == MAP_FALSE)      /* if incorrect -> marked */
-            currentPuzzle->BoardState[mapY*currentPuzzle->Width + mapX] = MAP_MARKED;
+        if (PUZSTATEP(currentLocation) == MAP_MARKED)             /* was marked -> unmarked */
+            PUZSTATEP(currentLocation) = MAP_CLEAN;
+        else if (PUZMAPP(currentLocation) == MAP_TRUE)      /* if correct -> hit */
+            PUZSTATEP(currentLocation) = MAP_HIT;
+        else if (PUZMAPP(currentLocation) == MAP_FALSE)      /* if incorrect -> marked */
+            PUZSTATEP(currentLocation) = MAP_MARKED;
     }
 
-    if (currentPuzzle->GameWon()) {
+    if (curPuzzle->GameWon()) {
         printf("WIN!");
         quit = true;
     }
-
-    /* ANIMATIONS
-
-    if(hit == 1) {
-        HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);   // %5
-    }
-    if(erase == 1) {
-        if(tempMap[mapY][mapX] == ' ') {
-            EraseBlock.GB_ShowSprite(0,EraseBlockShowFrame);   // %4
-        } else {
-            //	Erase.GB_ShowSprite(0,EraseShowFrame);   // %4
-        }
-    }
-    if(hitcheck == 1) {
-        HitMattoc.GB_ShowSprite(0,HitMattocShowFrame);   // %7
-    }
-    if(check == 1) {
-        Check.GB_ShowSprite(0,CheckShowFrame);  // %6
-    }
-
-    */
 }
 
 void Game::Initialize() {
 
-    mapX = 0;
-    mapY = 0;
-    clickX = 0;
-    clickY = 0;
-
-    MattocShowFrame = 0;
-    HitMattocShowFrame = 0;
-    EraseShowFrame = 0;
-    CheckShowFrame = 0;
-    EraseBlockShowFrame = 0;
     dragDirection = DRAG_UNDEF;
 
     quit = false;
@@ -301,9 +266,9 @@ void Game::Initialize() {
 
 void Game::NewPuzzle(int type, unsigned int difficulty) {
 
-    if (currentPuzzle) {
-        delete currentPuzzle;
-        currentPuzzle = NULL;
+    if (curPuzzle) {
+        delete curPuzzle;
+        curPuzzle = NULL;
     }
 
     std::stringstream puzzleInitializer;
@@ -327,23 +292,23 @@ void Game::NewPuzzle(int type, unsigned int difficulty) {
             ".#.......#....." <<
             "#.#.....#......";
 
-        currentPuzzle = new Puzzle(15, 15, puzzleInitializer.str());
+        curPuzzle = new Puzzle(15, 15, puzzleInitializer.str());
         break;
     case PUZ_RAND:
-        currentPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
+        curPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
         break;
     default:
-        currentPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
+        curPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
         break;
     }
 }
 
 Game::Game() {
-    currentPuzzle = NULL;
+    curPuzzle = NULL;
 }
 Game::~Game() {
-    if (currentPuzzle)
-        delete currentPuzzle;
+    if (curPuzzle)
+        delete curPuzzle;
 }
 
 void Game::DoMainLoop() {

@@ -9,6 +9,7 @@
 
 #include "GameBlade.h"
 #include "Puzzle.h"
+#include "Point.h"
 
 #include <vector>
 #include <sstream>
@@ -26,6 +27,13 @@
 #define DRAG_VER 1
 #define PUZ_RAND 1
 #define PUZ_STAT 0
+
+#define PUZSTATE(X,Y) curPuzzle->BoardState[Y*curPuzzle->Width + X]
+#define PUZMAP(X,Y) curPuzzle->Map[Y*curPuzzle->Width + X]
+
+#define PUZSTATEP(A) curPuzzle->BoardState[A.y*curPuzzle->Width + A.x]
+#define PUZMAPP(A) curPuzzle->Map[A.y*curPuzzle->Width + A.x]
+
 
 class Game {
 public:
@@ -45,21 +53,13 @@ private:
 
     int HandleMouseEvent(int x, int y, int btn, int event);
 
-    unsigned int
-        mapX,
-        mapY,
-        clickX,
-        clickY,
-        lastHandledMouseX,
-        lastHandledMouseY;
+    Point
+        currentLocation,
+        lastClickLocation,
+        lastDragLocation;
 
     /* vars from original 2004 state of game */
-    int MattocShowFrame,
-        HitMattocShowFrame,
-        EraseShowFrame,
-        CheckShowFrame,
-        EraseBlockShowFrame,
-        dragDirection;
+    int dragDirection;
 
     bool
         quit;
@@ -75,5 +75,5 @@ private:
         Check,
         BG;
 
-    Puzzle *currentPuzzle;
+    Puzzle *curPuzzle;
 };
