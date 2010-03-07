@@ -76,8 +76,11 @@ void Game::ProcessDrawing() {
     /* draw timer */
     unsigned int elapsedTime = time(NULL) - startTime;
     out << elapsedTime + penaltyTime;
-    GB_DrawText(out.str().c_str(), TIMERX*MAGNIFICATION_LEVEL - out.str().length()*10,
-                TIMERY*MAGNIFICATION_LEVEL);
+    txt.Blit(
+            out.str(),
+            Point(TIMERX*MAGNIFICATION_LEVEL,
+                  TIMERY*MAGNIFICATION_LEVEL),
+            JUSTIFY_R);
 
 
     /* draw row streaks */
@@ -87,9 +90,10 @@ void Game::ProcessDrawing() {
         for (j = 0; j < curPuzzle->RowStreaks[i].size(); j++)
             out << curPuzzle->RowStreaks[i][j] << ' ';
 
-        GB_DrawText(out.str().c_str(),
-                    PUZZLE_POSX*MAGNIFICATION_LEVEL - 10*out.str().length(),
-                    PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH);
+        txt.Blit(out.str(),
+                 Point(PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL,
+                       PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH),
+                 JUSTIFY_R);
     }
 
     /* draw col streaks */
@@ -102,16 +106,17 @@ void Game::ProcessDrawing() {
             out.str("");    //clear the stream
             out << curPuzzle->ColStreaks[i][j];
 
-            GB_DrawText(
-                    out.str().c_str(),
+            txt.Blit(
+                    out.str(),
 
-                    PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
-                    + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
-                    - (out.str().length()-1)*4,         /* and try to approximately center numbers with more than 1 digit */
+                    Point(PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                          + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
+                          + 10*MAGNIFICATION_LEVEL,           /* and centre within column */
 
-                    PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
-                    - 10*drawLocation*2                 /* stack numbers above each other */
-                    - 5*MAGNIFICATION_LEVEL);           /* and adjust the whole stack upwards */
+                          PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                          - 10*drawLocation*2                 /* stack numbers above each other */
+                          - 5*MAGNIFICATION_LEVEL),           /* and adjust the whole stack upwards */
+                    JUSTIFY_C);
         }
     }
 }
@@ -262,8 +267,9 @@ void Game::Initialize() {
     /* Initiate audio, video and the text */
 
     GB_Init(RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
+    TTF_Init();
 
-    GB_LoadTextBitmap(FILEPREFIX "gfx/8x8font.bmp");
+    txt.Load(FILEPREFIX "gfx/cour.ttf");
 
     sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", MAGNIFICATION_LEVEL, 0);
     sprBoxTile.Load(FILEPREFIX "gfx/box.png", MAGNIFICATION_LEVEL, 0);
@@ -338,6 +344,8 @@ Game::Game() {
 Game::~Game() {
     if (curPuzzle)
         delete curPuzzle;
+
+    TTF_Quit();
 }
 
 void Game::DoMainLoop() {

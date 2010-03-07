@@ -11,6 +11,7 @@
 #include "Puzzle.h"
 #include "Point.h"
 #include "Sprite.h"
+#include "Text.h"
 
 #include <vector>
 #include <sstream>
@@ -92,6 +93,8 @@ private:
         sprStreakAreaVerA,
         sprStreakAreaVerB,
         sprBackground;
+
+    Text txt;
 
     Puzzle *curPuzzle;
 };

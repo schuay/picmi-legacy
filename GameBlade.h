@@ -31,6 +31,7 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_rotozoom.h>
+#include <SDL/SDL_ttf.h>
 
 // Section 1: Declaration headers
 
@@ -43,7 +44,6 @@
 // Section 3: The headers for the interfaces to SDL and the other libraries
 
 #include "GB_VideoSystem.h"      // Setting video mode, freeing surfaces
-#include "GB_TextEngine.h"       // Loading a bitmap font and displaying a text or a single character
 #include "GB_System.h"           // Quitting the GameBlade
 
 // Section 4: Custom
