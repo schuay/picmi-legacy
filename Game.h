@@ -28,6 +28,7 @@
 #define DRAG_VER 1
 #define PUZ_RAND 1
 #define PUZ_STAT 0
+#define FILEPREFIX ""
 
 #define PUZSTATE(X,Y) curPuzzle->BoardState[Y*curPuzzle->Width + X]
 #define PUZMAP(X,Y) curPuzzle->Map[Y*curPuzzle->Width + X]
