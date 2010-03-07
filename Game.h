@@ -16,19 +16,25 @@
 #include <iostream>
 #include <time.h>
 
-#define CELLLENGTH 12
-#define PUZZLE_POSX 117
-#define PUZZLE_POSY 107
+#define CELLLENGTH 24
+#define PUZZLE_POSX 234
+#define PUZZLE_POSY 214
 #define OP_NONE 0
 #define OP_HIT 1
 #define OP_MARK 2
-#define MAGNIFICATION_LEVEL 2
+#define MAGNIFICATION_LEVEL 1
 #define DRAG_UNDEF -1
 #define DRAG_HOR 0
 #define DRAG_VER 1
 #define PUZ_RAND 1
 #define PUZ_STAT 0
 #define FILEPREFIX ""
+
+#define TIMERX 160
+#define TIMERY 170
+
+#define RESX 640
+#define RESY 580
 
 #define PUZSTATE(X,Y) curPuzzle->BoardState[Y*curPuzzle->Width + X]
 #define PUZMAP(X,Y) curPuzzle->Map[Y*curPuzzle->Width + X]
@@ -72,7 +78,7 @@ private:
         quit;
 
     GB_Sprite
-        FIFTEEN,
+        sprCellFrame,
         PushedBlock,
         CheckedBlock,
         Mattoc,

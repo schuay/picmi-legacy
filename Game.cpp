@@ -21,11 +21,14 @@ void Game::ProcessDrawing() {
 
     BG.GB_ShowSprite(0, 0);
 
-    FIFTEEN.GB_SetXY(PUZZLE_POSX * MAGNIFICATION_LEVEL, PUZZLE_POSY * MAGNIFICATION_LEVEL);
-    FIFTEEN.GB_ShowSprite(0, 0);
 
     for (i = 0; i < curPuzzle->Width; i++) {
         for (j = 0; j < curPuzzle->Height; j++) {
+
+            sprCellFrame.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL,
+                                  PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL);
+            sprCellFrame.GB_ShowSprite(0, 0);
+
             if (PUZSTATE(i,j) == MAP_HIT) {
                 PushedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL,
                                      PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL);
@@ -42,7 +45,8 @@ void Game::ProcessDrawing() {
     /* draw timer */
     unsigned int elapsedTime = time(NULL) - startTime;
     out << elapsedTime + penaltyTime;
-    GB_DrawText(out.str().c_str(), 80*MAGNIFICATION_LEVEL - out.str().length()*10, 85*MAGNIFICATION_LEVEL);
+    GB_DrawText(out.str().c_str(), TIMERX*MAGNIFICATION_LEVEL - out.str().length()*10,
+                TIMERY*MAGNIFICATION_LEVEL);
 
 
     /* draw row streaks */
@@ -243,14 +247,9 @@ void Game::Initialize() {
 
     GB_LoadTextBitmap(FILEPREFIX "gfx/8x8font.bmp");
 
-    FIFTEEN.GB_LoadSprite(FILEPREFIX "gfx/FIFTEEN-grid.bmp", 1, 1, MAGNIFICATION_LEVEL);
-    FIFTEEN.GB_SetColorKey(255,0,255);
-
-    PushedBlock.GB_LoadSprite(FILEPREFIX "gfx/pushed_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
-    PushedBlock.GB_SetColorKey(255,0,255);
-
-    CheckedBlock.GB_LoadSprite(FILEPREFIX "gfx/checked_block.bmp", 1, 1, MAGNIFICATION_LEVEL);
-    CheckedBlock.GB_SetColorKey(255,0,255);
+    sprCellFrame.GB_LoadSprite(FILEPREFIX "gfx/cellframe.png", 1, 1, MAGNIFICATION_LEVEL);
+    PushedBlock.GB_LoadSprite(FILEPREFIX "gfx/box.png", 1, 1, MAGNIFICATION_LEVEL);
+    CheckedBlock.GB_LoadSprite(FILEPREFIX "gfx/mark.png", 1, 1, MAGNIFICATION_LEVEL);
 
     Mattoc.GB_LoadSprite(FILEPREFIX "gfx/mattoc.bmp", 1, 4, MAGNIFICATION_LEVEL);
     Mattoc.GB_SetColorKey(255,0,255);

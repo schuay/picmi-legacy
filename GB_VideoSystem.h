@@ -24,7 +24,7 @@
 #define _GB_VIDEOSYSTEM_H_
 
 // Set the video mode according to the values in the Definitions.h header
-void GB_SetupSDL_Video(int ResX = RESX, int ResY = RESY);
+void GB_SetupSDL_Video(int ResX, int ResY);
 
 // Free the surfaces if you are not using them anymore
 void GB_FreeSurfaces();

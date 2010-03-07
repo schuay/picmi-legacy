@@ -49,7 +49,7 @@ void GB_SetupSDL_Video( int ResX, int ResY)
 
   SDL_WM_SetCaption( GAMEBUILD, NULL );
 
-    if( DEBUGMESSAGELEVEL > 1 ) printf("- SDL initialized: %dx%dx%dbpp, %s\n\n", RESX, RESY, Screen->format->BitsPerPixel, FULLSCREEN?"Fullscreen":"Windowed");
+    if( DEBUGMESSAGELEVEL > 1 ) printf("- SDL initialized: %dx%dx%dbpp, %s\n\n", ResX, ResY, Screen->format->BitsPerPixel, FULLSCREEN?"Fullscreen":"Windowed");
 }
 
 // Free the surfaces if you are not using them anymore

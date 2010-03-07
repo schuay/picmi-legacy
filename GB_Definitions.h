@@ -36,8 +36,6 @@
 
 // Resolution of the game/application and whether it runs in fullscreen mode or not
 
-#define RESX 320     // Horizontal resolution
-#define RESY 290       // Vertical resolution
 #define FULLSCREEN 0  // 1 for FULLSCREEN, 0 for WINDOWED
 
 // Value which tells the compiler about how much info it should ouput about the execution of the game

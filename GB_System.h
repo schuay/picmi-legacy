@@ -27,7 +27,7 @@ class GB_System
 {
  public:
    static void Quit();
-   static void Init( int, int ResX = RESX, int ResY = RESY );
+   static void Init( int, int ResX, int ResY );
 };
 
 // For ease of use
