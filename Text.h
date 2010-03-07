@@ -4,7 +4,7 @@
 #include <SDL/SDL_ttf.h>
 #include <string>
 #include "Point.h"
-#include <PicrossException.h>
+#include "PicrossException.h"
 #include "GameBlade.h"
 
 #define JUSTIFY_C   0
