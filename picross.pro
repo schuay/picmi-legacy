@@ -11,7 +11,6 @@ SOURCES += main.cpp \
     GB_VideoSystem.cpp \
     GB_TextEngine.cpp \
     GB_System.cpp \
-    GB_AudioSystem.cpp \
     Game.cpp \
     Puzzle.cpp \
     PicrossException.cpp \
@@ -20,7 +19,6 @@ SOURCES += main.cpp \
 HEADERS += GB_VideoSystem.h \
     GB_TextEngine.h \
     GB_Definitions.h \
-    GB_AudioSystem.h \
     GB_System.h \
     GB_Globals.h \
     Game.h \

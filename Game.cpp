@@ -261,7 +261,7 @@ void Game::Initialize() {
 
     /* Initiate audio, video and the text */
 
-    GB_Init(GB_INIT_VIDEO, RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
+    GB_Init(RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
 
     GB_LoadTextBitmap(FILEPREFIX "gfx/8x8font.bmp");
 

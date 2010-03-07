@@ -47,11 +47,11 @@ Puzzle::~Puzzle() {
 bool Puzzle::GameWon() {
     int mapFilled = 0, stateFilled = 0;
 
-    for (int i = 0; i<strlen(Map); i++)
+    for (unsigned int i = 0; i < strlen(Map); i++)
         if (Map[i] == MAP_TRUE)
             mapFilled++;
 
-    for (int i = 0; i<strlen(BoardState); i++)
+    for (unsigned int i = 0; i<strlen(BoardState); i++)
         if (BoardState[i] == MAP_HIT)
             stateFilled++;
 

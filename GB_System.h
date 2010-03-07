@@ -27,11 +27,11 @@ class GB_System
 {
  public:
    static void Quit();
-   static void Init( int, int ResX, int ResY );
+   static void Init( int ResX, int ResY );
 };
 
 // For ease of use
 #define GB_Quit() GB_System::Quit()
-#define GB_Init(A,B,C) GB_System::Init(A,B,C)
+#define GB_Init(B,C) GB_System::Init(B,C)
 
 #endif

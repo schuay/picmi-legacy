@@ -31,4 +31,6 @@ bool Point::operator!=(Point const &p) {
 Point& Point::operator=(Point const &rhs) {
     this->x = rhs.x;
     this->y = rhs.y;
+
+    return *this;
 }

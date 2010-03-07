@@ -26,19 +26,13 @@
 // Please use this function to quit the GameBlade and all components of SDL
 void GB_System::Quit()
 {
-   if( AudioEnabled == 1 )
-   {
-     GB_CloseMixer();
-   }
-
    GB_FreeSurfaces();
    SDL_Quit();
 }
 
-void GB_System::Init( int InitSystems, int ResX, int ResY )
+void GB_System::Init( int ResX, int ResY )
 {
    GB_SetupSDL_Video(ResX, ResY);
-   if( InitSystems == GB_INIT_VIDEO_AND_AUDIO ) GB_SetupSDL_Audio();
 
    SDL_EnableUNICODE(1);
    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);

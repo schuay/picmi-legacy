@@ -43,7 +43,6 @@
 // Section 3: The headers for the interfaces to SDL and the other libraries
 
 #include "GB_VideoSystem.h"      // Setting video mode, freeing surfaces
-#include "GB_AudioSystem.h"      // Initializing the audio device and mixer, closing the mixer
 #include "GB_TextEngine.h"       // Loading a bitmap font and displaying a text or a single character
 #include "GB_System.h"           // Quitting the GameBlade
 
