@@ -11,24 +11,24 @@ SOURCES += main.cpp \
     GB_VideoSystem.cpp \
     GB_TextEngine.cpp \
     GB_System.cpp \
-    GB_Sprites.cpp \
     GB_AudioSystem.cpp \
     Game.cpp \
     Puzzle.cpp \
     PicrossException.cpp \
-    Point.cpp
+    Point.cpp \
+    Sprite.cpp
 HEADERS += GB_VideoSystem.h \
     GB_TextEngine.h \
     GB_Definitions.h \
     GB_AudioSystem.h \
     GB_System.h \
-    GB_Sprites.h \
     GB_Globals.h \
     Game.h \
     GameBlade.h \
     Puzzle.h \
     PicrossException.h \
-    Point.h
+    Point.h \
+    Sprite.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_mixer \

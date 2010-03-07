@@ -44,7 +44,6 @@
 
 #include "GB_VideoSystem.h"      // Setting video mode, freeing surfaces
 #include "GB_AudioSystem.h"      // Initializing the audio device and mixer, closing the mixer
-#include "GB_Sprites.h"          // Loading a sprite, displaying it and the necessary class to wrap it up
 #include "GB_TextEngine.h"       // Loading a bitmap font and displaying a text or a single character
 #include "GB_System.h"           // Quitting the GameBlade
 

@@ -14,30 +14,43 @@ bool Game::GetQuit() {
 }
 
 void Game::ProcessDrawing() {
-    unsigned int i, j;
+    unsigned int i, j, x, y;
     std::stringstream out;
 
     /* game board */
 
-    BG.GB_ShowSprite(0, 0);
-
+    sprBackground.Blit(0, 0);
 
     for (i = 0; i < curPuzzle->Width; i++) {
         for (j = 0; j < curPuzzle->Height; j++) {
+            x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
+            y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
 
-            sprCellFrame.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL,
-                                  PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL);
-            sprCellFrame.GB_ShowSprite(0, 0);
+            /* cell frame */
+            sprCellFrame.Blit(x,y);
 
-            if (PUZSTATE(i,j) == MAP_HIT) {
-                PushedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL,
-                                     PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL);
-                PushedBlock.GB_ShowSprite(0,0);
+            /* dividers (mark 5x5 areas */
+            if ((i+1)%5 == 0) {
+                sprDividerR.Blit(x,y);
             }
+            else if (i%5 == 0) {
+                sprDividerL.Blit(x,y);
+            }
+            if ((j+1)%5 == 0) {
+                sprDividerD.Blit(x,y);
+            }
+            else if (j%5 == 0) {
+                sprDividerU.Blit(x,y);
+            }
+
+            /* box tile */
+            if (PUZSTATE(i,j) == MAP_HIT) {
+                sprBoxTile.Blit(x,y);
+            }
+
+            /* marked tile */
             else if (PUZSTATE(i,j) == MAP_MARKED) {
-                CheckedBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL,
-                                      PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL);
-                CheckedBlock.GB_ShowSprite(0,0);
+                sprMarkTile.Blit(x,y);
             }
         }
     }
@@ -78,23 +91,10 @@ void Game::ProcessDrawing() {
     }
 
 
-    /* set movable object positions */
-    Mattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
-                    PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL);
-    HitMattoc.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
-                       PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL);
-
-    Erase.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
-                   PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
-    EraseBlock.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL - 5,
-                        PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL + 10);
-
-    Check.GB_SetXY(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
-                   PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL+ 12);
-
     /* draw movable objects */
-
-    Mattoc.GB_ShowSprite(0,0);
+//    Mattoc.Blit(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
+//                    PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL);
+//    Mattoc.GB_ShowSprite(0,0);
 
 }
 
@@ -247,27 +247,16 @@ void Game::Initialize() {
 
     GB_LoadTextBitmap(FILEPREFIX "gfx/8x8font.bmp");
 
-    sprCellFrame.GB_LoadSprite(FILEPREFIX "gfx/cellframe.png", 1, 1, MAGNIFICATION_LEVEL);
-    PushedBlock.GB_LoadSprite(FILEPREFIX "gfx/box.png", 1, 1, MAGNIFICATION_LEVEL);
-    CheckedBlock.GB_LoadSprite(FILEPREFIX "gfx/mark.png", 1, 1, MAGNIFICATION_LEVEL);
+    sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", MAGNIFICATION_LEVEL, 0);
+    sprBoxTile.Load(FILEPREFIX "gfx/box.png", MAGNIFICATION_LEVEL, 0);
+    sprMarkTile.Load(FILEPREFIX "gfx/mark.png", MAGNIFICATION_LEVEL, 0);
 
-    Mattoc.GB_LoadSprite(FILEPREFIX "gfx/mattoc.bmp", 1, 4, MAGNIFICATION_LEVEL);
-    Mattoc.GB_SetColorKey(255,0,255);
-    Mattoc.GB_SetAlpha(150);
+    sprDividerR.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL,0);
+    sprDividerD.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 270);
+    sprDividerL.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 180);
+    sprDividerU.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 90);
 
-    HitMattoc.GB_LoadSprite(FILEPREFIX "gfx/hitmattoc2.bmp", 1, 5, MAGNIFICATION_LEVEL);
-    HitMattoc.GB_SetColorKey(255,0,255);
-
-    Check.GB_LoadSprite(FILEPREFIX "gfx/check.bmp", 1, 7, MAGNIFICATION_LEVEL);
-    Check.GB_SetColorKey(255,0,255);
-
-    Erase.GB_LoadSprite(FILEPREFIX "gfx/erase.bmp", 1, 4, MAGNIFICATION_LEVEL);
-    Erase.GB_SetColorKey(255,0,255);
-
-    EraseBlock.GB_LoadSprite(FILEPREFIX "gfx/erase_block.bmp", 1, 4, MAGNIFICATION_LEVEL);
-    EraseBlock.GB_SetColorKey(255,0,255);
-
-    BG.GB_LoadSprite(FILEPREFIX "gfx/FIFTEEN.bmp", 1, 1, MAGNIFICATION_LEVEL);
+    sprBackground.Load(FILEPREFIX "gfx/FIFTEEN.bmp", MAGNIFICATION_LEVEL, 0);
 }
 
 void Game::NewPuzzle(int type, unsigned int difficulty) {

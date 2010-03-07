@@ -10,30 +10,31 @@
 #include "GameBlade.h"
 #include "Puzzle.h"
 #include "Point.h"
+#include "Sprite.h"
 
 #include <vector>
 #include <sstream>
 #include <iostream>
 #include <time.h>
 
-#define CELLLENGTH 24
-#define PUZZLE_POSX 234
+#define CELLLENGTH 24           // length of a single tile (width and height must be equal)
+#define PUZZLE_POSX 234         // position of the board's left upper corner
 #define PUZZLE_POSY 214
-#define OP_NONE 0
+#define OP_NONE 0               // defines for game actions, NONE, HIT (uncover a tile), MARK (mark a tile as empty)
 #define OP_HIT 1
 #define OP_MARK 2
-#define MAGNIFICATION_LEVEL 1
-#define DRAG_UNDEF -1
+#define MAGNIFICATION_LEVEL 1   // zoom level, must be a whole number (1==100%, 2==200%, ...)
+#define DRAG_UNDEF -1           // defines for drag locking
 #define DRAG_HOR 0
 #define DRAG_VER 1
-#define PUZ_RAND 1
+#define PUZ_RAND 1              // defines for used puzzle type
 #define PUZ_STAT 0
-#define FILEPREFIX ""
+#define FILEPREFIX ""           // set the location of gfx/fonts
 
-#define TIMERX 160
+#define TIMERX 160              // location of the timer
 #define TIMERY 170
 
-#define RESX 640
+#define RESX 640                // resolution of game window
 #define RESY 580
 
 #define PUZSTATE(X,Y) curPuzzle->BoardState[Y*curPuzzle->Width + X]
@@ -77,16 +78,17 @@ private:
     bool
         quit;
 
-    GB_Sprite
+    Sprite
         sprCellFrame,
-        PushedBlock,
-        CheckedBlock,
-        Mattoc,
-        HitMattoc,
-        Erase,
-        EraseBlock,
-        Check,
-        BG;
+        sprBoxTile,
+        sprMarkTile,
+        sprDividerR,
+        sprDividerD,
+        sprDividerL,
+        sprDividerU,
+//        sprCurrentTile,
+//        sprStreakArea,
+        sprBackground;
 
     Puzzle *curPuzzle;
 };
