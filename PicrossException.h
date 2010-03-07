@@ -10,8 +10,8 @@
 #ifndef PICROSSEXCEPTION_H
 #define PICROSSEXCEPTION_H
 
-#include <string>
 #include <exception>
+#include <string>
 
 class PicrossException : public std::exception
 {

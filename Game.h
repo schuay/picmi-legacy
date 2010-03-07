@@ -7,16 +7,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "GameBlade.h"
+#ifndef GAME_H
+#define GAME_H
+
+#include <SDL/SDL.h>
+#include <sstream>
+#include "Globals.h"
 #include "Puzzle.h"
 #include "Point.h"
 #include "Sprite.h"
 #include "Text.h"
-
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <time.h>
 
 #define CELLLENGTH 24           // length of a single tile (width and height must be equal)
 #define PUZZLE_POSX 234         // position of the board's left upper corner
@@ -44,6 +44,7 @@
 #define PUZSTATEP(A) curPuzzle->BoardState[A.y*curPuzzle->Width + A.x]
 #define PUZMAPP(A) curPuzzle->Map[A.y*curPuzzle->Width + A.x]
 
+#define GAMEBUILD "Tux Picross v.0.1"
 
 class Game {
 public:
@@ -98,3 +99,5 @@ private:
 
     Puzzle *curPuzzle;
 };
+
+#endif // GAME_H

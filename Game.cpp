@@ -264,10 +264,28 @@ void Game::ProcessLogic(int dx, int dy, int op) {
 
 void Game::Initialize() {
 
-    /* Initiate audio, video and the text */
+    /* Initialize SDL systems */
 
-    GB_Init(RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
+    if (SDL_Init(SDL_INIT_VIDEO) == -1 ) {
+        SDL_Quit();
+        throw PicrossException(SDL_GetError());
+    }
+
+    Screen = SDL_SetVideoMode(RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL, 24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF);
+
+    if (!Screen) {
+        SDL_Quit();
+        throw PicrossException(SDL_GetError());
+    }
+
+    SDL_WM_SetCaption(GAMEBUILD, NULL);
+
+    SDL_EnableUNICODE(1);
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+
     TTF_Init();
+
+    /* Load resources */
 
     txt.Load(FILEPREFIX "gfx/cour.ttf");
 

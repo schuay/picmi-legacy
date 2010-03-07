@@ -1,11 +1,13 @@
 #ifndef TEXT_H
 #define TEXT_H
 
+#include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <string>
+
 #include "Point.h"
 #include "PicrossException.h"
-#include "GameBlade.h"
+#include "Globals.h"
 
 #define JUSTIFY_C   0
 #define JUSTIFY_L   1

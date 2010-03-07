@@ -83,7 +83,7 @@ void Sprite::Rotate(unsigned int Rotation) {
 
         SDL_FreeSurface(oldSurface);           /* throw out old surface and replace with empty surface of same size */
 
-        switch (Rotation) { /* rotozoom doesn't handle rotating even sized images correctly /*
+        switch (Rotation) { /* rotozoom doesn't handle rotating even sized images correctly */
         case 90:            /* which is why we need this custom handling */
             from.x = 0;
             from.y = 1;
@@ -118,5 +118,5 @@ void Sprite::Blit(int x, int y) {
     to.h = Surface->h;
 
     if ( SDL_BlitSurface( Surface, NULL, Screen, &to) < 0 )
-        throw PicrossException(( "!Error! Blit Surface error: %s.\n", SDL_GetError() ));
+        throw PicrossException(SDL_GetError());
 }

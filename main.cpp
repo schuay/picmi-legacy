@@ -7,9 +7,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "GameBlade.h"
 #include "Game.h"
 #include <unistd.h>
+
+SDL_Surface *Screen;
 
 int main(int argc, char **argv) {
 
@@ -58,14 +59,11 @@ int main(int argc, char **argv) {
         game.NewPuzzle(puzType, puzDifficulty);
 
         while(!game.GetQuit()) {
-                GB_ClearScreen();
-
                 game.DoMainLoop();
-
                 SDL_Flip(Screen);
         }
 
-        GB_Quit();
+        SDL_Quit();
 
         return 0;
     }

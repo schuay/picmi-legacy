@@ -10,11 +10,10 @@
 #ifndef PUZZLE_H
 #define PUZZLE_H
 
-#include <string>
-#include <cstring>
 #include <vector>
+#include <cstring>
 #include <cstdlib>
-#include <time.h>
+
 #include "PicrossException.h"
 
 #define MAP_FALSE '.'

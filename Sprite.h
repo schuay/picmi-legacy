@@ -1,13 +1,12 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include <string>
 #include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_gfxPrimitives.h>
 #include <SDL/SDL_rotozoom.h>
+#include <SDL/SDL_image.h>
+
+#include "Globals.h"
 #include "PicrossException.h"
-#include "GB_Globals.h"
 
 class Sprite
 {
