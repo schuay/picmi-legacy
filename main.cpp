@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
         puzDifficulty = 55;
     char *cvalue = NULL;
 
-    while ((c = getopt(argc, argv, "shkr:")) != -1)
+    while ((c = getopt(argc, argv, "shkr:")) != -1) {
         switch (c) {
         case 'r':
             puzType = PUZ_RAND;
@@ -49,23 +49,28 @@ int main(int argc, char **argv) {
         default:
             return -1;
         }
+    }
 
+    try {
+        Game game;
 
-    Game game;
-
-    game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
-    game.NewPuzzle(puzType, puzDifficulty);
+        game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
+        game.NewPuzzle(puzType, puzDifficulty);
 
         while(!game.GetQuit()) {
-		GB_ClearScreen();
+                GB_ClearScreen();
 
-		game.DoMainLoop();
+                game.DoMainLoop();
 
                 SDL_Flip(Screen);
-	}
+        }
 
-	GB_Quit();
+        GB_Quit();
 
-	return 0;
+        return 0;
+    }
+    catch (PicrossException e) {
+        printf("Error: %s", e.what());
+    }
 }
 

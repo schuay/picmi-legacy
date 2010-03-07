@@ -21,6 +21,24 @@ void Game::ProcessDrawing() {
 
     sprBackground.Blit(0, 0);
 
+    /* streak areas */
+
+    for (i = 0; i < curPuzzle->Width; i++) {
+        x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
+        if (i%2 == 0)
+            sprStreakAreaVerA.Blit(x, PUZZLE_POSY - 200);
+        else
+            sprStreakAreaVerB.Blit(x, PUZZLE_POSY - 200);
+    }
+    for (j = 0; j < curPuzzle->Width; j++) {
+        y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
+        if (j%2 == 0)
+            sprStreakAreaHorA.Blit(PUZZLE_POSX - 200, y);
+        else
+            sprStreakAreaHorB.Blit(PUZZLE_POSX - 200, y);
+    }
+
+
     for (i = 0; i < curPuzzle->Width; i++) {
         for (j = 0; j < curPuzzle->Height; j++) {
             x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
@@ -70,7 +88,7 @@ void Game::ProcessDrawing() {
             out << curPuzzle->RowStreaks[i][j] << ' ';
 
         GB_DrawText(out.str().c_str(),
-                    PUZZLE_POSX*MAGNIFICATION_LEVEL - 10*out.str().length() - 5*MAGNIFICATION_LEVEL,
+                    PUZZLE_POSX*MAGNIFICATION_LEVEL - 10*out.str().length(),
                     PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH);
     }
 
@@ -84,18 +102,18 @@ void Game::ProcessDrawing() {
             out.str("");    //clear the stream
             out << curPuzzle->ColStreaks[i][j];
 
-            GB_DrawText(out.str().c_str(),
-                        PUZZLE_POSX*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH - 4,
-                        PUZZLE_POSY*MAGNIFICATION_LEVEL - 10*drawLocation*2 - 5*MAGNIFICATION_LEVEL);
+            GB_DrawText(
+                    out.str().c_str(),
+
+                    PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                    + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
+                    - (out.str().length()-1)*4,         /* and try to approximately center numbers with more than 1 digit */
+
+                    PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                    - 10*drawLocation*2                 /* stack numbers above each other */
+                    - 5*MAGNIFICATION_LEVEL);           /* and adjust the whole stack upwards */
         }
     }
-
-
-    /* draw movable objects */
-//    Mattoc.Blit(PUZZLE_POSX*MAGNIFICATION_LEVEL + currentLocation.x*CELLLENGTH*MAGNIFICATION_LEVEL,
-//                    PUZZLE_POSY*MAGNIFICATION_LEVEL + currentLocation.y*CELLLENGTH*MAGNIFICATION_LEVEL);
-//    Mattoc.GB_ShowSprite(0,0);
-
 }
 
 int Game::HandleMouseEvent(int x, int y, int btn, int event) {
@@ -243,7 +261,7 @@ void Game::Initialize() {
 
     /* Initiate audio, video and the text */
 
-    GB_Init(GB_INIT_VIDEO_AND_AUDIO, RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
+    GB_Init(GB_INIT_VIDEO, RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL);
 
     GB_LoadTextBitmap(FILEPREFIX "gfx/8x8font.bmp");
 
@@ -256,7 +274,12 @@ void Game::Initialize() {
     sprDividerL.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 180);
     sprDividerU.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 90);
 
-    sprBackground.Load(FILEPREFIX "gfx/FIFTEEN.bmp", MAGNIFICATION_LEVEL, 0);
+    sprStreakAreaHorA.Load(FILEPREFIX "gfx/streakA.png", MAGNIFICATION_LEVEL, 0);
+    sprStreakAreaHorB.Load(FILEPREFIX "gfx/streakB.png", MAGNIFICATION_LEVEL, 0);
+    sprStreakAreaVerA.Load(FILEPREFIX "gfx/streakA.png", MAGNIFICATION_LEVEL, 270);
+    sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", MAGNIFICATION_LEVEL, 270);
+
+    sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
 }
 
 void Game::NewPuzzle(int type, unsigned int difficulty) {

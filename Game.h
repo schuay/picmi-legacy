@@ -87,7 +87,10 @@ private:
         sprDividerL,
         sprDividerU,
 //        sprCurrentTile,
-//        sprStreakArea,
+        sprStreakAreaHorA,
+        sprStreakAreaHorB,
+        sprStreakAreaVerA,
+        sprStreakAreaVerB,
         sprBackground;
 
     Puzzle *curPuzzle;
