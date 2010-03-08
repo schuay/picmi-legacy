@@ -48,6 +48,10 @@ void Game::ProcessDrawing() {
             p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
 
+            /* active cells (and entire row / column) */
+            if (i == currentLocation.x || j == currentLocation.y)
+                sprActiveTile.Blit(p);
+
             /* cell frame */
             sprCellFrame.Blit(p);
 
@@ -179,9 +183,10 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
 
 void Game::ProcessInput() {
     SDL_Event ev;
-    int dx = 0, dy = 0, op = OP_NONE;
 
     while (SDL_PollEvent(&ev) == 1) {
+        int dx = 0, dy = 0, op = OP_NONE;
+
         switch (ev.type) {
         case SDL_KEYDOWN:
             switch (ev.key.keysym.sym) {
@@ -294,6 +299,7 @@ void Game::Initialize() {
     sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", MAGNIFICATION_LEVEL, 0);
     sprBoxTile.Load(FILEPREFIX "gfx/box.png", MAGNIFICATION_LEVEL, 0);
     sprMarkTile.Load(FILEPREFIX "gfx/mark.png", MAGNIFICATION_LEVEL, 0);
+    sprActiveTile.Load(FILEPREFIX "gfx/activecell.png", MAGNIFICATION_LEVEL, 0);
 
     sprDividerR.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL,0);
     sprDividerD.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 270);

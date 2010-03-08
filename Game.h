@@ -82,7 +82,7 @@ private:
         sprDividerD,
         sprDividerL,
         sprDividerU,
-//        sprCurrentTile,
+        sprActiveTile,
         sprStreakAreaHorA,
         sprStreakAreaHorB,
         sprStreakAreaVerA,
