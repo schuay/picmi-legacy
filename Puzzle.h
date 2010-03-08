@@ -34,10 +34,16 @@ public:
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
 
-    int GetStateAt(Point p);    /* returns the state of game board at p */
-    int GetMapAt(Point p);      /* returns the state of map at p */
+    bool IsInBounds(unsigned int x, unsigned int y);    /* returns true if coordinate is in puzzle limits */
+    bool IsInBounds(Point &p);
 
-    void SetStateAt(Point p, int state); /* set state of board at p */
+    int GetStateAt(Point &p);    /* returns the state of game board at p */
+    int GetMapAt(Point &p);      /* returns the state of map at p */
+
+    void SetStateAt(Point &p, int state); /* set state of board at p */
+
+    Point GetLocation();
+    void SetLocation(Point &p);
 
     std::vector<int>
             *ColStreaks,    /* stores streaks */
@@ -49,6 +55,8 @@ public:
 
 private:
     void CalculateStreaks();
+
+    Point Location; /* stores current location on board */
 
     static const char
             mapFalse = '.',

@@ -60,7 +60,6 @@ private:
     int HandleMouseEvent(int x, int y, int btn, int event);
 
     Point
-        currentLocation,
         lastClickLocation,
         lastDragLocation;
 

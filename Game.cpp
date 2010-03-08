@@ -48,8 +48,11 @@ void Game::ProcessDrawing() {
             p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
 
+            q.x = i;
+            q.y = j;
+
             /* active cells (and entire row / column) */
-            if (i == currentLocation.x || j == currentLocation.y)
+            if (q.x == curPuzzle->GetLocation().x || q.y == curPuzzle->GetLocation().y)
                 sprActiveTile.Blit(p);
 
             /* cell frame */
@@ -68,9 +71,6 @@ void Game::ProcessDrawing() {
             else if (j%5 == 0) {
                 sprDividerU.Blit(p);
             }
-
-            q.x = i;
-            q.y = j;
 
             /* box / marked tiles */
             if (curPuzzle->GetStateAt(q) == BOARD_HIT) {
@@ -128,25 +128,24 @@ void Game::ProcessDrawing() {
 }
 
 int Game::HandleMouseEvent(int x, int y, int btn, int event) {
-    Point _currentLocation(
+    Point newLocation(
             (x - PUZZLE_POSX * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL),
             (y - PUZZLE_POSY * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL));
 
     /* only handle mouse events in game board area */
-    if (_currentLocation.x < 0 || _currentLocation.x >= curPuzzle->Width ||
-        _currentLocation.y < 0 || _currentLocation.y >= curPuzzle->Height)
+    if (!curPuzzle->IsInBounds(newLocation))
         return OP_NONE;
 
     switch (event) {
     case SDL_MOUSEBUTTONDOWN:
-        lastClickLocation = _currentLocation; /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
+        lastClickLocation = newLocation; /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
         dragDirection = -1; /* reset drag direction */
-        lastDragLocation = _currentLocation;  /* remember last handled tile so we only to a single op per tile on drags */
+        lastDragLocation = newLocation;  /* remember last handled tile so we only to a single op per tile on drags */
         break;
     case SDL_MOUSEMOTION:
-        if ( _currentLocation != lastClickLocation && dragDirection == -1 ) { /* calc drag direction */
-            unsigned int diffX = abs(lastClickLocation.x - _currentLocation.x);
-            unsigned int diffY = abs(lastClickLocation.y - _currentLocation.y);
+        if ( newLocation != lastClickLocation && dragDirection == -1 ) { /* calc drag direction */
+            unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
+            unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
             if (diffX < diffY)
                 dragDirection = DRAG_VER;
             else if (diffX > diffY)
@@ -156,14 +155,14 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         }
 
         if (dragDirection == DRAG_HOR)   /* adjust _currentLocation according to dragDirection */
-            _currentLocation.y = currentLocation.y;
+            newLocation.y = curPuzzle->GetLocation().y;
         else if (dragDirection == DRAG_VER)
-            _currentLocation.x = currentLocation.x;
+            newLocation.x = curPuzzle->GetLocation().x;
 
-        if (lastDragLocation == _currentLocation)
+        if (lastDragLocation == newLocation)
             return OP_NONE; /* tile already handled, nothing to be done */
         else {
-            lastDragLocation = _currentLocation;
+            lastDragLocation = newLocation;
         }
 
         break;
@@ -171,7 +170,7 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         break;
     }
 
-    currentLocation = _currentLocation;
+    curPuzzle->SetLocation(newLocation);
 
     if (btn == SDL_BUTTON_LEFT)
         return OP_HIT;
@@ -236,28 +235,29 @@ void Game::ProcessInput() {
 void Game::ProcessLogic(int dx, int dy, int op) {
 
     /* movement logic */
-    if (currentLocation.x + dx < curPuzzle->Width &&
-        currentLocation.x + dx >= 0)
-        currentLocation.x += dx;
-    if (currentLocation.y + dy < curPuzzle->Height &&
-        currentLocation.y + dy >= 0)
-        currentLocation.y += dy;
+    Point p = curPuzzle->GetLocation();
+    p.x += dx;
+    p.y += dy;
+    if (curPuzzle->IsInBounds(p))
+        curPuzzle->SetLocation(p);
+
+    p = curPuzzle->GetLocation();
 
     /* hit/mark logic */
-    if (curPuzzle->GetStateAt(currentLocation) == BOARD_HIT) {}    /* we cannot mark spots that are already hit */
+    if (curPuzzle->GetStateAt(p) == BOARD_HIT) {}    /* we cannot mark spots that are already hit */
     else if (op == OP_MARK) {
-        if (curPuzzle->GetStateAt(currentLocation) == BOARD_MARKED)
-            curPuzzle->SetStateAt(currentLocation, BOARD_CLEAN);
+        if (curPuzzle->GetStateAt(p) == BOARD_MARKED)
+            curPuzzle->SetStateAt(p, BOARD_CLEAN);
         else
-            curPuzzle->SetStateAt(currentLocation, BOARD_MARKED);
+            curPuzzle->SetStateAt(p, BOARD_MARKED);
     }
     else if (op == OP_HIT) {                                 /* HIT */
-        if (curPuzzle->GetStateAt(currentLocation) == BOARD_MARKED)             /* was marked -> unmarked */
-            curPuzzle->SetStateAt(currentLocation, BOARD_CLEAN);
-        else if (curPuzzle->GetMapAt(currentLocation) == MAP_TRUE)      /* if correct -> hit */
-            curPuzzle->SetStateAt(currentLocation, BOARD_HIT);
-        else if (curPuzzle->GetMapAt(currentLocation) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
-            curPuzzle->SetStateAt(currentLocation, BOARD_MARKED);
+        if (curPuzzle->GetStateAt(p) == BOARD_MARKED)             /* was marked -> unmarked */
+            curPuzzle->SetStateAt(p, BOARD_CLEAN);
+        else if (curPuzzle->GetMapAt(p) == MAP_TRUE)      /* if correct -> hit */
+            curPuzzle->SetStateAt(p, BOARD_HIT);
+        else if (curPuzzle->GetMapAt(p) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
+            curPuzzle->SetStateAt(p, BOARD_MARKED);
             penaltyTime += 120*penaltyMultiplier++;
         }
     }

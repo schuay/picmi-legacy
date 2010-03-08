@@ -54,6 +54,12 @@ bool Puzzle::GameWon() {
 
     return (mapFilled == stateFilled);
 }
+bool Puzzle::IsInBounds(Point &p) {
+    return IsInBounds(p.x, p.y);
+}
+bool Puzzle::IsInBounds(unsigned int x, unsigned int y) {
+    return (x < Width && y < Height);
+}
 
 void Puzzle::CalculateStreaks() {
     unsigned int
@@ -124,8 +130,8 @@ Puzzle* Puzzle::RandomPuzzle(unsigned int w, unsigned int h, unsigned int percen
     return new Puzzle(w, h, map);
 }
 
-int Puzzle::GetMapAt(Point p) {
-    if (p.x >= Width || p.y >= Height)
+int Puzzle::GetMapAt(Point &p) {
+    if (!IsInBounds(p))
         throw PicrossException("GetMapAt failed: Point not within puzzle dimensions.");
 
     if (Map[p.y*Width + p.x] == mapTrue)
@@ -133,8 +139,8 @@ int Puzzle::GetMapAt(Point p) {
     else
         return MAP_FALSE;
 }
-int Puzzle::GetStateAt(Point p) {
-    if (p.x >= Width || p.y >= Height)
+int Puzzle::GetStateAt(Point &p) {
+    if (!IsInBounds(p))
         throw PicrossException("GetStateAt failed: Point not within puzzle dimensions.");
 
     if (BoardState[p.y*Width + p.x] == boardClean)
@@ -144,10 +150,10 @@ int Puzzle::GetStateAt(Point p) {
     else
         return BOARD_MARKED;
 }
-void Puzzle::SetStateAt(Point p, int state) {
+void Puzzle::SetStateAt(Point &p, int state) {
     if (state != BOARD_CLEAN && state != BOARD_HIT && state != BOARD_MARKED)
         throw PicrossException("SetStateAt failed: invalid state passed");
-    if (p.x >= Width || p.y >= Height)
+    if (!IsInBounds(p))
         throw PicrossException("SetStateAt failed: Point not within puzzle dimensions.");
 
     char c;
@@ -165,4 +171,15 @@ void Puzzle::SetStateAt(Point p, int state) {
     }
 
     BoardState[p.y*Width + p.x] = c;
+}
+
+Point Puzzle::GetLocation() {
+    return Point(&Location);
+}
+void Puzzle::SetLocation(Point &p) {
+    if (!IsInBounds(p))
+        throw PicrossException("SetLocation failed: Point not within puzzle dimensions.");
+
+    Location.x = p.x;
+    Location.y = p.y;
 }

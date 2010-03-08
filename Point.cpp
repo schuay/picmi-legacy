@@ -13,7 +13,10 @@ Point::Point() {
     x = 0;
     y = 0;
 }
-
+Point::Point(Point *p) {
+    x = p->x;
+    y = p->y;
+}
 Point::Point(unsigned int _x, unsigned int _y)
 {
     x = _x;
