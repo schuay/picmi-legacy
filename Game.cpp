@@ -14,61 +14,64 @@ bool Game::GetQuit() {
 }
 
 void Game::ProcessDrawing() {
-    unsigned int i, j, x, y;
+    unsigned int i, j;
+    Point p;
     std::stringstream out;
 
     /* game board */
 
-    sprBackground.Blit(0, 0);
+    sprBackground.Blit(Point(0,0));
 
     /* streak areas */
 
+    p.y = PUZZLE_POSY - 200;
     for (i = 0; i < curPuzzle->Width; i++) {
-        x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
+        p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
         if (i%2 == 0)
-            sprStreakAreaVerA.Blit(x, PUZZLE_POSY - 200);
+            sprStreakAreaVerA.Blit(p);
         else
-            sprStreakAreaVerB.Blit(x, PUZZLE_POSY - 200);
+            sprStreakAreaVerB.Blit(p);
     }
+    p.x = PUZZLE_POSX - 200;
     for (j = 0; j < curPuzzle->Width; j++) {
-        y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
+        p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
         if (j%2 == 0)
-            sprStreakAreaHorA.Blit(PUZZLE_POSX - 200, y);
+            sprStreakAreaHorA.Blit(p);
         else
-            sprStreakAreaHorB.Blit(PUZZLE_POSX - 200, y);
+            sprStreakAreaHorB.Blit(p);
     }
 
+    /* main area */
 
     for (i = 0; i < curPuzzle->Width; i++) {
         for (j = 0; j < curPuzzle->Height; j++) {
-            x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
-            y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
+            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
+            p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
 
             /* cell frame */
-            sprCellFrame.Blit(x,y);
+            sprCellFrame.Blit(p);
 
             /* dividers (mark 5x5 areas */
             if ((i+1)%5 == 0) {
-                sprDividerR.Blit(x,y);
+                sprDividerR.Blit(p);
             }
             else if (i%5 == 0) {
-                sprDividerL.Blit(x,y);
+                sprDividerL.Blit(p);
             }
             if ((j+1)%5 == 0) {
-                sprDividerD.Blit(x,y);
+                sprDividerD.Blit(p);
             }
             else if (j%5 == 0) {
-                sprDividerU.Blit(x,y);
+                sprDividerU.Blit(p);
             }
 
             /* box tile */
             if (PUZSTATE(i,j) == MAP_HIT) {
-                sprBoxTile.Blit(x,y);
+                sprBoxTile.Blit(p);
             }
-
             /* marked tile */
             else if (PUZSTATE(i,j) == MAP_MARKED) {
-                sprMarkTile.Blit(x,y);
+                sprMarkTile.Blit(p);
             }
         }
     }
@@ -76,11 +79,11 @@ void Game::ProcessDrawing() {
     /* draw timer */
     unsigned int elapsedTime = time(NULL) - startTime;
     out << elapsedTime + penaltyTime;
-    txt.Blit(
-            out.str(),
-            Point(TIMERX*MAGNIFICATION_LEVEL,
-                  TIMERY*MAGNIFICATION_LEVEL),
-            JUSTIFY_R);
+
+    p.x = TIMERX*MAGNIFICATION_LEVEL;
+    p.y = TIMERY*MAGNIFICATION_LEVEL;
+
+    txt.Blit(out.str(), p, JUSTIFY_R);
 
 
     /* draw row streaks */
@@ -90,10 +93,10 @@ void Game::ProcessDrawing() {
         for (j = 0; j < curPuzzle->RowStreaks[i].size(); j++)
             out << curPuzzle->RowStreaks[i][j] << ' ';
 
-        txt.Blit(out.str(),
-                 Point(PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL,
-                       PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH),
-                 JUSTIFY_R);
+        p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL;
+        p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
+
+        txt.Blit(out.str(), p, JUSTIFY_R);
     }
 
     /* draw col streaks */
@@ -106,17 +109,14 @@ void Game::ProcessDrawing() {
             out.str("");    //clear the stream
             out << curPuzzle->ColStreaks[i][j];
 
-            txt.Blit(
-                    out.str(),
+            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                  + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
+                  + 10*MAGNIFICATION_LEVEL;           /* and centre within column */
+            p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                  - 10*drawLocation*2                 /* stack numbers above each other */
+                  - 5*MAGNIFICATION_LEVEL;           /* and adjust the whole stack upwards */
 
-                    Point(PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
-                          + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
-                          + 10*MAGNIFICATION_LEVEL,           /* and centre within column */
-
-                          PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
-                          - 10*drawLocation*2                 /* stack numbers above each other */
-                          - 5*MAGNIFICATION_LEVEL),           /* and adjust the whole stack upwards */
-                    JUSTIFY_C);
+            txt.Blit(out.str(), p, JUSTIFY_C);
         }
     }
 }

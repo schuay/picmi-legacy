@@ -109,11 +109,11 @@ void Sprite::Rotate(unsigned int Rotation) {
     SDL_FreeSurface(tmpSurface);
 }
 
-void Sprite::Blit(int x, int y) {
+void Sprite::Blit(Point p) {
     SDL_Rect to;
 
-    to.x = x;
-    to.y = y;
+    to.x = p.x;
+    to.y = p.y;
     to.w = Surface->w;
     to.h = Surface->h;
 

@@ -6,6 +6,7 @@
 #include <SDL/SDL_image.h>
 
 #include "Globals.h"
+#include "Point.h"
 #include "PicrossException.h"
 
 class Sprite
@@ -15,7 +16,7 @@ public:
     ~Sprite();
 
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(int x, int y);
+    void Blit(Point p);
 
 private:
 
