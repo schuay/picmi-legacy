@@ -15,7 +15,7 @@ bool Game::GetQuit() {
 
 void Game::ProcessDrawing() {
     unsigned int i, j;
-    Point p;
+    Point p, q;
     std::stringstream out;
 
     /* game board */
@@ -65,12 +65,14 @@ void Game::ProcessDrawing() {
                 sprDividerU.Blit(p);
             }
 
-            /* box tile */
-            if (PUZSTATE(i,j) == MAP_HIT) {
+            q.x = i;
+            q.y = j;
+
+            /* box / marked tiles */
+            if (curPuzzle->GetStateAt(q) == BOARD_HIT) {
                 sprBoxTile.Blit(p);
             }
-            /* marked tile */
-            else if (PUZSTATE(i,j) == MAP_MARKED) {
+            else if (curPuzzle->GetStateAt(q) == BOARD_MARKED) {
                 sprMarkTile.Blit(p);
             }
         }
@@ -237,27 +239,27 @@ void Game::ProcessLogic(int dx, int dy, int op) {
         currentLocation.y += dy;
 
     /* hit/mark logic */
-    if (PUZSTATEP(currentLocation) == MAP_HIT) {}    /* we cannot mark spots that are already hit */
+    if (curPuzzle->GetStateAt(currentLocation) == BOARD_HIT) {}    /* we cannot mark spots that are already hit */
     else if (op == OP_MARK) {
-        if (PUZSTATEP(currentLocation) == MAP_MARKED)
-            PUZSTATEP(currentLocation) = MAP_CLEAN;
+        if (curPuzzle->GetStateAt(currentLocation) == BOARD_MARKED)
+            curPuzzle->SetStateAt(currentLocation, BOARD_CLEAN);
         else
-            PUZSTATEP(currentLocation) = MAP_MARKED;
+            curPuzzle->SetStateAt(currentLocation, BOARD_MARKED);
     }
     else if (op == OP_HIT) {                                 /* HIT */
-        if (PUZSTATEP(currentLocation) == MAP_MARKED)             /* was marked -> unmarked */
-            PUZSTATEP(currentLocation) = MAP_CLEAN;
-        else if (PUZMAPP(currentLocation) == MAP_TRUE)      /* if correct -> hit */
-            PUZSTATEP(currentLocation) = MAP_HIT;
-        else if (PUZMAPP(currentLocation) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
-            PUZSTATEP(currentLocation) = MAP_MARKED;
+        if (curPuzzle->GetStateAt(currentLocation) == BOARD_MARKED)             /* was marked -> unmarked */
+            curPuzzle->SetStateAt(currentLocation, BOARD_CLEAN);
+        else if (curPuzzle->GetMapAt(currentLocation) == MAP_TRUE)      /* if correct -> hit */
+            curPuzzle->SetStateAt(currentLocation, BOARD_HIT);
+        else if (curPuzzle->GetMapAt(currentLocation) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
+            curPuzzle->SetStateAt(currentLocation, BOARD_MARKED);
             penaltyTime += 120*penaltyMultiplier++;
         }
     }
 
     if (curPuzzle->GameWon()) {
         unsigned int elapsedTime = time(NULL) - startTime;
-        printf("Game solved in %u s (%u s real, %u s penalty)!", elapsedTime + penaltyTime, elapsedTime, penaltyTime);
+        printf("\nGame solved in %u s (%u s real, %u s penalty)!\n\n", elapsedTime + penaltyTime, elapsedTime, penaltyTime);
         quit = true;
     }
 }

@@ -38,12 +38,6 @@
 #define RESX 640                // resolution of game window
 #define RESY 580
 
-#define PUZSTATE(X,Y) curPuzzle->BoardState[Y*curPuzzle->Width + X]
-#define PUZMAP(X,Y) curPuzzle->Map[Y*curPuzzle->Width + X]
-
-#define PUZSTATEP(A) curPuzzle->BoardState[A.y*curPuzzle->Width + A.x]
-#define PUZMAPP(A) curPuzzle->Map[A.y*curPuzzle->Width + A.x]
-
 #define GAMEBUILD "Tux Picross v.0.1"
 
 class Game {
