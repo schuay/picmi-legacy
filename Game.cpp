@@ -369,4 +369,6 @@ Game::~Game() {
 void Game::DoMainLoop() {
     ProcessInput();
     ProcessDrawing();
+
+    SDL_Delay(30);  /* relinquish cpu time we don't need */
 }
