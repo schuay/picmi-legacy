@@ -31,6 +31,7 @@
 #define PUZ_RAND 1              // defines for used puzzle type
 #define PUZ_STAT 0
 #define FILEPREFIX ""           // set the location of gfx/fonts
+#define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
 
 #define TIMERX 160              // location of the timer
 #define TIMERY 170

@@ -143,28 +143,29 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         lastDragLocation = newLocation;  /* remember last handled tile so we only to a single op per tile on drags */
         break;
     case SDL_MOUSEMOTION:
-        if ( newLocation != lastClickLocation && dragDirection == -1 ) { /* calc drag direction */
-            unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
-            unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
-            if (diffX < diffY)
-                dragDirection = DRAG_VER;
-            else if (diffX > diffY)
-                dragDirection = DRAG_HOR;
-            else
-                dragDirection = DRAG_HOR;
+        if (btn == SDL_BUTTON_LEFT || btn == SDL_BUTTON_RIGHT) {
+            if ( newLocation != lastClickLocation && dragDirection == -1 ) { /* calc drag direction */
+                unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
+                unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
+                if (diffX < diffY)
+                    dragDirection = DRAG_VER;
+                else if (diffX > diffY)
+                    dragDirection = DRAG_HOR;
+                else
+                    dragDirection = DRAG_HOR;
+            }
+
+            if (dragDirection == DRAG_HOR)   /* adjust newLocation according to dragDirection */
+                newLocation.y = curPuzzle->GetLocation().y;
+            else if (dragDirection == DRAG_VER)
+                newLocation.x = curPuzzle->GetLocation().x;
+
+            if (lastDragLocation == newLocation)
+                return OP_NONE; /* tile already handled, nothing to be done */
+            else {
+                lastDragLocation = newLocation;
+            }
         }
-
-        if (dragDirection == DRAG_HOR)   /* adjust _currentLocation according to dragDirection */
-            newLocation.y = curPuzzle->GetLocation().y;
-        else if (dragDirection == DRAG_VER)
-            newLocation.x = curPuzzle->GetLocation().x;
-
-        if (lastDragLocation == newLocation)
-            return OP_NONE; /* tile already handled, nothing to be done */
-        else {
-            lastDragLocation = newLocation;
-        }
-
         break;
     default:
         break;
@@ -224,6 +225,7 @@ void Game::ProcessInput() {
                 op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_LEFT, SDL_MOUSEMOTION);
             else if (ev.motion.state & SDL_BUTTON(3))
                 op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT, SDL_MOUSEMOTION);
+            else HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE, SDL_MOUSEMOTION);
             break;
          default:
             break;
