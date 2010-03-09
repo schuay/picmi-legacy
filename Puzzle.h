@@ -14,6 +14,7 @@
 #include <cstring>
 #include <cstdlib>
 
+#include "Streak.h"
 #include "Point.h"
 #include "PicrossException.h"
 
@@ -43,7 +44,9 @@ public:
     bool IsInBounds(Point &p);
 
     int GetStateAt(Point &p);    /* returns the state of game board at p */
+    int GetStateAt(unsigned int x, unsigned int y);
     int GetMapAt(Point &p);      /* returns the state of map at p */
+    int GetMapAt(unsigned int x, unsigned int y);
 
     void SetStateAt(Point &p, int state); /* set state of board at p */
 
@@ -54,11 +57,13 @@ public:
     void DoOpAt(Point &p, int op);  /* perform operation (HIT/MARK) at p */
     void DoOp(int op);              /* or at current location */
 
+    void CalculateStreakSolvedState(); /* call this to update streak.Solved states - ideally once before drawing each frame */
+
     unsigned int GetElapsedTime();
     unsigned int GetElapsedRealTime();
     unsigned int GetElapsedPenaltyTime();
 
-    std::vector<int>
+    std::vector<Streak>
             *ColStreaks,    /* stores streaks */
             *RowStreaks;
 

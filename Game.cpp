@@ -90,29 +90,38 @@ void Game::ProcessDrawing() {
 
     txt.Blit(out.str(), p, JUSTIFY_R);
 
+    SDL_Color c;
+    unsigned int rowStreakLength;
 
     /* draw row streaks */
     for (i = 0; i < curPuzzle->Height; i++) {
-        out.str("");
+        rowStreakLength = 0;
 
-        for (j = 0; j < curPuzzle->RowStreaks[i].size(); j++)
-            out << curPuzzle->RowStreaks[i][j] << ' ';
+        for (int js = curPuzzle->RowStreaks[i].size() - 1; js >= 0; js--) {
+            Streak s = curPuzzle->RowStreaks[i][js];    /* note the reverse order of loop  */
+            c.r = c.g = c.b = s.Solved ? 200 : 0;       /* we need to do this to draw streaks in correct order */
 
-        p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL;
-        p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
+            out.str("");
+            out << s.GetLength() << ' ';
 
-        txt.Blit(out.str(), p, JUSTIFY_R);
+            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL - rowStreakLength*txt.Size/2;
+            p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
+
+            rowStreakLength += out.str().length() + 1;
+            txt.Blit(out.str(), p, c, JUSTIFY_R);
+        }
     }
 
     /* draw col streaks */
     for (i = 0; i < curPuzzle->Width; i++) {
-        out.str("");
-
         for (j = 0; j < curPuzzle->ColStreaks[i].size(); j++) {
+            Streak s = curPuzzle->ColStreaks[i][j];
+            c.r = c.g = c.b = s.Solved ? 200 : 0;
+
             int drawLocation = curPuzzle->ColStreaks[i].size() - j;
 
             out.str("");    //clear the stream
-            out << curPuzzle->ColStreaks[i][j];
+            out << s.GetLength();
 
             p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
                   + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
@@ -121,7 +130,7 @@ void Game::ProcessDrawing() {
                   - 10*drawLocation*2                 /* stack numbers above each other */
                   - 5*MAGNIFICATION_LEVEL;           /* and adjust the whole stack upwards */
 
-            txt.Blit(out.str(), p, JUSTIFY_C);
+            txt.Blit(out.str(), p, c, JUSTIFY_C);
         }
     }
 }
@@ -248,6 +257,8 @@ void Game::ProcessInput() {
             quit = true;
         }
     }
+
+    curPuzzle->CalculateStreakSolvedState();    /* prepare streaks for drawing */
 }
 
 void Game::Initialize() {

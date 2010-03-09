@@ -72,8 +72,8 @@ void Puzzle::CalculateStreaks() {
             lenOfCurrRowStreak,
             lenOfCurrColStreak;
 
-    RowStreaks = new std::vector<int>[Height];
-    ColStreaks = new std::vector<int>[Width];
+    RowStreaks = new std::vector<Streak>[Height];
+    ColStreaks = new std::vector<Streak>[Width];
 
     /* calculate the numbers to show in rows */
     for(i = 0; i < Height; i++) {
@@ -83,13 +83,14 @@ void Puzzle::CalculateStreaks() {
             if (Map[i*Width + j] == mapTrue)
                 lenOfCurrRowStreak++;
             else if (lenOfCurrRowStreak > 0) {
-                RowStreaks[i].push_back(lenOfCurrRowStreak);
+                Streak s(lenOfCurrRowStreak);
+                RowStreaks[i].push_back(s);
                 lenOfCurrRowStreak = 0;
             }
         }
 
         if (lenOfCurrRowStreak > 0)
-            RowStreaks[i].push_back(lenOfCurrRowStreak);
+            RowStreaks[i].push_back(Streak(lenOfCurrRowStreak));
     }
 
     /* calculate the numbers to show in columns */
@@ -100,13 +101,56 @@ void Puzzle::CalculateStreaks() {
             if (Map[j*Width + i] == mapTrue)
                 lenOfCurrColStreak++;
             else if (lenOfCurrColStreak > 0) {
-                ColStreaks[i].push_back(lenOfCurrColStreak);
+                ColStreaks[i].push_back(Streak(lenOfCurrColStreak));
                 lenOfCurrColStreak = 0;
             }
         }
 
         if (lenOfCurrColStreak > 0)
-            ColStreaks[i].push_back(lenOfCurrColStreak);
+            ColStreaks[i].push_back(Streak(lenOfCurrColStreak));
+    }
+}
+void Puzzle::CalculateStreakSolvedState() {
+    /* when is a streak solved?
+       * either if all streaks in a row/col are marked completely == whole row/col is solved
+       * or - coming from the edge of a puzzle - every tile must be either HIT or MARKED
+         note that this means streak.Solved does not necessarily reflect the true state:
+         with board map: ..X..X.... (X == box) and board state: XXXXXHX... (X == marked, H = hit),
+         the first streak would be marked as solved even though the row is NOT solved correctly
+     */
+
+    unsigned int i, j, sumFromStreak, sumFromBoard;
+
+    /* col streaks */
+    for (i = 0; i < Width; i++) {
+
+        /* entire col solved? */
+        sumFromBoard = sumFromStreak = 0;
+        for (j = 0; j < ColStreaks[i].size(); j++)
+            sumFromStreak += ColStreaks[i][j].GetLength();
+        for (j = 0; j < Height; j++)
+            if (GetStateAt(i, j) == BOARD_HIT)
+                sumFromBoard++;
+
+        if (sumFromBoard == sumFromStreak)
+            for (j = 0; j < ColStreaks[i].size(); j++)
+                ColStreaks[i][j].Solved = true;
+    }
+
+    /* row streaks */
+    for (i = 0; i < Height; i++) {
+
+        /* entire row solved? */
+        sumFromBoard = sumFromStreak = 0;
+        for (j = 0; j < RowStreaks[i].size(); j++)
+            sumFromStreak += RowStreaks[i][j].GetLength();
+        for (j = 0; j < Width; j++)
+            if (GetStateAt(j, i) == BOARD_HIT)  /* note reversed state of i/j */
+                sumFromBoard++;
+
+        if (sumFromBoard == sumFromStreak)
+            for (j = 0; j < RowStreaks[i].size(); j++)
+                RowStreaks[i][j].Solved = true;
     }
 }
 
@@ -136,30 +180,41 @@ Puzzle* Puzzle::RandomPuzzle(unsigned int w, unsigned int h, unsigned int percen
 }
 
 int Puzzle::GetMapAt(Point &p) {
-    if (!IsInBounds(p))
+    return GetMapAt(p.x, p.y);
+}
+int Puzzle::GetMapAt(unsigned int x, unsigned int y) {
+    if (!IsInBounds(x, y))
         throw PicrossException("GetMapAt failed: Point not within puzzle dimensions.");
 
-    if (Map[p.y*Width + p.x] == mapTrue)
+    if (Map[y*Width + x] == mapTrue)
         return MAP_TRUE;
     else
         return MAP_FALSE;
 }
 int Puzzle::GetStateAt(Point &p) {
-    if (!IsInBounds(p))
+    return GetStateAt(p.x, p.y);
+}
+int Puzzle::GetStateAt(unsigned int x, unsigned int y) {
+    if (!IsInBounds(x, y))
         throw PicrossException("GetStateAt failed: Point not within puzzle dimensions.");
 
-    if (BoardState[p.y*Width + p.x] == boardClean)
+    if (BoardState[y*Width + x] == boardClean)
         return BOARD_CLEAN;
-    else if (BoardState[p.y*Width + p.x] == boardHit)
+    else if (BoardState[y*Width + x] == boardHit)
         return BOARD_HIT;
     else
         return BOARD_MARKED;
 }
+
 void Puzzle::SetStateAt(Point &p, int state) {
     if (state != BOARD_CLEAN && state != BOARD_HIT && state != BOARD_MARKED)
         throw PicrossException("SetStateAt failed: invalid state passed");
     if (!IsInBounds(p))
         throw PicrossException("SetStateAt failed: Point not within puzzle dimensions.");
+    if (GetStateAt(p) == BOARD_HIT)
+        throw PicrossException("SetStateAt failed: cannot modify tile set to BOARD_HIT");
+    if (state == BOARD_HIT && GetMapAt(p) == MAP_FALSE)
+        throw PicrossException("SetStateAt failed: incorrect state BOARD_HIT requested");
 
     char c;
 

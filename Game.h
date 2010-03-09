@@ -12,7 +12,9 @@
 
 #include <SDL/SDL.h>
 #include <sstream>
+
 #include "Globals.h"
+#include "Streak.h"
 #include "Puzzle.h"
 #include "Point.h"
 #include "Sprite.h"

@@ -21,6 +21,10 @@ public:
 
     void Load(std::string Filename);
     void Blit(std::string txt, Point p, unsigned int justify = JUSTIFY_L);
+    void Blit(std::string txt, Point p, SDL_Color c, unsigned int justify = JUSTIFY_L);
+
+    static const unsigned int Size = 18;
+
 private:
     TTF_Font *font;
 };

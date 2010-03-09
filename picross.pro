@@ -13,14 +13,16 @@ SOURCES += main.cpp \
     PicrossException.cpp \
     Point.cpp \
     Sprite.cpp \
-    Text.cpp
+    Text.cpp \
+    Streak.cpp
 HEADERS += Game.h \
     Puzzle.h \
     PicrossException.h \
     Point.h \
     Sprite.h \
     Text.h \
-    Globals.h
+    Globals.h \
+    Streak.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_mixer \

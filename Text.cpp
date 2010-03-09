@@ -15,17 +15,20 @@ void Text::Load(std::string Filename) {
     if (font)
         throw PicrossException("Font already loaded, Text::Load cannot be called twice.");
 
-    font = TTF_OpenFont(Filename.c_str(), 18);
+    font = TTF_OpenFont(Filename.c_str(), Size);
 
     if (!font)
         throw PicrossException(TTF_GetError());
 }
 
 void Text::Blit(std::string txt, Point p, unsigned int justify) {
+    SDL_Color c = {0,0,0};
+    Blit(txt, p, c, justify);
+}
+void Text::Blit(std::string txt, Point p, SDL_Color c, unsigned int justify) {
     if (!font)
         throw PicrossException("Text::Blit failed, no font loaded.");
 
-    SDL_Color c = {0,0,0};
     SDL_Rect to;
     SDL_Surface *s = NULL;
 
