@@ -72,7 +72,10 @@ public:
             Height;
 
 private:
-    void CalculateStreaks();
+    std::vector<Streak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
+    std::vector<Streak> CalculateStreaksFromState(              /* startFromEnd: when true, starts calculation from end of row.*/
+            bool horizontal, int lineIndex, bool startFromEnd); /* this matters because streaks from state need to be contigous*/
+                                                                /* lineIndex: which row/column to calc streaks for */
 
     Point Location; /* stores current location on board */
 

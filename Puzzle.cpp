@@ -27,7 +27,8 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
             Map[i] = map[i];
         else throw PicrossException("Illegal character in input map");
 
-    CalculateStreaks();
+    ColStreaks = CalculateStreaksFromMap(false);
+    RowStreaks = CalculateStreaksFromMap(true);
 
     penaltyTime = 0;
     penaltyMultiplier = 1;
@@ -66,49 +67,69 @@ bool Puzzle::IsInBounds(unsigned int x, unsigned int y) {
     return (x < Width && y < Height);
 }
 
-void Puzzle::CalculateStreaks() {
-    unsigned int
-            i, j,
-            lenOfCurrRowStreak,
-            lenOfCurrColStreak;
+std::vector<Streak>* Puzzle::CalculateStreaksFromMap(bool horizontal) {
+    /* note:    CalculateStreaksFromMap / CalculateStreaksFromState functions are very similar
+                when changing one, don't forget to change the other */
 
-    RowStreaks = new std::vector<Streak>[Height];
-    ColStreaks = new std::vector<Streak>[Width];
+    unsigned int i, j, lenOfCurrStreak;
 
-    /* calculate the numbers to show in rows */
-    for(i = 0; i < Height; i++) {
-        lenOfCurrRowStreak = 0;
+    unsigned int iMax = horizontal ? Height : Width; /* loop bounds differ for cols / rows */
+    unsigned int jMax = horizontal ? Width : Height;
 
-        for(j = 0; j < Width; j++) {
-            if (Map[i*Width + j] == mapTrue)
-                lenOfCurrRowStreak++;
-            else if (lenOfCurrRowStreak > 0) {
-                Streak s(lenOfCurrRowStreak);
-                RowStreaks[i].push_back(s);
-                lenOfCurrRowStreak = 0;
+    std::vector<Streak> *s = new std::vector<Streak>[iMax];
+
+    for(i = 0; i < iMax; i++) {
+        lenOfCurrStreak = 0;
+
+        for(j = 0; j < jMax; j++) {
+            int posIndex = horizontal ? i*Width + j : j*Width + i; /* index calc differs for cols / rows */
+
+            if (Map[posIndex] == mapTrue)
+                lenOfCurrStreak++;
+            else if (lenOfCurrStreak > 0) {
+                s[i].push_back(Streak(lenOfCurrStreak));
+                lenOfCurrStreak = 0;
             }
         }
 
-        if (lenOfCurrRowStreak > 0)
-            RowStreaks[i].push_back(Streak(lenOfCurrRowStreak));
+        if (lenOfCurrStreak > 0)
+            s[i].push_back(Streak(lenOfCurrStreak));
     }
 
-    /* calculate the numbers to show in columns */
-    for(i = 0; i < Width; i++) {
-        lenOfCurrColStreak = 0;
+    return s;
+}
+std::vector<Streak> Puzzle::CalculateStreaksFromState(bool horizontal, int lineIndex, bool startFromEnd) {
+    /* note:    CalculateStreaksFromMap / CalculateStreaksFromState functions are very similar
+                when changing one, don't forget to change the other */
 
-        for(j = 0; j < Height; j++) {
-            if (Map[j*Width + i] == mapTrue)
-                lenOfCurrColStreak++;
-            else if (lenOfCurrColStreak > 0) {
-                ColStreaks[i].push_back(Streak(lenOfCurrColStreak));
-                lenOfCurrColStreak = 0;
-            }
+    unsigned int j, jCalc, lenOfCurrStreak = 0;
+
+    unsigned int jMax = horizontal ? Width : Height; /* loop bounds differ for cols / rows */
+
+    std::vector<Streak> s;
+
+    for(j = 0; j < jMax; j++) {
+
+        jCalc = startFromEnd ? jMax - 1 - j : j;    /* reverse direction of loop if startFromEnd == true */
+        int posIndex = horizontal ?     /* index calc differs for cols / rows */
+                       lineIndex*Width + jCalc :
+                       jCalc*Width + lineIndex;
+
+        if (BoardState[posIndex] == boardClean) {
+            break;              /* return only contigous streaks for solved calculation */
         }
-
-        if (lenOfCurrColStreak > 0)
-            ColStreaks[i].push_back(Streak(lenOfCurrColStreak));
+        else if (BoardState[posIndex] == boardHit)
+            lenOfCurrStreak++;
+        else if (lenOfCurrStreak > 0) {
+            s.push_back(Streak(lenOfCurrStreak));
+            lenOfCurrStreak = 0;
+        }
     }
+
+    if (lenOfCurrStreak > 0)
+        s.push_back(Streak(lenOfCurrStreak));
+
+    return s;
 }
 void Puzzle::CalculateStreakSolvedState() {
     /* when is a streak solved?
@@ -119,38 +140,85 @@ void Puzzle::CalculateStreakSolvedState() {
          the first streak would be marked as solved even though the row is NOT solved correctly
      */
 
-    unsigned int i, j, sumFromStreak, sumFromBoard;
+    unsigned int i, j, sumFromStreak, sumFromBoard, sumFromBoardIncludingMarked;
 
     /* col streaks */
     for (i = 0; i < Width; i++) {
 
         /* entire col solved? */
-        sumFromBoard = sumFromStreak = 0;
+        sumFromBoard = sumFromStreak = sumFromBoardIncludingMarked = 0;
         for (j = 0; j < ColStreaks[i].size(); j++)
             sumFromStreak += ColStreaks[i][j].GetLength();
-        for (j = 0; j < Height; j++)
-            if (GetStateAt(i, j) == BOARD_HIT)
+        for (j = 0; j < Height; j++) {
+            int state = GetStateAt(i, j);
+            if (state == BOARD_HIT)
                 sumFromBoard++;
+            if (state == BOARD_HIT || state == BOARD_MARKED)
+                sumFromBoardIncludingMarked++;
+        }
 
         if (sumFromBoard == sumFromStreak)
             for (j = 0; j < ColStreaks[i].size(); j++)
                 ColStreaks[i][j].Solved = true;
+
+        /* entire line marked but not correctly */
+        else if (sumFromBoardIncludingMarked == Height)
+            for (j = 0; j < ColStreaks[i].size(); j++)
+                ColStreaks[i][j].Solved = false;
+
+        /* if not entire col solved and tiles are checked in col (to prevent unnecessary work), do detailed check */
+        else if (sumFromBoard > 0) {
+            std::vector<Streak> vFromStart = CalculateStreaksFromState(false, i, false);
+            std::vector<Streak> vFromEnd = CalculateStreaksFromState(false, i, true);
+
+            for (j = 0; j < vFromStart.size(); j++) /* from beginning */
+                ColStreaks[i][j].Solved = (vFromStart[j].GetLength() == ColStreaks[i][j].GetLength());
+
+            for (j = 0; j < vFromEnd.size(); j++) { /* from end */
+                int posIndex = ColStreaks[i].size() - 1 - j;
+                ColStreaks[i][posIndex].Solved = (vFromEnd[j].GetLength() == ColStreaks[i][posIndex].GetLength());
+            }
+        }
+
     }
 
     /* row streaks */
     for (i = 0; i < Height; i++) {
 
         /* entire row solved? */
-        sumFromBoard = sumFromStreak = 0;
+        sumFromBoard = sumFromStreak = sumFromBoardIncludingMarked = 0;
         for (j = 0; j < RowStreaks[i].size(); j++)
             sumFromStreak += RowStreaks[i][j].GetLength();
-        for (j = 0; j < Width; j++)
-            if (GetStateAt(j, i) == BOARD_HIT)  /* note reversed state of i/j */
+        for (j = 0; j < Width; j++) {
+            int state = GetStateAt(j, i); /* note reversed state of i/j */
+            if (state == BOARD_HIT)
                 sumFromBoard++;
+            if (state == BOARD_HIT || state == BOARD_MARKED)
+                sumFromBoardIncludingMarked++;
+        }
 
         if (sumFromBoard == sumFromStreak)
             for (j = 0; j < RowStreaks[i].size(); j++)
                 RowStreaks[i][j].Solved = true;
+
+        /* entire line marked but not correctly */
+        else if (sumFromBoardIncludingMarked == Width)
+            for (j = 0; j < RowStreaks[i].size(); j++)
+                RowStreaks[i][j].Solved = false;
+
+        /* if not entire row solved and tiles are checked in row (to prevent unnecessary work), do detailed check */
+        else if (sumFromBoard > 0) {
+            std::vector<Streak> vFromStart = CalculateStreaksFromState(true, i, false);
+            std::vector<Streak> vFromEnd = CalculateStreaksFromState(true, i, true);
+
+            for (j = 0; j < vFromStart.size(); j++) /* from beginning */
+                RowStreaks[i][j].Solved = (vFromStart[j].GetLength() == RowStreaks[i][j].GetLength());
+
+            for (j = 0; j < vFromEnd.size(); j++) { /* from end */
+                int posIndex = RowStreaks[i].size() - 1 - j;
+                RowStreaks[i][posIndex].Solved = (vFromEnd[j].GetLength() == RowStreaks[i][posIndex].GetLength());
+            }
+        }
     }
 }
 
