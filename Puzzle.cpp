@@ -10,7 +10,8 @@
 #include "Puzzle.h"
 
 Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
-        ColStreaks(NULL), RowStreaks(NULL), Width(w), Height(h), Map(NULL), BoardState(NULL)
+        ColStreaks(NULL), RowStreaks(NULL), Width(w), Height(h),
+        Map(NULL), BoardState(NULL)
 {
     if (map.length() < w*h)
         throw PicrossException("Input map has incorrect size");
@@ -27,6 +28,10 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
         else throw PicrossException("Illegal character in input map");
 
     CalculateStreaks();
+
+    penaltyTime = 0;
+    penaltyMultiplier = 1;
+    startTime = time(NULL);
 }
 
 Puzzle::~Puzzle() {
@@ -176,10 +181,57 @@ void Puzzle::SetStateAt(Point &p, int state) {
 Point Puzzle::GetLocation() {
     return Point(&Location);
 }
-void Puzzle::SetLocation(Point &p) {
+bool Puzzle::TrySetLocation(Point &p) {
     if (!IsInBounds(p))
-        throw PicrossException("SetLocation failed: Point not within puzzle dimensions.");
+        return false;
 
-    Location.x = p.x;
-    Location.y = p.y;
+    Location = p;
+
+    return true;
+}
+bool Puzzle::TrySetLocationRel(int dx, int dy) {
+    Point p(Location.x + dx, Location.y + dy);
+
+    if (!IsInBounds(Location.x + dx, Location.y + dy))
+        return false;
+
+    Location.x += dx;
+    Location.y += dy;
+
+    return true;
+}
+
+void Puzzle::DoOpAt(Point &p, int op) {
+
+    /* hit/mark logic */
+    if (GetStateAt(p) == BOARD_HIT) {}    /* we cannot mark spots that are already hit */
+    else if (op == OP_MARK) {
+        if (GetStateAt(p) == BOARD_MARKED)
+            SetStateAt(p, BOARD_CLEAN);
+        else
+            SetStateAt(p, BOARD_MARKED);
+    }
+    else if (op == OP_HIT) {                                 /* HIT */
+        if (GetStateAt(p) == BOARD_MARKED)             /* was marked -> unmarked */
+            SetStateAt(p, BOARD_CLEAN);
+        else if (GetMapAt(p) == MAP_TRUE)      /* if correct -> hit */
+            SetStateAt(p, BOARD_HIT);
+        else if (GetMapAt(p) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
+            SetStateAt(p, BOARD_MARKED);
+            penaltyTime += 120 * penaltyMultiplier++;
+        }
+    }
+}
+void Puzzle::DoOp(int op) {
+    DoOpAt(Location, op);
+}
+
+unsigned int Puzzle::GetElapsedPenaltyTime() {
+    return penaltyTime;
+}
+unsigned int Puzzle::GetElapsedRealTime() {
+    return time(NULL) - startTime;
+}
+unsigned int Puzzle::GetElapsedTime() {
+    return GetElapsedPenaltyTime() + GetElapsedRealTime();
 }

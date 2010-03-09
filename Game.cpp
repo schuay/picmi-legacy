@@ -83,8 +83,7 @@ void Game::ProcessDrawing() {
     }
 
     /* draw timer */
-    unsigned int elapsedTime = time(NULL) - startTime;
-    out << elapsedTime + penaltyTime;
+    out << curPuzzle->GetElapsedTime();
 
     p.x = TIMERX*MAGNIFICATION_LEVEL;
     p.y = TIMERY*MAGNIFICATION_LEVEL;
@@ -143,7 +142,7 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         lastDragLocation = newLocation;  /* remember last handled tile so we only to a single op per tile on drags */
         break;
     case SDL_MOUSEMOTION:
-        if (btn == SDL_BUTTON_LEFT || btn == SDL_BUTTON_RIGHT) {
+        if (btn == SDL_BUTTON_LEFT || btn == SDL_BUTTON_RIGHT) {    /* only run drag logic if a mousebutton is pressed, otherwise only set location */
             if ( newLocation != lastClickLocation && dragDirection == -1 ) { /* calc drag direction */
                 unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
                 unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
@@ -171,7 +170,7 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         break;
     }
 
-    curPuzzle->SetLocation(newLocation);
+    curPuzzle->TrySetLocation(newLocation);
 
     if (btn == SDL_BUTTON_LEFT)
         return OP_HIT;
@@ -186,6 +185,8 @@ void Game::ProcessInput() {
 
     while (SDL_PollEvent(&ev) == 1) {
         int dx = 0, dy = 0, op = OP_NONE;
+
+        /* get input... */
 
         switch (ev.type) {
         case SDL_KEYDOWN:
@@ -230,44 +231,22 @@ void Game::ProcessInput() {
          default:
             break;
         }
-        ProcessLogic(dx, dy, op);
-    }
-}
 
-void Game::ProcessLogic(int dx, int dy, int op) {
+        /* perform actual logic... */
 
-    /* movement logic */
-    Point p = curPuzzle->GetLocation();
-    p.x += dx;
-    p.y += dy;
-    if (curPuzzle->IsInBounds(p))
-        curPuzzle->SetLocation(p);
+        if (dx || dy)
+            curPuzzle->TrySetLocationRel(dx, dy);
 
-    p = curPuzzle->GetLocation();
+        if (op != OP_NONE)
+            curPuzzle->DoOp(op);
 
-    /* hit/mark logic */
-    if (curPuzzle->GetStateAt(p) == BOARD_HIT) {}    /* we cannot mark spots that are already hit */
-    else if (op == OP_MARK) {
-        if (curPuzzle->GetStateAt(p) == BOARD_MARKED)
-            curPuzzle->SetStateAt(p, BOARD_CLEAN);
-        else
-            curPuzzle->SetStateAt(p, BOARD_MARKED);
-    }
-    else if (op == OP_HIT) {                                 /* HIT */
-        if (curPuzzle->GetStateAt(p) == BOARD_MARKED)             /* was marked -> unmarked */
-            curPuzzle->SetStateAt(p, BOARD_CLEAN);
-        else if (curPuzzle->GetMapAt(p) == MAP_TRUE)      /* if correct -> hit */
-            curPuzzle->SetStateAt(p, BOARD_HIT);
-        else if (curPuzzle->GetMapAt(p) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
-            curPuzzle->SetStateAt(p, BOARD_MARKED);
-            penaltyTime += 120*penaltyMultiplier++;
+        if (curPuzzle->GameWon()) {
+            unsigned int elapsedRealTime = curPuzzle->GetElapsedRealTime();
+            unsigned int elapsedPenaltyTime = curPuzzle->GetElapsedPenaltyTime();
+            printf("\nGame solved in %u s (%u s real, %u s penalty)!\n\n",
+                   elapsedRealTime + elapsedPenaltyTime, elapsedRealTime, elapsedPenaltyTime);
+            quit = true;
         }
-    }
-
-    if (curPuzzle->GameWon()) {
-        unsigned int elapsedTime = time(NULL) - startTime;
-        printf("\nGame solved in %u s (%u s real, %u s penalty)!\n\n", elapsedTime + penaltyTime, elapsedTime, penaltyTime);
-        quit = true;
     }
 }
 
@@ -358,12 +337,7 @@ void Game::NewPuzzle(int type, unsigned int difficulty) {
 
     dragDirection = DRAG_UNDEF;
 
-    penaltyMultiplier = 1;
-    penaltyTime = 0;
-
     quit = false;
-
-    startTime = time(NULL);
 }
 
 Game::Game() {

@@ -19,9 +19,14 @@
 
 #define MAP_FALSE       0
 #define MAP_TRUE        1
+
 #define BOARD_CLEAN     0
 #define BOARD_MARKED    1
 #define BOARD_HIT       2
+
+#define OP_NONE         0  // defines for game actions, NONE, HIT (uncover a tile), MARK (mark a tile as empty)
+#define OP_HIT          1
+#define OP_MARK         2
 
 class Puzzle
 {
@@ -42,8 +47,16 @@ public:
 
     void SetStateAt(Point &p, int state); /* set state of board at p */
 
-    Point GetLocation();
-    void SetLocation(Point &p);
+    Point GetLocation();    /* get / set current location */
+    bool TrySetLocation(Point &p);  /* try setting absolute / relative current location; returns true on success, false on failure*/
+    bool TrySetLocationRel(int dx, int dy);
+
+    void DoOpAt(Point &p, int op);  /* perform operation (HIT/MARK) at p */
+    void DoOp(int op);              /* or at current location */
+
+    unsigned int GetElapsedTime();
+    unsigned int GetElapsedRealTime();
+    unsigned int GetElapsedPenaltyTime();
 
     std::vector<int>
             *ColStreaks,    /* stores streaks */
@@ -57,6 +70,11 @@ private:
     void CalculateStreaks();
 
     Point Location; /* stores current location on board */
+
+    unsigned int
+            startTime,          /* game start time (s)*/
+            penaltyTime,        /* base penalty time */
+            penaltyMultiplier;  /* current penalty multiplier (applied to penaltyTime) */
 
     static const char
             mapFalse = '.',
