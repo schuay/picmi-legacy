@@ -348,11 +348,14 @@ Game::~Game() {
         delete curPuzzle;
 
     TTF_Quit();
+    SDL_Quit();
 }
 
 void Game::DoMainLoop() {
     ProcessInput();
+
     ProcessDrawing();
+    SDL_Flip(Screen);
 
     SDL_Delay(30);  /* relinquish cpu time we don't need */
 }

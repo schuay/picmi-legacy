@@ -58,17 +58,14 @@ int main(int argc, char **argv) {
         game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
         game.NewPuzzle(puzType, puzDifficulty);
 
-        while(!game.GetQuit()) {
+        while(!game.GetQuit())
                 game.DoMainLoop();
-                SDL_Flip(Screen);
-        }
-
-        SDL_Quit();
 
         return 0;
     }
     catch (PicrossException e) {
         printf("Error: %s", e.what());
+        return 1;
     }
 }
 
