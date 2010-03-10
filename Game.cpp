@@ -237,6 +237,9 @@ void Game::ProcessInput() {
                 op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT, SDL_MOUSEMOTION);
             else HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE, SDL_MOUSEMOTION);
             break;
+         case SDL_QUIT:
+            quit = true;
+            break;
          default:
             break;
         }
