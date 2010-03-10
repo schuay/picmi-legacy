@@ -309,7 +309,7 @@ void Game::Initialize() {
     sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
 }
 
-void Game::NewPuzzle(int type, unsigned int difficulty) {
+void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode) {
 
     if (curPuzzle) {
         delete curPuzzle;
@@ -346,6 +346,8 @@ void Game::NewPuzzle(int type, unsigned int difficulty) {
         curPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
         break;
     }
+
+    curPuzzle->NoHintsMode = noHintsMode;
 
     /* initialize vars */
 

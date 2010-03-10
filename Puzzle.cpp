@@ -157,14 +157,12 @@ void Puzzle::CalculateStreakSolvedState() {
                 sumFromBoardIncludingMarked++;
         }
 
-        if (sumFromBoard == sumFromStreak)
+        for (j = 0; j < ColStreaks[i].size(); j++)  /* reset state of all streaks to false */
+            ColStreaks[i][j].Solved = false;
+
+        if (!NoHintsMode && sumFromBoard == sumFromStreak)  /* test only valid if !NoHintsMode */
             for (j = 0; j < ColStreaks[i].size(); j++)
                 ColStreaks[i][j].Solved = true;
-
-        /* entire line marked but not correctly */
-        else if (sumFromBoardIncludingMarked == Height)
-            for (j = 0; j < ColStreaks[i].size(); j++)
-                ColStreaks[i][j].Solved = false;
 
         /* if not entire col solved and tiles are checked in col (to prevent unnecessary work), do detailed check */
         else if (sumFromBoard > 0) {
@@ -172,11 +170,17 @@ void Puzzle::CalculateStreakSolvedState() {
             std::vector<Streak> vFromEnd = CalculateStreaksFromState(false, i, true);
 
             for (j = 0; j < vFromStart.size(); j++) /* from beginning */
-                ColStreaks[i][j].Solved = (vFromStart[j].GetLength() == ColStreaks[i][j].GetLength());
+                if (vFromStart[j].GetLength() == ColStreaks[i][j].GetLength())
+                    ColStreaks[i][j].Solved = true;
+                else
+                    break;
 
             for (j = 0; j < vFromEnd.size(); j++) { /* from end */
                 int posIndex = ColStreaks[i].size() - 1 - j;
-                ColStreaks[i][posIndex].Solved = (vFromEnd[j].GetLength() == ColStreaks[i][posIndex].GetLength());
+                if (vFromEnd[j].GetLength() == ColStreaks[i][posIndex].GetLength())
+                    ColStreaks[i][posIndex].Solved = true;
+                else
+                    break;
             }
         }
 
@@ -197,14 +201,12 @@ void Puzzle::CalculateStreakSolvedState() {
                 sumFromBoardIncludingMarked++;
         }
 
-        if (sumFromBoard == sumFromStreak)
+        for (j = 0; j < RowStreaks[i].size(); j++)  /* reset state of all streaks to false */
+            RowStreaks[i][j].Solved = false;
+
+        if (!NoHintsMode && sumFromBoard == sumFromStreak)  /* test only valid if !NoHintsMode */
             for (j = 0; j < RowStreaks[i].size(); j++)
                 RowStreaks[i][j].Solved = true;
-
-        /* entire line marked but not correctly */
-        else if (sumFromBoardIncludingMarked == Width)
-            for (j = 0; j < RowStreaks[i].size(); j++)
-                RowStreaks[i][j].Solved = false;
 
         /* if not entire row solved and tiles are checked in row (to prevent unnecessary work), do detailed check */
         else if (sumFromBoard > 0) {
@@ -212,11 +214,17 @@ void Puzzle::CalculateStreakSolvedState() {
             std::vector<Streak> vFromEnd = CalculateStreaksFromState(true, i, true);
 
             for (j = 0; j < vFromStart.size(); j++) /* from beginning */
-                RowStreaks[i][j].Solved = (vFromStart[j].GetLength() == RowStreaks[i][j].GetLength());
+                if (vFromStart[j].GetLength() == RowStreaks[i][j].GetLength())
+                    RowStreaks[i][j].Solved = true;
+                else
+                    break;
 
             for (j = 0; j < vFromEnd.size(); j++) { /* from end */
                 int posIndex = RowStreaks[i].size() - 1 - j;
-                RowStreaks[i][posIndex].Solved = (vFromEnd[j].GetLength() == RowStreaks[i][posIndex].GetLength());
+                if (vFromEnd[j].GetLength() == RowStreaks[i][posIndex].GetLength())
+                    RowStreaks[i][posIndex].Solved = true;
+                else
+                    break;
             }
         }
     }
@@ -279,10 +287,6 @@ void Puzzle::SetStateAt(Point &p, int state) {
         throw PicrossException("SetStateAt failed: invalid state passed");
     if (!IsInBounds(p))
         throw PicrossException("SetStateAt failed: Point not within puzzle dimensions.");
-    if (GetStateAt(p) == BOARD_HIT)
-        throw PicrossException("SetStateAt failed: cannot modify tile set to BOARD_HIT");
-    if (state == BOARD_HIT && GetMapAt(p) == MAP_FALSE)
-        throw PicrossException("SetStateAt failed: incorrect state BOARD_HIT requested");
 
     char c;
 
@@ -324,25 +328,79 @@ bool Puzzle::TrySetLocationRel(int dx, int dy) {
     return true;
 }
 
-void Puzzle::DoOpAt(Point &p, int op) {
+void Puzzle::DoOpAt(Point &p, int op) {    
+    if (op == OP_NONE)
+        return;
 
-    /* hit/mark logic */
-    if (GetStateAt(p) == BOARD_HIT) {}    /* we cannot mark spots that are already hit */
-    else if (op == OP_MARK) {
-        if (GetStateAt(p) == BOARD_MARKED)
-            SetStateAt(p, BOARD_CLEAN);
-        else
-            SetStateAt(p, BOARD_MARKED);
-    }
-    else if (op == OP_HIT) {                                 /* HIT */
-        if (GetStateAt(p) == BOARD_MARKED)             /* was marked -> unmarked */
-            SetStateAt(p, BOARD_CLEAN);
-        else if (GetMapAt(p) == MAP_TRUE)      /* if correct -> hit */
-            SetStateAt(p, BOARD_HIT);
-        else if (GetMapAt(p) == MAP_FALSE) {     /* if incorrect -> marked and add to penaltyTime*/
-            SetStateAt(p, BOARD_MARKED);
-            penaltyTime += 120 * penaltyMultiplier++;
+    if (op != OP_MARK && op != OP_HIT)
+        throw PicrossException("DoOpAt failed: Incorrect operation passed.");
+
+    int
+            state = GetStateAt(p),
+            map = GetMapAt(p);
+
+    switch (NoHintsMode) {
+    case false:                 /* NoHintsMode DISABLED */
+        switch (op) {
+        case OP_MARK:               /* OP_MARK requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                SetStateAt(p, BOARD_MARKED);
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                SetStateAt(p, BOARD_CLEAN);
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                break;
+            }
+            break;
+        case OP_HIT:                /* OP_HIT requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                if (map == MAP_TRUE)
+                    SetStateAt(p, BOARD_HIT);
+                else if (map == MAP_FALSE) {
+                    SetStateAt(p, BOARD_MARKED);
+                    penaltyTime += 120 * penaltyMultiplier++;
+                }
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                SetStateAt(p, BOARD_CLEAN);
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                break;
+            }
+            break;
         }
+        break;
+    case true:                  /* NoHintsMode ENABLED */
+        switch (op) {
+        case OP_MARK:               /* OP_MARK requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                SetStateAt(p, BOARD_MARKED);
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                SetStateAt(p, BOARD_CLEAN);
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                break;
+            }
+            break;
+        case OP_HIT:                /* OP_HIT requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                SetStateAt(p, BOARD_HIT);
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                SetStateAt(p, BOARD_CLEAN);
+                break;
+            }
+            break;
+        }
+        break;
     }
 }
 void Puzzle::DoOp(int op) {

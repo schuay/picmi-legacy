@@ -71,6 +71,8 @@ public:
             Width,
             Height;
 
+    bool NoHintsMode;   /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
+
 private:
     std::vector<Streak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
     std::vector<Streak> CalculateStreaksFromState(              /* startFromEnd: when true, starts calculation from end of row.*/

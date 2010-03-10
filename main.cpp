@@ -17,9 +17,12 @@ int main(int argc, char **argv) {
     int c,
         puzType = PUZ_RAND,
         puzDifficulty = 55;
-    char *cvalue = NULL;
+    char
+        *cvalue = NULL;
+    bool
+        noHintsMode = false;
 
-    while ((c = getopt(argc, argv, "shkr:")) != -1) {
+    while ((c = getopt(argc, argv, "nshkr:")) != -1) {
         switch (c) {
         case 'r':
             puzType = PUZ_RAND;
@@ -28,6 +31,9 @@ int main(int argc, char **argv) {
             break;
         case 's':
             puzType = PUZ_STAT;
+            break;
+        case 'n':
+            noHintsMode = true;
             break;
         case 'h':
         case '?':
@@ -41,6 +47,7 @@ int main(int argc, char **argv) {
                    "    right ctrl: expose a tile\n"
                    "    right shift: mark/unmark a tile\n\n"
                    "arguments:\n"
+                   "    -n: no hints mode. incorrect tile marks are not prevented\n"
                    "    -r num: generate random puzzle with percentage num of board filled \n"
                    "            for example, 'tuxpicross -r 60' will generate a random board with 60%% of all tiles filled\n"
                    "    -s: generate static puzzle (for debug purposes)\n"
@@ -56,7 +63,7 @@ int main(int argc, char **argv) {
         Game game;
 
         game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
-        game.NewPuzzle(puzType, puzDifficulty);
+        game.NewPuzzle(puzType, puzDifficulty, noHintsMode);
 
         while(!game.GetQuit())
                 game.DoMainLoop();

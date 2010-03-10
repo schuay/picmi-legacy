@@ -47,7 +47,7 @@ public:
     ~Game();
 
     void Initialize();
-    void NewPuzzle(int type, unsigned int difficulty);
+    void NewPuzzle(int type, unsigned int difficulty, bool noHintsMode);
     void DoMainLoop();
     bool GetQuit();
 
