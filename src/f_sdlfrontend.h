@@ -14,12 +14,11 @@
 #include <sstream>
 #include <iomanip>
 
-#include "Globals.h"
-#include "Streak.h"
-#include "Puzzle.h"
-#include "Point.h"
-#include "Sprite.h"
-#include "Text.h"
+#include "b_picross.h"
+
+#include "f_sdlglobals.h"
+#include "f_sdlsprite.h"
+#include "f_sdltext.h"
 
 #define CELLLENGTH 24           // length of a single tile (width and height must be equal)
 #define PUZZLE_POSX 200         // position of the board's left upper corner
@@ -38,11 +37,11 @@
 
 #define GAMEBUILD "Tux Picross v.0.1"
 
-class Game {
+class SDLFrontend {
 public:
 
-    Game();
-    ~Game();
+    SDLFrontend();
+    ~SDLFrontend();
 
     void Initialize();
     void NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
@@ -65,7 +64,7 @@ private:
 
     int HandleMouseEvent(int x, int y, int btn, int event);
 
-    Point
+    PicPoint
         lastClickLocation,
         lastDragLocation;
 
@@ -74,7 +73,7 @@ private:
     bool
         quit;
 
-    Sprite
+    SDLSprite
         sprCellFrame,
         sprBoxTile,
         sprMarkTile,
@@ -89,9 +88,9 @@ private:
         sprStreakAreaVerB,
         sprBackground;
 
-    Text txt;
+    SDLText txt;
 
-    Puzzle *curPuzzle;
+    Picross *curPuzzle;
 };
 
 #endif // GAME_H

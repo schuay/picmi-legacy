@@ -7,14 +7,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "Puzzle.h"
+#include "b_picross.h"
 
-Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
+Picross::Picross(unsigned int w, unsigned int h, std::string map) :
         ColStreaks(NULL), RowStreaks(NULL), Width(w), Height(h),
         Map(NULL), BoardState(NULL)
 {
     if (map.length() < w*h)
-        throw PicrossException("Input map has incorrect size");
+        throw PicException("Input map has incorrect size");
 
     Map = new char[w*h];
     BoardState = new char[w*h];
@@ -26,7 +26,7 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
             NrOfBoxes++;
         if (map[i] == mapTrue || map[i] == mapFalse)
             Map[i] = map[i];
-        else throw PicrossException("Illegal character in input map");
+        else throw PicException("Illegal character in input map");
 
     }
 
@@ -38,7 +38,7 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
     startTime = time(NULL);
 }
 
-Puzzle::~Puzzle() {
+Picross::~Picross() {
     if (Map)
         delete[] Map;
     if (BoardState)
@@ -50,7 +50,7 @@ Puzzle::~Puzzle() {
         delete[] RowStreaks;
 }
 
-bool Puzzle::GameWon() {
+bool Picross::GameWon() {
     int mapFilled = 0, stateFilled = 0;
 
     for (unsigned int i = 0; i < strlen(Map); i++)
@@ -63,14 +63,14 @@ bool Puzzle::GameWon() {
 
     return (mapFilled == stateFilled);
 }
-bool Puzzle::IsInBounds(Point &p) {
+bool Picross::IsInBounds(PicPoint &p) {
     return IsInBounds(p.x, p.y);
 }
-bool Puzzle::IsInBounds(unsigned int x, unsigned int y) {
+bool Picross::IsInBounds(unsigned int x, unsigned int y) {
     return (x < Width && y < Height);
 }
 
-std::vector<Streak>* Puzzle::CalculateStreaksFromMap(bool horizontal) {
+std::vector<PicStreak>* Picross::CalculateStreaksFromMap(bool horizontal) {
     /* note:    CalculateStreaksFromMap / CalculateStreaksFromState functions are very similar
                 when changing one, don't forget to change the other */
 
@@ -79,7 +79,7 @@ std::vector<Streak>* Puzzle::CalculateStreaksFromMap(bool horizontal) {
     unsigned int iMax = horizontal ? Height : Width; /* loop bounds differ for cols / rows */
     unsigned int jMax = horizontal ? Width : Height;
 
-    std::vector<Streak> *s = new std::vector<Streak>[iMax];
+    std::vector<PicStreak> *s = new std::vector<PicStreak>[iMax];
 
     for(i = 0; i < iMax; i++) {
         lenOfCurrStreak = 0;
@@ -90,18 +90,18 @@ std::vector<Streak>* Puzzle::CalculateStreaksFromMap(bool horizontal) {
             if (Map[posIndex] == mapTrue)
                 lenOfCurrStreak++;
             else if (lenOfCurrStreak > 0) {
-                s[i].push_back(Streak(lenOfCurrStreak));
+                s[i].push_back(PicStreak(lenOfCurrStreak));
                 lenOfCurrStreak = 0;
             }
         }
 
         if (lenOfCurrStreak > 0)
-            s[i].push_back(Streak(lenOfCurrStreak));
+            s[i].push_back(PicStreak(lenOfCurrStreak));
     }
 
     return s;
 }
-std::vector<Streak> Puzzle::CalculateStreaksFromState(bool horizontal, int lineIndex, bool startFromEnd) {
+std::vector<PicStreak> Picross::CalculateStreaksFromState(bool horizontal, int lineIndex, bool startFromEnd) {
     /* note:    CalculateStreaksFromMap / CalculateStreaksFromState functions are very similar
                 when changing one, don't forget to change the other */
 
@@ -109,7 +109,7 @@ std::vector<Streak> Puzzle::CalculateStreaksFromState(bool horizontal, int lineI
 
     unsigned int jMax = horizontal ? Width : Height; /* loop bounds differ for cols / rows */
 
-    std::vector<Streak> s;
+    std::vector<PicStreak> s;
 
     for(j = 0; j < jMax; j++) {
 
@@ -124,17 +124,17 @@ std::vector<Streak> Puzzle::CalculateStreaksFromState(bool horizontal, int lineI
         else if (BoardState[posIndex] == boardHit)
             lenOfCurrStreak++;
         else if (lenOfCurrStreak > 0) {
-            s.push_back(Streak(lenOfCurrStreak));
+            s.push_back(PicStreak(lenOfCurrStreak));
             lenOfCurrStreak = 0;
         }
     }
 
     if (lenOfCurrStreak > 0)
-        s.push_back(Streak(lenOfCurrStreak));
+        s.push_back(PicStreak(lenOfCurrStreak));
 
     return s;
 }
-void Puzzle::CalculateStreakSolvedState() {
+void Picross::CalculateStreakSolvedState() {
     /* when is a streak solved?
        * either if all streaks in a row/col are marked completely == whole row/col is solved
        * or - coming from the edge of a puzzle - every tile must be either HIT or MARKED
@@ -169,8 +169,8 @@ void Puzzle::CalculateStreakSolvedState() {
 
         /* if not entire col solved and tiles are checked in col (to prevent unnecessary work), do detailed check */
         else if (sumFromBoard > 0) {
-            std::vector<Streak> vFromStart = CalculateStreaksFromState(false, i, false);
-            std::vector<Streak> vFromEnd = CalculateStreaksFromState(false, i, true);
+            std::vector<PicStreak> vFromStart = CalculateStreaksFromState(false, i, false);
+            std::vector<PicStreak> vFromEnd = CalculateStreaksFromState(false, i, true);
 
             for (j = 0; j < vFromStart.size(); j++) /* from beginning */
                 if (vFromStart[j].GetLength() == ColStreaks[i][j].GetLength())
@@ -213,8 +213,8 @@ void Puzzle::CalculateStreakSolvedState() {
 
         /* if not entire row solved and tiles are checked in row (to prevent unnecessary work), do detailed check */
         else if (sumFromBoard > 0) {
-            std::vector<Streak> vFromStart = CalculateStreaksFromState(true, i, false);
-            std::vector<Streak> vFromEnd = CalculateStreaksFromState(true, i, true);
+            std::vector<PicStreak> vFromStart = CalculateStreaksFromState(true, i, false);
+            std::vector<PicStreak> vFromEnd = CalculateStreaksFromState(true, i, true);
 
             for (j = 0; j < vFromStart.size(); j++) /* from beginning */
                 if (vFromStart[j].GetLength() == RowStreaks[i][j].GetLength())
@@ -233,10 +233,10 @@ void Puzzle::CalculateStreakSolvedState() {
     }
 }
 
-Puzzle* Puzzle::RandomPuzzle(unsigned int w, unsigned int h, unsigned int percentageFilled) {
+Picross* Picross::RandomPuzzle(unsigned int w, unsigned int h, unsigned int percentageFilled) {
 
     if (percentageFilled > 99)
-        return new Puzzle(w, h, std::string(w*h, mapTrue));
+        return new Picross(w, h, std::string(w*h, mapTrue));
 
     std::string map(w*h, '.');
     int cellsToFill = w*h*percentageFilled/100,
@@ -255,27 +255,27 @@ Puzzle* Puzzle::RandomPuzzle(unsigned int w, unsigned int h, unsigned int percen
         map[randY*w + randX] = mapTrue;
     }
 
-    return new Puzzle(w, h, map);
+    return new Picross(w, h, map);
 }
 
-int Puzzle::GetMapAt(Point &p) {
+int Picross::GetMapAt(PicPoint &p) {
     return GetMapAt(p.x, p.y);
 }
-int Puzzle::GetMapAt(unsigned int x, unsigned int y) {
+int Picross::GetMapAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
-        throw PicrossException("GetMapAt failed: Point not within puzzle dimensions.");
+        throw PicException("GetMapAt failed: Point not within puzzle dimensions.");
 
     if (Map[y*Width + x] == mapTrue)
         return MAP_TRUE;
     else
         return MAP_FALSE;
 }
-int Puzzle::GetStateAt(Point &p) {
+int Picross::GetStateAt(PicPoint &p) {
     return GetStateAt(p.x, p.y);
 }
-int Puzzle::GetStateAt(unsigned int x, unsigned int y) {
+int Picross::GetStateAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
-        throw PicrossException("GetStateAt failed: Point not within puzzle dimensions.");
+        throw PicException("GetStateAt failed: Point not within puzzle dimensions.");
 
     if (BoardState[y*Width + x] == boardClean)
         return BOARD_CLEAN;
@@ -285,11 +285,11 @@ int Puzzle::GetStateAt(unsigned int x, unsigned int y) {
         return BOARD_MARKED;
 }
 
-void Puzzle::SetStateAt(Point &p, int state) {
+void Picross::SetStateAt(PicPoint &p, int state) {
     if (state != BOARD_CLEAN && state != BOARD_HIT && state != BOARD_MARKED)
-        throw PicrossException("SetStateAt failed: invalid state passed");
+        throw PicException("SetStateAt failed: invalid state passed");
     if (!IsInBounds(p))
-        throw PicrossException("SetStateAt failed: Point not within puzzle dimensions.");
+        throw PicException("SetStateAt failed: Point not within puzzle dimensions.");
 
     char c;
 
@@ -308,10 +308,10 @@ void Puzzle::SetStateAt(Point &p, int state) {
     BoardState[p.y*Width + p.x] = c;
 }
 
-Point Puzzle::GetLocation() {
-    return Point(&Location);
+PicPoint Picross::GetLocation() {
+    return PicPoint(&Location);
 }
-bool Puzzle::TrySetLocation(Point &p) {
+bool Picross::TrySetLocation(PicPoint &p) {
     if (!IsInBounds(p))
         return false;
 
@@ -319,8 +319,8 @@ bool Puzzle::TrySetLocation(Point &p) {
 
     return true;
 }
-bool Puzzle::TrySetLocationRel(int dx, int dy) {
-    Point p(Location.x + dx, Location.y + dy);
+bool Picross::TrySetLocationRel(int dx, int dy) {
+    PicPoint p(Location.x + dx, Location.y + dy);
 
     if (!IsInBounds(Location.x + dx, Location.y + dy))
         return false;
@@ -331,12 +331,12 @@ bool Puzzle::TrySetLocationRel(int dx, int dy) {
     return true;
 }
 
-void Puzzle::DoOpAt(Point &p, int op) {    
+void Picross::DoOpAt(PicPoint &p, int op) {    
     if (op == OP_NONE)
         return;
 
     if (op != OP_MARK && op != OP_HIT)
-        throw PicrossException("DoOpAt failed: Incorrect operation passed.");
+        throw PicException("DoOpAt failed: Incorrect operation passed.");
 
     int
             state = GetStateAt(p),
@@ -406,24 +406,24 @@ void Puzzle::DoOpAt(Point &p, int op) {
         break;
     }
 }
-void Puzzle::DoOp(int op) {
+void Picross::DoOp(int op) {
     DoOpAt(Location, op);
 }
 
-unsigned int Puzzle::GetElapsedPenaltyTime() {
+unsigned int Picross::GetElapsedPenaltyTime() {
     return penaltyTime;
 }
-unsigned int Puzzle::GetElapsedRealTime() {
+unsigned int Picross::GetElapsedRealTime() {
     return time(NULL) - startTime;
 }
-unsigned int Puzzle::GetElapsedTime() {
+unsigned int Picross::GetElapsedTime() {
     return GetElapsedPenaltyTime() + GetElapsedRealTime();
 }
 
-float Puzzle::GetCompletedPercentageBoxes() {
+float Picross::GetCompletedPercentageBoxes() {
     int NrOfHitTiles = 0;
 
-    for (int i = 0; i < Width*Height; i++)
+    for (unsigned int i = 0; i < Width*Height; i++)
         if (BoardState[i] == boardHit)
             NrOfHitTiles++;
 

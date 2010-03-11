@@ -1,10 +1,10 @@
 #ifndef STREAK_H
 #define STREAK_H
 
-class Streak
+class PicStreak
 {
 public:
-    Streak(unsigned int l);
+    PicStreak(unsigned int l);
 
     unsigned int GetLength();
     bool Solved;

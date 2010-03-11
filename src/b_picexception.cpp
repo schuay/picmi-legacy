@@ -7,23 +7,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef POINT_H
-#define POINT_H
+#include "b_picexception.h"
 
-class Point
-{
-public:
-    Point();
-    Point(Point *p);
-    Point(unsigned int _x, unsigned int _y);
+PicException::PicException() { }
+PicException::PicException(std::string message) {
+    Message = message;
+}
 
-    bool operator==(Point const &p);
-    bool operator!=(Point const &p);
-    Point& operator=(Point const &rhs);
+PicException::~PicException() throw() { }
 
-    unsigned int
-            x,
-            y;
-};
-
-#endif // POINT_H
+const char* PicException::what() const throw() {
+    return Message.c_str();
+}

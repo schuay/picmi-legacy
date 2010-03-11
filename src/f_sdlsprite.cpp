@@ -1,15 +1,15 @@
-#include "Sprite.h"
+#include "f_sdlsprite.h"
 
-Sprite::Sprite()
+SDLSprite::SDLSprite()
 {
     Surface = NULL;
 }
-Sprite::~Sprite() {
+SDLSprite::~SDLSprite() {
     if (Surface)
         SDL_FreeSurface(Surface);
 }
 
-void Sprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int Rotation) {
+void SDLSprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int Rotation) {
 
     if (Surface) {
         SDL_FreeSurface(Surface);
@@ -19,7 +19,7 @@ void Sprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int Ro
     Surface = IMG_Load(Filename.c_str());
 
     if (!Surface) {
-        throw PicrossException("Loading sprite failed.");
+        throw PicException("Loading sprite failed.");
     }
 
     if (ZoomFactor != 1)
@@ -29,7 +29,7 @@ void Sprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int Ro
         Rotate(Rotation);
 }
 
-void Sprite::Zoom(unsigned int ZoomFactor) {
+void SDLSprite::Zoom(unsigned int ZoomFactor) {
     if (!Surface)
         return;
 
@@ -38,7 +38,7 @@ void Sprite::Zoom(unsigned int ZoomFactor) {
     tmpSurface = rotozoomSurface(Surface, 0, ZoomFactor, 0);
 
     if (!tmpSurface) {
-        throw PicrossException("Zooming sprite %s failed.");
+        throw PicException("Zooming sprite %s failed.");
     }
     else {
         if (Surface)
@@ -46,12 +46,12 @@ void Sprite::Zoom(unsigned int ZoomFactor) {
         Surface = tmpSurface;
     }
 }
-void Sprite::Rotate(unsigned int Rotation) {
+void SDLSprite::Rotate(unsigned int Rotation) {
 
     if (!Surface)
-        throw PicrossException("Rotating sprite failed: No sprite to rotate.");
+        throw PicException("Rotating sprite failed: No sprite to rotate.");
     if (!(Rotation < 360 && Rotation%90 == 0))
-        throw PicrossException("Rotating sprite failed: Invalid angle.");
+        throw PicException("Rotating sprite failed: Invalid angle.");
 
     SDL_Rect from, to;
     SDL_Surface *tmpSurface =
@@ -68,7 +68,7 @@ void Sprite::Rotate(unsigned int Rotation) {
     to.y = 0;
 
     if (!tmpSurface)
-        throw PicrossException("Rotating sprite failed.");
+        throw PicException("Rotating sprite failed.");
     else {
         SDL_Surface *oldSurface = Surface;
         Surface = SDL_CreateRGBSurface(
@@ -109,7 +109,7 @@ void Sprite::Rotate(unsigned int Rotation) {
     SDL_FreeSurface(tmpSurface);
 }
 
-void Sprite::Blit(Point p) {
+void SDLSprite::Blit(PicPoint p) {
     SDL_Rect to;
 
     to.x = p.x;
@@ -118,5 +118,5 @@ void Sprite::Blit(Point p) {
     to.h = Surface->h;
 
     if ( SDL_BlitSurface( Surface, NULL, Screen, &to) < 0 )
-        throw PicrossException(SDL_GetError());
+        throw PicException(SDL_GetError());
 }

@@ -1,34 +1,34 @@
-#include "Text.h"
+#include "f_sdltext.h"
 
-Text::Text()
+SDLText::SDLText()
 {
     font = NULL;
 }
 
-Text::~Text() {
+SDLText::~SDLText() {
     if (font)
         TTF_CloseFont(font);
 
 }
 
-void Text::Load(std::string Filename) {
+void SDLText::Load(std::string Filename) {
     if (font)
-        throw PicrossException("Font already loaded, Text::Load cannot be called twice.");
+        throw PicException("Font already loaded, Text::Load cannot be called twice.");
 
     font = TTF_OpenFont(Filename.c_str(), Size);
 
     if (!font)
-        throw PicrossException(TTF_GetError());
+        throw PicException(TTF_GetError());
 }
 
-int Text::WidthOf(std::string txt) {
+int SDLText::WidthOf(std::string txt) {
     int w;
 
     TTF_SizeText(font, txt.c_str(), &w, NULL);
 
     return w;
 }
-int Text::HeightOf(std::string txt) {
+int SDLText::HeightOf(std::string txt) {
     int h;
 
     TTF_SizeText(font, txt.c_str(), NULL, &h);
@@ -36,13 +36,13 @@ int Text::HeightOf(std::string txt) {
     return h;
 }
 
-void Text::Blit(std::string txt, Point p, unsigned int justify) {
+void SDLText::Blit(std::string txt, PicPoint p, unsigned int justify) {
     SDL_Color c = {0,0,0};
     Blit(txt, p, c, justify);
 }
-void Text::Blit(std::string txt, Point p, SDL_Color c, unsigned int justify) {
+void SDLText::Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int justify) {
     if (!font)
-        throw PicrossException("Text::Blit failed, no font loaded.");
+        throw PicException("Text::Blit failed, no font loaded.");
 
     SDL_Rect to;
     SDL_Surface *s = NULL;
@@ -62,7 +62,7 @@ void Text::Blit(std::string txt, Point p, SDL_Color c, unsigned int justify) {
         to.x = p.x;
 
     if (!s)
-        throw PicrossException("Text::Blit failed, TTF_RenderText failed");
+        throw PicException("Text::Blit failed, TTF_RenderText failed");
 
     SDL_BlitSurface(s, NULL, Screen, &to);
     SDL_FreeSurface(s);

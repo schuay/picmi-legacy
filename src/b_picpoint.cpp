@@ -7,22 +7,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PICROSSEXCEPTION_H
-#define PICROSSEXCEPTION_H
+#include "b_picpoint.h"
 
-#include <exception>
-#include <string>
-
-class PicrossException : public std::exception
+PicPoint::PicPoint() {
+    x = 0;
+    y = 0;
+}
+PicPoint::PicPoint(PicPoint *p) {
+    x = p->x;
+    y = p->y;
+}
+PicPoint::PicPoint(unsigned int _x, unsigned int _y)
 {
-public:
-    PicrossException();
-    PicrossException(std::string message);
-    ~PicrossException() throw();
+    x = _x;
+    y = _y;
+}
 
-    const char* what() const throw();
-private:
-    std::string Message;
-};
+bool PicPoint::operator==(PicPoint const &p) {
+    return ((this->x == p.x) && (this->y == p.y));
+}
+bool PicPoint::operator!=(PicPoint const &p) {
+    return ((this->x != p.x) || (this->y != p.y));
+}
+PicPoint& PicPoint::operator=(PicPoint const &rhs) {
+    this->x = rhs.x;
+    this->y = rhs.y;
 
-#endif // PICROSSEXCEPTION_H
+    return *this;
+}

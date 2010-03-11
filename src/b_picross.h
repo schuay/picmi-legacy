@@ -14,9 +14,9 @@
 #include <cstring>
 #include <cstdlib>
 
-#include "Streak.h"
-#include "Point.h"
-#include "PicrossException.h"
+#include "b_picstreak.h"
+#include "b_picpoint.h"
+#include "b_picexception.h"
 
 #define MAP_FALSE       0
 #define MAP_TRUE        1
@@ -29,32 +29,32 @@
 #define OP_HIT          1
 #define OP_MARK         2
 
-class Puzzle
+class Picross
 {
 public:
-    Puzzle(unsigned int, unsigned int, std::string);
-    ~Puzzle();
+    Picross(unsigned int, unsigned int, std::string);
+    ~Picross();
 
-    static Puzzle *RandomPuzzle(    /* returns a random puzzle with given dimensions */
+    static Picross *RandomPuzzle(    /* returns a random puzzle with given dimensions */
             unsigned int w, unsigned int h, unsigned int percentageFilled);
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
 
     bool IsInBounds(unsigned int x, unsigned int y);    /* returns true if coordinate is in puzzle limits */
-    bool IsInBounds(Point &p);
+    bool IsInBounds(PicPoint &p);
 
-    int GetStateAt(Point &p);    /* returns the state of game board at p */
+    int GetStateAt(PicPoint &p);    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y);
-    int GetMapAt(Point &p);      /* returns the state of map at p */
+    int GetMapAt(PicPoint &p);      /* returns the state of map at p */
     int GetMapAt(unsigned int x, unsigned int y);
 
-    void SetStateAt(Point &p, int state); /* set state of board at p */
+    void SetStateAt(PicPoint &p, int state); /* set state of board at p */
 
-    Point GetLocation();    /* get / set current location */
-    bool TrySetLocation(Point &p);  /* try setting absolute / relative current location; returns true on success, false on failure*/
+    PicPoint GetLocation();    /* get / set current location */
+    bool TrySetLocation(PicPoint &p);  /* try setting absolute / relative current location; returns true on success, false on failure*/
     bool TrySetLocationRel(int dx, int dy);
 
-    void DoOpAt(Point &p, int op);  /* perform operation (HIT/MARK) at p */
+    void DoOpAt(PicPoint &p, int op);  /* perform operation (HIT/MARK) at p */
     void DoOp(int op);              /* or at current location */
 
     void CalculateStreakSolvedState(); /* call this to update streak.Solved states - ideally once before drawing each frame */
@@ -65,7 +65,7 @@ public:
 
     float GetCompletedPercentageBoxes();
 
-    std::vector<Streak>
+    std::vector<PicStreak>
             *ColStreaks,    /* stores streaks */
             *RowStreaks;
 
@@ -76,12 +76,12 @@ public:
     bool NoHintsMode;   /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
 
 private:
-    std::vector<Streak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
-    std::vector<Streak> CalculateStreaksFromState(              /* startFromEnd: when true, starts calculation from end of row.*/
+    std::vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
+    std::vector<PicStreak> CalculateStreaksFromState(              /* startFromEnd: when true, starts calculation from end of row.*/
             bool horizontal, int lineIndex, bool startFromEnd); /* this matters because streaks from state need to be contigous*/
                                                                 /* lineIndex: which row/column to calc streaks for */
 
-    Point Location; /* stores current location on board */
+    PicPoint Location; /* stores current location on board */
 
     unsigned int
             startTime,          /* game start time (s)*/

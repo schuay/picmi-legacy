@@ -5,18 +5,18 @@
 #include <SDL/SDL_rotozoom.h>
 #include <SDL/SDL_image.h>
 
-#include "Globals.h"
-#include "Point.h"
-#include "PicrossException.h"
+#include "f_sdlglobals.h"
+#include "b_picpoint.h"
+#include "b_picexception.h"
 
-class Sprite
+class SDLSprite
 {
 public:
-    Sprite();
-    ~Sprite();
+    SDLSprite();
+    ~SDLSprite();
 
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(Point p);
+    void Blit(PicPoint p);
 
 private:
 

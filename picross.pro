@@ -7,22 +7,22 @@ TARGET = picross
 CONFIG += console
 CONFIG -= app_bundle
 TEMPLATE = app
-SOURCES += main.cpp \
-    Game.cpp \
-    Puzzle.cpp \
-    PicrossException.cpp \
-    Point.cpp \
-    Sprite.cpp \
-    Text.cpp \
-    Streak.cpp
-HEADERS += Game.h \
-    Puzzle.h \
-    PicrossException.h \
-    Point.h \
-    Sprite.h \
-    Text.h \
-    Globals.h \
-    Streak.h
+SOURCES += src/f_main.cpp \
+    src/f_sdlfrontend.cpp \
+    src/b_picross.cpp \
+    src/b_picexception.cpp \
+    src/b_picpoint.cpp \
+    src/f_sdlsprite.cpp \
+    src/f_sdltext.cpp \
+    src/b_picstreak.cpp
+HEADERS += src/f_sdlfrontend.h \
+    src/b_picross.h \
+    src/b_picexception.h \
+    src/b_picpoint.h \
+    src/f_sdlsprite.h \
+    src/f_sdltext.h \
+    src/f_sdlglobals.h \
+    src/b_picstreak.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_mixer \

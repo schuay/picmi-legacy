@@ -5,23 +5,23 @@
 #include <SDL/SDL_ttf.h>
 #include <string>
 
-#include "Point.h"
-#include "PicrossException.h"
-#include "Globals.h"
+#include "b_picpoint.h"
+#include "b_picexception.h"
+#include "f_sdlglobals.h"
 
 #define JUSTIFY_C   0
 #define JUSTIFY_L   1
 #define JUSTIFY_R   2
 
-class Text
+class SDLText
 {
 public:
-    Text();
-    ~Text();
+    SDLText();
+    ~SDLText();
 
     void Load(std::string Filename);
-    void Blit(std::string txt, Point p, unsigned int justify = JUSTIFY_L);
-    void Blit(std::string txt, Point p, SDL_Color c, unsigned int justify = JUSTIFY_L);
+    void Blit(std::string txt, PicPoint p, unsigned int justify = JUSTIFY_L);
+    void Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int justify = JUSTIFY_L);
 
     int WidthOf(std::string txt);
     int HeightOf(std::string txt);

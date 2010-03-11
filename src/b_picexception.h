@@ -7,15 +7,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "PicrossException.h"
+#ifndef PICROSSEXCEPTION_H
+#define PICROSSEXCEPTION_H
 
-PicrossException::PicrossException() { }
-PicrossException::PicrossException(std::string message) {
-    Message = message;
-}
+#include <exception>
+#include <string>
 
-PicrossException::~PicrossException() throw() { }
+class PicException : public std::exception
+{
+public:
+    PicException();
+    PicException(std::string message);
+    ~PicException() throw();
 
-const char* PicrossException::what() const throw() {
-    return Message.c_str();
-}
+    const char* what() const throw();
+private:
+    std::string Message;
+};
+
+#endif // PICROSSEXCEPTION_H

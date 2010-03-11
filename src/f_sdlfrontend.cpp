@@ -7,27 +7,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "Game.h"
+#include "f_sdlfrontend.h"
 
-bool Game::GetQuit() {
+bool SDLFrontend::GetQuit() {
     return quit;
 }
 
-void Game::ProcessDrawing() {
+void SDLFrontend::ProcessDrawing() {
     DrawBackground();
     DrawInfoArea();
     DrawStreakArea();
     DrawBoardArea();
 }
-void Game::DrawBackground() {
+void SDLFrontend::DrawBackground() {
     SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));  /* paint bg white */
-    sprBackground.Blit(Point(0,0));
+    sprBackground.Blit(PicPoint(0,0));
 }
-void Game::DrawInfoArea() {
+void SDLFrontend::DrawInfoArea() {
     SDL_Rect to;
     SDL_Color color;
     std::stringstream out;
-    Point p;
+    PicPoint p;
 
     to.x = to.y = 0;
     to.w = PUZZLE_POSX;
@@ -76,9 +76,9 @@ void Game::DrawInfoArea() {
     txt.Blit(out.str(), p, color, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 5;
 }
-void Game::DrawStreakArea() {
+void SDLFrontend::DrawStreakArea() {
     unsigned int i, j;
-    Point p;
+    PicPoint p;
     SDL_Color color;
     std::stringstream out;
 
@@ -108,7 +108,7 @@ void Game::DrawStreakArea() {
         streakLength = 0;
 
         for (int js = curPuzzle->RowStreaks[i].size() - 1; js >= 0; js--) {
-            Streak s = curPuzzle->RowStreaks[i][js];    /* note the reverse order of loop  */
+            PicStreak s = curPuzzle->RowStreaks[i][js];    /* note the reverse order of loop  */
             color.r = color.g = color.b = s.Solved ? 200 : 0;       /* we need to do this to draw streaks in correct order */
 
             out.str("");
@@ -127,7 +127,7 @@ void Game::DrawStreakArea() {
         streakLength = 0;
 
         for (j = 0; j < curPuzzle->ColStreaks[i].size(); j++) {
-            Streak s = curPuzzle->ColStreaks[i][j];
+            PicStreak s = curPuzzle->ColStreaks[i][j];
             color.r = color.g = color.b = s.Solved ? 200 : 0;
 
             out.str("");    //clear the stream
@@ -146,9 +146,9 @@ void Game::DrawStreakArea() {
         }
     }
 }
-void Game::DrawBoardArea() {
+void SDLFrontend::DrawBoardArea() {
     unsigned int i, j;
-    Point p, q;
+    PicPoint p, q;
 
     for (i = 0; i < curPuzzle->Width; i++) {
         for (j = 0; j < curPuzzle->Height; j++) {
@@ -190,8 +190,8 @@ void Game::DrawBoardArea() {
     }
 }
 
-int Game::HandleMouseEvent(int x, int y, int btn, int event) {
-    Point newLocation(
+int SDLFrontend::HandleMouseEvent(int x, int y, int btn, int event) {
+    PicPoint newLocation(
             (x - PUZZLE_POSX * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL),
             (y - PUZZLE_POSY * MAGNIFICATION_LEVEL) / (CELLLENGTH * MAGNIFICATION_LEVEL));
 
@@ -244,7 +244,7 @@ int Game::HandleMouseEvent(int x, int y, int btn, int event) {
         return OP_NONE;
 }
 
-void Game::ProcessInput() {
+void SDLFrontend::ProcessInput() {
     SDL_Event ev;
 
     while (SDL_PollEvent(&ev) == 1) {
@@ -324,13 +324,13 @@ void Game::ProcessInput() {
     curPuzzle->CalculateStreakSolvedState();    /* prepare streaks for drawing */
 }
 
-void Game::Initialize() {
+void SDLFrontend::Initialize() {
 
     /* Initialize SDL systems */
 
     if (SDL_Init(SDL_INIT_VIDEO) == -1 ) {
         SDL_Quit();
-        throw PicrossException(SDL_GetError());
+        throw PicException(SDL_GetError());
     }
 
     SDL_WM_SetCaption(GAMEBUILD, NULL);
@@ -362,7 +362,7 @@ void Game::Initialize() {
     sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
 }
 
-void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
+void SDLFrontend::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
                      unsigned int width, unsigned int height) {
 
     if (curPuzzle) {
@@ -391,13 +391,13 @@ void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
             ".#.......#....." <<
             "#.#.....#......";
 
-        curPuzzle = new Puzzle(width, height, puzzleInitializer.str());
+        curPuzzle = new Picross(width, height, puzzleInitializer.str());
         break;
     case PUZ_RAND:
-        curPuzzle = Puzzle::RandomPuzzle(width, height, difficulty);
+        curPuzzle = Picross::RandomPuzzle(width, height, difficulty);
         break;
     default:
-        curPuzzle = Puzzle::RandomPuzzle(width, height, difficulty);
+        curPuzzle = Picross::RandomPuzzle(width, height, difficulty);
         break;
     }
 
@@ -415,7 +415,7 @@ void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
 
     if (!Screen) {
         SDL_Quit();
-        throw PicrossException(SDL_GetError());
+        throw PicException(SDL_GetError());
     }
 
     /* initialize vars */
@@ -425,11 +425,11 @@ void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
     quit = false;
 }
 
-Game::Game() {
+SDLFrontend::SDLFrontend() {
     Screen = NULL;
     curPuzzle = NULL;
 }
-Game::~Game() {
+SDLFrontend::~SDLFrontend() {
     if (curPuzzle)
         delete curPuzzle;
 
@@ -437,7 +437,7 @@ Game::~Game() {
     SDL_Quit();
 }
 
-void Game::DoMainLoop() {
+void SDLFrontend::DoMainLoop() {
 
     ProcessInput();
     ProcessDrawing();
@@ -446,6 +446,6 @@ void Game::DoMainLoop() {
     SDL_Delay(30);  /* relinquish cpu time we don't need */
 }
 
-void Game::DebugKeyAction() {
+void SDLFrontend::DebugKeyAction() {
     NewPuzzle(PUZ_RAND, 50, false, 20-rand()%10, 20-rand()%10);
 }

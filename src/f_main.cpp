@@ -7,7 +7,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "Game.h"
+#include "f_sdlfrontend.h"
 #include <unistd.h>
 
 SDL_Surface *Screen;
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     }
 
     try {
-        Game game;
+        SDLFrontend game;
 
         game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
         game.NewPuzzle(puzType, puzDifficulty, noHintsMode, x, y);
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 
         return 0;
     }
-    catch (PicrossException e) {
+    catch (PicException e) {
         printf("Error: %s", e.what());
         return 1;
     }

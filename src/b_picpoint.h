@@ -7,31 +7,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "Point.h"
+#ifndef POINT_H
+#define POINT_H
 
-Point::Point() {
-    x = 0;
-    y = 0;
-}
-Point::Point(Point *p) {
-    x = p->x;
-    y = p->y;
-}
-Point::Point(unsigned int _x, unsigned int _y)
+class PicPoint
 {
-    x = _x;
-    y = _y;
-}
+public:
+    PicPoint();
+    PicPoint(PicPoint *p);
+    PicPoint(unsigned int _x, unsigned int _y);
 
-bool Point::operator==(Point const &p) {
-    return ((this->x == p.x) && (this->y == p.y));
-}
-bool Point::operator!=(Point const &p) {
-    return ((this->x != p.x) || (this->y != p.y));
-}
-Point& Point::operator=(Point const &rhs) {
-    this->x = rhs.x;
-    this->y = rhs.y;
+    bool operator==(PicPoint const &p);
+    bool operator!=(PicPoint const &p);
+    PicPoint& operator=(PicPoint const &rhs);
 
-    return *this;
-}
+    unsigned int
+            x,
+            y;
+};
+
+#endif // POINT_H
