@@ -243,7 +243,6 @@ int SDLFrontend::HandleMouseEvent(int x, int y, int btn, int event) {
 
         return OP_NONE;
 }
-
 void SDLFrontend::ProcessInput() {
     SDL_Event ev;
 
@@ -324,42 +323,13 @@ void SDLFrontend::ProcessInput() {
     curPuzzle->CalculateStreakSolvedState();    /* prepare streaks for drawing */
 }
 
-void SDLFrontend::Initialize() {
+void SDLFrontend::DoMainLoop() {
 
-    /* Initialize SDL systems */
+    ProcessInput();
+    ProcessDrawing();
 
-    if (SDL_Init(SDL_INIT_VIDEO) == -1 ) {
-        SDL_Quit();
-        throw PicException(SDL_GetError());
-    }
-
-    SDL_WM_SetCaption(GAMEBUILD, NULL);
-
-    SDL_EnableUNICODE(1);
-    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
-
-    TTF_Init();
-
-    /* Load resources */
-
-    txt.Load(FILEPREFIX "gfx/cour.ttf");
-
-    sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", MAGNIFICATION_LEVEL, 0);
-    sprBoxTile.Load(FILEPREFIX "gfx/box.png", MAGNIFICATION_LEVEL, 0);
-    sprMarkTile.Load(FILEPREFIX "gfx/mark.png", MAGNIFICATION_LEVEL, 0);
-    sprActiveTile.Load(FILEPREFIX "gfx/activecell.png", MAGNIFICATION_LEVEL, 0);
-
-    sprDividerR.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL,0);
-    sprDividerD.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 270);
-    sprDividerL.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 180);
-    sprDividerU.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 90);
-
-    sprStreakAreaHorA.Load(FILEPREFIX "gfx/streakA.png", MAGNIFICATION_LEVEL, 0);
-    sprStreakAreaHorB.Load(FILEPREFIX "gfx/streakB.png", MAGNIFICATION_LEVEL, 0);
-    sprStreakAreaVerA.Load(FILEPREFIX "gfx/streakA.png", MAGNIFICATION_LEVEL, 270);
-    sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", MAGNIFICATION_LEVEL, 270);
-
-    sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
+    SDL_Flip(Screen);
+    SDL_Delay(30);  /* relinquish cpu time we don't need */
 }
 
 void SDLFrontend::NewPuzzle(PicSettings &s) {
@@ -424,6 +394,43 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
     quit = false;
 }
 
+void SDLFrontend::Initialize() {
+
+    /* Initialize SDL systems */
+
+    if (SDL_Init(SDL_INIT_VIDEO) == -1 ) {
+        SDL_Quit();
+        throw PicException(SDL_GetError());
+    }
+
+    SDL_WM_SetCaption(GAMEBUILD, NULL);
+
+    SDL_EnableUNICODE(1);
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+
+    TTF_Init();
+
+    /* Load resources */
+
+    txt.Load(FILEPREFIX "gfx/cour.ttf");
+
+    sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", MAGNIFICATION_LEVEL, 0);
+    sprBoxTile.Load(FILEPREFIX "gfx/box.png", MAGNIFICATION_LEVEL, 0);
+    sprMarkTile.Load(FILEPREFIX "gfx/mark.png", MAGNIFICATION_LEVEL, 0);
+    sprActiveTile.Load(FILEPREFIX "gfx/activecell.png", MAGNIFICATION_LEVEL, 0);
+
+    sprDividerR.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL,0);
+    sprDividerD.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 270);
+    sprDividerL.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 180);
+    sprDividerU.Load(FILEPREFIX "gfx/divider.png", MAGNIFICATION_LEVEL, 90);
+
+    sprStreakAreaHorA.Load(FILEPREFIX "gfx/streakA.png", MAGNIFICATION_LEVEL, 0);
+    sprStreakAreaHorB.Load(FILEPREFIX "gfx/streakB.png", MAGNIFICATION_LEVEL, 0);
+    sprStreakAreaVerA.Load(FILEPREFIX "gfx/streakA.png", MAGNIFICATION_LEVEL, 270);
+    sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", MAGNIFICATION_LEVEL, 270);
+
+    sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
+}
 SDLFrontend::SDLFrontend() {
     Screen = NULL;
     curPuzzle = NULL;
@@ -436,15 +443,6 @@ SDLFrontend::~SDLFrontend() {
 
     TTF_Quit();
     SDL_Quit();
-}
-
-void SDLFrontend::DoMainLoop() {
-
-    ProcessInput();
-    ProcessDrawing();
-
-    SDL_Flip(Screen);
-    SDL_Delay(30);  /* relinquish cpu time we don't need */
 }
 
 void SDLFrontend::DebugKeyAction() {
