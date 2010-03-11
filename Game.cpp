@@ -20,6 +20,7 @@ void Game::ProcessDrawing() {
 
     /* game board */
 
+    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));
     sprBackground.Blit(Point(0,0));
 
     /* streak areas */
@@ -33,7 +34,7 @@ void Game::ProcessDrawing() {
             sprStreakAreaVerB.Blit(p);
     }
     p.x = PUZZLE_POSX - 200;
-    for (j = 0; j < curPuzzle->Width; j++) {
+    for (j = 0; j < curPuzzle->Height; j++) {
         p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
         if (j%2 == 0)
             sprStreakAreaHorA.Blit(p);
@@ -203,6 +204,9 @@ void Game::ProcessInput() {
             case SDLK_ESCAPE:
                 quit = true;
                 break;
+            case SDLK_d:
+                DebugKeyAction();
+                break;
             case SDLK_LEFT:
                 dx = -1;
                 break;
@@ -273,13 +277,6 @@ void Game::Initialize() {
         throw PicrossException(SDL_GetError());
     }
 
-    Screen = SDL_SetVideoMode(RESX * MAGNIFICATION_LEVEL, RESY * MAGNIFICATION_LEVEL, 24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF);
-
-    if (!Screen) {
-        SDL_Quit();
-        throw PicrossException(SDL_GetError());
-    }
-
     SDL_WM_SetCaption(GAMEBUILD, NULL);
 
     SDL_EnableUNICODE(1);
@@ -309,7 +306,8 @@ void Game::Initialize() {
     sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
 }
 
-void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode) {
+void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
+                     unsigned int width, unsigned int height) {
 
     if (curPuzzle) {
         delete curPuzzle;
@@ -337,17 +335,32 @@ void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode) {
             ".#.......#....." <<
             "#.#.....#......";
 
-        curPuzzle = new Puzzle(15, 15, puzzleInitializer.str());
+        curPuzzle = new Puzzle(width, height, puzzleInitializer.str());
         break;
     case PUZ_RAND:
-        curPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
+        curPuzzle = Puzzle::RandomPuzzle(width, height, difficulty);
         break;
     default:
-        curPuzzle = Puzzle::RandomPuzzle(15, 15, difficulty);
+        curPuzzle = Puzzle::RandomPuzzle(width, height, difficulty);
         break;
     }
 
     curPuzzle->NoHintsMode = noHintsMode;
+
+    if (Screen) {
+        SDL_FreeSurface(Screen);
+        Screen = NULL;
+    }
+
+    Screen = SDL_SetVideoMode(
+            (PUZZLE_POSX + curPuzzle->Width * CELLLENGTH + 5) * MAGNIFICATION_LEVEL,
+            (PUZZLE_POSY + curPuzzle->Height * CELLLENGTH + 5) * MAGNIFICATION_LEVEL,
+            24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF);
+
+    if (!Screen) {
+        SDL_Quit();
+        throw PicrossException(SDL_GetError());
+    }
 
     /* initialize vars */
 
@@ -357,6 +370,7 @@ void Game::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode) {
 }
 
 Game::Game() {
+    Screen = NULL;
     curPuzzle = NULL;
 }
 Game::~Game() {
@@ -374,4 +388,8 @@ void Game::DoMainLoop() {
     SDL_Flip(Screen);
 
     SDL_Delay(30);  /* relinquish cpu time we don't need */
+}
+
+void Game::DebugKeyAction() {
+    NewPuzzle(PUZ_RAND, 50, false, 20-rand()%10, 20-rand()%10);
 }

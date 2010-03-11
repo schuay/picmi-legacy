@@ -21,8 +21,8 @@
 #include "Text.h"
 
 #define CELLLENGTH 24           // length of a single tile (width and height must be equal)
-#define PUZZLE_POSX 234         // position of the board's left upper corner
-#define PUZZLE_POSY 214
+#define PUZZLE_POSX 215         // position of the board's left upper corner
+#define PUZZLE_POSY 215
 #define MAGNIFICATION_LEVEL 1   // zoom level, must be a whole number (1==100%, 2==200%, ...)
 #define DRAG_UNDEF -1           // defines for drag locking
 #define DRAG_HOR 0
@@ -35,9 +35,6 @@
 #define TIMERX 160              // location of the timer
 #define TIMERY 170
 
-#define RESX 640                // resolution of game window
-#define RESY 580
-
 #define GAMEBUILD "Tux Picross v.0.1"
 
 class Game {
@@ -47,7 +44,8 @@ public:
     ~Game();
 
     void Initialize();
-    void NewPuzzle(int type, unsigned int difficulty, bool noHintsMode);
+    void NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
+                   unsigned int width, unsigned int height);
     void DoMainLoop();
     bool GetQuit();
 
@@ -56,6 +54,8 @@ private:
     void ProcessInput();
     void ProcessDrawing();
     void ProcessLogic(int dx, int dy, int op);
+
+    void DebugKeyAction();
 
     int HandleMouseEvent(int x, int y, int btn, int event);
 
