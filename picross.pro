@@ -25,7 +25,8 @@ HEADERS += src/f_sdlfrontend.h \
     src/f_sdlglobals.h \
     src/b_picstreak.h \
     src/b_picsettings.h \
-    src/b_picdefines.h
+    src/b_picdefines.h \
+    src/f_sdldefines.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_mixer \

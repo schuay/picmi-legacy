@@ -33,8 +33,8 @@ void SDLFrontend::DrawInfoArea() {
     to.w = PUZZLE_POSX;
     to.h = PUZZLE_POSY;
 
-    p.x = TIMERX*MAGNIFICATION_LEVEL;
-    p.y = TIMERY*MAGNIFICATION_LEVEL;
+    p.x = 10 * MAGNIFICATION_LEVEL;
+    p.y = 10 * MAGNIFICATION_LEVEL;
 
     color.r = color.g = color.b = 255;
 
@@ -201,13 +201,15 @@ int SDLFrontend::HandleMouseEvent(int x, int y, int btn, int event) {
 
     switch (event) {
     case SDL_MOUSEBUTTONDOWN:
-        lastClickLocation = newLocation; /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
-        dragDirection = -1; /* reset drag direction */
-        lastDragLocation = newLocation;  /* remember last handled tile so we only to a single op per tile on drags */
+        lastClickLocation = newLocation;    /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
+        dragDirection = DRAG_UNDEF;         /* reset drag direction */
+        dragOperation =                     /* set drag operation */
+                curPuzzle->GetStateAt(newLocation) == BOARD_CLEAN ? DRAG_OP_MARK : DRAG_OP_CLEAR;
+        lastDragLocation = newLocation;     /* remember last handled tile so we only to a single op per tile on drags */
         break;
     case SDL_MOUSEMOTION:
         if (btn == SDL_BUTTON_LEFT || btn == SDL_BUTTON_RIGHT) {    /* only run drag logic if a mousebutton is pressed, otherwise only set location */
-            if ( newLocation != lastClickLocation && dragDirection == -1 ) { /* calc drag direction */
+            if ( newLocation != lastClickLocation && dragDirection == DRAG_UNDEF ) { /* calc drag direction */
                 unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
                 unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
                 if (diffX < diffY)
@@ -391,6 +393,7 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
     /* initialize vars */
 
     dragDirection = DRAG_UNDEF;
+    dragOperation = DRAG_OP_UNDEF;
     quit = false;
 }
 

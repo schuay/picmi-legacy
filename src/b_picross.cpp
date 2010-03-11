@@ -340,7 +340,7 @@ void Picross::DoOpAt(PicPoint &p, int op) {
     if (op == OP_NONE)
         return;
 
-    if (op != OP_MARK && op != OP_HIT)
+    if (op != OP_MARK && op != OP_HIT && op != OP_CLEAR)
         throw PicException("DoOpAt failed: Incorrect operation passed.");
 
     int

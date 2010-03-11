@@ -20,6 +20,7 @@
 #define OP_NONE         0 /* defines for game actions, NONE, HIT (uncover a tile), MARK (mark a tile as empty) */
 #define OP_HIT          1
 #define OP_MARK         2
+#define OP_CLEAR        3
 
 #define PUZ_RAND        1 /* defines for used puzzle type */
 #define PUZ_STAT        0

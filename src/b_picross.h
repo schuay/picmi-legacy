@@ -30,24 +30,24 @@ public:
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
 
-    bool IsInBounds(unsigned int x, unsigned int y);    /* returns true if coordinate is in puzzle limits */
+    bool IsInBounds(unsigned int x, unsigned int y); /* returns true if coordinate is in puzzle limits */
     bool IsInBounds(PicPoint &p);
 
-    int GetStateAt(PicPoint &p);    /* returns the state of game board at p */
+    int GetStateAt(PicPoint &p);                    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y);
-    int GetMapAt(PicPoint &p);      /* returns the state of map at p */
+    int GetMapAt(PicPoint &p);                      /* returns the state of map at p */
     int GetMapAt(unsigned int x, unsigned int y);
 
     void SetStateAt(PicPoint &p, int state); /* set state of board at p */
 
-    PicPoint GetLocation();    /* get / set current location */
+    PicPoint GetLocation();            /* get / set current location */
     bool TrySetLocation(PicPoint &p);  /* try setting absolute / relative current location; returns true on success, false on failure*/
     bool TrySetLocationRel(int dx, int dy);
 
-    void DoOpAt(PicPoint &p, int op);  /* perform operation (HIT/MARK) at p */
-    void DoOp(int op);              /* or at current location */
+    void DoOpAt(PicPoint &p, int op);   /* perform operation (HIT/MARK) at p */
+    void DoOp(int op);                  /* or at current location */
 
-    void CalculateStreakSolvedState(); /* call this to update streak.Solved states - ideally once before drawing each frame */
+    void CalculateStreakSolvedState();  /* call this to update streak.Solved states - ideally once before drawing each frame */
 
     unsigned int GetElapsedTime();
     unsigned int GetElapsedRealTime();
