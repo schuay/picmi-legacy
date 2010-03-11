@@ -12,37 +12,62 @@
 
 SDL_Surface *Screen;
 
-int main(int argc, char **argv) {
+struct Settings {
+    int puzType;
+    int puzDifficulty;
 
-    int c,
-        puzType = PUZ_RAND,
+    bool noHintsMode;
+
+    unsigned int x;
+    unsigned int y;
+
+    Settings() {
+        puzType = PUZ_RAND;
         puzDifficulty = 55;
-    char
-        *cvalue = NULL;
-    bool
+
         noHintsMode = false;
-    unsigned int x = 15, y = 15;
+
+        x = 15;
+        y = 15;
+    }
+};
+
+bool HandleArguments(Settings& s, int argc, char **argv) {
+    int c;
+    char *cvalue = NULL;
 
     while ((c = getopt(argc, argv, "nshkr:x:y:")) != -1) {
         switch (c) {
         case 'r':
-            puzType = PUZ_RAND;
+            s.puzType = PUZ_RAND;
             cvalue = optarg;
-            puzDifficulty = atoi(cvalue);
+            s.puzDifficulty = atoi(cvalue);
+            if (s.puzDifficulty == 0) {
+                printf("Argument %c must be followed by an integer argument.", c);
+                return false;
+            }
             break;
         case 'x':
             cvalue = optarg;
-            x = atoi(cvalue);
+            s.x = atoi(cvalue);
+            if (s.x == 0) {
+                printf("Argument %c must be followed by an integer argument.", c);
+                return false;
+            }
             break;
         case 'y':
             cvalue = optarg;
-            y = atoi(cvalue);
+            s.y = atoi(cvalue);
+            if (s.y == 0) {
+                printf("Argument %c must be followed by an integer argument.", c);
+                return false;
+            }
             break;
         case 's':
-            puzType = PUZ_STAT;
+            s.puzType = PUZ_STAT;
             break;
         case 'n':
-            noHintsMode = true;
+            s.noHintsMode = true;
             break;
         case 'h':
         case '?':
@@ -64,18 +89,27 @@ int main(int argc, char **argv) {
                    "            (defaults to 55)\n"
                    "    -s: generate static puzzle (for debug purposes)\n"
                    "    -h: show this message\n");
-            return -1;
+            return false;
             break;
         default:
-            return -1;
+            return false;
         }
     }
+
+    return true;
+}
+
+int main(int argc, char **argv) {
+
+    Settings s;
+    if (!HandleArguments(s, argc, argv))
+        return -1;
 
     try {
         SDLFrontend game;
 
         game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
-        game.NewPuzzle(puzType, puzDifficulty, noHintsMode, x, y);
+        game.NewPuzzle(s.puzType, s.puzDifficulty, s.noHintsMode, s.x, s.y);
 
         while(!game.GetQuit())
                 game.DoMainLoop();
