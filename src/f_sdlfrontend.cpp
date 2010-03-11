@@ -52,12 +52,12 @@ void SDLFrontend::DrawInfoArea() {
     p.y += txt.HeightOf(out.str()) + 2;
 
     out.str("");
-    out << "Total: " << curPuzzle->GetElapsedTime();;
+    out << "Total: " << curPuzzle->GetElapsedTime() << "s";
     txt.Blit(out.str(), p, color, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 2;
 
     out.str("");
-    out << "Real: " << curPuzzle->GetElapsedRealTime();
+    out << "Real: " << curPuzzle->GetElapsedRealTime() << "s";
     txt.Blit(out.str(), p, color, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 25;
 
@@ -126,8 +126,8 @@ void SDLFrontend::DrawStreakArea() {
     for (i = 0; i < curPuzzle->Width; i++) {
         streakLength = 0;
 
-        for (j = 0; j < curPuzzle->ColStreaks[i].size(); j++) {
-            PicStreak s = curPuzzle->ColStreaks[i][j];
+        for (int js = curPuzzle->ColStreaks[i].size() - 1; js >= 0; js--) {
+            PicStreak s = curPuzzle->ColStreaks[i][js];
             color.r = color.g = color.b = s.Solved ? 200 : 0;
 
             out.str("");    //clear the stream
