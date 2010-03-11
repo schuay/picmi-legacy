@@ -204,7 +204,7 @@ int SDLFrontend::HandleMouseEvent(int x, int y, int btn, int event) {
         lastClickLocation = newLocation;    /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
         dragDirection = DRAG_UNDEF;         /* reset drag direction */
         dragOperation =                     /* set drag operation */
-                curPuzzle->GetStateAt(newLocation) == BOARD_CLEAN ? DRAG_OP_MARK : DRAG_OP_CLEAR;
+                curPuzzle->GetStateAt(newLocation) == BOARD_CLEAN ? OP_FORCE_MARK : OP_FORCE_CLEAR;
         lastDragLocation = newLocation;     /* remember last handled tile so we only to a single op per tile on drags */
         break;
     case SDL_MOUSEMOTION:
@@ -241,9 +241,9 @@ int SDLFrontend::HandleMouseEvent(int x, int y, int btn, int event) {
     if (btn == SDL_BUTTON_LEFT)
         return OP_HIT;
     else if (btn == SDL_BUTTON_RIGHT)
-        return OP_MARK;
+        return dragOperation;
 
-        return OP_NONE;
+    return OP_NONE;
 }
 void SDLFrontend::ProcessInput() {
     SDL_Event ev;
@@ -287,14 +287,14 @@ void SDLFrontend::ProcessInput() {
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button, SDL_MOUSEBUTTONDOWN);
+            op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button, ev.type);
             break;
         case SDL_MOUSEMOTION:
             if (ev.motion.state & SDL_BUTTON(1))
-                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_LEFT, SDL_MOUSEMOTION);
+                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_LEFT, ev.type);
             else if (ev.motion.state & SDL_BUTTON(3))
-                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT, SDL_MOUSEMOTION);
-            else HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE, SDL_MOUSEMOTION);
+                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT, ev.type);
+            else HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE, ev.type);
             break;
          case SDL_QUIT:
             quit = true;
@@ -393,7 +393,7 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
     /* initialize vars */
 
     dragDirection = DRAG_UNDEF;
-    dragOperation = DRAG_OP_UNDEF;
+    dragOperation = DRAG_UNDEF;
     quit = false;
 }
 

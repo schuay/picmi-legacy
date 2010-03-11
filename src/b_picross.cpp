@@ -340,7 +340,7 @@ void Picross::DoOpAt(PicPoint &p, int op) {
     if (op == OP_NONE)
         return;
 
-    if (op != OP_MARK && op != OP_HIT && op != OP_CLEAR)
+    if (op != OP_MARK && op != OP_HIT && op != OP_FORCE_CLEAR && op != OP_FORCE_MARK)
         throw PicException("DoOpAt failed: Incorrect operation passed.");
 
     int
@@ -350,6 +350,28 @@ void Picross::DoOpAt(PicPoint &p, int op) {
     switch (NoHintsMode) {
     case false:                 /* NoHintsMode DISABLED */
         switch (op) {
+        case OP_FORCE_CLEAR:            /* OP_FORCE_CLEAR requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                SetStateAt(p, BOARD_CLEAN);
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                break;
+            }
+            break;
+        case OP_FORCE_MARK:            /* OP_FORCE_MARK requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                SetStateAt(p, BOARD_MARKED);
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                break;
+            }
+            break;
         case OP_MARK:               /* OP_MARK requested */
             switch (state) {
             case BOARD_CLEAN:           /* on CLEAN tile */
@@ -383,6 +405,28 @@ void Picross::DoOpAt(PicPoint &p, int op) {
         break;
     case true:                  /* NoHintsMode ENABLED */
         switch (op) {
+        case OP_FORCE_CLEAR:            /* OP_FORCE_CLEAR requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                SetStateAt(p, BOARD_CLEAN);
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                break;
+            }
+            break;
+        case OP_FORCE_MARK:            /* OP_FORCE_MARK requested */
+            switch (state) {
+            case BOARD_CLEAN:           /* on CLEAN tile */
+                SetStateAt(p, BOARD_MARKED);
+                break;
+            case BOARD_MARKED:          /* on MARKED tile */
+                break;
+            case BOARD_HIT:             /* on HIT tile */
+                break;
+            }
+            break;
         case OP_MARK:               /* OP_MARK requested */
             switch (state) {
             case BOARD_CLEAN:           /* on CLEAN tile */

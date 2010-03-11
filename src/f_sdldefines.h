@@ -21,10 +21,6 @@
 #define DRAG_HOR 0
 #define DRAG_VER 1
 
-#define DRAG_OP_UNDEF -1
-#define DRAG_OP_MARK 0          // defines for drag op locking
-#define DRAG_OP_CLEAR 1
-
 #define FILEPREFIX ""           // set the location of gfx/fonts
 #define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
 
