@@ -12,6 +12,7 @@
 
 #include <SDL/SDL.h>
 #include <sstream>
+#include <iomanip>
 
 #include "Globals.h"
 #include "Streak.h"
@@ -21,8 +22,8 @@
 #include "Text.h"
 
 #define CELLLENGTH 24           // length of a single tile (width and height must be equal)
-#define PUZZLE_POSX 215         // position of the board's left upper corner
-#define PUZZLE_POSY 215
+#define PUZZLE_POSX 200         // position of the board's left upper corner
+#define PUZZLE_POSY 200
 #define MAGNIFICATION_LEVEL 1   // zoom level, must be a whole number (1==100%, 2==200%, ...)
 #define DRAG_UNDEF -1           // defines for drag locking
 #define DRAG_HOR 0
@@ -32,8 +33,8 @@
 #define FILEPREFIX ""           // set the location of gfx/fonts
 #define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
 
-#define TIMERX 160              // location of the timer
-#define TIMERY 170
+#define TIMERX 10              // location of the timer
+#define TIMERY 10
 
 #define GAMEBUILD "Tux Picross v.0.1"
 
@@ -54,6 +55,11 @@ private:
     void ProcessInput();
     void ProcessDrawing();
     void ProcessLogic(int dx, int dy, int op);
+
+    void DrawBackground();
+    void DrawInfoArea();
+    void DrawStreakArea();
+    void DrawBoardArea();
 
     void DebugKeyAction();
 

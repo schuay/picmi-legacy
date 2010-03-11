@@ -19,13 +19,16 @@ Puzzle::Puzzle(unsigned int w, unsigned int h, std::string map) :
     Map = new char[w*h];
     BoardState = new char[w*h];
 
-    for (unsigned int i=0; i < w*h; i++)
+    NrOfBoxes = 0;
+    for (unsigned int i=0; i < w*h; i++) {
         BoardState[i] = boardClean;
-
-    for (unsigned int i=0; i < w*h; i++)
+        if (map[i] == mapTrue)
+            NrOfBoxes++;
         if (map[i] == mapTrue || map[i] == mapFalse)
             Map[i] = map[i];
         else throw PicrossException("Illegal character in input map");
+
+    }
 
     ColStreaks = CalculateStreaksFromMap(false);
     RowStreaks = CalculateStreaksFromMap(true);
@@ -415,4 +418,14 @@ unsigned int Puzzle::GetElapsedRealTime() {
 }
 unsigned int Puzzle::GetElapsedTime() {
     return GetElapsedPenaltyTime() + GetElapsedRealTime();
+}
+
+float Puzzle::GetCompletedPercentageBoxes() {
+    int NrOfHitTiles = 0;
+
+    for (int i = 0; i < Width*Height; i++)
+        if (BoardState[i] == boardHit)
+            NrOfHitTiles++;
+
+    return ((float)NrOfHitTiles * 100.0f) / (float)NrOfBoxes;
 }

@@ -14,14 +14,73 @@ bool Game::GetQuit() {
 }
 
 void Game::ProcessDrawing() {
-    unsigned int i, j;
-    Point p, q;
-    std::stringstream out;
-
-    /* game board */
-
-    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));
+    DrawBackground();
+    DrawInfoArea();
+    DrawStreakArea();
+    DrawBoardArea();
+}
+void Game::DrawBackground() {
+    SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));  /* paint bg white */
     sprBackground.Blit(Point(0,0));
+}
+void Game::DrawInfoArea() {
+    SDL_Rect to;
+    SDL_Color color;
+    std::stringstream out;
+    Point p;
+
+    to.x = to.y = 0;
+    to.w = PUZZLE_POSX;
+    to.h = PUZZLE_POSY;
+
+    p.x = TIMERX*MAGNIFICATION_LEVEL;
+    p.y = TIMERY*MAGNIFICATION_LEVEL;
+
+    color.r = color.g = color.b = 255;
+
+
+    SDL_FillRect(Screen, &to, SDL_MapRGB(Screen->format, 0, 0, 0)); /* info -> black bg */
+
+    /* draw text */
+    out << "Elapsed Time";
+    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    p.y += txt.HeightOf(out.str());
+
+    out.str("");
+    out << "--------------";
+    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    p.y += txt.HeightOf(out.str()) + 2;
+
+    out.str("");
+    out << "Total: " << curPuzzle->GetElapsedTime();;
+    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    p.y += txt.HeightOf(out.str()) + 2;
+
+    out.str("");
+    out << "Real: " << curPuzzle->GetElapsedRealTime();
+    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    p.y += txt.HeightOf(out.str()) + 25;
+
+    out.str("");
+    out << "Completed";
+    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    p.y += txt.HeightOf(out.str());
+
+    out.str("");
+    out << "--------------";
+    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    p.y += txt.HeightOf(out.str()) + 2;
+
+    out.str("");
+    out << std::fixed << std::setprecision(0) << curPuzzle->GetCompletedPercentageBoxes() << " % done";
+    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    p.y += txt.HeightOf(out.str()) + 5;
+}
+void Game::DrawStreakArea() {
+    unsigned int i, j;
+    Point p;
+    SDL_Color color;
+    std::stringstream out;
 
     /* streak areas */
 
@@ -42,7 +101,54 @@ void Game::ProcessDrawing() {
             sprStreakAreaHorB.Blit(p);
     }
 
-    /* main area */
+    unsigned int streakLength;
+
+    /* draw row streaks */
+    for (i = 0; i < curPuzzle->Height; i++) {
+        streakLength = 0;
+
+        for (int js = curPuzzle->RowStreaks[i].size() - 1; js >= 0; js--) {
+            Streak s = curPuzzle->RowStreaks[i][js];    /* note the reverse order of loop  */
+            color.r = color.g = color.b = s.Solved ? 200 : 0;       /* we need to do this to draw streaks in correct order */
+
+            out.str("");
+            out << s.GetLength() << ' ';
+
+            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL - streakLength;
+            p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
+
+            streakLength += txt.WidthOf(out.str()) + 5;
+            txt.Blit(out.str(), p, color, JUSTIFY_R);
+        }
+    }
+
+    /* draw col streaks */
+    for (i = 0; i < curPuzzle->Width; i++) {
+        streakLength = 0;
+
+        for (j = 0; j < curPuzzle->ColStreaks[i].size(); j++) {
+            Streak s = curPuzzle->ColStreaks[i][j];
+            color.r = color.g = color.b = s.Solved ? 200 : 0;
+
+            out.str("");    //clear the stream
+            out << s.GetLength();
+
+            streakLength += txt.HeightOf(out.str()) + 5;
+
+            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                  + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
+                  + 10*MAGNIFICATION_LEVEL;           /* and centre within column */
+            p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
+                  - streakLength                      /* stack numbers above each other */
+                  - 3*MAGNIFICATION_LEVEL;            /* and adjust the whole stack upwards */
+
+            txt.Blit(out.str(), p, color, JUSTIFY_C);
+        }
+    }
+}
+void Game::DrawBoardArea() {
+    unsigned int i, j;
+    Point p, q;
 
     for (i = 0; i < curPuzzle->Width; i++) {
         for (j = 0; j < curPuzzle->Height; j++) {
@@ -80,58 +186,6 @@ void Game::ProcessDrawing() {
             else if (curPuzzle->GetStateAt(q) == BOARD_MARKED) {
                 sprMarkTile.Blit(p);
             }
-        }
-    }
-
-    /* draw timer */
-    out << curPuzzle->GetElapsedTime();
-
-    p.x = TIMERX*MAGNIFICATION_LEVEL;
-    p.y = TIMERY*MAGNIFICATION_LEVEL;
-
-    txt.Blit(out.str(), p, JUSTIFY_R);
-
-    SDL_Color c;
-    unsigned int rowStreakLength;
-
-    /* draw row streaks */
-    for (i = 0; i < curPuzzle->Height; i++) {
-        rowStreakLength = 0;
-
-        for (int js = curPuzzle->RowStreaks[i].size() - 1; js >= 0; js--) {
-            Streak s = curPuzzle->RowStreaks[i][js];    /* note the reverse order of loop  */
-            c.r = c.g = c.b = s.Solved ? 200 : 0;       /* we need to do this to draw streaks in correct order */
-
-            out.str("");
-            out << s.GetLength() << ' ';
-
-            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL - rowStreakLength*txt.Size/2;
-            p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
-
-            rowStreakLength += out.str().length() + 1;
-            txt.Blit(out.str(), p, c, JUSTIFY_R);
-        }
-    }
-
-    /* draw col streaks */
-    for (i = 0; i < curPuzzle->Width; i++) {
-        for (j = 0; j < curPuzzle->ColStreaks[i].size(); j++) {
-            Streak s = curPuzzle->ColStreaks[i][j];
-            c.r = c.g = c.b = s.Solved ? 200 : 0;
-
-            int drawLocation = curPuzzle->ColStreaks[i].size() - j;
-
-            out.str("");    //clear the stream
-            out << s.GetLength();
-
-            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
-                  + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
-                  + 10*MAGNIFICATION_LEVEL;           /* and centre within column */
-            p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
-                  - 10*drawLocation*2                 /* stack numbers above each other */
-                  - 5*MAGNIFICATION_LEVEL;           /* and adjust the whole stack upwards */
-
-            txt.Blit(out.str(), p, c, JUSTIFY_C);
         }
     }
 }
@@ -259,7 +313,9 @@ void Game::ProcessInput() {
         if (curPuzzle->GameWon()) {
             unsigned int elapsedRealTime = curPuzzle->GetElapsedRealTime();
             unsigned int elapsedPenaltyTime = curPuzzle->GetElapsedPenaltyTime();
-            printf("\nGame solved in %u s (%u s real, %u s penalty)!\n\n",
+            printf("\n-----------------------------\n\n"
+                   "Game solved in %u s (%u s real, %u s penalty)!\n\n"
+                   "------------------------------\n",
                    elapsedRealTime + elapsedPenaltyTime, elapsedRealTime, elapsedPenaltyTime);
             quit = true;
         }
@@ -382,11 +438,11 @@ Game::~Game() {
 }
 
 void Game::DoMainLoop() {
+
     ProcessInput();
-
     ProcessDrawing();
-    SDL_Flip(Screen);
 
+    SDL_Flip(Screen);
     SDL_Delay(30);  /* relinquish cpu time we don't need */
 }
 

@@ -63,6 +63,8 @@ public:
     unsigned int GetElapsedRealTime();
     unsigned int GetElapsedPenaltyTime();
 
+    float GetCompletedPercentageBoxes();
+
     std::vector<Streak>
             *ColStreaks,    /* stores streaks */
             *RowStreaks;
@@ -84,7 +86,8 @@ private:
     unsigned int
             startTime,          /* game start time (s)*/
             penaltyTime,        /* base penalty time */
-            penaltyMultiplier;  /* current penalty multiplier (applied to penaltyTime) */
+            penaltyMultiplier,  /* current penalty multiplier (applied to penaltyTime) */
+            NrOfBoxes;          /* number of boxes in map - set only once in constructor */
 
     static const char
             mapFalse = '.',

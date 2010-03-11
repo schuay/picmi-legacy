@@ -23,6 +23,9 @@ public:
     void Blit(std::string txt, Point p, unsigned int justify = JUSTIFY_L);
     void Blit(std::string txt, Point p, SDL_Color c, unsigned int justify = JUSTIFY_L);
 
+    int WidthOf(std::string txt);
+    int HeightOf(std::string txt);
+
     static const unsigned int Size = 18;
 
 private:

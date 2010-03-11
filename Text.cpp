@@ -21,6 +21,21 @@ void Text::Load(std::string Filename) {
         throw PicrossException(TTF_GetError());
 }
 
+int Text::WidthOf(std::string txt) {
+    int w;
+
+    TTF_SizeText(font, txt.c_str(), &w, NULL);
+
+    return w;
+}
+int Text::HeightOf(std::string txt) {
+    int h;
+
+    TTF_SizeText(font, txt.c_str(), NULL, &h);
+
+    return h;
+}
+
 void Text::Blit(std::string txt, Point p, unsigned int justify) {
     SDL_Color c = {0,0,0};
     Blit(txt, p, c, justify);
