@@ -1,20 +1,58 @@
+TUX PICROSS
+
+
+Project Information
+-------------------
+
 This project was originally started by Tobias Hellgren ( see http://www.thanius.com/picross/ ). 
-Currently it is being developed by Jakob Gruber ( jakob@gruber.kabelnet@at )
+Currently it is being developed by Jakob Gruber ( jakob.gruber@kabelnet.at )
 
-Currently, I'm planning on 
- * click on a column/row header to mark/unmark entire row.
- * implementing puzzle parsing from icon image files. We need to go through a specified folder 
-   and analyze each file, discard unsuitable files, find a threshhold for all files and convert 
-   them to 2-color bitmaps. Store the original files to display when the puzzle finishes.
- * once this is working we will need a menu system and some polish.
- * timer
- * high scores
- * getting new gfx
+Picross is a number logic game in which cells in a grid have to be colored or left 
+blank according to numbers given at the side of the grid to reveal a hidden picture. 
 
-Implemented:
- * getting this into a playable state
- * implementing mouse control (this should be easy). 
-   Left click to mark, right click to unmark.
+For more information, see http://en.wikipedia.org/wiki/Picross .
 
-I'm also thinking of doing a rewrite if this implementation turns out to be too 
-limiting ( fixed puzzle sizes, puzzles must be squared, etc. )
+So far, the core gameplay has been implemented. Puzzles are randomly generated for now.
+
+
+Some of the things I'm planning on implementing
+-------------------
+
+* Puzzle loading / generation from png image files
+
+We should be able to take any png file (of suitable size and content), analyze it and generate a picross board from it.
+
+* Usability Tweaks
+ * right clicking on a row/column header marks all clear tiles
+ * right mouse button drag should only perform a single operation: either clear->marked or marked-> clear
+
+* Appearance Tweaks / Polish
+ * Animations, nicer font, nicer sprites and background
+ 
+* GUI Loader
+
+The loader is responsible for displaying things like high scores, available puzzles / puzzlesets,
+changing settings, and launching tuxpicross with the appropriate arguments.
+Wishlist: an online DB with puzzle ratings from all users - puzzles can be loaded from here.
+
+
+Usage (for up to date instructions, run 'tuxpicross -h')
+-------------------
+
+mouse controls:
+    left click: expose a tile
+    right click: mark/unmark a tile
+
+keyboard controls:
+    arrow keys: move
+    ctrl: expose a tile
+    shift: mark/unmark a tile
+
+arguments:
+    -x num: x dimension of generated puzzle (defaults to 15)
+    -y num: y dimension of generated puzzle (defaults to 15)
+    -n: enable no hints mode. incorrect tile marks are not prevented (default is disabled)
+    -r num: generate random puzzle with percentage num of board filled 
+            for example, 'tuxpicross -r 60' will generate a random board with 60% of all tiles filled
+            (defaults to 55)    -s: generate static puzzle (for debug purposes)
+    -h: show this message

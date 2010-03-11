@@ -56,12 +56,12 @@ int main(int argc, char **argv) {
                    "    right ctrl: expose a tile\n"
                    "    right shift: mark/unmark a tile\n\n"
                    "arguments:\n"
-                   "    -x num: x dimension of generated puzzle (defaults to 15)"
-                   "    -y num: y dimension of generated puzzle (defaults to 15)"
+                   "    -x num: x dimension of generated puzzle (defaults to 15)\n"
+                   "    -y num: y dimension of generated puzzle (defaults to 15)\n"
                    "    -n: enable no hints mode. incorrect tile marks are not prevented (default is disabled)\n"
                    "    -r num: generate random puzzle with percentage num of board filled \n"
                    "            for example, 'tuxpicross -r 60' will generate a random board with 60%% of all tiles filled\n"
-                   "            (defaults to 55)"
+                   "            (defaults to 55)\n"
                    "    -s: generate static puzzle (for debug purposes)\n"
                    "    -h: show this message\n");
             return -1;
