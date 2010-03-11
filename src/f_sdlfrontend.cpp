@@ -362,8 +362,7 @@ void SDLFrontend::Initialize() {
     sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
 }
 
-void SDLFrontend::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
-                     unsigned int width, unsigned int height) {
+void SDLFrontend::NewPuzzle(PicSettings &s) {
 
     if (curPuzzle) {
         delete curPuzzle;
@@ -372,7 +371,7 @@ void SDLFrontend::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
 
     std::stringstream puzzleInitializer;
 
-    switch (type) {
+    switch (s.puzType) {
     case PUZ_STAT:
         puzzleInitializer <<
             "##.#.#.###.#.#." <<
@@ -391,17 +390,18 @@ void SDLFrontend::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
             ".#.......#....." <<
             "#.#.....#......";
 
-        curPuzzle = new Picross(width, height, puzzleInitializer.str());
+        s.puzMap = puzzleInitializer.str();
+        s.x = s.y = 15;
+
+        curPuzzle = new Picross(s);
         break;
     case PUZ_RAND:
-        curPuzzle = Picross::RandomPuzzle(width, height, difficulty);
+        curPuzzle = Picross::RandomPuzzle(s);
         break;
     default:
-        curPuzzle = Picross::RandomPuzzle(width, height, difficulty);
+        curPuzzle = Picross::RandomPuzzle(s);
         break;
     }
-
-    curPuzzle->NoHintsMode = noHintsMode;
 
     if (Screen) {
         SDL_FreeSurface(Screen);
@@ -421,13 +421,14 @@ void SDLFrontend::NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
     /* initialize vars */
 
     dragDirection = DRAG_UNDEF;
-
     quit = false;
 }
 
 SDLFrontend::SDLFrontend() {
     Screen = NULL;
     curPuzzle = NULL;
+
+    Initialize();
 }
 SDLFrontend::~SDLFrontend() {
     if (curPuzzle)
@@ -447,5 +448,13 @@ void SDLFrontend::DoMainLoop() {
 }
 
 void SDLFrontend::DebugKeyAction() {
-    NewPuzzle(PUZ_RAND, 50, false, 20-rand()%10, 20-rand()%10);
+    PicSettings s;
+
+    s.puzType = PUZ_RAND;
+    s.puzDifficulty = 50;
+    s.noHintsMode = false;
+    s.x = 20-rand()%10;
+    s.y = 20-rand()%10;
+
+    NewPuzzle(s);
 }

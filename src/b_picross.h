@@ -14,29 +14,19 @@
 #include <cstring>
 #include <cstdlib>
 
+#include "b_picsettings.h"
 #include "b_picstreak.h"
 #include "b_picpoint.h"
 #include "b_picexception.h"
-
-#define MAP_FALSE       0
-#define MAP_TRUE        1
-
-#define BOARD_CLEAN     0
-#define BOARD_MARKED    1
-#define BOARD_HIT       2
-
-#define OP_NONE         0  // defines for game actions, NONE, HIT (uncover a tile), MARK (mark a tile as empty)
-#define OP_HIT          1
-#define OP_MARK         2
+#include "b_picdefines.h"
 
 class Picross
 {
 public:
-    Picross(unsigned int, unsigned int, std::string);
+    Picross(PicSettings &s);
     ~Picross();
 
-    static Picross *RandomPuzzle(    /* returns a random puzzle with given dimensions */
-            unsigned int w, unsigned int h, unsigned int percentageFilled);
+    static Picross *RandomPuzzle(PicSettings &s);    /* returns a random puzzle with given dimensions */
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
 

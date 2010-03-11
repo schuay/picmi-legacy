@@ -7,9 +7,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#ifndef PICSETTINGS_H
+#define PICSETTINGS_H
 
-extern SDL_Surface *Screen;
+#include <string>
 
-#endif // GLOBALS_H
+#include "b_picdefines.h"
+
+class PicSettings
+{
+public:
+    PicSettings();
+
+    std::string puzMap;
+
+    int puzType;
+    int puzDifficulty;
+
+    bool noHintsMode;
+
+    unsigned int x;
+    unsigned int y;
+};
+
+#endif // PICSETTINGS_H

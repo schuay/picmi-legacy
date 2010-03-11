@@ -27,8 +27,6 @@
 #define DRAG_UNDEF -1           // defines for drag locking
 #define DRAG_HOR 0
 #define DRAG_VER 1
-#define PUZ_RAND 1              // defines for used puzzle type
-#define PUZ_STAT 0
 #define FILEPREFIX ""           // set the location of gfx/fonts
 #define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
 
@@ -43,13 +41,13 @@ public:
     SDLFrontend();
     ~SDLFrontend();
 
-    void Initialize();
-    void NewPuzzle(int type, unsigned int difficulty, bool noHintsMode,
-                   unsigned int width, unsigned int height);
+    void NewPuzzle(PicSettings &s);
     void DoMainLoop();
     bool GetQuit();
 
 private:
+
+    void Initialize();
 
     void ProcessInput();
     void ProcessDrawing();

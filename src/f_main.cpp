@@ -12,27 +12,31 @@
 
 SDL_Surface *Screen;
 
-struct Settings {
-    int puzType;
-    int puzDifficulty;
+bool HandleArguments(PicSettings &s, int argc, char **argv);
 
-    bool noHintsMode;
+int main(int argc, char **argv) {
 
-    unsigned int x;
-    unsigned int y;
+    PicSettings s;
+    if (!HandleArguments(s, argc, argv))
+        return -1;
 
-    Settings() {
-        puzType = PUZ_RAND;
-        puzDifficulty = 55;
+    try {
+        SDLFrontend game;
 
-        noHintsMode = false;
+        game.NewPuzzle(s);
 
-        x = 15;
-        y = 15;
+        while(!game.GetQuit())
+                game.DoMainLoop();
+
+        return 0;
     }
-};
+    catch (PicException e) {
+        printf("Error: %s", e.what());
+        return 1;
+    }
+}
 
-bool HandleArguments(Settings& s, int argc, char **argv) {
+bool HandleArguments(PicSettings& s, int argc, char **argv) {
     int c;
     char *cvalue = NULL;
 
@@ -98,27 +102,3 @@ bool HandleArguments(Settings& s, int argc, char **argv) {
 
     return true;
 }
-
-int main(int argc, char **argv) {
-
-    Settings s;
-    if (!HandleArguments(s, argc, argv))
-        return -1;
-
-    try {
-        SDLFrontend game;
-
-        game.Initialize();  /* initialize video/audio subsystems, load sprites, etc... */
-        game.NewPuzzle(s.puzType, s.puzDifficulty, s.noHintsMode, s.x, s.y);
-
-        while(!game.GetQuit())
-                game.DoMainLoop();
-
-        return 0;
-    }
-    catch (PicException e) {
-        printf("Error: %s", e.what());
-        return 1;
-    }
-}
-

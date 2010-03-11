@@ -9,26 +9,28 @@
 
 #include "b_picross.h"
 
-Picross::Picross(unsigned int w, unsigned int h, std::string map) :
-        ColStreaks(NULL), RowStreaks(NULL), Width(w), Height(h),
+Picross::Picross(PicSettings &s) :
+        ColStreaks(NULL), RowStreaks(NULL), Width(s.x), Height(s.y),
         Map(NULL), BoardState(NULL)
 {
-    if (map.length() < w*h)
+    if (s.puzMap.length() < s.x * s.y)
         throw PicException("Input map has incorrect size");
 
-    Map = new char[w*h];
-    BoardState = new char[w*h];
+    Map = new char[s.x * s.y];
+    BoardState = new char[s.x * s.y];
 
     NrOfBoxes = 0;
-    for (unsigned int i=0; i < w*h; i++) {
+    for (unsigned int i=0; i < s.x * s.y; i++) {
         BoardState[i] = boardClean;
-        if (map[i] == mapTrue)
+        if (s.puzMap[i] == mapTrue)
             NrOfBoxes++;
-        if (map[i] == mapTrue || map[i] == mapFalse)
-            Map[i] = map[i];
+        if (s.puzMap[i] == mapTrue || s.puzMap[i] == mapFalse)
+            Map[i] = s.puzMap[i];
         else throw PicException("Illegal character in input map");
 
     }
+
+    NoHintsMode = s.noHintsMode;
 
     ColStreaks = CalculateStreaksFromMap(false);
     RowStreaks = CalculateStreaksFromMap(true);
@@ -233,13 +235,15 @@ void Picross::CalculateStreakSolvedState() {
     }
 }
 
-Picross* Picross::RandomPuzzle(unsigned int w, unsigned int h, unsigned int percentageFilled) {
+Picross* Picross::RandomPuzzle(PicSettings &s) {
 
-    if (percentageFilled > 99)
-        return new Picross(w, h, std::string(w*h, mapTrue));
+    if (s.puzDifficulty > 99) {
+        s.puzMap = std::string(s.x * s.y, mapTrue);
+        return new Picross(s);
+    }
 
-    std::string map(w*h, '.');
-    int cellsToFill = w*h*percentageFilled/100,
+    std::string map(s.x*s.y, '.');
+    int cellsToFill = s.x * s.y * (float)s.puzDifficulty /100,
         randX, randY;
 
     srand(time(NULL));
@@ -247,15 +251,16 @@ Picross* Picross::RandomPuzzle(unsigned int w, unsigned int h, unsigned int perc
     for (int i=0; i<cellsToFill; i++) {
 
         do {
-            randX = rand() % w;
-            randY = rand() % h;
+            randX = rand() % s.x;
+            randY = rand() % s.y;
         }
-        while (map[randY*w + randX] != mapFalse);
+        while (map[randY*s.x + randX] != mapFalse);
 
-        map[randY*w + randX] = mapTrue;
+        map[randY*s.x + randX] = mapTrue;
     }
 
-    return new Picross(w, h, map);
+    s.puzMap = map;
+    return new Picross(s);
 }
 
 int Picross::GetMapAt(PicPoint &p) {
