@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Tux Picross
+GenericName=Logic Game
+Comment=A number logic game
+Exec=/usr/bin/tuxpicross
+Icon=/usr/share/tuxpicross/gfx/icon.png
+Terminal=false
+Type=Application
+Categories=Game;LogicGame;
+

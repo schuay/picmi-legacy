@@ -7,13 +7,22 @@ OBJECTS       = f_main.o f_sdlfrontend.o b_picross.o b_picexception.o \
                 b_picsettings.o
 LIBS= -lSDL -lSDL_image -lSDL_gfx -lSDL_mixer -lSDL_ttf
 EXECUTABLE= tuxpicross
+DESTDIR= /
  
 all:
+	sed -i \
+		"s_#define FILEPREFIX.*_#define FILEPREFIX \"/usr/share/tuxpicross/\"_" \
+		f_sdldefines.h
 	$(CC) -c `sdl-config --cflags` $(SOURCES)
 	$(CC) `sdl-config --libs` $(LIBS) $(OBJECTS) -o $(EXECUTABLE)
  
 clean:
 	rm -f $(OBJECTS)
  
-uninstall:
-	rm -f $(EXECUTABLE)
+install:
+	mkdir -p ${DESTDIR}/usr/{bin,share/{applications,${EXECUTABLE}/gfx}}
+	install -D -m755 ${EXECUTABLE} ${DESTDIR}/usr/bin/
+	install -D -m644 tuxpicross.desktop ${DESTDIR}/usr/share/applications/tuxpicross.desktop
+	install -D -m644 \
+		../gfx/*  \
+		${DESTDIR}/usr/share/${EXECUTABLE}/gfx/
