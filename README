@@ -12,7 +12,22 @@ blank according to numbers given at the side of the grid to reveal a hidden pict
 
 For more information, see http://en.wikipedia.org/wiki/Picross .
 
-So far, the core gameplay has been implemented. Puzzles are randomly generated for now.
+So far, the core gameplay has been implemented. Puzzles are randomly 
+generated for now.
+
+
+Features
+-------------------
+
+* basic picross gameplay
+* no hints mode: do not automatically prevent incorrect tile hits - the player must solve the 
+  puzzle correctly without hints. there is no penalty time in this mode.
+* randomly generated puzzles arbitraty size and difficulty
+* display which streaks are solved by greying out numbers
+* drag locking: during a drag, movement is locked either to the row or 
+  column to prevent undesired movement
+* drag operation locking: during a right mouse button drag, either all 
+  affected tiles are cleared OR marked, not both
 
 
 Some of the things I'm planning on implementing
@@ -20,11 +35,11 @@ Some of the things I'm planning on implementing
 
 * Puzzle loading / generation from png image files
 
-We should be able to take any png file (of suitable size and content), analyze it and generate a picross board from it.
+We should be able to take any png file (of suitable size and content), analyze it and generate 
+a picross board from it.
 
 * Usability Tweaks
  * right clicking on a row/column header marks all clear tiles
- * right mouse button drag should only perform a single operation: either clear->marked or marked-> clear
 
 * Appearance Tweaks / Polish
  * Animations, nicer font, nicer sprites and background
