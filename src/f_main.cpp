@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
         return 0;
     }
     catch (PicException e) {
-        printf("Error: %s", e.what());
+        printf("Error: %s\n\n", e.what());
         return 1;
     }
 }
