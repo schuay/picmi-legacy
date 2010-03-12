@@ -18,7 +18,7 @@ all:
 	sed -i \
 		"s_#define FILEPREFIX.*_#define FILEPREFIX \"/usr/share/tuxpicross/\"_" \
 		f_sdldefines.h
-	$(CC) -c `sdl-config --cflags` $(SOURCES)
+	$(CC) -c `sdl-config --cflags` -I/usr/include/ImageMagick $(SOURCES)
 	$(CC) `sdl-config --libs` $(LIBS) $(OBJECTS) -o $(EXECUTABLE)
  
 clean:
