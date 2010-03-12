@@ -15,6 +15,7 @@
 #include <iomanip>
 
 #include "b_picross.h"
+#include "b_picpngloader.h"
 
 #include "f_sdldefines.h"
 #include "f_sdlglobals.h"

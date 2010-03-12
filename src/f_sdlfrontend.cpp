@@ -452,13 +452,7 @@ SDLFrontend::~SDLFrontend() {
 }
 
 void SDLFrontend::DebugKeyAction() {
-    PicSettings s;
+    PicPngLoader loader;
 
-    s.puzType = PUZ_RAND;
-    s.puzDifficulty = 50;
-    s.noHintsMode = false;
-    s.x = 20-rand()%10;
-    s.y = 20-rand()%10;
-
-    NewPuzzle(s);
+    loader.LoadPNG(FILEPREFIX "gfx/icon.png", 50);
 }
