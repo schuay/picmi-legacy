@@ -3,21 +3,22 @@ TUX PICROSS
 Manual Installation
 -------------------
 
-Configure the path to the gfx directory by setting FILEPREFIX 
-in f_sdlfrontend.h. By default, FILEPREFIX is configured to 
-load from ./gfx.
-
-Examples for other configurations:
-
-//loads from ../gfx
-#define FILEPREFIX "../"
-
-//loads from /usr/share/tuxpicross/gfx
-#define FILEPREFIX "/usr/share/tuxpicross/"
-
-To install, enter the src directory and run 
+To build tuxpicross, enter the src directory and run
 
 make
+
+To install, run
+
+make install
+
+as root.
+
+By default, tuxpicross will install files in 
+
+/usr/bin/
+/usr/share/applications/
+/usr/share/tuxpicross/
+
 
 Installation from AUR (Archlinux)
 -------------------
