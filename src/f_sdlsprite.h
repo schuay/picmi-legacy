@@ -24,6 +24,7 @@ public:
     SDLSprite();
     ~SDLSprite();
 
+    void SetAsIcon();
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
     void Blit(PicPoint p);
 

@@ -71,7 +71,8 @@ private:
         sprStreakAreaHorB,
         sprStreakAreaVerA,
         sprStreakAreaVerB,
-        sprBackground;
+        sprBackground,
+        sprIcon;
 
     SDLText txt;
 

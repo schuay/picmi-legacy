@@ -417,6 +417,9 @@ void SDLFrontend::Initialize() {
 
     txt.Load(FILEPREFIX "gfx/cour.ttf");
 
+    sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
+    sprIcon.SetAsIcon();
+
     sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", MAGNIFICATION_LEVEL, 0);
     sprBoxTile.Load(FILEPREFIX "gfx/box.png", MAGNIFICATION_LEVEL, 0);
     sprMarkTile.Load(FILEPREFIX "gfx/mark.png", MAGNIFICATION_LEVEL, 0);

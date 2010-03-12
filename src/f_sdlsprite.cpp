@@ -18,6 +18,10 @@ SDLSprite::~SDLSprite() {
         SDL_FreeSurface(Surface);
 }
 
+void SDLSprite::SetAsIcon() {
+    SDL_WM_SetIcon(Surface, NULL);
+}
+
 void SDLSprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int Rotation) {
 
     if (Surface) {
