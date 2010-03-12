@@ -3,6 +3,10 @@ TUX PICROSS
 Manual Installation
 -------------------
 
+The following dependencies need to be installed to compile and run tuxpicross:
+
+sdl, sdl_gfx, sdl_image, sdl_ttf, imagemagick
+
 To build tuxpicross, enter the src directory and run
 
 make

@@ -32,7 +32,6 @@ HEADERS += src/f_sdlfrontend.h \
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \
-    -lSDL_mixer \
     -lSDL_gfx \
     -lSDL_ttf \
     -lMagick++ \

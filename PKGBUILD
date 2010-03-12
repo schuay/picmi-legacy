@@ -8,7 +8,7 @@ pkgrel=4
 arch=('i686' 'x86_64')
 url="http://github.com/schuay/$_pkgname/"
 license=('GPL')
-depends=('sdl' 'sdl_gfx' 'sdl_image' 'sdl_mixer' 'sdl_ttf' 'imagemagick')
+depends=('sdl' 'sdl_gfx' 'sdl_image' 'sdl_ttf' 'imagemagick')
 makedepends=('git')
 
 build() {
