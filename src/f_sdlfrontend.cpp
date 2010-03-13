@@ -432,7 +432,7 @@ SDLFrontend::~SDLFrontend() {
 void SDLFrontend::DebugKeyAction() {
     PicPngLoader loader("/home/jakob/.config/tuxpicross/");
 
-    PicSettings s = loader.LoadPicross("adventurer.xbm");
+    PicSettings s = loader.LoadPicross("altar.xbm");
 
     NewPuzzle(s);
 }

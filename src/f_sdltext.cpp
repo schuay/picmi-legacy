@@ -46,7 +46,9 @@ int SDLText::HeightOf(std::string txt) {
 }
 
 void SDLText::Blit(std::string txt, PicPoint p, unsigned int justify) {
-    SDL_Color c = {0,0,0};
+    SDL_Color c;
+
+    c.r = c.g = c.b = 0;
     Blit(txt, p, c, justify);
 }
 void SDLText::Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int justify) {

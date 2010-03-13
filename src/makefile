@@ -5,12 +5,8 @@ SOURCES       = f_main.cpp f_sdlfrontend.cpp b_picross.cpp b_picexception.cpp \
 OBJECTS       = f_main.o f_sdlfrontend.o b_picross.o b_picexception.o \
                 b_picpoint.o f_sdlsprite.o f_sdltext.o b_picstreak.o \
                 b_picsettings.o b_picpngloader.o
-LIBS= -lSDL -lSDL_image -lSDL_gfx -lSDL_ttf -lMagick++ \
-    -lMagickWand -lMagickCore -llcms -ltiff -lfreetype -ljasper \
-    -ljpeg -lgs -lpng -lfontconfig -lwmflite -lXext -lXt -lSM \
-    -lICE -lX11 -lbz2 -pthread -lIlmImf -lz -lImath -lHalf -lIex \
-    -lIlmThread -lrsvg-2 -lgdk_pixbuf-2.0 -lcairo -lgobject-2.0 \
-    -lgmodule-2.0 -lglib-2.0 -lxml2 -lz -lm -lgomp -lpthread -lltdl
+LIBS= -lSDL -lSDL_image -lSDL_gfx -lSDL_ttf -lMagick++ -lpng -lpthread
+INCLUDEDIRS= -I/usr/include/ImageMagick -I/usr/include/SDL
 EXECUTABLE= tuxpicross
 DESTDIR= /
  
@@ -18,8 +14,8 @@ all:
 	sed -i \
 		"s_#define FILEPREFIX.*_#define FILEPREFIX \"/usr/share/tuxpicross/\"_" \
 		f_sdldefines.h
-	$(CC) -c `sdl-config --cflags` -I/usr/include/ImageMagick $(SOURCES)
-	$(CC) `sdl-config --libs` $(LIBS) $(OBJECTS) -o $(EXECUTABLE)
+	$(CC) -c $(INCLUDEDIRS) $(SOURCES)
+	$(CC) $(LIBS) $(OBJECTS) -o $(EXECUTABLE)
  
 clean:
 	rm -f $(OBJECTS)

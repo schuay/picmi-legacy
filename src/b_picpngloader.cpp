@@ -40,7 +40,7 @@ void PicPngLoader::ConvertPath(std::string path, int threshold) {
     if (!d)
         throw PicException("Dir could not be opened");
 
-    while (ep = readdir(d)) {
+    while ( (ep = readdir(d)) ) {
         if (ep->d_type != DT_REG)
             continue;
 
@@ -75,14 +75,14 @@ PicSettings PicPngLoader::LoadPicross(std::string filename) {
     Magick::ColorMono currentPixel;
     bool currentColor;
 
-    for (int i = 0; i < h; i++) {
-        for (int j = 0; j < w; j++) {
+    for (unsigned int i = 0; i < h; i++) {
+        for (unsigned int j = 0; j < w; j++) {
             currentPixel = img.pixelColor(j,i);
             currentColor = currentPixel.mono();
             if (currentColor)
-                Map += '#'; /* TODO: convert this to use the same variable as Picross class MAP_TRUE mapTrue */
+                Map += '.'; /* TODO: convert this to use the same variable as Picross class MAP_TRUE mapTrue MAP_FALSE mapFalse */
             else
-                Map += '.'; /* TODO: convert this to use the same variable as Picross class MAP_FALSE mapFalse */
+                Map += '#'; /* TODO: convert this to use the same variable as Picross class MAP_TRUE mapTrue MAP_FALSE mapFalse */
         }
     }
 
