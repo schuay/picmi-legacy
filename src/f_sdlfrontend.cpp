@@ -341,30 +341,8 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
         curPuzzle = NULL;
     }
 
-    std::stringstream puzzleInitializer;
-
     switch (s.puzType) {
     case PUZ_STAT:
-        puzzleInitializer <<
-            "##.#.#.###.#.#." <<
-            "#.#.#.#.#......" <<
-            "###############" <<
-            "#.#.#.#.#......" <<
-            "###....##......" <<
-            "#.#######......" <<
-            "###....##......" <<
-            "#.#....##......" <<
-            "###....##......" <<
-            "#.......#......" <<
-            "#.#.#.........." <<
-            "#.......#......" <<
-            ".#.#..........." <<
-            ".#.......#....." <<
-            "#.#.....#......";
-
-        s.puzMap = puzzleInitializer.str();
-        s.x = s.y = 15;
-
         curPuzzle = new Picross(s);
         break;
     case PUZ_RAND:
@@ -452,7 +430,9 @@ SDLFrontend::~SDLFrontend() {
 }
 
 void SDLFrontend::DebugKeyAction() {
-    PicPngLoader loader;
+    PicPngLoader loader("/home/jakob/.config/tuxpicross/");
 
-    loader.LoadPNG(FILEPREFIX "gfx/icon.png", 50);
+    PicSettings s = loader.LoadPicross("adventurer.xbm");
+
+    NewPuzzle(s);
 }

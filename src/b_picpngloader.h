@@ -11,19 +11,26 @@
 #define B_PICPNGLOADER_H
 
 #include <ImageMagick/Magick++.h>
-#include <ImageMagick/Magick++/Color.h>
-#include <ImageMagick/Magick++/Image.h>
 #include <string>
+
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "b_picross.h"
 
 class PicPngLoader
 {
 public:
-    PicPngLoader();
+    PicPngLoader(std::string defpath);
 
     /* load a png image, use threshold to convert to black+white */
-    Picross *LoadPNG(std::string filename, int threshold);
+    void ConvertPNG(std::string path, std::string filename, int threshold);
+    void ConvertPath(std::string path, int threshold);
+
+    PicSettings LoadPicross(std::string path);
+private:
+
+    std::string defaultPath;
 };
 
 #endif // B_PICPNGLOADER_H
