@@ -28,15 +28,13 @@ Features
   column to prevent undesired movement
 * drag operation locking: during a right mouse button drag, either all 
   affected tiles are cleared OR marked, not both
+* conversion of png images into format suitable for picross (use your system icons as 
+  picross boards!)
+* puzzle loading from black and white png files
 
 
 Some of the things I'm planning on implementing
 -------------------
-
-* Puzzle loading / generation from png image files
-
-We should be able to take any png file (of suitable size and content), analyze it and generate 
-a picross board from it.
 
 * Usability Tweaks
  * right clicking on a row/column header marks all clear tiles
@@ -54,6 +52,8 @@ Wishlist: an online DB with puzzle ratings from all users - puzzles can be loade
 Usage (for up to date instructions, run 'tuxpicross -h')
 -------------------
 
+tuxpicross usage
+
 mouse controls:
     left click: expose a tile
     right click: mark/unmark a tile
@@ -67,8 +67,11 @@ arguments:
     -x num: x dimension of generated puzzle (defaults to 15)
     -y num: y dimension of generated puzzle (defaults to 15)
     -n: enable no hints mode. incorrect tile marks are not prevented (default is disabled)
-    -r num: generate random puzzle with percentage num of board filled 
+    -r num: generate random puzzle with percentage num of board filled
             for example, 'tuxpicross -r 60' will generate a random board with 60% of all tiles filled
             (defaults to 55)
     -s file: load puzzle from file (input file should be black and white .png)
+    -t dir: load puzzle from a random file in dir
+    -c dir: convert images from dir to a format suitable for puzzle input
+            files are stored in $HOME/.config/tuxpicross/ by default
     -h: show this message
