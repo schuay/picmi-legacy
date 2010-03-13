@@ -312,17 +312,35 @@ void SDLFrontend::ProcessInput() {
             curPuzzle->DoOp(op);
 
         if (curPuzzle->GameWon()) {
-            unsigned int elapsedRealTime = curPuzzle->GetElapsedRealTime();
-            unsigned int elapsedPenaltyTime = curPuzzle->GetElapsedPenaltyTime();
-            printf("\n-----------------------------\n\n"
-                   "Game solved in %u s (%u s real, %u s penalty)!\n\n"
-                   "------------------------------\n",
-                   elapsedRealTime + elapsedPenaltyTime, elapsedRealTime, elapsedPenaltyTime);
-            quit = true;
+            GameWon();
         }
     }
 
     curPuzzle->CalculateStreakSolvedState();    /* prepare streaks for drawing */
+}
+
+void SDLFrontend::GameWon() {
+
+    /* draw one final time */
+    ProcessDrawing();
+    SDL_Flip(Screen);
+
+    /* empty event loop - wait for user input */
+    SDL_Event ev;
+    while (!quit) {
+        SDL_Delay(100);
+        while (SDL_PollEvent(&ev) == 1) {
+            if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN)
+                quit = true;
+        }
+    }
+
+    unsigned int elapsedRealTime = curPuzzle->GetElapsedRealTime();
+    unsigned int elapsedPenaltyTime = curPuzzle->GetElapsedPenaltyTime();
+    printf("\n-----------------------------\n\n"
+           "Game solved in %u s (%u s real, %u s penalty)!\n\n"
+           "------------------------------\n",
+           elapsedRealTime + elapsedPenaltyTime, elapsedRealTime, elapsedPenaltyTime);
 }
 
 void SDLFrontend::DoMainLoop() {

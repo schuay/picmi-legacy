@@ -40,6 +40,8 @@ private:
     void ProcessDrawing();
     void ProcessLogic(int dx, int dy, int op);
 
+    void GameWon();
+
     void DrawBackground();
     void DrawInfoArea();
     void DrawStreakArea();
