@@ -26,5 +26,8 @@ bool PicSettings::Validate() {
     if (Type != PUZ_STAT && Type != PUZ_RAND)
         return false;
 
+    if (Difficulty < 1 || Difficulty > 99)
+        return false;
+
     return true;
 }

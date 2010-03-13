@@ -72,6 +72,12 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
             s.Type = PUZ_STAT;
             s.Path = cvalue;
             break;
+        case 't':
+            cvalue = optarg;
+            s.Type = PUZ_STAT;
+            s.Path = cvalue;
+            s.LoadRandomFromPath = true;
+            break;
         case 'n':
             s.NoHintsMode = true;
             break;
@@ -94,7 +100,7 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
                    "            for example, 'tuxpicross -r 60' will generate a random board with 60%% of all tiles filled\n"
                    "            (defaults to 55)\n"
                    "    -s file: load puzzle from file (input file should be black and white .png)\n"
-//                   "    -t dir: load puzzle from a random file in dir\n"
+                   "    -t dir: load puzzle from a random file in dir\n"
 //                   "    -c dir: convert images from dir to a format suitable for puzzle input\n"
 //                   "            files are stored in $HOME/.config/tuxpicross/ by default\n"
                    "    -h: show this message\n");

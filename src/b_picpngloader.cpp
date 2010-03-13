@@ -29,7 +29,7 @@ PicPngLoader::PicPngLoader(std::string defpath) {
         closedir(d);
 }
 
-void PicPngLoader::ConvertPNG(std::string path, std::string filename, int threshold) {
+void PicPngLoader::Convert(std::string path, std::string filename, int threshold) {
 
     std::string fullfilename = path + "/" + filename;
     std::string newfilename = defaultPath + "/" + filename;
@@ -69,13 +69,13 @@ void PicPngLoader::ConvertPath(std::string path, int threshold) {
         if (ext != ".png" && ext != ".xbm")  /* for now, limit to png (even though we could process all formats) */
             continue;
 
-        ConvertPNG(path, filename, threshold);
+        Convert(path, filename, threshold);
     }
 
     closedir(d);
 }
 
-void PicPngLoader::LoadPicross(PicSettings& settings) {
+void PicPngLoader::Load(PicSettings& settings) {
 
     Magick::Image img(settings.Path.c_str());
 
@@ -102,4 +102,43 @@ void PicPngLoader::LoadPicross(PicSettings& settings) {
     settings.Map = Map;
     settings.x = w;
     settings.y = w;
+}
+void PicPngLoader::LoadRandom(PicSettings &settings) {
+    DIR* d = opendir(settings.Path.c_str());
+    struct dirent *ep;
+
+    if (!d)
+        throw PicException("Dir could not be opened");
+
+    std::vector<std::string> v;
+
+    while ( (ep = readdir(d)) ) {
+        if (ep->d_type != DT_REG)
+            continue;
+
+        std::string filename = ep->d_name;
+        int l = filename.length();
+
+        if (l < 5)      /* we need at least 5 chars to store extension + name */
+            continue;
+
+        std::string ext = filename.substr(filename.length() - 4, 4);
+
+        if (ext != ".png" && ext != ".xbm")  /* for now, limit to png (even though we could process all formats) */
+            continue;
+
+        v.push_back(settings.Path + "/" + filename);
+    }
+
+    closedir(d);
+
+    if (v.size() == 0)
+        throw PicException("No files found in directory");
+
+    srand(time(NULL));
+
+    settings.Path = v[rand() % v.size()];
+    settings.LoadRandomFromPath = false;
+
+    Load(settings);
 }

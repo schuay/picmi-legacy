@@ -217,7 +217,10 @@ void Picross::Load(PicSettings &s) {
     }
     else if (s.Type == PUZ_STAT) {
         PicPngLoader loader;
-        loader.LoadPicross(s);
+        if (s.LoadRandomFromPath)
+            loader.LoadRandom(s);
+        else
+            loader.Load(s);
     }
     else
         throw PicException("Invalid puzzle type passed");

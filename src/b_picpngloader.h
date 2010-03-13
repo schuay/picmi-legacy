@@ -12,6 +12,7 @@
 
 #include <ImageMagick/Magick++.h>
 #include <string>
+#include <vector>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -30,10 +31,12 @@ public:
     PicPngLoader(std::string defpath);
 
     /* load a png image, use threshold to convert to black+white */
-    void ConvertPNG(std::string path, std::string filename, int threshold);
+    void Convert(std::string path, std::string filename, int threshold);
     void ConvertPath(std::string path, int threshold);
 
-    void LoadPicross(PicSettings& settings);
+    void Load(PicSettings& settings);
+    void LoadRandom(PicSettings& settings);
+
 private:
 
     std::string defaultPath;
