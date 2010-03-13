@@ -92,9 +92,9 @@ void PicPngLoader::LoadPicross(PicSettings& settings) {
             currentPixel = img.pixelColor(j,i);
             currentColor = currentPixel.mono();
             if (currentColor)
-                Map += '.'; /* TODO: convert this to use the same variable as Picross class MAP_TRUE mapTrue MAP_FALSE mapFalse */
+                Map += PIC_MAP_FALSE;
             else
-                Map += '#'; /* TODO: convert this to use the same variable as Picross class MAP_TRUE mapTrue MAP_FALSE mapFalse */
+                Map += PIC_MAP_TRUE;
         }
     }
 

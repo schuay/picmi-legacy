@@ -85,7 +85,7 @@ void SDLFrontend::DrawStreakArea() {
     /* streak areas */
 
     p.y = PUZZLE_POSY - 200;
-    for (i = 0; i < curPuzzle->Width; i++) {
+    for (i = 0; i < curPuzzle->Width(); i++) {
         p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
         if (i%2 == 0)
             sprStreakAreaVerA.Blit(p);
@@ -93,7 +93,7 @@ void SDLFrontend::DrawStreakArea() {
             sprStreakAreaVerB.Blit(p);
     }
     p.x = PUZZLE_POSX - 200;
-    for (j = 0; j < curPuzzle->Height; j++) {
+    for (j = 0; j < curPuzzle->Height(); j++) {
         p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
         if (j%2 == 0)
             sprStreakAreaHorA.Blit(p);
@@ -104,7 +104,7 @@ void SDLFrontend::DrawStreakArea() {
     unsigned int streakLength;
 
     /* draw row streaks */
-    for (i = 0; i < curPuzzle->Height; i++) {
+    for (i = 0; i < curPuzzle->Height(); i++) {
         streakLength = 0;
 
         for (int js = curPuzzle->RowStreaks[i].size() - 1; js >= 0; js--) {
@@ -123,7 +123,7 @@ void SDLFrontend::DrawStreakArea() {
     }
 
     /* draw col streaks */
-    for (i = 0; i < curPuzzle->Width; i++) {
+    for (i = 0; i < curPuzzle->Width(); i++) {
         streakLength = 0;
 
         for (int js = curPuzzle->ColStreaks[i].size() - 1; js >= 0; js--) {
@@ -150,8 +150,8 @@ void SDLFrontend::DrawBoardArea() {
     unsigned int i, j;
     PicPoint p, q;
 
-    for (i = 0; i < curPuzzle->Width; i++) {
-        for (j = 0; j < curPuzzle->Height; j++) {
+    for (i = 0; i < curPuzzle->Width(); i++) {
+        for (j = 0; j < curPuzzle->Height(); j++) {
             p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
 
@@ -359,20 +359,8 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
         curPuzzle = NULL;
     }
 
-    PicPngLoader loader;
-
-    switch (s.puzType) {
-    case PUZ_STAT:      /* load puzzle from file */
-        loader.LoadPicross(s);
-        curPuzzle = new Picross(s);
-        break;
-    case PUZ_RAND:      /* generate random puzzle */
-        curPuzzle = Picross::RandomPuzzle(s);
-        break;
-    default:
-        curPuzzle = Picross::RandomPuzzle(s);
-        break;
-    }
+    /* create puzzle */
+    curPuzzle = new Picross(s);
 
     if (Screen) {
         SDL_FreeSurface(Screen);
@@ -380,8 +368,8 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
     }
 
     Screen = SDL_SetVideoMode(
-            (PUZZLE_POSX + curPuzzle->Width * CELLLENGTH + 5) * MAGNIFICATION_LEVEL,
-            (PUZZLE_POSY + curPuzzle->Height * CELLLENGTH + 5) * MAGNIFICATION_LEVEL,
+            (PUZZLE_POSX + curPuzzle->Width() * CELLLENGTH + 5) * MAGNIFICATION_LEVEL,
+            (PUZZLE_POSY + curPuzzle->Height() * CELLLENGTH + 5) * MAGNIFICATION_LEVEL,
             24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF);
 
     if (!Screen) {

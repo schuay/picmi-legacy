@@ -10,36 +10,12 @@
 #include "b_picross.h"
 
 Picross::Picross(PicSettings &s) :
-        ColStreaks(NULL), RowStreaks(NULL), Width(s.x), Height(s.y),
+        ColStreaks(NULL), RowStreaks(NULL),
         Map(NULL), BoardState(NULL)
 {
-    if (s.puzMap.length() < s.x * s.y)
-        throw PicException("Input map has incorrect size");
-
-    Map = new char[s.x * s.y];
-    BoardState = new char[s.x * s.y];
-
-    NrOfBoxes = 0;
-    for (unsigned int i=0; i < s.x * s.y; i++) {
-        BoardState[i] = boardClean;
-        if (s.puzMap[i] == mapTrue)
-            NrOfBoxes++;
-        if (s.puzMap[i] == mapTrue || s.puzMap[i] == mapFalse)
-            Map[i] = s.puzMap[i];
-        else throw PicException("Illegal character in input map");
-
-    }
-
-    NoHintsMode = s.noHintsMode;
-
-    ColStreaks = CalculateStreaksFromMap(false);
-    RowStreaks = CalculateStreaksFromMap(true);
-
-    penaltyTime = 0;
-    penaltyMultiplier = 1;
-    startTime = time(NULL);
+    Load(s);
+    Initialize(s);
 }
-
 Picross::~Picross() {
     if (Map)
         delete[] Map;
@@ -69,7 +45,7 @@ bool Picross::IsInBounds(PicPoint &p) {
     return IsInBounds(p.x, p.y);
 }
 bool Picross::IsInBounds(unsigned int x, unsigned int y) {
-    return (x < Width && y < Height);
+    return (x < width && y < height);
 }
 
 std::vector<PicStreak>* Picross::CalculateStreaksFromMap(bool horizontal) {
@@ -78,8 +54,8 @@ std::vector<PicStreak>* Picross::CalculateStreaksFromMap(bool horizontal) {
 
     unsigned int i, j, lenOfCurrStreak;
 
-    unsigned int iMax = horizontal ? Height : Width; /* loop bounds differ for cols / rows */
-    unsigned int jMax = horizontal ? Width : Height;
+    unsigned int iMax = horizontal ? height : width; /* loop bounds differ for cols / rows */
+    unsigned int jMax = horizontal ? width : height;
 
     std::vector<PicStreak> *s = new std::vector<PicStreak>[iMax];
 
@@ -87,7 +63,7 @@ std::vector<PicStreak>* Picross::CalculateStreaksFromMap(bool horizontal) {
         lenOfCurrStreak = 0;
 
         for(j = 0; j < jMax; j++) {
-            int posIndex = horizontal ? i*Width + j : j*Width + i; /* index calc differs for cols / rows */
+            int posIndex = horizontal ? i*width + j : j*width + i; /* index calc differs for cols / rows */
 
             if (Map[posIndex] == mapTrue)
                 lenOfCurrStreak++;
@@ -109,7 +85,7 @@ std::vector<PicStreak> Picross::CalculateStreaksFromState(bool horizontal, int l
 
     unsigned int j, jCalc, lenOfCurrStreak = 0;
 
-    unsigned int jMax = horizontal ? Width : Height; /* loop bounds differ for cols / rows */
+    unsigned int jMax = horizontal ? width : height; /* loop bounds differ for cols / rows */
 
     std::vector<PicStreak> s;
 
@@ -117,8 +93,8 @@ std::vector<PicStreak> Picross::CalculateStreaksFromState(bool horizontal, int l
 
         jCalc = startFromEnd ? jMax - 1 - j : j;    /* reverse direction of loop if startFromEnd == true */
         int posIndex = horizontal ?     /* index calc differs for cols / rows */
-                       lineIndex*Width + jCalc :
-                       jCalc*Width + lineIndex;
+                       lineIndex*width + jCalc :
+                       jCalc*width + lineIndex;
 
         if (BoardState[posIndex] == boardClean) {
             break;              /* return only contigous streaks for solved calculation */
@@ -148,13 +124,13 @@ void Picross::CalculateStreakSolvedState() {
     unsigned int i, j, sumFromStreak, sumFromBoard, sumFromBoardIncludingMarked;
 
     /* col streaks */
-    for (i = 0; i < Width; i++) {
+    for (i = 0; i < width; i++) {
 
         /* entire col solved? */
         sumFromBoard = sumFromStreak = sumFromBoardIncludingMarked = 0;
         for (j = 0; j < ColStreaks[i].size(); j++)
             sumFromStreak += ColStreaks[i][j].GetLength();
-        for (j = 0; j < Height; j++) {
+        for (j = 0; j < height; j++) {
             int state = GetStateAt(i, j);
             if (state == BOARD_HIT)
                 sumFromBoard++;
@@ -192,13 +168,13 @@ void Picross::CalculateStreakSolvedState() {
     }
 
     /* row streaks */
-    for (i = 0; i < Height; i++) {
+    for (i = 0; i < height; i++) {
 
         /* entire row solved? */
         sumFromBoard = sumFromStreak = sumFromBoardIncludingMarked = 0;
         for (j = 0; j < RowStreaks[i].size(); j++)
             sumFromStreak += RowStreaks[i][j].GetLength();
-        for (j = 0; j < Width; j++) {
+        for (j = 0; j < width; j++) {
             int state = GetStateAt(j, i); /* note reversed state of i/j */
             if (state == BOARD_HIT)
                 sumFromBoard++;
@@ -235,11 +211,51 @@ void Picross::CalculateStreakSolvedState() {
     }
 }
 
-Picross* Picross::RandomPuzzle(PicSettings &s) {
+void Picross::Load(PicSettings &s) {
+    if (s.puzType == PUZ_RAND) {
+        RandomPuzzle(s);
+    }
+    else if (s.puzType == PUZ_STAT) {
+        PicPngLoader loader;
+        loader.LoadPicross(s);
+    }
+    else
+        throw PicException("Invalid puzzle type passed");
+}
+void Picross::Initialize(PicSettings &s) {
+    if (s.puzMap.length() < s.x * s.y)
+        throw PicException("Input map has incorrect size");
+
+    width = s.x;
+    height = s.y;
+
+    Map = new char[s.x * s.y];
+    BoardState = new char[s.x * s.y];
+
+    NrOfBoxes = 0;
+    for (unsigned int i=0; i < s.x * s.y; i++) {
+        BoardState[i] = boardClean;
+        if (s.puzMap[i] == mapTrue)
+            NrOfBoxes++;
+        if (s.puzMap[i] == mapTrue || s.puzMap[i] == mapFalse)
+            Map[i] = s.puzMap[i];
+        else throw PicException("Illegal character in input map");
+    }
+
+    NoHintsMode = s.noHintsMode;
+
+    ColStreaks = CalculateStreaksFromMap(false);
+    RowStreaks = CalculateStreaksFromMap(true);
+
+    penaltyTime = 0;
+    penaltyMultiplier = 1;
+    startTime = time(NULL);
+}
+void Picross::RandomPuzzle(PicSettings &s) {
 
     if (s.puzDifficulty > 99) {
         s.puzMap = std::string(s.x * s.y, mapTrue);
-        return new Picross(s);
+        return;
     }
 
     std::string map(s.x*s.y, '.');
@@ -260,7 +276,6 @@ Picross* Picross::RandomPuzzle(PicSettings &s) {
     }
 
     s.puzMap = map;
-    return new Picross(s);
 }
 
 int Picross::GetMapAt(PicPoint &p) {
@@ -270,7 +285,7 @@ int Picross::GetMapAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
         throw PicException("GetMapAt failed: Point not within puzzle dimensions.");
 
-    if (Map[y*Width + x] == mapTrue)
+    if (Map[y*width + x] == mapTrue)
         return MAP_TRUE;
     else
         return MAP_FALSE;
@@ -282,9 +297,9 @@ int Picross::GetStateAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
         throw PicException("GetStateAt failed: Point not within puzzle dimensions.");
 
-    if (BoardState[y*Width + x] == boardClean)
+    if (BoardState[y*width + x] == boardClean)
         return BOARD_CLEAN;
-    else if (BoardState[y*Width + x] == boardHit)
+    else if (BoardState[y*width + x] == boardHit)
         return BOARD_HIT;
     else
         return BOARD_MARKED;
@@ -310,7 +325,7 @@ void Picross::SetStateAt(PicPoint &p, int state) {
         break;
     }
 
-    BoardState[p.y*Width + p.x] = c;
+    BoardState[p.y*width + p.x] = c;
 }
 
 PicPoint Picross::GetLocation() {
@@ -472,7 +487,7 @@ unsigned int Picross::GetElapsedTime() {
 float Picross::GetCompletedPercentageBoxes() {
     int NrOfHitTiles = 0;
 
-    for (unsigned int i = 0; i < Width*Height; i++)
+    for (unsigned int i = 0; i < width*height; i++)
         if (BoardState[i] == boardHit)
             NrOfHitTiles++;
 

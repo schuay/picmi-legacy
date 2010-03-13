@@ -40,7 +40,7 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
     int c;
     char *cvalue = NULL;
 
-    while ((c = getopt(argc, argv, "nhkr:x:y:s:")) != -1) {
+    while ((c = getopt(argc, argv, "nhkr:x:y:s:t:c:")) != -1) {
         switch (c) {
         case 'r':
             s.puzType = PUZ_RAND;
@@ -90,10 +90,13 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
                    "    -x num: x dimension of generated puzzle (defaults to 15)\n"
                    "    -y num: y dimension of generated puzzle (defaults to 15)\n"
                    "    -n: enable no hints mode. incorrect tile marks are not prevented (default is disabled)\n"
-                   "    -r num: generate random puzzle with percentage num of board filled \n"
+                   "    -r num: generate random puzzle with percentage num of board filled\n"
                    "            for example, 'tuxpicross -r 60' will generate a random board with 60%% of all tiles filled\n"
                    "            (defaults to 55)\n"
                    "    -s file: load puzzle from file (input file should be black and white .png)\n"
+//                   "    -t dir: load puzzle from a random file in dir\n"
+//                   "    -c dir: convert images from dir to a format suitable for puzzle input\n"
+//                   "            files are stored in $HOME/.config/tuxpicross/ by default\n"
                    "    -h: show this message\n");
             return false;
             break;

@@ -17,7 +17,11 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
-#include "b_picross.h"
+#include "b_picsettings.h"
+#include "b_picexception.h"
+
+#define PIC_MAP_FALSE '.'   //these defines exist because i haven't figured out how
+#define PIC_MAP_TRUE '#'    //picpngloader and picross should relate
 
 class PicPngLoader
 {

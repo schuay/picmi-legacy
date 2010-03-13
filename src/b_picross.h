@@ -19,14 +19,13 @@
 #include "b_picpoint.h"
 #include "b_picexception.h"
 #include "b_picdefines.h"
+#include "b_picpngloader.h"
 
 class Picross
 {
 public:
     Picross(PicSettings &s);
     ~Picross();
-
-    static Picross *RandomPuzzle(PicSettings &s);    /* returns a random puzzle with given dimensions */
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
 
@@ -53,17 +52,14 @@ public:
     unsigned int GetElapsedRealTime();
     unsigned int GetElapsedPenaltyTime();
 
+    unsigned int Width() { return width; }
+    unsigned int Height() { return height; }
+
     float GetCompletedPercentageBoxes();
 
     std::vector<PicStreak>
             *ColStreaks,    /* stores streaks */
             *RowStreaks;
-
-    const unsigned int
-            Width,
-            Height;
-
-    bool NoHintsMode;   /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
 
 private:
     std::vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
@@ -71,13 +67,21 @@ private:
             bool horizontal, int lineIndex, bool startFromEnd); /* this matters because streaks from state need to be contigous*/
                                                                 /* lineIndex: which row/column to calc streaks for */
 
+    bool NoHintsMode;   /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
+
+    void Load(PicSettings &s);            /* generate / load a map before initializing class */
+    void Initialize(PicSettings &s);      /* check integrity and initialize class */
+    void RandomPuzzle(PicSettings &s);    /* generates random puzzle with given dimensions and sets map in settings */
+
     PicPoint Location; /* stores current location on board */
 
     unsigned int
             startTime,          /* game start time (s)*/
             penaltyTime,        /* base penalty time */
             penaltyMultiplier,  /* current penalty multiplier (applied to penaltyTime) */
-            NrOfBoxes;          /* number of boxes in map - set only once in constructor */
+            NrOfBoxes,          /* number of boxes in map - set only once in constructor */
+            width,
+            height;
 
     static const char
             mapFalse = '.',
