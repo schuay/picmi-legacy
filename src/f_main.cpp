@@ -17,10 +17,11 @@ bool HandleArguments(PicSettings &s, int argc, char **argv);
 int main(int argc, char **argv) {
 
     PicSettings s;
-    if (!HandleArguments(s, argc, argv))
-        return -1;
 
     try {
+        if (!HandleArguments(s, argc, argv))
+            return -1;
+
         SDLFrontend game;
 
         game.NewPuzzle(s);
@@ -36,6 +37,11 @@ int main(int argc, char **argv) {
     }
 }
 
+void ConvertPath(char *path) {
+    std::string s = path;
+    PicPngLoader loader;
+    loader.ConvertPath(s, 30000);
+}
 bool HandleArguments(PicSettings& s, int argc, char **argv) {
     int c;
     char *cvalue = NULL;
@@ -67,6 +73,15 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
                 return false;
             }
             break;
+        case 'c':
+            cvalue = optarg;
+            if (strlen(cvalue) == 0) {
+                printf("Argument %c must be followed by an integer argument.", c);
+                return false;
+            }
+            ConvertPath(cvalue);
+            printf("Path converted successfully.");
+            return false;
         case 's':
             cvalue = optarg;
             s.Type = PUZ_STAT;
@@ -101,8 +116,8 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
                    "            (defaults to 55)\n"
                    "    -s file: load puzzle from file (input file should be black and white .png)\n"
                    "    -t dir: load puzzle from a random file in dir\n"
-//                   "    -c dir: convert images from dir to a format suitable for puzzle input\n"
-//                   "            files are stored in $HOME/.config/tuxpicross/ by default\n"
+                   "    -c dir: convert images from dir to a format suitable for puzzle input\n"
+                   "            files are stored in $HOME/.config/tuxpicross/ by default\n"
                    "    -h: show this message\n");
             return false;
             break;

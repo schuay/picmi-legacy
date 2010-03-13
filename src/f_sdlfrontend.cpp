@@ -325,14 +325,16 @@ void SDLFrontend::GameWon() {
     ProcessDrawing();
     SDL_Flip(Screen);
 
-    /* empty event loop - wait for user input */
+    SDL_Delay(1000);
+
+    /* empty event loop, then wait for user input */
     SDL_Event ev;
+    while (SDL_PollEvent(&ev) == 1) {}
+
     while (!quit) {
-        SDL_Delay(100);
-        while (SDL_PollEvent(&ev) == 1) {
-            if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN)
-                quit = true;
-        }
+        SDL_WaitEvent(&ev);
+        if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN)
+            quit = true;
     }
 
     unsigned int elapsedRealTime = curPuzzle->GetElapsedRealTime();

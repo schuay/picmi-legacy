@@ -12,7 +12,17 @@
 PicPngLoader::PicPngLoader() { 
     std::string path = getenv("HOME");
 
-    PicPngLoader(path + "/.config/tuxpicross/");
+    defaultPath = path + "/.config/tuxpicross/";
+
+    DIR* d = opendir(defaultPath.c_str());
+
+    if (!d) {
+        int success = mkdir(defaultPath.c_str(), S_IRWXU);
+        if (success != 0)
+            throw PicException("Could not create directory " + defaultPath);
+    }
+    else
+        closedir(d);
 }
 PicPngLoader::PicPngLoader(std::string defpath) {
 
