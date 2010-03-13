@@ -40,7 +40,7 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
     int c;
     char *cvalue = NULL;
 
-    while ((c = getopt(argc, argv, "nshkr:x:y:")) != -1) {
+    while ((c = getopt(argc, argv, "nhkr:x:y:s:")) != -1) {
         switch (c) {
         case 'r':
             s.puzType = PUZ_RAND;
@@ -68,7 +68,9 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
             }
             break;
         case 's':
+            cvalue = optarg;
             s.puzType = PUZ_STAT;
+            s.fileName = cvalue;
             break;
         case 'n':
             s.noHintsMode = true;
@@ -91,7 +93,7 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
                    "    -r num: generate random puzzle with percentage num of board filled \n"
                    "            for example, 'tuxpicross -r 60' will generate a random board with 60%% of all tiles filled\n"
                    "            (defaults to 55)\n"
-                   "    -s: generate static puzzle (for debug purposes)\n"
+                   "    -s file: load puzzle from file (input file should be black and white .png)\n"
                    "    -h: show this message\n");
             return false;
             break;

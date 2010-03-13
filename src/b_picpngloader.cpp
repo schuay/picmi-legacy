@@ -9,16 +9,30 @@
 
 #include "b_picpngloader.h"
 
+PicPngLoader::PicPngLoader() { 
+    std::string path = getenv("HOME");
+
+    PicPngLoader(path + "/.config/tuxpicross/");
+}
 PicPngLoader::PicPngLoader(std::string defpath) {
-    /* TODO: remember defaultpath, if it doesn't exist create it */
 
     defaultPath = defpath;
+
+    DIR* d = opendir(defpath.c_str());
+
+    if (!d) {
+        int success = mkdir(defpath.c_str(), S_IRWXU);
+        if (success != 0)
+            throw PicException("Could not create directory " + defpath);
+    }
+    else
+        closedir(d);
 }
 
 void PicPngLoader::ConvertPNG(std::string path, std::string filename, int threshold) {
 
     std::string fullfilename = path + "/" + filename;
-    std::string newfilename = defaultPath + filename;
+    std::string newfilename = defaultPath + "/" + filename;
 
     Magick::Image img(fullfilename.c_str());
     Magick::Image imgCopy(img);     /* copy the image right away to make sure we don't modify the original */
@@ -61,11 +75,9 @@ void PicPngLoader::ConvertPath(std::string path, int threshold) {
     closedir(d);
 }
 
-PicSettings PicPngLoader::LoadPicross(std::string filename) {
+void PicPngLoader::LoadPicross(PicSettings& settings) {
 
-    std::string fullfilename = defaultPath + filename;
-
-    Magick::Image img(fullfilename.c_str());
+    Magick::Image img(settings.fileName.c_str());
 
     unsigned int
             w = img.columns(),
@@ -86,11 +98,8 @@ PicSettings PicPngLoader::LoadPicross(std::string filename) {
         }
     }
 
-    PicSettings s;
-    s.puzType = PUZ_STAT;
-    s.puzMap = Map;
-    s.x = w;
-    s.y = w;
-
-    return s;
+    settings.puzType = PUZ_STAT;
+    settings.puzMap = Map;
+    settings.x = w;
+    settings.y = w;
 }

@@ -14,6 +14,7 @@
 #include <string>
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 
 #include "b_picross.h"
@@ -21,13 +22,14 @@
 class PicPngLoader
 {
 public:
+    PicPngLoader();
     PicPngLoader(std::string defpath);
 
     /* load a png image, use threshold to convert to black+white */
     void ConvertPNG(std::string path, std::string filename, int threshold);
     void ConvertPath(std::string path, int threshold);
 
-    PicSettings LoadPicross(std::string path);
+    void LoadPicross(PicSettings& settings);
 private:
 
     std::string defaultPath;

@@ -21,6 +21,8 @@ public:
 
     std::string puzMap;
 
+    std::string fileName;
+
     int puzType;
     int puzDifficulty;
 

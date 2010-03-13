@@ -359,11 +359,14 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
         curPuzzle = NULL;
     }
 
+    PicPngLoader loader;
+
     switch (s.puzType) {
-    case PUZ_STAT:
+    case PUZ_STAT:      /* load puzzle from file */
+        loader.LoadPicross(s);
         curPuzzle = new Picross(s);
         break;
-    case PUZ_RAND:
+    case PUZ_RAND:      /* generate random puzzle */
         curPuzzle = Picross::RandomPuzzle(s);
         break;
     default:
@@ -448,9 +451,4 @@ SDLFrontend::~SDLFrontend() {
 }
 
 void SDLFrontend::DebugKeyAction() {
-    PicPngLoader loader("/home/jakob/.config/tuxpicross/");
-
-    PicSettings s = loader.LoadPicross("altar.xbm");
-
-    NewPuzzle(s);
 }
