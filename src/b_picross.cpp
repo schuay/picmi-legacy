@@ -232,11 +232,11 @@ void Picross::Initialize(PicSettings &s) {
     width = s.x;
     height = s.y;
 
-    Map = new char[s.x * s.y];
-    BoardState = new char[s.x * s.y];
+    Map = new char[width * height];
+    BoardState = new char[width * height];
 
     NrOfBoxes = 0;
-    for (unsigned int i=0; i < s.x * s.y; i++) {
+    for (unsigned int i = 0; i < width * height; i++) {
         BoardState[i] = boardClean;
         if (s.Map[i] == mapTrue)
             NrOfBoxes++;
@@ -245,11 +245,21 @@ void Picross::Initialize(PicSettings &s) {
         else throw PicException("Illegal character in input map");
     }
 
-    NoHintsMode = s.NoHintsMode;
-
     ColStreaks = CalculateStreaksFromMap(false);
     RowStreaks = CalculateStreaksFromMap(true);
 
+    /* if any rows/cols contain no boxes, mark entire row */
+    for (unsigned int i = 0; i < width; i++)
+        if (ColStreaks[i].size() == 0)
+            for (unsigned int j = 0; j < height; j++)
+                BoardState[j * width + i] = boardMarked;
+    for (unsigned int i = 0; i < height; i++)
+        if (RowStreaks[i].size() == 0)
+            for (unsigned int j = 0; j < width; j++)
+                BoardState[i * width + j] = boardMarked;
+
+
+    NoHintsMode = s.NoHintsMode;
     penaltyTime = 0;
     penaltyMultiplier = 1;
     startTime = time(NULL);
