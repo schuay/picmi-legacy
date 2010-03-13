@@ -18,18 +18,23 @@ class PicSettings
 {
 public:
     PicSettings();
+    bool Validate();
 
-    std::string puzMap;
+    std::string
+            Map,
+            Path;
 
-    std::string fileName;
+    int
+            Type,
+            Difficulty;
 
-    int puzType;
-    int puzDifficulty;
+    bool
+            NoHintsMode,
+            LoadRandomFromPath;
 
-    bool noHintsMode;
-
-    unsigned int x;
-    unsigned int y;
+    unsigned int
+            x,
+            y;
 };
 
 #endif // PICSETTINGS_H

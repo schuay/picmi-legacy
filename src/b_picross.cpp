@@ -212,10 +212,10 @@ void Picross::CalculateStreakSolvedState() {
 }
 
 void Picross::Load(PicSettings &s) {
-    if (s.puzType == PUZ_RAND) {
+    if (s.Type == PUZ_RAND) {
         RandomPuzzle(s);
     }
-    else if (s.puzType == PUZ_STAT) {
+    else if (s.Type == PUZ_STAT) {
         PicPngLoader loader;
         loader.LoadPicross(s);
     }
@@ -223,8 +223,8 @@ void Picross::Load(PicSettings &s) {
         throw PicException("Invalid puzzle type passed");
 }
 void Picross::Initialize(PicSettings &s) {
-    if (s.puzMap.length() < s.x * s.y)
-        throw PicException("Input map has incorrect size");
+    if (!s.Validate())
+        throw PicException("Settings validation failed");
 
     width = s.x;
     height = s.y;
@@ -235,14 +235,14 @@ void Picross::Initialize(PicSettings &s) {
     NrOfBoxes = 0;
     for (unsigned int i=0; i < s.x * s.y; i++) {
         BoardState[i] = boardClean;
-        if (s.puzMap[i] == mapTrue)
+        if (s.Map[i] == mapTrue)
             NrOfBoxes++;
-        if (s.puzMap[i] == mapTrue || s.puzMap[i] == mapFalse)
-            Map[i] = s.puzMap[i];
+        if (s.Map[i] == mapTrue || s.Map[i] == mapFalse)
+            Map[i] = s.Map[i];
         else throw PicException("Illegal character in input map");
     }
 
-    NoHintsMode = s.noHintsMode;
+    NoHintsMode = s.NoHintsMode;
 
     ColStreaks = CalculateStreaksFromMap(false);
     RowStreaks = CalculateStreaksFromMap(true);
@@ -253,13 +253,13 @@ void Picross::Initialize(PicSettings &s) {
 }
 void Picross::RandomPuzzle(PicSettings &s) {
 
-    if (s.puzDifficulty > 99) {
-        s.puzMap = std::string(s.x * s.y, mapTrue);
+    if (s.Difficulty > 99) {
+        s.Map = std::string(s.x * s.y, mapTrue);
         return;
     }
 
     std::string map(s.x*s.y, '.');
-    int cellsToFill = s.x * s.y * (float)s.puzDifficulty /100,
+    int cellsToFill = s.x * s.y * (float)s.Difficulty /100,
         randX, randY;
 
     srand(time(NULL));
@@ -275,7 +275,7 @@ void Picross::RandomPuzzle(PicSettings &s) {
         map[randY*s.x + randX] = mapTrue;
     }
 
-    s.puzMap = map;
+    s.Map = map;
 }
 
 int Picross::GetMapAt(PicPoint &p) {

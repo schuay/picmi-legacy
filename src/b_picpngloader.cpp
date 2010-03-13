@@ -77,7 +77,7 @@ void PicPngLoader::ConvertPath(std::string path, int threshold) {
 
 void PicPngLoader::LoadPicross(PicSettings& settings) {
 
-    Magick::Image img(settings.fileName.c_str());
+    Magick::Image img(settings.Path.c_str());
 
     unsigned int
             w = img.columns(),
@@ -98,8 +98,8 @@ void PicPngLoader::LoadPicross(PicSettings& settings) {
         }
     }
 
-    settings.puzType = PUZ_STAT;
-    settings.puzMap = Map;
+    settings.Type = PUZ_STAT;
+    settings.Map = Map;
     settings.x = w;
     settings.y = w;
 }

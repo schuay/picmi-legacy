@@ -43,10 +43,10 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
     while ((c = getopt(argc, argv, "nhkr:x:y:s:t:c:")) != -1) {
         switch (c) {
         case 'r':
-            s.puzType = PUZ_RAND;
+            s.Type = PUZ_RAND;
             cvalue = optarg;
-            s.puzDifficulty = atoi(cvalue);
-            if (s.puzDifficulty == 0) {
+            s.Difficulty = atoi(cvalue);
+            if (s.Difficulty == 0) {
                 printf("Argument %c must be followed by an integer argument.", c);
                 return false;
             }
@@ -69,11 +69,11 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
             break;
         case 's':
             cvalue = optarg;
-            s.puzType = PUZ_STAT;
-            s.fileName = cvalue;
+            s.Type = PUZ_STAT;
+            s.Path = cvalue;
             break;
         case 'n':
-            s.noHintsMode = true;
+            s.NoHintsMode = true;
             break;
         case 'h':
         case '?':

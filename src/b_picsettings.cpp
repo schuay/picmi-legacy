@@ -1,14 +1,30 @@
 #include "b_picsettings.h"
 
 PicSettings::PicSettings()
-{    
-    puzType = PUZ_RAND;
-    puzDifficulty = 55;
+{
+    /* set default values */
+    Map = "";
+    Path = "";
 
-    fileName = "";
+    Type = PUZ_RAND;
+    Difficulty = 55;
 
-    noHintsMode = false;
+    NoHintsMode = false;
+    LoadRandomFromPath = false;
 
     x = 15;
     y = 15;
+}
+
+bool PicSettings::Validate() {
+    if (Map.length() != x*y)
+        return false;
+
+    if (Type == PUZ_STAT && Path.length() == 0)
+        return false;
+
+    if (Type != PUZ_STAT && Type != PUZ_RAND)
+        return false;
+
+    return true;
 }
