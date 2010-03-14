@@ -1,11 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-01T00:05:51
 # -------------------------------------------------
-QT -= core \
-    gui
 TARGET = picross
-CONFIG += console
-CONFIG -= app_bundle
 TEMPLATE = app
 SOURCES += src/f_main.cpp \
     src/f_sdlfrontend.cpp \
@@ -16,7 +12,8 @@ SOURCES += src/f_main.cpp \
     src/f_sdltext.cpp \
     src/b_picstreak.cpp \
     src/b_picsettings.cpp \
-    src/b_picpngloader.cpp
+    src/b_picpngloader.cpp \
+    src/f_qtmainwindow.cpp
 HEADERS += src/f_sdlfrontend.h \
     src/b_picross.h \
     src/b_picexception.h \
@@ -28,7 +25,8 @@ HEADERS += src/f_sdlfrontend.h \
     src/b_picsettings.h \
     src/b_picdefines.h \
     src/f_sdldefines.h \
-    src/b_picpngloader.h
+    src/b_picpngloader.h \
+    src/f_qtmainwindow.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \
@@ -37,3 +35,4 @@ unix:LIBS += -lSDL \
     -lMagick++ \
     -lpng
 OTHER_FILES += src/makefile
+FORMS += src/f_qtmainwindow.ui
