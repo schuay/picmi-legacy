@@ -34,5 +34,10 @@ unix:LIBS += -lSDL \
     -lSDL_ttf \
     -lMagick++ \
     -lpng
-OTHER_FILES += src/makefile
+OTHER_FILES += src/makefile \
+    README \
+    PKGBUILD \
+    AUTHORS \
+    INSTALL \
+    COPYING
 FORMS += src/f_qtmainwindow.ui
