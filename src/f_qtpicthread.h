@@ -7,38 +7,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef F_QTMAINWINDOW_H
-#define F_QTMAINWINDOW_H
+#ifndef F_QTPICTHREAD_H
+#define F_QTPICTHREAD_H
 
-#include <QMainWindow>
+#include <QThread>
 
-#include "f_qtpicthread.h"
+#include "f_sdlfrontend.h"
 
-namespace Ui {
-    class QTMainWindow;
-}
-
-class QTMainWindow : public QMainWindow {
-    Q_OBJECT
+class QTPicThread : public QThread
+{
 public:
-    QTMainWindow(PicSettings &settings, QWidget *parent = 0);
-    ~QTMainWindow();
+    QTPicThread();
+    ~QTPicThread();
 
-protected:
-    void changeEvent(QEvent *e);
-
-private slots:
-    void quit();
-    void start();
-    void browse();
+    void run();
+    void PassSettings(PicSettings *s);
 
 private:
-    Ui::QTMainWindow *ui;
-
-    QTPicThread t;
-
-    void ReadSettings(PicSettings &settings);
-    PicSettings* WriteSettings();
+    PicSettings *settings;
 };
 
-#endif // F_QTMAINWINDOW_H
+#endif // F_QTPICTHREAD_H

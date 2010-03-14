@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Tux Picross</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../gfx/icon.png</normaloff>../gfx/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_4">

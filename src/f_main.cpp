@@ -7,8 +7,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "f_sdlfrontend.h"
 #include <unistd.h>
+#include <QtGui/QApplication>
+
+#include "f_qtmainwindow.h"
+#include "f_qtpicthread.h"
 
 SDL_Surface *Screen;
 
@@ -22,14 +25,12 @@ int main(int argc, char **argv) {
         if (!HandleArguments(s, argc, argv))
             return -1;
 
-        SDLFrontend game;
+        QApplication a(argc, argv);
+        QTMainWindow w(s);
 
-        game.NewPuzzle(s);
+        w.show();
 
-        while(!game.GetQuit())
-                game.DoMainLoop();
-
-        return 0;
+        return a.exec();
     }
     catch (PicException e) {
         printf("Error: %s\n\n", e.what());

@@ -13,7 +13,8 @@ SOURCES += src/f_main.cpp \
     src/b_picstreak.cpp \
     src/b_picsettings.cpp \
     src/b_picpngloader.cpp \
-    src/f_qtmainwindow.cpp
+    src/f_qtmainwindow.cpp \
+    src/f_qtpicthread.cpp
 HEADERS += src/f_sdlfrontend.h \
     src/b_picross.h \
     src/b_picexception.h \
@@ -26,7 +27,8 @@ HEADERS += src/f_sdlfrontend.h \
     src/b_picdefines.h \
     src/f_sdldefines.h \
     src/b_picpngloader.h \
-    src/f_qtmainwindow.h
+    src/f_qtmainwindow.h \
+    src/f_qtpicthread.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \

@@ -7,38 +7,32 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef F_QTMAINWINDOW_H
-#define F_QTMAINWINDOW_H
-
-#include <QMainWindow>
-
 #include "f_qtpicthread.h"
 
-namespace Ui {
-    class QTMainWindow;
+QTPicThread::QTPicThread()
+{
+    settings = NULL;
+}
+QTPicThread::~QTPicThread() {
+    if (settings)
+        delete settings;
 }
 
-class QTMainWindow : public QMainWindow {
-    Q_OBJECT
-public:
-    QTMainWindow(PicSettings &settings, QWidget *parent = 0);
-    ~QTMainWindow();
+void QTPicThread::PassSettings(PicSettings *s) {
+    if (settings) {
+        delete settings;
+        settings = NULL;
+    }
 
-protected:
-    void changeEvent(QEvent *e);
+    settings = s;
+}
 
-private slots:
-    void quit();
-    void start();
-    void browse();
+void QTPicThread::run() {
 
-private:
-    Ui::QTMainWindow *ui;
+    SDLFrontend game;
 
-    QTPicThread t;
+    game.NewPuzzle(*settings);
 
-    void ReadSettings(PicSettings &settings);
-    PicSettings* WriteSettings();
-};
-
-#endif // F_QTMAINWINDOW_H
+    while(!game.GetQuit())
+            game.DoMainLoop();
+}
