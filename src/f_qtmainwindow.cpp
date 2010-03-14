@@ -19,6 +19,8 @@ QTMainWindow::QTMainWindow(PicSettings &settings, QWidget *parent) :
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->bChoosePath, SIGNAL(clicked()), this, SLOT(browse()));
+    connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggled(bool)));
+    connect(&t, SIGNAL(finished()), this, SLOT(enableGui()));
 
     ReadSettings(settings);
 }
@@ -53,6 +55,8 @@ void QTMainWindow::ReadSettings(PicSettings &settings) {
     ui->sbHeight->setValue(settings.y);
 
     ui->cbNoHintsMode->setChecked(settings.NoHintsMode);
+
+    radioButtonToggled(true);
 }
 PicSettings* QTMainWindow::WriteSettings() {
     PicSettings *settings = new PicSettings();
@@ -79,9 +83,46 @@ void QTMainWindow::start() {
     if (t.isRunning())
         return;
 
+    setGuiEnabledState(false);
+
     t.PassSettings(WriteSettings());
     t.start();
 }
 void QTMainWindow::browse() {
 
+}
+void QTMainWindow::enableGui() {
+    setGuiEnabledState(true);
+}
+void QTMainWindow::radioButtonToggled(bool b) {
+    b=true;
+
+    if (ui->rbPuzTypeRandom->isChecked()) {
+        ui->lePath->setEnabled(!b);
+        ui->bChoosePath->setEnabled(!b);
+
+        ui->sbHeight->setEnabled(b);
+        ui->sbWidth->setEnabled(b);
+    }
+    else {
+        b = !b;
+
+        ui->lePath->setEnabled(!b);
+        ui->bChoosePath->setEnabled(!b);
+
+        ui->sbHeight->setEnabled(b);
+        ui->sbWidth->setEnabled(b);
+    }
+}
+
+void QTMainWindow::setGuiEnabledState(bool b) {
+    ui->rbPuzTypeRandom->setEnabled(b);
+    ui->rbPuzTypeStatic->setEnabled(b);
+    ui->lePath->setEnabled(b);
+    ui->sbWidth->setEnabled(b);
+    ui->sbHeight->setEnabled(b);
+    ui->cbNoHintsMode->setEnabled(b);
+    ui->bChoosePath->setEnabled(b);
+    ui->bQuit->setEnabled(b);
+    ui->bStart->setEnabled(b);
 }

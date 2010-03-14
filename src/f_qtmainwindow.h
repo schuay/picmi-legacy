@@ -31,11 +31,15 @@ private slots:
     void quit();
     void start();
     void browse();
+    void enableGui();
+    void radioButtonToggled(bool b);
 
 private:
     Ui::QTMainWindow *ui;
 
     QTPicThread t;
+
+    void setGuiEnabledState(bool b);
 
     void ReadSettings(PicSettings &settings);
     PicSettings* WriteSettings();
