@@ -26,10 +26,10 @@ build() {
   make || return 1
 
 
-  mkdir -p $pkgdir/usr/{bin,share/{applications,tuxpicross/gfx}}
-  install -D -m755 picross $pkgdir/usr/bin/
-  install -D -m644 src/tuxpicross.desktop $pkgdir/usr/share/applications/tuxpicross.desktop
+  mkdir -p $pkgdir/usr/{bin,share/{applications,$pkgname/gfx}}
+  install -D -m755 $_pkgname $pkgdir/usr/bin/$pkgname
+  install -D -m644 src/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
   install -D -m644 \
-    gfx/* $pkgdir/usr/share/tuxpicross/gfx/
+    gfx/* $pkgdir/usr/share/$pkgname/gfx/
 
 }
