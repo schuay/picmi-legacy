@@ -66,12 +66,27 @@ PicSettings* QTMainWindow::WriteSettings() {
     else
         settings->Type = PUZ_STAT;
 
-    settings->Path = ui->lePath->displayText().toStdString();
-
     settings->x = ui->sbWidth->value();
     settings->y = ui->sbHeight->value();
 
     settings->NoHintsMode = ui->cbNoHintsMode->isChecked();
+
+
+
+    QString path(ui->lePath->displayText());
+    QFile f(path);
+    QDir d(path);
+    if (path.length() == 0)
+        settings->Type = PUZ_RAND;
+    else if (d.exists())
+        settings->LoadRandomFromPath = true;
+    else if (f.exists())
+        settings->LoadRandomFromPath = false;
+    else
+        settings->Type = PUZ_RAND;
+
+    settings->Path = ui->lePath->displayText().toStdString();
+
 
     return settings;
 }
@@ -93,6 +108,7 @@ void QTMainWindow::browse() {
 }
 void QTMainWindow::enableGui() {
     setGuiEnabledState(true);
+    radioButtonToggled(true);
 }
 void QTMainWindow::radioButtonToggled(bool b) {
     b=true;

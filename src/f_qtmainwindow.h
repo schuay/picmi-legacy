@@ -11,6 +11,8 @@
 #define F_QTMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFile>
+#include <QDir>
 
 #include "f_qtpicthread.h"
 
