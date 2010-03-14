@@ -333,7 +333,7 @@ void SDLFrontend::GameWon() {
 
     while (!quit) {
         SDL_WaitEvent(&ev);
-        if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN)
+        if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
             quit = true;
     }
 
