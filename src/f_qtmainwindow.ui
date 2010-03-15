@@ -232,6 +232,18 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>rbPuzTypeRandom</tabstop>
+  <tabstop>rbPuzTypeStatic</tabstop>
+  <tabstop>cbNoHintsMode</tabstop>
+  <tabstop>sbDifficulty</tabstop>
+  <tabstop>sbHeight</tabstop>
+  <tabstop>sbWidth</tabstop>
+  <tabstop>lePath</tabstop>
+  <tabstop>bBrowse</tabstop>
+  <tabstop>bQuit</tabstop>
+  <tabstop>bStart</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
