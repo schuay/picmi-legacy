@@ -310,23 +310,12 @@ void SDLFrontend::ProcessInput() {
 
         if (op != OP_NONE)
             curPuzzle->DoOp(op);
-
-        if (curPuzzle->GameWon()) {
-            GameWon();
-        }
     }
 
     curPuzzle->CalculateStreakSolvedState();    /* prepare streaks for drawing */
 }
 
 void SDLFrontend::GameWon() {
-
-    /* calculate final streaks */
-    curPuzzle->CalculateStreakSolvedState();
-
-    /* draw one final time */
-    ProcessDrawing();
-    SDL_Flip(Screen);
 
     SDL_Delay(1000);
 
@@ -355,6 +344,9 @@ void SDLFrontend::DoMainLoop() {
 
     SDL_Flip(Screen);
     SDL_Delay(30);  /* relinquish cpu time we don't need */
+
+    if (curPuzzle->GameWon())
+        GameWon();
 }
 
 void SDLFrontend::NewPuzzle(PicSettings &s) {
