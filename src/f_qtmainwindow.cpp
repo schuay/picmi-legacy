@@ -58,7 +58,7 @@ void QTMainWindow::ReadSettings(PicSettings &settings) {
 
     ui->cbNoHintsMode->setChecked(settings.NoHintsMode);
 
-    radioButtonToggled(true);
+    setGuiEnabledState(true);
 }
 PicSettings* QTMainWindow::WriteSettings() {
     PicSettings *settings = new PicSettings();
@@ -124,29 +124,9 @@ void QTMainWindow::browse() {
 }
 void QTMainWindow::enableGui() {
     setGuiEnabledState(true);
-    radioButtonToggled(true);
 }
 void QTMainWindow::radioButtonToggled(bool b) {
-    b=true;
-
-    if (ui->rbPuzTypeRandom->isChecked()) {
-        ui->lePath->setEnabled(!b);
-        ui->bBrowse->setEnabled(!b);
-
-        ui->sbHeight->setEnabled(b);
-        ui->sbWidth->setEnabled(b);
-        ui->sbDifficulty->setEnabled(b);
-    }
-    else {
-        b = !b;
-
-        ui->lePath->setEnabled(!b);
-        ui->bBrowse->setEnabled(!b);
-
-        ui->sbHeight->setEnabled(b);
-        ui->sbWidth->setEnabled(b);
-        ui->sbDifficulty->setEnabled(b);
-    }
+    setGuiEnabledState(true);
 }
 
 void QTMainWindow::setGuiEnabledState(bool b) {
@@ -160,4 +140,14 @@ void QTMainWindow::setGuiEnabledState(bool b) {
     ui->bQuit->setEnabled(b);
     ui->bStart->setEnabled(b);
     ui->sbDifficulty->setEnabled(b);
+
+
+    bool randomSelected = ui->rbPuzTypeRandom->isChecked();
+
+    ui->lePath->setEnabled(!randomSelected);
+    ui->bBrowse->setEnabled(!randomSelected);
+
+    ui->sbHeight->setEnabled(randomSelected);
+    ui->sbWidth->setEnabled(randomSelected);
+    ui->sbDifficulty->setEnabled(randomSelected);
 }
