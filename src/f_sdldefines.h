@@ -21,7 +21,7 @@
 #define DRAG_HOR 0
 #define DRAG_VER 1
 
-#define FILEPREFIX "/usr/share/tuxpicross/"
+#define FILEPREFIX ""           // set the location of gfx/fonts
 #define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
 
 #define GAMEBUILD "Tux Picross v.0.1"
