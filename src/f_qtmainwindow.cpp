@@ -18,7 +18,7 @@ QTMainWindow::QTMainWindow(PicSettings &settings, QWidget *parent) :
 
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
-    connect(ui->bChoosePath, SIGNAL(clicked()), this, SLOT(browse()));
+    connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(browse()));
     connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggled(bool)));
     connect(&t, SIGNAL(finished()), this, SLOT(enableGui()));
 
@@ -54,6 +54,8 @@ void QTMainWindow::ReadSettings(PicSettings &settings) {
     ui->sbWidth->setValue(settings.x);
     ui->sbHeight->setValue(settings.y);
 
+    ui->sbDifficulty->setValue(settings.Difficulty);
+
     ui->cbNoHintsMode->setChecked(settings.NoHintsMode);
 
     radioButtonToggled(true);
@@ -71,6 +73,7 @@ PicSettings* QTMainWindow::WriteSettings() {
 
     settings->NoHintsMode = ui->cbNoHintsMode->isChecked();
 
+    settings->Difficulty = ui->sbDifficulty->value();
 
 
     QString path(ui->lePath->displayText());
@@ -104,7 +107,10 @@ void QTMainWindow::start() {
     t.start();
 }
 void QTMainWindow::browse() {
+    QMessageBox mb;
 
+    mb.setText("Not yet implemented.");
+    mb.exec();
 }
 void QTMainWindow::enableGui() {
     setGuiEnabledState(true);
@@ -115,19 +121,21 @@ void QTMainWindow::radioButtonToggled(bool b) {
 
     if (ui->rbPuzTypeRandom->isChecked()) {
         ui->lePath->setEnabled(!b);
-        ui->bChoosePath->setEnabled(!b);
+        ui->bBrowse->setEnabled(!b);
 
         ui->sbHeight->setEnabled(b);
         ui->sbWidth->setEnabled(b);
+        ui->sbDifficulty->setEnabled(b);
     }
     else {
         b = !b;
 
         ui->lePath->setEnabled(!b);
-        ui->bChoosePath->setEnabled(!b);
+        ui->bBrowse->setEnabled(!b);
 
         ui->sbHeight->setEnabled(b);
         ui->sbWidth->setEnabled(b);
+        ui->sbDifficulty->setEnabled(b);
     }
 }
 
@@ -138,7 +146,8 @@ void QTMainWindow::setGuiEnabledState(bool b) {
     ui->sbWidth->setEnabled(b);
     ui->sbHeight->setEnabled(b);
     ui->cbNoHintsMode->setEnabled(b);
-    ui->bChoosePath->setEnabled(b);
+    ui->bBrowse->setEnabled(b);
     ui->bQuit->setEnabled(b);
     ui->bStart->setEnabled(b);
+    ui->sbDifficulty->setEnabled(b);
 }
