@@ -29,17 +29,14 @@ Picross::~Picross() {
 }
 
 bool Picross::GameWon() {
-    int mapFilled = 0, stateFilled = 0;
+    for (unsigned int i = 0; i < width * height; i++) {
+        if (Map[i] == mapTrue && BoardState[i] != boardHit)
+            return false;
+        else if (Map[i] == mapFalse && BoardState[i] == boardHit)
+            return false;
+    }
 
-    for (unsigned int i = 0; i < strlen(Map); i++)
-        if (Map[i] == mapTrue)
-            mapFilled++;
-
-    for (unsigned int i = 0; i<strlen(BoardState); i++)
-        if (BoardState[i] == boardHit)
-            stateFilled++;
-
-    return (mapFilled == stateFilled);
+    return true;
 }
 bool Picross::IsInBounds(PicPoint &p) {
     return IsInBounds(p.x, p.y);
