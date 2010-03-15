@@ -321,6 +321,9 @@ void SDLFrontend::ProcessInput() {
 
 void SDLFrontend::GameWon() {
 
+    /* calculate final streaks */
+    curPuzzle->CalculateStreakSolvedState();
+
     /* draw one final time */
     ProcessDrawing();
     SDL_Flip(Screen);
