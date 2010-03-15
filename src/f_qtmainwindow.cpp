@@ -107,10 +107,20 @@ void QTMainWindow::start() {
     t.start();
 }
 void QTMainWindow::browse() {
-    QMessageBox mb;
+    QDir d(ui->lePath->text());
 
-    mb.setText("Not yet implemented.");
-    mb.exec();
+    QFileDialog fd;
+
+    fd.setFileMode(QFileDialog::Directory);
+    fd.setOption(QFileDialog::ReadOnly);
+    fd.setDirectory(d);
+
+    if (fd.exec()) {
+
+        QStringList sl = fd.selectedFiles();
+
+        ui->lePath->setText(sl.at(0));
+    }
 }
 void QTMainWindow::enableGui() {
     setGuiEnabledState(true);

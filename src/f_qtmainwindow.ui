@@ -28,7 +28,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="gbGlobal">
         <property name="title">
          <string>Global</string>
         </property>
@@ -72,7 +72,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="QGroupBox" name="gbRandom">
         <property name="title">
          <string>Random</string>
         </property>
@@ -142,7 +142,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_3">
+       <widget class="QGroupBox" name="gbFile">
         <property name="title">
          <string>From File</string>
         </property>

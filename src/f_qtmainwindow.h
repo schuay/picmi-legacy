@@ -13,7 +13,7 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QDir>
-#include <QMessageBox>
+#include <QFileDialog>
 
 #include "f_qtpicthread.h"
 
