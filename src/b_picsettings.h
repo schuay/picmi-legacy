@@ -11,6 +11,7 @@
 #define PICSETTINGS_H
 
 #include <string>
+#include <cstdlib>
 
 #include "b_picdefines.h"
 
