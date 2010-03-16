@@ -33,14 +33,20 @@ protected:
 private slots:
     void quit();
     void start();
-    void browse();
+    void setPuzzleFolder();
     void enableGui();
     void radioButtonToggled(bool b);
+    void setDefaultBG();
+    void setCustomBG();
 
 private:
     Ui::QTMainWindow *ui;
 
     QTPicThread t;
+
+    QString bgPath;
+
+    QString browse(QFileDialog::FileMode mode);
 
     void setGuiEnabledState(bool b);
 

@@ -397,6 +397,10 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
     dragOperation = DRAG_UNDEF;
     quit = false;
 }
+void SDLFrontend::LoadBackground(std::string path) {
+    std::string fullpath = FILEPREFIX + path;
+    sprBackground.Load( fullpath, MAGNIFICATION_LEVEL, 0);
+}
 
 void SDLFrontend::Initialize() {
 

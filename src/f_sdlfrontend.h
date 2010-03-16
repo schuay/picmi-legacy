@@ -32,6 +32,8 @@ public:
     void DoMainLoop();
     bool GetQuit();
 
+    void LoadBackground(std::string path);
+
 private:
 
     void Initialize();

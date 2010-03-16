@@ -22,9 +22,11 @@ public:
 
     void run();
     void PassSettings(PicSettings *s);
+    void LoadBackground(std::string path);
 
 private:
     PicSettings *settings;
+    std::string bgPath;
 };
 
 #endif // F_QTPICTHREAD_H

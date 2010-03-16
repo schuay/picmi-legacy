@@ -18,9 +18,11 @@ QTMainWindow::QTMainWindow(PicSettings &settings, QWidget *parent) :
 
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
-    connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(browse()));
+    connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(setPuzzleFolder()));
     connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggled(bool)));
     connect(&t, SIGNAL(finished()), this, SLOT(enableGui()));
+    connect(ui->bBGCustom, SIGNAL(clicked()), this, SLOT(setCustomBG()));
+    connect(ui->bBGDefault, SIGNAL(clicked()), this, SLOT(setDefaultBG()));
 
     ReadSettings(settings);
 }
@@ -104,29 +106,32 @@ void QTMainWindow::start() {
     setGuiEnabledState(false);
 
     t.PassSettings(WriteSettings());
+    t.LoadBackground(bgPath.toStdString());
     t.start();
 }
-void QTMainWindow::browse() {
-    QDir d(ui->lePath->text());
+void QTMainWindow::setPuzzleFolder() {
+    QString path = browse(QFileDialog::Directory);
 
-    QFileDialog fd;
-
-    fd.setFileMode(QFileDialog::Directory);
-    fd.setOption(QFileDialog::ReadOnly);
-    fd.setDirectory(d);
-
-    if (fd.exec()) {
-
-        QStringList sl = fd.selectedFiles();
-
-        ui->lePath->setText(sl.at(0));
-    }
+    if (path != "")
+        ui->lePath->setText(path);
 }
 void QTMainWindow::enableGui() {
     setGuiEnabledState(true);
 }
 void QTMainWindow::radioButtonToggled(bool b) {
     setGuiEnabledState(true);
+}
+void QTMainWindow::setDefaultBG() {
+    ui->lblBG->setText("Selected: default");
+    bgPath = "";
+}
+void QTMainWindow::setCustomBG() {
+    QString path = browse(QFileDialog::ExistingFile);
+
+    if (path.length() != 0) {
+        bgPath = path;
+        ui->lblBG->setText("Selected: " + bgPath);
+    }
 }
 
 void QTMainWindow::setGuiEnabledState(bool b) {
@@ -150,4 +155,16 @@ void QTMainWindow::setGuiEnabledState(bool b) {
     ui->sbHeight->setEnabled(randomSelected);
     ui->sbWidth->setEnabled(randomSelected);
     ui->sbDifficulty->setEnabled(randomSelected);
+}
+
+QString QTMainWindow::browse(QFileDialog::FileMode mode) {
+    QFileDialog fd;
+
+    fd.setFileMode(mode);
+    fd.setOption(QFileDialog::ReadOnly);
+
+    if (fd.exec())
+        return fd.selectedFiles().at(0);
+    else
+        return "";
 }
