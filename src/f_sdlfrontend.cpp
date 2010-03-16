@@ -21,7 +21,7 @@ void SDLFrontend::ProcessDrawing() {
 }
 void SDLFrontend::DrawBackground() {
     SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));  /* paint bg white */
-    sprBackground.Blit(PicPoint(0,0), JUSTIFY_LB);
+    sprBackground.Blit(PicPoint(0,0));
 }
 void SDLFrontend::DrawInfoArea() {
     SDL_Rect to;

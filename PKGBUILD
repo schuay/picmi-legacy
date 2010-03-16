@@ -2,9 +2,9 @@
  
 _pkgname=picross
 pkgname=tuxpicross
-pkgver=0.1
+pkgver=1.0.0
 pkgdesc="A number logic game."
-pkgrel=4
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://github.com/schuay/$_pkgname/"
 license=('GPL')
@@ -18,7 +18,7 @@ build() {
 
   #git checkout
   cd $srcdir || return 1
-  git clone -b qtfrontend git://github.com/schuay/$_pkgname.git || return 1
+  git clone git://github.com/schuay/$_pkgname.git || return 1
   cd $srcdir/$_pkgname || return 1
 
   #set file path
