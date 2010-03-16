@@ -35,6 +35,8 @@ build() {
   #
   # cd $srcdir/$_pkgname/src || return 1
   # make || return 1
+  # mv tuxpicross ../picross
+  # cd $srcdir/$_pkgname || return 1
   #
   # END: QT DISABLED
 
