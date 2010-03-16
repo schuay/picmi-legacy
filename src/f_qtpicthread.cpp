@@ -7,35 +7,37 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PICSETTINGS_H
-#define PICSETTINGS_H
+#include "f_qtpicthread.h"
 
-#include <string>
-#include <cstdlib>
-
-#include "b_picdefines.h"
-
-class PicSettings
+QTPicThread::QTPicThread()
 {
-public:
-    PicSettings();
-    bool Validate();
+    settings = NULL;
+}
+QTPicThread::~QTPicThread() {
+    if (settings)
+        delete settings;
+}
 
-    std::string
-            Map,
-            Path;
+void QTPicThread::PassSettings(PicSettings *s) {
+    if (settings) {
+        delete settings;
+        settings = NULL;
+    }
 
-    int
-            Type,
-            Difficulty;
+    settings = s;
+}
+void QTPicThread::LoadBackground(std::string path) {
+    bgPath = path;
+}
 
-    bool
-            NoHintsMode,
-            LoadRandomFromPath;
+void QTPicThread::run() {
 
-    unsigned int
-            x,
-            y;
-};
+    SDLFrontend game;
 
-#endif // PICSETTINGS_H
+    if (bgPath.length() > 0)
+        game.LoadBackground(bgPath);
+    game.NewPuzzle(*settings);
+
+    while(!game.GetQuit())
+            game.DoMainLoop();
+}

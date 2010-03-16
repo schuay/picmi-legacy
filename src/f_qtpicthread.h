@@ -7,35 +7,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PICSETTINGS_H
-#define PICSETTINGS_H
+#ifndef F_QTPICTHREAD_H
+#define F_QTPICTHREAD_H
 
-#include <string>
-#include <cstdlib>
+#include <QThread>
 
-#include "b_picdefines.h"
+#include "f_sdlfrontend.h"
 
-class PicSettings
+class QTPicThread : public QThread
 {
 public:
-    PicSettings();
-    bool Validate();
+    QTPicThread();
+    ~QTPicThread();
 
-    std::string
-            Map,
-            Path;
+    void run();
+    void PassSettings(PicSettings *s);
+    void LoadBackground(std::string path);
 
-    int
-            Type,
-            Difficulty;
-
-    bool
-            NoHintsMode,
-            LoadRandomFromPath;
-
-    unsigned int
-            x,
-            y;
+private:
+    PicSettings *settings;
+    std::string bgPath;
 };
 
-#endif // PICSETTINGS_H
+#endif // F_QTPICTHREAD_H

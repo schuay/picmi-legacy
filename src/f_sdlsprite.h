@@ -18,6 +18,11 @@
 #include "b_picpoint.h"
 #include "b_picexception.h"
 
+#define JUSTIFY_LT   0
+#define JUSTIFY_LB   1
+#define JUSTIFY_RT   2
+#define JUSTIFY_RB   3
+
 class SDLSprite
 {
 public:
@@ -26,7 +31,7 @@ public:
 
     void SetAsIcon();
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(PicPoint p);
+    void Blit(PicPoint p, int justify = JUSTIFY_LT);
 
 private:
 

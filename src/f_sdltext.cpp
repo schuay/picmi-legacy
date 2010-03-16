@@ -15,9 +15,10 @@ SDLText::SDLText()
 }
 
 SDLText::~SDLText() {
-    if (font)
+    if (font) {
         TTF_CloseFont(font);
-
+        font = NULL;
+    }
 }
 
 void SDLText::Load(std::string Filename) {

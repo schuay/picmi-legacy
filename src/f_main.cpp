@@ -7,29 +7,52 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "f_sdlfrontend.h"
+#define QTENABLED
+
 #include <unistd.h>
+
+#ifdef QTENABLED
+#include <QtGui/QApplication>
+
+#include "f_qtmainwindow.h"
+#include "f_qtpicthread.h"
+#else
+#include "f_sdlfrontend.h"
+#endif
 
 SDL_Surface *Screen;
 
-bool HandleArguments(PicSettings &s, int argc, char **argv);
+bool HandleArguments(PicSettings &s, bool &disableQt, int argc, char **argv);
 
 int main(int argc, char **argv) {
 
     PicSettings s;
+    bool disableQt = false;
 
     try {
-        if (!HandleArguments(s, argc, argv))
+        if (!HandleArguments(s, disableQt, argc, argv))
             return -1;
 
-        SDLFrontend game;
+#ifdef QTENABLED
+        if (disableQt) {
+#endif
+            SDLFrontend game;
 
-        game.NewPuzzle(s);
+            game.NewPuzzle(s);
 
-        while(!game.GetQuit())
-                game.DoMainLoop();
+            while(!game.GetQuit())
+                    game.DoMainLoop();
+#ifdef QTENABLED
+        }
+        else {
+            QApplication a(argc, argv);
+            QTMainWindow w(s);
 
-        return 0;
+            w.show();
+
+            return a.exec();
+        }
+#endif
     }
     catch (PicException e) {
         printf("Error: %s\n\n", e.what());
@@ -42,11 +65,13 @@ void ConvertPath(char *path) {
     PicPngLoader loader;
     loader.ConvertPath(s, 30000);
 }
-bool HandleArguments(PicSettings& s, int argc, char **argv) {
+bool HandleArguments(PicSettings &s, bool &disableQt, int argc, char **argv) {
     int c;
     char *cvalue = NULL;
 
-    while ((c = getopt(argc, argv, "nhkr:x:y:s:t:c:")) != -1) {
+    disableQt = false;
+
+    while ((c = getopt(argc, argv, "qnhkr:x:y:s:t:c:")) != -1) {
         switch (c) {
         case 'r':
             s.Type = PUZ_RAND;
@@ -64,6 +89,9 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
                 printf("Argument %c must be followed by an integer argument.", c);
                 return false;
             }
+            break;
+        case 'q':
+            disableQt = true;
             break;
         case 'y':
             cvalue = optarg;
@@ -118,6 +146,7 @@ bool HandleArguments(PicSettings& s, int argc, char **argv) {
                    "    -t dir: load puzzle from a random file in dir\n"
                    "    -c dir: convert images from dir to a format suitable for puzzle input\n"
                    "            files are stored in $HOME/.config/tuxpicross/ by default\n"
+                   "    -q: disable QT frontend\n"
                    "    -h: show this message\n");
             return false;
             break;

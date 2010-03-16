@@ -4,7 +4,7 @@ PicSettings::PicSettings()
 {
     /* set default values */
     Map = "";
-    Path = "";
+    Path = std::string(getenv("HOME")) + "/.config/tuxpicross/";
 
     Type = PUZ_RAND;
     Difficulty = 55;

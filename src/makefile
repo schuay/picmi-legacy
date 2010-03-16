@@ -11,6 +11,7 @@ EXECUTABLE= tuxpicross
 DESTDIR= /
  
 all:
+	sed -i 's_#define QTENABLED__' f_main.cpp
 	sed -i \
 		"s_#define FILEPREFIX.*_#define FILEPREFIX \"/usr/share/tuxpicross/\"_" \
 		f_sdldefines.h

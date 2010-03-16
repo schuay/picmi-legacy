@@ -82,23 +82,40 @@ void SDLFrontend::DrawStreakArea() {
     SDL_Color color;
     std::stringstream out;
 
+    /* highlight active row/col - currently deactivated because streak gfx are not translucent*/
+
+    p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL +
+          curPuzzle->GetLocation().x*CELLLENGTH*MAGNIFICATION_LEVEL;
+    for (int i = 0; i * CELLLENGTH < PUZZLE_POSX; i++) {
+        p.y = i*CELLLENGTH*MAGNIFICATION_LEVEL;
+
+        sprActiveTile.Blit(p);
+    }
+    p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL +
+          curPuzzle->GetLocation().y*CELLLENGTH*MAGNIFICATION_LEVEL;
+    for (int j = 0; j * CELLLENGTH < PUZZLE_POSX; j++) {
+        p.x = j*CELLLENGTH*MAGNIFICATION_LEVEL;
+
+        sprActiveTile.Blit(p);
+    }
+
     /* streak areas */
 
-    p.y = PUZZLE_POSY - 200;
+    p.y = 0;
     for (i = 0; i < curPuzzle->Width(); i++) {
         p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL + i*CELLLENGTH*MAGNIFICATION_LEVEL;
         if (i%2 == 0)
-            sprStreakAreaVerA.Blit(p);
+            sprStreakAreaVerA.Blit(p, JUSTIFY_LB);
         else
-            sprStreakAreaVerB.Blit(p);
+            sprStreakAreaVerB.Blit(p, JUSTIFY_LB);
     }
-    p.x = PUZZLE_POSX - 200;
+    p.x = 0;
     for (j = 0; j < curPuzzle->Height(); j++) {
         p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + j*CELLLENGTH*MAGNIFICATION_LEVEL;
         if (j%2 == 0)
-            sprStreakAreaHorA.Blit(p);
+            sprStreakAreaHorA.Blit(p, JUSTIFY_RT);
         else
-            sprStreakAreaHorB.Blit(p);
+            sprStreakAreaHorB.Blit(p, JUSTIFY_RT);
     }
 
     unsigned int streakLength;
@@ -114,10 +131,10 @@ void SDLFrontend::DrawStreakArea() {
             out.str("");
             out << s.GetLength() << ' ';
 
-            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL - streakLength;
+            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 2*MAGNIFICATION_LEVEL - streakLength;
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
 
-            streakLength += txt.WidthOf(out.str()) + 5;
+            streakLength += txt.WidthOf(out.str()) + 2;
             txt.Blit(out.str(), p, color, JUSTIFY_R);
         }
     }
@@ -133,14 +150,14 @@ void SDLFrontend::DrawStreakArea() {
             out.str("");    //clear the stream
             out << s.GetLength();
 
-            streakLength += txt.HeightOf(out.str()) + 5;
+            streakLength += txt.HeightOf(out.str()) + 2;
 
             p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
                   + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
                   + 10*MAGNIFICATION_LEVEL;           /* and centre within column */
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
                   - streakLength                      /* stack numbers above each other */
-                  - 3*MAGNIFICATION_LEVEL;            /* and adjust the whole stack upwards */
+                  - 2*MAGNIFICATION_LEVEL;            /* and adjust the whole stack upwards */
 
             txt.Blit(out.str(), p, color, JUSTIFY_C);
         }
@@ -157,7 +174,7 @@ void SDLFrontend::DrawBoardArea() {
 
             q.x = i;
             q.y = j;
-
+            
             /* active cells (and entire row / column) */
             if (q.x == curPuzzle->GetLocation().x || q.y == curPuzzle->GetLocation().y)
                 sprActiveTile.Blit(p);
@@ -310,23 +327,12 @@ void SDLFrontend::ProcessInput() {
 
         if (op != OP_NONE)
             curPuzzle->DoOp(op);
-
-        if (curPuzzle->GameWon()) {
-            GameWon();
-        }
     }
 
     curPuzzle->CalculateStreakSolvedState();    /* prepare streaks for drawing */
 }
 
 void SDLFrontend::GameWon() {
-
-    /* calculate final streaks */
-    curPuzzle->CalculateStreakSolvedState();
-
-    /* draw one final time */
-    ProcessDrawing();
-    SDL_Flip(Screen);
 
     SDL_Delay(1000);
 
@@ -355,6 +361,9 @@ void SDLFrontend::DoMainLoop() {
 
     SDL_Flip(Screen);
     SDL_Delay(30);  /* relinquish cpu time we don't need */
+
+    if (curPuzzle->GameWon())
+        GameWon();
 }
 
 void SDLFrontend::NewPuzzle(PicSettings &s) {
@@ -387,6 +396,10 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
     dragDirection = DRAG_UNDEF;
     dragOperation = DRAG_UNDEF;
     quit = false;
+}
+void SDLFrontend::LoadBackground(std::string path) {
+    std::string fullpath = FILEPREFIX + path;
+    sprBackground.Load( fullpath, MAGNIFICATION_LEVEL, 0);
 }
 
 void SDLFrontend::Initialize() {
@@ -427,7 +440,7 @@ void SDLFrontend::Initialize() {
     sprStreakAreaVerA.Load(FILEPREFIX "gfx/streakA.png", MAGNIFICATION_LEVEL, 270);
     sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", MAGNIFICATION_LEVEL, 270);
 
-    sprBackground.Load(FILEPREFIX "gfx/background.png", MAGNIFICATION_LEVEL, 0);
+    sprBackground.Load(FILEPREFIX "gfx/background.jpg", MAGNIFICATION_LEVEL, 0);
 }
 SDLFrontend::SDLFrontend() {
     Screen = NULL;
@@ -438,6 +451,8 @@ SDLFrontend::SDLFrontend() {
 SDLFrontend::~SDLFrontend() {
     if (curPuzzle)
         delete curPuzzle;
+
+    txt.~SDLText(); /* force deinitialization of font before TTF_Quit is called */
 
     TTF_Quit();
     SDL_Quit();
