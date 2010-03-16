@@ -21,6 +21,9 @@ build() {
   git clone -b qtfrontend git://github.com/schuay/$_pkgname.git || return 1
   cd $srcdir/$_pkgname || return 1
 
+  #set file path
+  sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/tuxpicross/"_' src/f_sdldefines.h || return 1
+
   #build
   qmake || return 1
   make || return 1
