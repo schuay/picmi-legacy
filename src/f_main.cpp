@@ -10,12 +10,14 @@
 #define QTENABLED
 
 #include <unistd.h>
+
+#ifdef QTENABLED
 #include <QtGui/QApplication>
 
 #include "f_qtmainwindow.h"
-
-#ifdef QTENABLED
 #include "f_qtpicthread.h"
+#else
+#include "f_sdlfrontend.h"
 #endif
 
 SDL_Surface *Screen;
