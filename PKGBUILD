@@ -24,10 +24,19 @@ build() {
   #set file path
   sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/tuxpicross/"_' src/f_sdldefines.h || return 1
 
-  #build
+  # START:  QT ENABLED. if you want to disable qt, remove qt from depends(),
+  #         comment this section and uncomment the QT DISABLED section
+
   qmake || return 1
   make || return 1
 
+  # END: QT ENABLED
+  # START: QT DISABLED
+  #
+  # cd $srcdir/$_pkgname/src || return 1
+  # make || return 1
+  #
+  # END: QT DISABLED
 
   mkdir -p $pkgdir/usr/{bin,share/{applications,$pkgname/gfx}}
   install -D -m755 $_pkgname $pkgdir/usr/bin/$pkgname
