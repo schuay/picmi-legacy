@@ -7,11 +7,16 @@
  *                                                                         *
  ***************************************************************************/
 
+#define QTENABLED
+
 #include <unistd.h>
 #include <QtGui/QApplication>
 
 #include "f_qtmainwindow.h"
+
+#ifdef QTENABLED
 #include "f_qtpicthread.h"
+#endif
 
 SDL_Surface *Screen;
 
@@ -26,13 +31,16 @@ int main(int argc, char **argv) {
         if (!HandleArguments(s, disableQt, argc, argv))
             return -1;
 
+#ifdef QTENABLED
         if (disableQt) {
+#endif
             SDLFrontend game;
 
             game.NewPuzzle(s);
 
             while(!game.GetQuit())
                     game.DoMainLoop();
+#ifdef QTENABLED
         }
         else {
             QApplication a(argc, argv);
@@ -42,6 +50,7 @@ int main(int argc, char **argv) {
 
             return a.exec();
         }
+#endif
     }
     catch (PicException e) {
         printf("Error: %s\n\n", e.what());
