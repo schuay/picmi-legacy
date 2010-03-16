@@ -131,10 +131,10 @@ void SDLFrontend::DrawStreakArea() {
             out.str("");
             out << s.GetLength() << ' ';
 
-            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 3*MAGNIFICATION_LEVEL - streakLength;
+            p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL - 2*MAGNIFICATION_LEVEL - streakLength;
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
 
-            streakLength += txt.WidthOf(out.str()) + 5;
+            streakLength += txt.WidthOf(out.str()) + 2;
             txt.Blit(out.str(), p, color, JUSTIFY_R);
         }
     }
@@ -150,14 +150,14 @@ void SDLFrontend::DrawStreakArea() {
             out.str("");    //clear the stream
             out << s.GetLength();
 
-            streakLength += txt.HeightOf(out.str()) + 5;
+            streakLength += txt.HeightOf(out.str()) + 2;
 
             p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
                   + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
                   + 10*MAGNIFICATION_LEVEL;           /* and centre within column */
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL     /* puzzle starting position */
                   - streakLength                      /* stack numbers above each other */
-                  - 3*MAGNIFICATION_LEVEL;            /* and adjust the whole stack upwards */
+                  - 2*MAGNIFICATION_LEVEL;            /* and adjust the whole stack upwards */
 
             txt.Blit(out.str(), p, color, JUSTIFY_C);
         }
