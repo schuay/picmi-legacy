@@ -72,3 +72,9 @@ arguments:
             files are stored in $HOME/.config/tuxpicross/ by default
     -q: disable QT frontend
     -h: show this message
+
+
+Sources
+-------------------
+
+Font used: ttf-liberation ( https://fedorahosted.org/liberation-fonts/ )
