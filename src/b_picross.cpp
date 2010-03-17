@@ -331,6 +331,7 @@ void Picross::SetStateAt(PicPoint &p, int state) {
         c = boardHit;
         break;
     case BOARD_MARKED:
+    default:
         c = boardMarked;
         break;
     }

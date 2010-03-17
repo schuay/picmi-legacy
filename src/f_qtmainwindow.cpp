@@ -19,7 +19,7 @@ QTMainWindow::QTMainWindow(PicSettings &settings, QWidget *parent) :
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(setPuzzleFolder()));
-    connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggled(bool)));
+    connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggled()));
     connect(&t, SIGNAL(finished()), this, SLOT(enableGui()));
     connect(ui->bBGCustom, SIGNAL(clicked()), this, SLOT(setCustomBG()));
     connect(ui->bBGDefault, SIGNAL(clicked()), this, SLOT(setDefaultBG()));
@@ -118,7 +118,7 @@ void QTMainWindow::setPuzzleFolder() {
 void QTMainWindow::enableGui() {
     setGuiEnabledState(true);
 }
-void QTMainWindow::radioButtonToggled(bool b) {
+void QTMainWindow::radioButtonToggled() {
     setGuiEnabledState(true);
 }
 void QTMainWindow::setDefaultBG() {
