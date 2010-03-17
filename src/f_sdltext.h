@@ -22,23 +22,31 @@
 #define JUSTIFY_L   1
 #define JUSTIFY_R   2
 
+#define FONT_NORMAL 0
+#define FONT_BOLD   1
+#define FONT_ITALIC 2
+
 class SDLText
 {
 public:
     SDLText();
     ~SDLText();
 
-    void Load(std::string Filename);
-    void Blit(std::string txt, PicPoint p, unsigned int justify = JUSTIFY_L);
-    void Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int justify = JUSTIFY_L);
+    void Load(std::string fnNormal, std::string fnBold, std::string fnItalic);
+    void Blit(std::string txt, PicPoint p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
 
-    int WidthOf(std::string txt);
-    int HeightOf(std::string txt);
-
-    static const unsigned int Size = 18;
+    int WidthOf(std::string txt, unsigned int fontType = FONT_NORMAL);
+    int HeightOf(std::string txt, unsigned int fontType = FONT_NORMAL);
 
 private:
-    TTF_Font *font;
+    static const unsigned int Size = 17;
+
+    TTF_Font *GetFontForType(unsigned int fontType);
+
+    TTF_Font *fontNormal,
+             *fontBold,
+             *fontItalic;
 };
 
 #endif // TEXT_H

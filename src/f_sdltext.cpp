@@ -11,56 +11,68 @@
 
 SDLText::SDLText()
 {
-    font = NULL;
+    fontNormal = NULL;
+    fontBold = NULL;
+    fontItalic = NULL;
 }
 
 SDLText::~SDLText() {
-    if (font) {
-        TTF_CloseFont(font);
-        font = NULL;
+    if (fontNormal) {
+        TTF_CloseFont(fontNormal);
+        fontNormal = NULL;
+    }
+    if (fontBold) {
+        TTF_CloseFont(fontBold);
+        fontBold = NULL;
+    }
+    if (fontItalic) {
+        TTF_CloseFont(fontItalic);
+        fontItalic = NULL;
     }
 }
 
-void SDLText::Load(std::string Filename) {
-    if (font)
+void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic) {
+    if (fontNormal)
         throw PicException("Font already loaded, Text::Load cannot be called twice.");
 
-    font = TTF_OpenFont(Filename.c_str(), Size);
+    fontNormal = TTF_OpenFont(fnNormal.c_str(), Size);
+    fontBold = TTF_OpenFont(fnBold.c_str(), Size);
+    fontItalic = TTF_OpenFont(fnItalic.c_str(), Size);
 
-    if (!font)
+    if (!fontNormal || !fontBold || !fontItalic)
         throw PicException(TTF_GetError());
 }
 
-int SDLText::WidthOf(std::string txt) {
+int SDLText::WidthOf(std::string txt, unsigned int fontType) {
     int w;
 
-    TTF_SizeText(font, txt.c_str(), &w, NULL);
+    TTF_SizeText(GetFontForType(fontType), txt.c_str(), &w, NULL);
 
     return w;
 }
-int SDLText::HeightOf(std::string txt) {
+int SDLText::HeightOf(std::string txt, unsigned int fontType) {
     int h;
 
-    TTF_SizeText(font, txt.c_str(), NULL, &h);
+    TTF_SizeText(GetFontForType(fontType), txt.c_str(), NULL, &h);
 
     return h;
 }
 
-void SDLText::Blit(std::string txt, PicPoint p, unsigned int justify) {
+void SDLText::Blit(std::string txt, PicPoint p, unsigned int fontType, unsigned int justify) {
     SDL_Color c;
 
     c.r = c.g = c.b = 0;
-    Blit(txt, p, c, justify);
+    Blit(txt, p, c, fontType, justify);
 }
-void SDLText::Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int justify) {
-    if (!font)
+void SDLText::Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify) {
+    if (!fontNormal || !fontBold || !fontItalic)
         throw PicException("Text::Blit failed, no font loaded.");
 
     SDL_Rect to;
     SDL_Surface *s = NULL;
 
     s = TTF_RenderText_Solid(
-            font,
+            GetFontForType(fontType),
             txt.c_str(),
             c);
 
@@ -78,4 +90,19 @@ void SDLText::Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int justif
 
     SDL_BlitSurface(s, NULL, Screen, &to);
     SDL_FreeSurface(s);
+}
+
+TTF_Font *SDLText::GetFontForType(unsigned int fontType) {
+    if (fontType != FONT_NORMAL && fontType != FONT_BOLD && fontType != FONT_ITALIC)
+        throw PicException("Invalid font type passed.");
+
+    switch (fontType) {
+    case FONT_NORMAL:
+        return fontNormal;
+    case FONT_BOLD:
+        return fontBold;
+    case FONT_ITALIC:
+    default:
+        return fontItalic;
+    }
 }

@@ -43,43 +43,48 @@ void SDLFrontend::DrawInfoArea() {
 
     /* draw text */
     out << "Elapsed Time";
-    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    txt.Blit(out.str(), p, color, FONT_BOLD, JUSTIFY_L);
     p.y += txt.HeightOf(out.str());
 
     out.str("");
     out << "--------------";
-    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    txt.Blit(out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 2;
 
     out.str("");
     out << "Total: " << curPuzzle->GetElapsedTime() << "s";
-    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    txt.Blit(out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 2;
 
     out.str("");
     out << "Real: " << curPuzzle->GetElapsedRealTime() << "s";
-    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    txt.Blit(out.str(), p, color, FONT_ITALIC, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 25;
 
     out.str("");
     out << "Completed";
-    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    txt.Blit(out.str(), p, color, FONT_BOLD, JUSTIFY_L);
     p.y += txt.HeightOf(out.str());
 
     out.str("");
     out << "--------------";
-    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    txt.Blit(out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 2;
 
     out.str("");
     out << std::fixed << std::setprecision(0) << curPuzzle->GetCompletedPercentageBoxes() << " % done";
-    txt.Blit(out.str(), p, color, JUSTIFY_L);
+    txt.Blit(out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
     p.y += txt.HeightOf(out.str()) + 5;
 }
 void SDLFrontend::DrawStreakArea() {
     unsigned int i, j;
     PicPoint p;
-    SDL_Color color;
+    SDL_Color colorSolved,
+              colorUnsolved;
+
+    colorSolved.r = colorSolved.g = colorSolved.b = 84;         /* dark gray */
+    colorUnsolved.r = colorUnsolved.g = colorUnsolved.b = 0;    /* black */
+
     std::stringstream out;
 
     /* highlight active row/col - currently deactivated because streak gfx are not translucent*/
@@ -125,9 +130,8 @@ void SDLFrontend::DrawStreakArea() {
         streakLength = 0;
 
         for (int js = curPuzzle->RowStreaks[i].size() - 1; js >= 0; js--) {
-            PicStreak s = curPuzzle->RowStreaks[i][js];    /* note the reverse order of loop  */
-            color.r = color.g = color.b = s.Solved ? 200 : 0;       /* we need to do this to draw streaks in correct order */
-
+            PicStreak s = curPuzzle->RowStreaks[i][js];     /* note the reverse order of loop  */
+                                                            /* we need to do this to draw streaks in correct order */
             out.str("");
             out << s.GetLength() << ' ';
 
@@ -135,7 +139,12 @@ void SDLFrontend::DrawStreakArea() {
             p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL + i*MAGNIFICATION_LEVEL*CELLLENGTH;
 
             streakLength += txt.WidthOf(out.str()) + 2;
-            txt.Blit(out.str(), p, color, JUSTIFY_R);
+
+            txt.Blit(   out.str(),
+                        p,
+                        s.Solved ? colorSolved : colorUnsolved,
+                        s.Solved ? FONT_ITALIC : FONT_BOLD,
+                        JUSTIFY_R);
         }
     }
 
@@ -145,12 +154,11 @@ void SDLFrontend::DrawStreakArea() {
 
         for (int js = curPuzzle->ColStreaks[i].size() - 1; js >= 0; js--) {
             PicStreak s = curPuzzle->ColStreaks[i][js];
-            color.r = color.g = color.b = s.Solved ? 200 : 0;
 
             out.str("");    //clear the stream
             out << s.GetLength();
 
-            streakLength += txt.HeightOf(out.str()) + 2;
+            streakLength += txt.HeightOf(out.str()) + 2;    /* used in next statement, don't move */
 
             p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL     /* puzzle starting position */
                   + i*MAGNIFICATION_LEVEL*CELLLENGTH  /* plus the appropriate column position */
@@ -159,7 +167,11 @@ void SDLFrontend::DrawStreakArea() {
                   - streakLength                      /* stack numbers above each other */
                   - 2*MAGNIFICATION_LEVEL;            /* and adjust the whole stack upwards */
 
-            txt.Blit(out.str(), p, color, JUSTIFY_C);
+            txt.Blit(   out.str(),
+                        p,
+                        s.Solved ? colorSolved : colorUnsolved,
+                        s.Solved ? FONT_ITALIC : FONT_BOLD,
+                        JUSTIFY_C);
         }
     }
 }
@@ -419,7 +431,10 @@ void SDLFrontend::Initialize() {
 
     /* Load resources */
 
-    txt.Load(FILEPREFIX "gfx/cour.ttf");
+    txt.Load(FILEPREFIX "gfx/LiberationMono-Regular.ttf",
+             FILEPREFIX "gfx/LiberationMono-Bold.ttf",
+             FILEPREFIX "gfx/LiberationMono-Italic.ttf");
+
 
     sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
     sprIcon.SetAsIcon();
