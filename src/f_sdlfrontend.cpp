@@ -89,19 +89,21 @@ void SDLFrontend::DrawStreakArea() {
 
     /* highlight active row/col - currently deactivated because streak gfx are not translucent*/
 
-    p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL +
-          curPuzzle->GetLocation().x*CELLLENGTH*MAGNIFICATION_LEVEL;
-    for (int i = 0; i * CELLLENGTH < PUZZLE_POSX; i++) {
-        p.y = i*CELLLENGTH*MAGNIFICATION_LEVEL;
+    if (!curPuzzle->GameWon()) {
+        p.x = PUZZLE_POSX*MAGNIFICATION_LEVEL +
+              curPuzzle->GetLocation().x*CELLLENGTH*MAGNIFICATION_LEVEL;
+        for (int i = 0; i * CELLLENGTH < PUZZLE_POSX; i++) {
+            p.y = i*CELLLENGTH*MAGNIFICATION_LEVEL;
 
-        sprActiveTile.Blit(p);
-    }
-    p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL +
-          curPuzzle->GetLocation().y*CELLLENGTH*MAGNIFICATION_LEVEL;
-    for (int j = 0; j * CELLLENGTH < PUZZLE_POSX; j++) {
+            sprActiveTile.Blit(p);
+        }
+        p.y = PUZZLE_POSY*MAGNIFICATION_LEVEL +
+              curPuzzle->GetLocation().y*CELLLENGTH*MAGNIFICATION_LEVEL;
+        for (int j = 0; j * CELLLENGTH < PUZZLE_POSX; j++) {
         p.x = j*CELLLENGTH*MAGNIFICATION_LEVEL;
 
         sprActiveTile.Blit(p);
+    }
     }
 
     /* streak areas */
@@ -188,7 +190,8 @@ void SDLFrontend::DrawBoardArea() {
             q.y = j;
             
             /* active cells (and entire row / column) */
-            if (q.x == curPuzzle->GetLocation().x || q.y == curPuzzle->GetLocation().y)
+            if (!curPuzzle->GameWon() &&
+                ( q.x == curPuzzle->GetLocation().x || q.y == curPuzzle->GetLocation().y ))
                 sprActiveTile.Blit(p);
 
             /* cell frame */
