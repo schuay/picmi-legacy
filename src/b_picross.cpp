@@ -257,9 +257,7 @@ void Picross::Initialize(PicSettings &s) {
 
 
     NoHintsMode = s.NoHintsMode;
-    penaltyTime = 0;
-    penaltyMultiplier = 1;
-    startTime = time(NULL);
+    timer.Start();
 }
 void Picross::RandomPuzzle(PicSettings &s) {
 
@@ -417,7 +415,7 @@ void Picross::DoOpAt(PicPoint &p, int op) {
                     SetStateAt(p, BOARD_HIT);
                 else if (map == MAP_FALSE) {
                     SetStateAt(p, BOARD_MARKED);
-                    penaltyTime += 120 * penaltyMultiplier++;
+                    timer.AddPenalty();
                 }
                 break;
             case BOARD_MARKED:          /* on MARKED tile */
@@ -486,13 +484,13 @@ void Picross::DoOp(int op) {
 }
 
 unsigned int Picross::GetElapsedPenaltyTime() {
-    return penaltyTime;
+    return timer.GetPenaltyTime();
 }
 unsigned int Picross::GetElapsedRealTime() {
-    return time(NULL) - startTime;
+    return timer.GetRealTime();
 }
 unsigned int Picross::GetElapsedTime() {
-    return GetElapsedPenaltyTime() + GetElapsedRealTime();
+    return timer.GetTime();
 }
 
 float Picross::GetCompletedPercentageBoxes() {

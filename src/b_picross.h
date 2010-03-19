@@ -20,6 +20,7 @@
 #include "b_picexception.h"
 #include "b_picdefines.h"
 #include "b_picpngloader.h"
+#include "b_pictimer.h"
 
 class Picross
 {
@@ -75,10 +76,9 @@ private:
 
     PicPoint Location; /* stores current location on board */
 
+    PicTimer timer;
+
     unsigned int
-            startTime,          /* game start time (s)*/
-            penaltyTime,        /* base penalty time */
-            penaltyMultiplier,  /* current penalty multiplier (applied to penaltyTime) */
             NrOfBoxes,          /* number of boxes in map - set only once in constructor */
             width,
             height;
