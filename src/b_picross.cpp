@@ -138,8 +138,11 @@ void Picross::CalculateStreakSolvedState() {
         for (j = 0; j < ColStreaks[i].size(); j++)  /* reset state of all streaks to false */
             ColStreaks[i][j].Solved = false;
 
-        if (!NoHintsMode && sumFromBoard == sumFromStreak)  /* test only valid if !NoHintsMode */
-            for (j = 0; j < ColStreaks[i].size(); j++)
+        if (sumFromBoardIncludingMarked == Height() && sumFromBoard != sumFromStreak)
+        { } /* entire row/col is filled with either hits or marks but hitcount does not equal count generated from streaks */
+
+        else if (!NoHintsMode && sumFromBoard == sumFromStreak)  /* when not in NoHintsMode, only correct hits are allowed */
+            for (j = 0; j < ColStreaks[i].size(); j++)           /* so we can simply test by count and save calculation effort */
                 ColStreaks[i][j].Solved = true;
 
         /* if not entire col solved and tiles are checked in col (to prevent unnecessary work), do detailed check */
@@ -182,8 +185,12 @@ void Picross::CalculateStreakSolvedState() {
         for (j = 0; j < RowStreaks[i].size(); j++)  /* reset state of all streaks to false */
             RowStreaks[i][j].Solved = false;
 
-        if (!NoHintsMode && sumFromBoard == sumFromStreak)  /* test only valid if !NoHintsMode */
-            for (j = 0; j < RowStreaks[i].size(); j++)
+
+        if (sumFromBoardIncludingMarked == Width() && sumFromBoard != sumFromStreak)
+        { } /* entire row/col is filled with either hits or marks but hitcount does not equal count generated from streaks */
+
+        else if (!NoHintsMode && sumFromBoard == sumFromStreak)  /* when not in NoHintsMode, only correct hits are allowed */
+            for (j = 0; j < RowStreaks[i].size(); j++)           /* so we can simply test by count and save calculation effort */
                 RowStreaks[i][j].Solved = true;
 
         /* if not entire row solved and tiles are checked in row (to prevent unnecessary work), do detailed check */
