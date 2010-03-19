@@ -14,6 +14,7 @@
 #include <cstring>
 #include <cstdlib>
 
+#include "b_boardgame.h"
 #include "b_picsettings.h"
 #include "b_picstreak.h"
 #include "b_picpoint.h"
@@ -22,16 +23,13 @@
 #include "b_picpngloader.h"
 #include "b_pictimer.h"
 
-class Picross
+class Picross : public BoardGame
 {
 public:
     Picross(PicSettings &s);
     ~Picross();
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
-
-    bool IsInBounds(unsigned int x, unsigned int y); /* returns true if coordinate is in puzzle limits */
-    bool IsInBounds(PicPoint &p);
 
     int GetStateAt(PicPoint &p);                    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y);
@@ -40,21 +38,13 @@ public:
 
     void SetStateAt(PicPoint &p, int state); /* set state of board at p */
 
-    PicPoint GetLocation();            /* get / set current location */
-    bool TrySetLocation(PicPoint &p);  /* try setting absolute / relative current location; returns true on success, false on failure*/
-    bool TrySetLocationRel(int dx, int dy);
-
     void DoOpAt(PicPoint &p, int op);   /* perform operation (HIT/MARK) at p */
     void DoOp(int op);                  /* or at current location */
 
     void CalculateStreakSolvedState();  /* call this to update streak.Solved states - ideally once before drawing each frame */
 
-    unsigned int GetElapsedTime();
     unsigned int GetElapsedRealTime();
     unsigned int GetElapsedPenaltyTime();
-
-    unsigned int Width() { return width; }
-    unsigned int Height() { return height; }
 
     float GetCompletedPercentageBoxes();
 
@@ -74,25 +64,13 @@ private:
     void Initialize(PicSettings &s);      /* check integrity and initialize class */
     void RandomPuzzle(PicSettings &s);    /* generates random puzzle with given dimensions and sets map in settings */
 
-    PicPoint Location; /* stores current location on board */
-
-    PicTimer timer;
-
-    unsigned int
-            NrOfBoxes,          /* number of boxes in map - set only once in constructor */
-            width,
-            height;
+    unsigned int nrOfBoxes;          /* number of boxes in map - set only once in constructor */;
 
     static const char
             mapFalse = '.',
             mapTrue = '#',
-            boardClean = '.',
             boardMarked = 'X',
             boardHit = 'H';
-    
-    char
-            *Map,   /* stores the puzzle map (which fields are empty, which fields are boxes) */
-            *BoardState;    /* stores current state of game board (uncovered, marked, clean) */
 };
 
 #endif // PUZZLE_H
