@@ -406,6 +406,10 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
         throw PicException(SDL_GetError());
     }
 
+    /* load custom background (if specified) */
+    if (s.BackgroundPath.length() > 0)
+        LoadBackground(s.BackgroundPath);
+
     /* initialize vars */
 
     dragDirection = DRAG_UNDEF;

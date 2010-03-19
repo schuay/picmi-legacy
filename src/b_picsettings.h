@@ -12,18 +12,26 @@
 
 #include <string>
 #include <cstdlib>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <fstream>
 
 #include "b_picdefines.h"
+#include "b_picexception.h"
 
 class PicSettings
 {
 public:
     PicSettings();
     bool Validate();
+    void Load();
+    void Save();
 
     std::string
             Map,
-            Path;
+            PuzzlePath,
+            BackgroundPath;
 
     int
             Type,
@@ -36,6 +44,15 @@ public:
     unsigned int
             x,
             y;
+
+private:
+    void CheckForConfDir();
+    void HandleConfLine(std::string line);
+
+    std::string
+            basePath,
+            defaultPuzzlePath,
+            confFilePath;
 };
 
 #endif // PICSETTINGS_H

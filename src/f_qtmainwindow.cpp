@@ -24,6 +24,7 @@ QTMainWindow::QTMainWindow(PicSettings &settings, QWidget *parent) :
     connect(ui->bBGCustom, SIGNAL(clicked()), this, SLOT(setCustomBG()));
     connect(ui->bBGDefault, SIGNAL(clicked()), this, SLOT(setDefaultBG()));
 
+    settings.Load();
     ReadSettings(settings);
 }
 
@@ -51,7 +52,8 @@ void QTMainWindow::ReadSettings(PicSettings &settings) {
     else
         ui->rbPuzTypeStatic->setChecked(true);
 
-    ui->lePath->setText(settings.Path.c_str());
+    ui->lePath->setText(settings.PuzzlePath.c_str());
+    bgPath = QString(settings.BackgroundPath.c_str());
 
     ui->sbWidth->setValue(settings.x);
     ui->sbHeight->setValue(settings.y);
@@ -77,7 +79,7 @@ PicSettings* QTMainWindow::WriteSettings() {
 
     settings->Difficulty = ui->sbDifficulty->value();
 
-
+    /* test whether path exists and set path */
     QString path(ui->lePath->displayText());
     QFile f(path);
     QDir d(path);
@@ -90,8 +92,15 @@ PicSettings* QTMainWindow::WriteSettings() {
     else
         settings->Type = PUZ_RAND;
 
-    settings->Path = ui->lePath->displayText().toStdString();
+    settings->PuzzlePath = path.toStdString();
 
+    /* test whether bgPath exists and set it */
+    QFile bgFile(bgPath);
+    if (bgFile.exists())
+        settings->BackgroundPath = bgPath.toStdString();
+
+    /* save settings to disk */
+    settings->Save();
 
     return settings;
 }
@@ -106,7 +115,6 @@ void QTMainWindow::start() {
     setGuiEnabledState(false);
 
     t.PassSettings(WriteSettings());
-    t.LoadBackground(bgPath.toStdString());
     t.start();
 }
 void QTMainWindow::setPuzzleFolder() {

@@ -26,7 +26,6 @@ public:
 
 private:
     PicSettings *settings;
-    std::string bgPath;
 };
 
 #endif // F_QTPICTHREAD_H

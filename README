@@ -69,7 +69,7 @@ arguments:
     -s file: load puzzle from file (input file should be black and white .png)
     -t dir: load puzzle from a random file in dir
     -c dir: convert images from dir to a format suitable for puzzle input
-            files are stored in $HOME/.config/tuxpicross/ by default
+            files are stored in $HOME/.config/tuxpicross/puzzles by default
     -q: disable QT frontend
     -h: show this message
 

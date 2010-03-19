@@ -113,12 +113,12 @@ bool HandleArguments(PicSettings &s, bool &disableQt, int argc, char **argv) {
         case 's':
             cvalue = optarg;
             s.Type = PUZ_STAT;
-            s.Path = cvalue;
+            s.PuzzlePath = cvalue;
             break;
         case 't':
             cvalue = optarg;
             s.Type = PUZ_STAT;
-            s.Path = cvalue;
+            s.PuzzlePath = cvalue;
             s.LoadRandomFromPath = true;
             break;
         case 'n':
@@ -145,7 +145,7 @@ bool HandleArguments(PicSettings &s, bool &disableQt, int argc, char **argv) {
                    "    -s file: load puzzle from file (input file should be black and white .png)\n"
                    "    -t dir: load puzzle from a random file in dir\n"
                    "    -c dir: convert images from dir to a format suitable for puzzle input\n"
-                   "            files are stored in $HOME/.config/tuxpicross/ by default\n"
+                   "            files are stored in $HOME/.config/tuxpicross/puzzles by default\n"
                    "    -q: disable QT frontend\n"
                    "    -h: show this message\n");
             return false;

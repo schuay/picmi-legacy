@@ -26,16 +26,10 @@ void QTPicThread::PassSettings(PicSettings *s) {
 
     settings = s;
 }
-void QTPicThread::LoadBackground(std::string path) {
-    bgPath = path;
-}
-
 void QTPicThread::run() {
 
     SDLFrontend game;
 
-    if (bgPath.length() > 0)
-        game.LoadBackground(bgPath);
     game.NewPuzzle(*settings);
 
     while(!game.GetQuit())

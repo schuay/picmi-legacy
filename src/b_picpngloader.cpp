@@ -12,7 +12,7 @@
 PicPngLoader::PicPngLoader() { 
     std::string path = getenv("HOME");
 
-    defaultPath = path + "/.config/tuxpicross/";
+    defaultPath = path + "/.config/tuxpicross/puzzles/";
 
     DIR* d = opendir(defaultPath.c_str());
 
@@ -87,7 +87,7 @@ void PicPngLoader::ConvertPath(std::string path, int threshold) {
 
 void PicPngLoader::Load(PicSettings& settings) {
 
-    Magick::Image img(settings.Path.c_str());
+    Magick::Image img(settings.PuzzlePath.c_str());
 
     unsigned int
             w = img.columns(),
@@ -114,7 +114,7 @@ void PicPngLoader::Load(PicSettings& settings) {
     settings.y = w;
 }
 void PicPngLoader::LoadRandom(PicSettings &settings) {
-    DIR* d = opendir(settings.Path.c_str());
+    DIR* d = opendir(settings.PuzzlePath.c_str());
     struct dirent *ep;
 
     if (!d)
@@ -137,7 +137,7 @@ void PicPngLoader::LoadRandom(PicSettings &settings) {
         if (ext != ".png" && ext != ".xbm")  /* for now, limit to png (even though we could process all formats) */
             continue;
 
-        v.push_back(settings.Path + "/" + filename);
+        v.push_back(settings.PuzzlePath + "/" + filename);
     }
 
     closedir(d);
@@ -147,7 +147,7 @@ void PicPngLoader::LoadRandom(PicSettings &settings) {
 
     srand(time(NULL));
 
-    settings.Path = v[rand() % v.size()];
+    settings.PuzzlePath = v[rand() % v.size()];
     settings.LoadRandomFromPath = false;
 
     Load(settings);
