@@ -31,7 +31,7 @@ public:
 
     void SetAsIcon();
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(PicPoint p, int justify = JUSTIFY_LT);
+    void Blit(SDL_Surface *target, PicPoint p, int justify = JUSTIFY_LT);
 
 private:
 

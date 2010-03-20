@@ -33,8 +33,8 @@ public:
     ~SDLText();
 
     void Load(std::string fnNormal, std::string fnBold, std::string fnItalic);
-    void Blit(std::string txt, PicPoint p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
-    void Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void Blit(SDL_Surface *target, std::string txt, PicPoint p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void Blit(SDL_Surface *target, std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
 
     int WidthOf(std::string txt, unsigned int fontType = FONT_NORMAL);
     int HeightOf(std::string txt, unsigned int fontType = FONT_NORMAL);

@@ -58,13 +58,13 @@ int SDLText::HeightOf(std::string txt, unsigned int fontType) {
     return h;
 }
 
-void SDLText::Blit(std::string txt, PicPoint p, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(SDL_Surface *target, std::string txt, PicPoint p, unsigned int fontType, unsigned int justify) {
     SDL_Color c;
 
     c.r = c.g = c.b = 0;
-    Blit(txt, p, c, fontType, justify);
+    Blit(target, txt, p, c, fontType, justify);
 }
-void SDLText::Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(SDL_Surface *target, std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify) {
     if (!fontNormal || !fontBold || !fontItalic)
         throw PicException("Text::Blit failed, no font loaded.");
 
@@ -88,7 +88,7 @@ void SDLText::Blit(std::string txt, PicPoint p, SDL_Color c, unsigned int fontTy
     if (!s)
         throw PicException("Text::Blit failed, TTF_RenderText failed");
 
-    SDL_BlitSurface(s, NULL, Screen, &to);
+    SDL_BlitSurface(s, NULL, target, &to);
     SDL_FreeSurface(s);
 }
 

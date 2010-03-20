@@ -9,7 +9,7 @@
 
 #include "b_picross.h"
 
-Picross::Picross(PicSettings &s) : base(),
+Picross::Picross(PicSettings &s) : BoardGame(),
         ColStreaks(NULL), RowStreaks(NULL)
 {
     Load(s);

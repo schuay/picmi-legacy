@@ -16,6 +16,7 @@
 
 #include "b_picross.h"
 #include "b_picpngloader.h"
+#include "b_picpainter.h"
 
 #include "f_sdldefines.h"
 #include "f_sdlglobals.h"
@@ -39,15 +40,9 @@ private:
     void Initialize();
 
     void ProcessInput();
-    void ProcessDrawing();
     void ProcessLogic(int dx, int dy, int op);
 
     void GameWon();
-
-    void DrawBackground();
-    void DrawInfoArea();
-    void DrawStreakArea();
-    void DrawBoardArea();
 
     void DebugKeyAction();
 
@@ -63,25 +58,8 @@ private:
     bool
         quit;
 
-    SDLSprite
-        sprCellFrame,
-        sprBoxTile,
-        sprMarkTile,
-        sprDividerR,
-        sprDividerD,
-        sprDividerL,
-        sprDividerU,
-        sprActiveTile,
-        sprStreakAreaHorA,
-        sprStreakAreaHorB,
-        sprStreakAreaVerA,
-        sprStreakAreaVerB,
-        sprBackground,
-        sprIcon;
-
-    SDLText txt;
-
-    Picross *curPuzzle;
+    Picross *game;
+    PicPainter *painter;
 };
 
 #endif // GAME_H

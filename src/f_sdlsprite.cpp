@@ -122,7 +122,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     SDL_FreeSurface(tmpSurface);
 }
 
-void SDLSprite::Blit(PicPoint p, int justify) {
+void SDLSprite::Blit(SDL_Surface *target, PicPoint p, int justify) {
     SDL_Rect to, from;
 
     to.x = p.x;
@@ -136,25 +136,25 @@ void SDLSprite::Blit(PicPoint p, int justify) {
         break;
     case JUSTIFY_LB:
         from.x = 0;
-        from.y = Surface->h > Screen->h ?
-                 Surface->h - Screen->h : 0;
+        from.y = Surface->h > target->h ?
+                 Surface->h - target->h : 0;
         break;
      case JUSTIFY_RT:
-         from.x = Surface->w > Screen->w ?
-                  Surface->w - Screen->w : 0;
+         from.x = Surface->w > target->w ?
+                  Surface->w - target->w : 0;
          from.y = 0;
          break;
     case JUSTIFY_RB:
-        from.x = Surface->w > Screen->w ?
-                 Surface->w - Screen->w : 0;
-        from.y = Surface->h > Screen->h ?
-                 Surface->h - Screen->h : 0;
+        from.x = Surface->w > target->w ?
+                 Surface->w - target->w : 0;
+        from.y = Surface->h > target->h ?
+                 Surface->h - target->h : 0;
         break;
     }
 
     from.w = Surface->w;
     from.h = Surface->h;
 
-    if ( SDL_BlitSurface( Surface, &from, Screen, &to) < 0 )
+    if ( SDL_BlitSurface( Surface, &from, target, &to) < 0 )
         throw PicException(SDL_GetError());
 }
