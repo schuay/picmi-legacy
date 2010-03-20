@@ -7,15 +7,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef F_SDLDEFINES_H
-#define F_SDLDEFINES_H
+#ifndef B_INPUTHANDLER_H
+#define B_INPUTHANDLER_H
 
-#define DRAG_UNDEF -1           // defines for drag locking
-#define DRAG_HOR 0
-#define DRAG_VER 1
+class InputHandler
+{
+public:
+    virtual void HandleInput() = 0;
+};
 
-#define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
-
-#define WINDOWCAPTION "Tux Picross"
-
-#endif // F_SDLDEFINES_H
+#endif // B_INPUTHANDLER_H

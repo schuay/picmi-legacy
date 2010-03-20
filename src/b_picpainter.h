@@ -71,16 +71,6 @@ private:
 
     /* the game instance - painter reads state from here and paints accordingly */
     Picross *game;
-
-    /* size of tiles in pixels */
-    static const unsigned int celllength = 24;
-
-    /* upper left corner of board */
-    static const unsigned int boardX = 200;
-    static const unsigned int boardY = 200;
-
-    /* zoom */
-    static const unsigned int zoom = 1;
 };
 
 #endif // B_SDLPAINTER_H

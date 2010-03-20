@@ -65,6 +65,13 @@ public:
     unsigned int Width() { return width; }
     unsigned int Height() { return height; }
 
+    unsigned int PixOffsetX() { return puzzleLocation.x; }
+    unsigned int PixOffsetY() { return puzzleLocation.y; }
+    unsigned int CellLength() { return celllength; }
+    unsigned int Zoom() { return zoom; }
+
+    bool Quit;
+
 protected:
 
     /* stores current location on board */
@@ -86,6 +93,19 @@ protected:
 
     /* representation of untouched board tile */
     static const char boardClean = '.';
+
+
+    /* puzzleLocation, celllength, zoom must be stored in game
+       painter + inputhandler need access to them */
+
+    /* left upper corner of puzzle (in pixels) */
+    PicPoint puzzleLocation;
+
+    /* size of tiles in pixels */
+    unsigned int celllength;
+
+    /* zoom */
+    unsigned int zoom;
 };
 
 #endif // B_BOARDGAME_H

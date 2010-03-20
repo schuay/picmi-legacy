@@ -19,10 +19,12 @@ PicPainter::PicPainter(BoardGame *p) : screen(NULL), game(NULL)
     InitSystems();
     LoadSprites();
 }
-PicPainter::~PicPainter() {}
+PicPainter::~PicPainter() {
+    TTF_Quit();
+}
 
 void PicPainter::LoadCustomBackground(std::string path) {
-    sprBackground.Load( path, zoom, 0);
+    sprBackground.Load( path, game->Zoom(), 0);
 }
 
 void PicPainter::LoadSprites() {
@@ -34,28 +36,31 @@ void PicPainter::LoadSprites() {
     sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
     sprIcon.SetAsIcon();
 
-    sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", zoom, 0);
-    sprBoxTile.Load(FILEPREFIX "gfx/box.png", zoom, 0);
-    sprMarkTile.Load(FILEPREFIX "gfx/mark.png", zoom, 0);
-    sprActiveTile.Load(FILEPREFIX "gfx/activecell.png", zoom, 0);
+    sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", game->Zoom(), 0);
+    sprBoxTile.Load(FILEPREFIX "gfx/box.png", game->Zoom(), 0);
+    sprMarkTile.Load(FILEPREFIX "gfx/mark.png", game->Zoom(), 0);
+    sprActiveTile.Load(FILEPREFIX "gfx/activecell.png", game->Zoom(), 0);
 
-    sprDividerR.Load(FILEPREFIX "gfx/divider.png", zoom,0);
-    sprDividerD.Load(FILEPREFIX "gfx/divider.png", zoom, 270);
-    sprDividerL.Load(FILEPREFIX "gfx/divider.png", zoom, 180);
-    sprDividerU.Load(FILEPREFIX "gfx/divider.png", zoom, 90);
+    sprDividerR.Load(FILEPREFIX "gfx/divider.png", game->Zoom(),0);
+    sprDividerD.Load(FILEPREFIX "gfx/divider.png", game->Zoom(), 270);
+    sprDividerL.Load(FILEPREFIX "gfx/divider.png", game->Zoom(), 180);
+    sprDividerU.Load(FILEPREFIX "gfx/divider.png", game->Zoom(), 90);
 
-    sprStreakAreaHorA.Load(FILEPREFIX "gfx/streakA.png", zoom, 0);
-    sprStreakAreaHorB.Load(FILEPREFIX "gfx/streakB.png", zoom, 0);
-    sprStreakAreaVerA.Load(FILEPREFIX "gfx/streakA.png", zoom, 270);
-    sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", zoom, 270);
+    sprStreakAreaHorA.Load(FILEPREFIX "gfx/streakA.png", game->Zoom(), 0);
+    sprStreakAreaHorB.Load(FILEPREFIX "gfx/streakB.png", game->Zoom(), 0);
+    sprStreakAreaVerA.Load(FILEPREFIX "gfx/streakA.png", game->Zoom(), 270);
+    sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", game->Zoom(), 270);
 
-    sprBackground.Load(FILEPREFIX "gfx/background.jpg", zoom, 0);
+    sprBackground.Load(FILEPREFIX "gfx/background.jpg", game->Zoom(), 0);
 }
 
 void PicPainter::InitSystems() {
+    if (TTF_Init() == -1)
+        throw PicException("Could not initialize sdl_ttf");
+
     screen = SDL_SetVideoMode(
-            (boardX + game->Width() * celllength + 5) * zoom,
-            (boardY + game->Height() * celllength + 5) * zoom,
+            (game->PixOffsetX() + game->Width() * game->CellLength() + 5) * game->Zoom(),
+            (game->PixOffsetY() + game->Height() * game->CellLength() + 5) * game->Zoom(),
             24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF);
 
     if (!screen)
@@ -84,11 +89,11 @@ void PicPainter::PaintInfoArea() {
     PicPoint p;
 
     to.x = to.y = 0;
-    to.w = boardX;
-    to.h = boardY;
+    to.w = game->PixOffsetX();
+    to.h = game->PixOffsetY();
 
-    p.x = 10 * zoom;
-    p.y = 10 * zoom;
+    p.x = 10 * game->Zoom();
+    p.y = 10 * game->Zoom();
 
     color.r = color.g = color.b = 255;
 
@@ -144,17 +149,17 @@ void PicPainter::PaintStreakArea() {
     /* highlight active row/col - currently deactivated because streak gfx are not translucent*/
 
     if (!game->GameWon()) {
-        p.x = boardX*zoom +
-              game->GetLocation().x*celllength*zoom;
-        for (int i = 0; i * celllength < boardX; i++) {
-            p.y = i*celllength*zoom;
+        p.x = game->PixOffsetX()*game->Zoom() +
+              game->GetLocation().x*game->CellLength()*game->Zoom();
+        for (int i = 0; i * game->CellLength() < game->PixOffsetX(); i++) {
+            p.y = i*game->CellLength()*game->Zoom();
 
             sprActiveTile.Blit(screen, p);
         }
-        p.y = boardY*zoom +
-              game->GetLocation().y*celllength*zoom;
-        for (int j = 0; j * celllength < boardX; j++) {
-        p.x = j*celllength*zoom;
+        p.y = game->PixOffsetY()*game->Zoom() +
+              game->GetLocation().y*game->CellLength()*game->Zoom();
+        for (int j = 0; j * game->CellLength() < game->PixOffsetX(); j++) {
+        p.x = j*game->CellLength()*game->Zoom();
 
         sprActiveTile.Blit(screen, p);
     }
@@ -164,7 +169,7 @@ void PicPainter::PaintStreakArea() {
 
     p.y = 0;
     for (i = 0; i < game->Width(); i++) {
-        p.x = boardX*zoom + i*celllength*zoom;
+        p.x = game->PixOffsetX()*game->Zoom() + i*game->CellLength()*game->Zoom();
         if (i%2 == 0)
             sprStreakAreaVerA.Blit(screen, p, JUSTIFY_LB);
         else
@@ -172,7 +177,7 @@ void PicPainter::PaintStreakArea() {
     }
     p.x = 0;
     for (j = 0; j < game->Height(); j++) {
-        p.y = boardY*zoom + j*celllength*zoom;
+        p.y = game->PixOffsetY()*game->Zoom() + j*game->CellLength()*game->Zoom();
         if (j%2 == 0)
             sprStreakAreaHorA.Blit(screen, p, JUSTIFY_RT);
         else
@@ -191,8 +196,8 @@ void PicPainter::PaintStreakArea() {
             out.str("");
             out << s.GetLength() << ' ';
 
-            p.x = boardX*zoom - 2*zoom - streakLength;
-            p.y = boardY*zoom + i*zoom*celllength;
+            p.x = game->PixOffsetX()*game->Zoom() - 2*game->Zoom() - streakLength;
+            p.y = game->PixOffsetY()*game->Zoom() + i*game->Zoom()*game->CellLength();
 
             streakLength += txt.WidthOf(out.str()) + 2;
 
@@ -217,12 +222,12 @@ void PicPainter::PaintStreakArea() {
 
             streakLength += txt.HeightOf(out.str()) + 2;    /* used in next statement, don't move */
 
-            p.x = boardX*zoom     /* puzzle starting position */
-                  + i*zoom*celllength  /* plus the appropriate column position */
-                  + 10*zoom;           /* and centre within column */
-            p.y = boardY*zoom     /* puzzle starting position */
+            p.x = game->PixOffsetX()*game->Zoom()     /* puzzle starting position */
+                  + i*game->Zoom()*game->CellLength()  /* plus the appropriate column position */
+                  + 10*game->Zoom();           /* and centre within column */
+            p.y = game->PixOffsetY()*game->Zoom()     /* puzzle starting position */
                   - streakLength                      /* stack numbers above each other */
-                  - 2*zoom;            /* and adjust the whole stack upwards */
+                  - 2*game->Zoom();            /* and adjust the whole stack upwards */
 
             txt.Blit(   screen,
                         out.str(),
@@ -239,8 +244,8 @@ void PicPainter::PaintBoardArea() {
 
     for (i = 0; i < game->Width(); i++) {
         for (j = 0; j < game->Height(); j++) {
-            p.x = boardX*zoom + i*celllength*zoom;
-            p.y = boardY*zoom + j*celllength*zoom;
+            p.x = game->PixOffsetX()*game->Zoom() + i*game->CellLength()*game->Zoom();
+            p.y = game->PixOffsetY()*game->Zoom() + j*game->CellLength()*game->Zoom();
 
             q.x = i;
             q.y = j;

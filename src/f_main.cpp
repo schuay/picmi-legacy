@@ -36,12 +36,8 @@ int main(int argc, char **argv) {
 #ifdef QTENABLED
         if (disableQt) {
 #endif
-            SDLFrontend game;
-
-            game.NewPuzzle(s);
-
-            while(!game.GetQuit())
-                    game.DoMainLoop();
+            SDLFrontend game(s);
+            game.DoMainLoop();
 #ifdef QTENABLED
         }
         else {

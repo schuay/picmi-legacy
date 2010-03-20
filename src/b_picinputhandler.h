@@ -7,37 +7,43 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef B_PICINPUTHANDLER_H
+#define B_PICINPUTHANDLER_H
 
 #include <SDL/SDL.h>
-#include <sstream>
-#include <iomanip>
 
-#include "b_picinputhandler.h"
 #include "b_picross.h"
-#include "b_picpngloader.h"
-#include "b_picpainter.h"
+#include "b_inputhandler.h"
 
-#define WINDOWCAPTION "Tux Picross"
+#define DRAG_UNDEF -1           // defines for drag locking
+#define DRAG_HOR 0
+#define DRAG_VER 1
 
-class SDLFrontend {
+#define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
+
+class PicInputHandler : public InputHandler
+{
 public:
+    PicInputHandler(BoardGame* p);
 
-    SDLFrontend(PicSettings &s);
-    ~SDLFrontend();
-
-    void DoMainLoop();
+    void HandleInput();
 
 private:
 
-    void Initialize();
+    void InitSystems();
 
-    void GameWon();
+    void DebugKeyAction();
 
-    BoardGame *game;
-    Painter *painter;
-    InputHandler *inputhandler;
+    int HandleMouseEvent(int x, int y, int btn, int event);
+
+    PicPoint
+        lastClickLocation,
+        lastDragLocation;
+
+    int dragDirection,
+        dragOperation;
+
+    Picross* game;
 };
 
-#endif // GAME_H
+#endif // B_PICINPUTHANDLER_H

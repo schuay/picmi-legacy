@@ -12,6 +12,12 @@
 BoardGame::BoardGame() :
     map(NULL), boardState(NULL)
 {
+    /* initialize to default values */
+    celllength = 24;
+    puzzleLocation.x = 200;
+    puzzleLocation.y = 200;
+
+    zoom = 1;
 }
 BoardGame::~BoardGame() {
     if (map)

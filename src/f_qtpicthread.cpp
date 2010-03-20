@@ -27,11 +27,6 @@ void QTPicThread::PassSettings(PicSettings *s) {
     settings = s;
 }
 void QTPicThread::run() {
-
-    SDLFrontend game;
-
-    game.NewPuzzle(*settings);
-
-    while(!game.GetQuit())
-            game.DoMainLoop();
+    SDLFrontend game(*settings);
+    game.DoMainLoop();
 }
