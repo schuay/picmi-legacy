@@ -184,6 +184,10 @@ void SDLFrontend::NewPuzzle(PicSettings &s) {
         delete game;
         game = NULL;
     }
+    if (painter) {
+        delete painter;
+        painter = NULL;
+    }
 
     /* create puzzle */
     game = new Picross(s);
