@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-01T00:05:51
 # -------------------------------------------------
-TARGET = picross
+TARGET = tuxpicross
 TEMPLATE = app
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
