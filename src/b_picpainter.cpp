@@ -18,9 +18,7 @@ PicPainter::PicPainter(Picross *p)
     InitSystems();
     LoadSprites();
 }
-PicPainter::~PicPainter() {
-    UnloadSprites();
-}
+PicPainter::~PicPainter() {}
 
 void PicPainter::LoadCustomBackground(std::string path) {
     sprBackground.Load( path, zoom, 0);
@@ -51,13 +49,6 @@ void PicPainter::LoadSprites() {
     sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", zoom, 270);
 
     sprBackground.Load(FILEPREFIX "gfx/background.jpg", zoom, 0);
-}
-
-void PicPainter::UnloadSprites() {
-    if (screen) {
-        SDL_FreeSurface(screen);
-        screen = NULL;
-    }
 }
 
 void PicPainter::InitSystems() {

@@ -7,7 +7,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "f_sdlsprite.h"
+#include "b_sdlsprite.h"
 
 SDLSprite::SDLSprite()
 {

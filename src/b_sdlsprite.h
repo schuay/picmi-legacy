@@ -14,7 +14,6 @@
 #include <SDL/SDL_rotozoom.h>
 #include <SDL/SDL_image.h>
 
-#include "f_sdlglobals.h"
 #include "b_picpoint.h"
 #include "b_picexception.h"
 

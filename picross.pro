@@ -8,8 +8,6 @@ SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
     src/b_picexception.cpp \
     src/b_picpoint.cpp \
-    src/f_sdlsprite.cpp \
-    src/f_sdltext.cpp \
     src/b_picstreak.cpp \
     src/b_picsettings.cpp \
     src/b_picpngloader.cpp \
@@ -17,13 +15,13 @@ SOURCES += src/f_main.cpp \
     src/f_qtpicthread.cpp \
     src/b_pictimer.cpp \
     src/b_boardgame.cpp \
-    src/b_picpainter.cpp
+    src/b_picpainter.cpp \
+    src/b_sdltext.cpp \
+    src/b_sdlsprite.cpp
 HEADERS += src/f_sdlfrontend.h \
     src/b_picross.h \
     src/b_picexception.h \
     src/b_picpoint.h \
-    src/f_sdlsprite.h \
-    src/f_sdltext.h \
     src/b_picstreak.h \
     src/b_picsettings.h \
     src/b_picdefines.h \
@@ -34,7 +32,9 @@ HEADERS += src/f_sdlfrontend.h \
     src/b_pictimer.h \
     src/b_boardgame.h \
     src/b_painter.h \
-    src/b_picpainter.h
+    src/b_picpainter.h \
+    src/b_sdlsprite.h \
+    src/b_sdltext.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \

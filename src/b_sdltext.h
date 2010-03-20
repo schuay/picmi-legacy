@@ -16,7 +16,6 @@
 
 #include "b_picpoint.h"
 #include "b_picexception.h"
-#include "f_sdlglobals.h"
 
 #define JUSTIFY_C   0
 #define JUSTIFY_L   1

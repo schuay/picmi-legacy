@@ -19,9 +19,6 @@
 #include "b_picpainter.h"
 
 #include "f_sdldefines.h"
-#include "f_sdlglobals.h"
-#include "f_sdlsprite.h"
-#include "f_sdltext.h"
 
 class SDLFrontend {
 public:

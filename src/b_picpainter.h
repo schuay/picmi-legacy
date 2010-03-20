@@ -16,11 +16,10 @@
 
 #include "b_painter.h"
 #include "b_picross.h"
-#include "f_sdlsprite.h"
-#include "f_sdltext.h"
+#include "b_sdlsprite.h"
+#include "b_sdltext.h"
 
 #define FILEPREFIX ""               /* set the location of gfx and fonts */
-#define GAMETITLE  "Tux Picross"    /* window caption */
 
 class PicPainter : public Painter
 {
@@ -41,12 +40,9 @@ private:
 
     /* (de)initialize sdl systems (including global sdl + key repeat settings) */
     void InitSystems();
-    void DeinitSystems();
 
 
-    /* all sprites are (un)loaded here */
     virtual void LoadSprites();
-    void UnloadSprites();
 
 
     /* the screen surface - everything is blitted to this */

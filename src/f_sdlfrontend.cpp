@@ -9,6 +9,13 @@
 
 #include "f_sdlfrontend.h"
 
+/* temp defines until input handling is moved to own class */
+#define CELLLENGTH 24           // length of a single tile (width and height must be equal)
+#define PUZZLE_POSX 200         // position of the board's left upper corner
+#define PUZZLE_POSY 200
+#define MAGNIFICATION_LEVEL 1   // zoom level, must be a whole number (1==100%, 2==200%, ...)
+
+
 bool SDLFrontend::GetQuit() {
     return quit;
 }
@@ -199,7 +206,7 @@ void SDLFrontend::Initialize() {
         throw PicException(SDL_GetError());
     }
 
-    SDL_WM_SetCaption(GAMEBUILD, NULL);
+    SDL_WM_SetCaption(WINDOWCAPTION, NULL);
 
     SDL_EnableUNICODE(1);
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
@@ -207,7 +214,6 @@ void SDLFrontend::Initialize() {
     TTF_Init();
 }
 SDLFrontend::SDLFrontend() {
-    Screen = NULL;
     game = NULL;
     painter = NULL;
 

@@ -16,4 +16,6 @@
 
 #define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
 
+#define WINDOWCAPTION "Tux Picross"
+
 #endif // F_SDLDEFINES_H
