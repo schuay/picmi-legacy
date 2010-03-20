@@ -58,7 +58,7 @@ GameManager::GameManager(PicSettings &s) {
 
     /* create game objects */
     game = new Picross(s);
-    painter = new PicPainter(game);
+    painter = new PicPainter(game, s.BackgroundPath);
     inputhandler = new PicInputHandler(game);
 }
 GameManager::~GameManager() {

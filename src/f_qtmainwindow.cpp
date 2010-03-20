@@ -130,16 +130,13 @@ void QTMainWindow::radioButtonToggled() {
     setGuiEnabledState(true);
 }
 void QTMainWindow::setDefaultBG() {
-    ui->lblBG->setText("Selected: default");
     bgPath = "";
 }
 void QTMainWindow::setCustomBG() {
     QString path = browse(QFileDialog::ExistingFile);
 
-    if (path.length() != 0) {
+    if (path.length() != 0)
         bgPath = path;
-        ui->lblBG->setText("Selected: " + bgPath);
-    }
 }
 
 void QTMainWindow::setGuiEnabledState(bool b) {
@@ -153,7 +150,8 @@ void QTMainWindow::setGuiEnabledState(bool b) {
     ui->bQuit->setEnabled(b);
     ui->bStart->setEnabled(b);
     ui->sbDifficulty->setEnabled(b);
-
+    ui->bBGCustom->setEnabled(b);
+    ui->bBGDefault->setEnabled(b);
 
     bool randomSelected = ui->rbPuzTypeRandom->isChecked();
 

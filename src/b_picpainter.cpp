@@ -9,7 +9,8 @@
 
 #include "b_picpainter.h"
 
-PicPainter::PicPainter(BoardGame *p) : screen(NULL), game(NULL)
+PicPainter::PicPainter(BoardGame *p, std::string customBackground)
+    : screen(NULL), game(NULL)
 {
     game = dynamic_cast<Picross*>(p);
 
@@ -18,6 +19,9 @@ PicPainter::PicPainter(BoardGame *p) : screen(NULL), game(NULL)
 
     InitSystems();
     LoadSprites();
+
+    if (customBackground.length() != 0)
+        LoadCustomBackground(customBackground);
 }
 PicPainter::~PicPainter() {
     TTF_Quit();

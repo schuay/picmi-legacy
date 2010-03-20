@@ -101,13 +101,6 @@
              </item>
             </layout>
            </item>
-           <item>
-            <widget class="QLabel" name="lblBG">
-             <property name="text">
-              <string>Selected: default</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
         </layout>

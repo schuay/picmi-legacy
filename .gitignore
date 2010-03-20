@@ -1,5 +1,5 @@
 *.o
-picross
+tuxpicross
 *.pro.user
 Makefile
 moc_*.cpp
