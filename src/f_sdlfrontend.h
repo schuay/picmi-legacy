@@ -55,8 +55,8 @@ private:
     bool
         quit;
 
-    Picross *game;
-    PicPainter *painter;
+    BoardGame *game;
+    Painter *painter;
 };
 
 #endif // GAME_H

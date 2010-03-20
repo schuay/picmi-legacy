@@ -9,11 +9,12 @@
 
 #include "b_picpainter.h"
 
-PicPainter::PicPainter(Picross *p)
+PicPainter::PicPainter(BoardGame *p) : screen(NULL), game(NULL)
 {
-    screen = NULL;
+    game = dynamic_cast<Picross*>(p);
 
-    game = p;
+    if (!game)
+        throw PicException("Game object not set");
 
     InitSystems();
     LoadSprites();
@@ -62,6 +63,8 @@ void PicPainter::InitSystems() {
 }
 
 void PicPainter::Paint() {
+    game->CalculateStreakSolvedState();
+
     PaintBackground();
     PaintInfoArea();
     PaintStreakArea();

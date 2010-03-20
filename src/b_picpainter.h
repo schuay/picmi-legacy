@@ -24,7 +24,7 @@
 class PicPainter : public Painter
 {
 public:
-    PicPainter(Picross *p);
+    PicPainter(BoardGame *p);
     ~PicPainter();
 
     void LoadCustomBackground(std::string path);

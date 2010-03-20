@@ -141,8 +141,6 @@ void SDLFrontend::ProcessInput() {
         if (op != OP_NONE)
             game->DoOp(op);
     }
-
-    game->CalculateStreakSolvedState();    /* prepare streaks for drawing */
 }
 
 void SDLFrontend::GameWon() {
@@ -159,12 +157,10 @@ void SDLFrontend::GameWon() {
             quit = true;
     }
 
-    unsigned int elapsedRealTime = game->GetElapsedRealTime();
-    unsigned int elapsedPenaltyTime = game->GetElapsedPenaltyTime();
     printf("\n-----------------------------\n\n"
-           "Game solved in %u s (%u s real, %u s penalty)!\n\n"
+           "Game solved in %u s!\n\n"
            "------------------------------\n",
-           elapsedRealTime + elapsedPenaltyTime, elapsedRealTime, elapsedPenaltyTime);
+           game->GetElapsedTime());
 }
 
 void SDLFrontend::DoMainLoop() {
