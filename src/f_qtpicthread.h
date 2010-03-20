@@ -12,7 +12,7 @@
 
 #include <QThread>
 
-#include "f_sdlfrontend.h"
+#include "b_gamemanager.h"
 
 class QTPicThread : public QThread
 {

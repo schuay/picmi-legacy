@@ -11,27 +11,24 @@
 #define GAME_H
 
 #include <SDL/SDL.h>
-#include <sstream>
-#include <iomanip>
 
 #include "b_picinputhandler.h"
 #include "b_picross.h"
-#include "b_picpngloader.h"
 #include "b_picpainter.h"
 
 #define WINDOWCAPTION "Tux Picross"
 
-class SDLFrontend {
+class GameManager {
 public:
 
-    SDLFrontend(PicSettings &s);
-    ~SDLFrontend();
+    GameManager(PicSettings &s);
+    ~GameManager();
 
-    void DoMainLoop();
+    void MainLoop();
 
 private:
 
-    void Initialize();
+    void InitSystems();
 
     void GameWon();
 

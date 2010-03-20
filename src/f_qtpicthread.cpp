@@ -27,6 +27,6 @@ void QTPicThread::PassSettings(PicSettings *s) {
     settings = s;
 }
 void QTPicThread::run() {
-    SDLFrontend game(*settings);
-    game.DoMainLoop();
+    GameManager game(*settings);
+    game.MainLoop();
 }

@@ -4,7 +4,6 @@
 TARGET = picross
 TEMPLATE = app
 SOURCES += src/f_main.cpp \
-    src/f_sdlfrontend.cpp \
     src/b_picross.cpp \
     src/b_picexception.cpp \
     src/b_picpoint.cpp \
@@ -18,9 +17,9 @@ SOURCES += src/f_main.cpp \
     src/b_picpainter.cpp \
     src/b_sdltext.cpp \
     src/b_sdlsprite.cpp \
-    src/b_picinputhandler.cpp
-HEADERS += src/f_sdlfrontend.h \
-    src/b_picross.h \
+    src/b_picinputhandler.cpp \
+    src/b_gamemanager.cpp
+HEADERS += src/b_picross.h \
     src/b_picexception.h \
     src/b_picpoint.h \
     src/b_picstreak.h \
@@ -36,7 +35,8 @@ HEADERS += src/f_sdlfrontend.h \
     src/b_sdlsprite.h \
     src/b_sdltext.h \
     src/b_inputhandler.h \
-    src/b_picinputhandler.h
+    src/b_picinputhandler.h \
+    src/b_gamemanager.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \

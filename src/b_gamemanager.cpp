@@ -7,9 +7,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "f_sdlfrontend.h"
+#include "b_gamemanager.h"
 
-void SDLFrontend::GameWon() {
+void GameManager::GameWon() {
 
     SDL_Delay(1000);
 
@@ -29,7 +29,7 @@ void SDLFrontend::GameWon() {
            game->GetElapsedTime());
 }
 
-void SDLFrontend::DoMainLoop() {
+void GameManager::MainLoop() {
 
     while (!game->Quit) {
         inputhandler->HandleInput();
@@ -42,31 +42,26 @@ void SDLFrontend::DoMainLoop() {
     }
 }
 
-void SDLFrontend::Initialize() {
-
-    /* Initialize SDL systems */
-
-    if (SDL_Init(SDL_INIT_VIDEO) == -1 ) {
-        SDL_Quit();
+void GameManager::InitSystems() {
+    if (SDL_Init(SDL_INIT_VIDEO) == -1 )
         throw PicException(SDL_GetError());
-    }
 
     SDL_WM_SetCaption(WINDOWCAPTION, NULL);
 }
 
-SDLFrontend::SDLFrontend(PicSettings &s) {
+GameManager::GameManager(PicSettings &s) {
     game = NULL;
     painter = NULL;
     inputhandler = NULL;
 
-    Initialize();
+    InitSystems();
 
     /* create game objects */
     game = new Picross(s);
     painter = new PicPainter(game);
     inputhandler = new PicInputHandler(game);
 }
-SDLFrontend::~SDLFrontend() {
+GameManager::~GameManager() {
     if (game)
         delete game;
     if (painter)
