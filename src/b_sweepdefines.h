@@ -7,35 +7,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef B_SWEEPDEFINES_H
+#define B_SWEEPDEFINES_H
 
-#include <SDL/SDL.h>
+#define S_MAP_NONE        0 /* map state defines for interfacing with frontends */
+#define S_MAP_BOMB        9
 
-#include "b_sweeper.h"
-#include "b_picinputhandler.h"
-#include "b_picross.h"
-#include "b_picpainter.h"
+#define S_BOARD_CLEAN     0 /* board state defines for interfacing with frontends */
+#define S_BOARD_EXPOSED   1
+#define S_BOARD_MARKED    2
+#define S_BOARD_TENTATIVE 3
 
-#define WINDOWCAPTION "Tux Picross"
+#define S_OP_NONE         0 /* defines for game actions, NONE */
+#define S_OP_EXPOSE       1 /* uncover a tile */
+#define S_OP_MARK         2 /* mark a bomb */
+#define S_OP_TENTATIVE    3 /* tentative mark */
 
-class GameManager {
-public:
-
-    GameManager(PicSettings &s);
-    ~GameManager();
-
-    void MainLoop();
-
-private:
-
-    void InitSystems();
-
-    void GameWon();
-
-    BoardGame *game;
-    Painter *painter;
-    InputHandler *inputhandler;
-};
-
-#endif // GAME_H
+#endif // B_SWEEPDEFINES_H

@@ -9,8 +9,7 @@
 
 #include "b_boardgame.h"
 
-BoardGame::BoardGame() :
-    map(NULL), boardState(NULL)
+BoardGame::BoardGame()
 {
     /* initialize to default values */
     celllength = 24;
@@ -19,12 +18,7 @@ BoardGame::BoardGame() :
 
     zoom = 1;
 }
-BoardGame::~BoardGame() {
-    if (map)
-        delete[] map;
-    if (boardState)
-        delete[] boardState;
-}
+BoardGame::~BoardGame() {}
 
 bool BoardGame::IsInBounds(PicPoint &p) {
     return IsInBounds(p.x, p.y);

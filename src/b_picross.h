@@ -33,10 +33,6 @@ public:
 
     int GetStateAt(PicPoint &p);                    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y);
-    int GetMapAt(PicPoint &p);                      /* returns the state of map at p */
-    int GetMapAt(unsigned int x, unsigned int y);
-
-    void SetStateAt(PicPoint &p, int state); /* set state of board at p */
 
     void DoOpAt(PicPoint &p, int op);   /* perform operation (HIT/MARK) at p */
     void DoOp(int op);                  /* or at current location */
@@ -53,6 +49,12 @@ public:
             *RowStreaks;
 
 private:
+
+    void SetStateAt(PicPoint &p, int state); /* set state of board at p */
+
+    int GetMapAt(PicPoint &p);                      /* returns the state of map at p */
+    int GetMapAt(unsigned int x, unsigned int y);
+
     std::vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
     std::vector<PicStreak> CalculateStreaksFromState(              /* startFromEnd: when true, starts calculation from end of row.*/
             bool horizontal, int lineIndex, bool startFromEnd); /* this matters because streaks from state need to be contigous*/
@@ -66,9 +68,18 @@ private:
 
     unsigned int nrOfBoxes;          /* number of boxes in map - set only once in constructor */;
 
+
+    /* stores the actual solved state of the puzzle */
+    char *map;
+
+    /* stores the current state of the board visible to user */
+    char *boardState;
+
+
     static const char
             mapFalse = '.',
             mapTrue = '#',
+            boardClean = '.',
             boardMarked = 'X',
             boardHit = 'H';
 };

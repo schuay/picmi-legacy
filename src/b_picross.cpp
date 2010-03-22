@@ -10,12 +10,16 @@
 #include "b_picross.h"
 
 Picross::Picross(PicSettings &s) : BoardGame(),
-        ColStreaks(NULL), RowStreaks(NULL)
+        ColStreaks(NULL), RowStreaks(NULL), map(NULL), boardState(NULL)
 {
     Load(s);
     Initialize(s);
 }
 Picross::~Picross() {
+    if (map)
+        delete[] map;
+    if (boardState)
+        delete[] boardState;
     if (ColStreaks)
         delete[] ColStreaks;
     if (RowStreaks)
@@ -261,7 +265,7 @@ void Picross::RandomPuzzle(PicSettings &s) {
         return;
     }
 
-    std::string map(s.x*s.y, '.');
+    std::string map(s.x*s.y, mapFalse);
     int cellsToFill = s.x * s.y * (float)s.Difficulty /100,
         randX, randY;
 

@@ -18,7 +18,8 @@ SOURCES += src/f_main.cpp \
     src/b_sdltext.cpp \
     src/b_sdlsprite.cpp \
     src/b_picinputhandler.cpp \
-    src/b_gamemanager.cpp
+    src/b_gamemanager.cpp \
+    src/b_sweeper.cpp
 HEADERS += src/b_picross.h \
     src/b_picexception.h \
     src/b_picpoint.h \
@@ -36,7 +37,9 @@ HEADERS += src/b_picross.h \
     src/b_sdltext.h \
     src/b_inputhandler.h \
     src/b_picinputhandler.h \
-    src/b_gamemanager.h
+    src/b_gamemanager.h \
+    src/b_sweeper.h \
+    src/b_sweepdefines.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \

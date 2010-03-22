@@ -39,10 +39,6 @@ public:
     virtual int GetMapAt(PicPoint &p) = 0;
     virtual int GetMapAt(unsigned int x, unsigned int y) = 0;
 
-    /* set state of board at p */
-    virtual void SetStateAt(PicPoint &p, int state) = 0;
-
-
     /* get / set current location */
     PicPoint GetLocation();
 
@@ -74,6 +70,9 @@ public:
 
 protected:
 
+    /* set state of board at p */
+    virtual void SetStateAt(PicPoint &p, int state) = 0;
+
     /* stores current location on board */
     PicPoint location;
 
@@ -83,16 +82,6 @@ protected:
     unsigned int
             width,
             height;
-
-    /* stores the actual solved state of the puzzle */
-    char *map;
-
-    /* stores the current state of the board visible to user */
-    char *boardState;
-
-
-    /* representation of untouched board tile */
-    static const char boardClean = '.';
 
 
     /* puzzleLocation, celllength, zoom must be stored in game
