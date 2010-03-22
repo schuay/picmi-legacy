@@ -52,8 +52,12 @@ namespace BoardGame {
 
                 if (state == S_BOARD_MARKED)
                     sprMarkedTile.Blit(screen, p);
+                if (state == S_BOARD_CLEAN)
+                    sprClearTile.Blit(screen, p);
                 else if (state == S_BOARD_TENTATIVE)
                     sprTentativeTile.Blit(screen, p);
+                else if (state == S_BOARD_BOMB)
+                    sprBomb.Blit(screen, p);
                 else if (state >= S_BOARD_EXPOSED_1 && state <= S_BOARD_EXPOSED_8)
                     sprNumbers[state-1].Blit(screen, p);
             }
@@ -80,8 +84,10 @@ namespace BoardGame {
         sprIcon.SetAsIcon();
 
         sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", game->Zoom(), 0);
-        sprMarkedTile.Load(FILEPREFIX "gfx/box.png", game->Zoom(), 0);
-        sprTentativeTile.Load(FILEPREFIX "gfx/mark.png", game->Zoom(), 0);
+        sprClearTile.Load(FILEPREFIX "gfx/box.png", game->Zoom(), 0);
+        sprMarkedTile.Load(FILEPREFIX "gfx/sweepermarked.png", game->Zoom(), 0);
+        sprTentativeTile.Load(FILEPREFIX "gfx/tentative.png", game->Zoom(), 0);
+        sprBomb.Load(FILEPREFIX "gfx/bomb.png", game->Zoom(), 0);
 
         sprNumbers[0].Load(FILEPREFIX "gfx/1.png", game->Zoom(), 0);
         sprNumbers[1].Load(FILEPREFIX "gfx/2.png", game->Zoom(), 0);

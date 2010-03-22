@@ -25,6 +25,7 @@
 #define S_BOARD_CLEAN     9
 #define S_BOARD_MARKED    10
 #define S_BOARD_TENTATIVE 11
+#define S_BOARD_BOMB      12
 
 #define S_OP_NONE         0 /* defines for game actions, NONE */
 #define S_OP_EXPOSE       1 /* uncover a tile */
