@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_picstreak.h"
-
+namespace BoardGame {
 PicStreak::PicStreak(unsigned int l)
 {
     length = l;
@@ -17,4 +17,5 @@ PicStreak::PicStreak(unsigned int l)
 
 unsigned int PicStreak::GetLength() {
     return length;
+}
 }

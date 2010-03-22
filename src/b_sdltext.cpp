@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_sdltext.h"
-
+namespace BoardGame {
 SDLText::SDLText()
 {
     fontNormal = NULL;
@@ -33,14 +33,14 @@ SDLText::~SDLText() {
 
 void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic) {
     if (fontNormal)
-        throw PicException("Font already loaded, Text::Load cannot be called twice.");
+        throw Exception("Font already loaded, Text::Load cannot be called twice.");
 
     fontNormal = TTF_OpenFont(fnNormal.c_str(), Size);
     fontBold = TTF_OpenFont(fnBold.c_str(), Size);
     fontItalic = TTF_OpenFont(fnItalic.c_str(), Size);
 
     if (!fontNormal || !fontBold || !fontItalic)
-        throw PicException(TTF_GetError());
+        throw Exception(TTF_GetError());
 }
 
 int SDLText::WidthOf(std::string txt, unsigned int fontType) {
@@ -58,15 +58,15 @@ int SDLText::HeightOf(std::string txt, unsigned int fontType) {
     return h;
 }
 
-void SDLText::Blit(SDL_Surface *target, std::string txt, PicPoint p, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(SDL_Surface *target, std::string txt, Point p, unsigned int fontType, unsigned int justify) {
     SDL_Color c;
 
     c.r = c.g = c.b = 0;
     Blit(target, txt, p, c, fontType, justify);
 }
-void SDLText::Blit(SDL_Surface *target, std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(SDL_Surface *target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
     if (!fontNormal || !fontBold || !fontItalic)
-        throw PicException("Text::Blit failed, no font loaded.");
+        throw Exception("Text::Blit failed, no font loaded.");
 
     SDL_Rect to;
     SDL_Surface *s = NULL;
@@ -86,7 +86,7 @@ void SDLText::Blit(SDL_Surface *target, std::string txt, PicPoint p, SDL_Color c
         to.x = p.x;
 
     if (!s)
-        throw PicException("Text::Blit failed, TTF_RenderText failed");
+        throw Exception("Text::Blit failed, TTF_RenderText failed");
 
     SDL_BlitSurface(s, NULL, target, &to);
     SDL_FreeSurface(s);
@@ -94,7 +94,7 @@ void SDLText::Blit(SDL_Surface *target, std::string txt, PicPoint p, SDL_Color c
 
 TTF_Font *SDLText::GetFontForType(unsigned int fontType) {
     if (fontType != FONT_NORMAL && fontType != FONT_BOLD && fontType != FONT_ITALIC)
-        throw PicException("Invalid font type passed.");
+        throw Exception("Invalid font type passed.");
 
     switch (fontType) {
     case FONT_NORMAL:
@@ -105,4 +105,5 @@ TTF_Font *SDLText::GetFontForType(unsigned int fontType) {
     default:
         return fontItalic;
     }
+}
 }

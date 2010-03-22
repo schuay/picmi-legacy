@@ -18,7 +18,7 @@
 #include "b_picpainter.h"
 
 #define WINDOWCAPTION "Tux Picross"
-
+namespace BoardGame {
 class GameManager {
 public:
 
@@ -37,5 +37,5 @@ private:
     Painter *painter;
     InputHandler *inputhandler;
 };
-
+}
 #endif // GAME_H

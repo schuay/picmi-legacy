@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "f_qtpicthread.h"
-
+namespace BoardGame {
 QTPicThread::QTPicThread()
 {
     settings = NULL;
@@ -29,4 +29,5 @@ void QTPicThread::PassSettings(BoardSettings *s) {
 void QTPicThread::run() {
     GameManager game(*settings);
     game.MainLoop();
+}
 }

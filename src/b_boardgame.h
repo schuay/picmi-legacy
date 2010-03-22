@@ -16,6 +16,7 @@
 #include "b_pictimer.h"
 #include "b_picpoint.h"
 
+namespace BoardGame {
 class BoardGame
 {
 public:
@@ -28,28 +29,28 @@ public:
 
     /* returns true if coordinate is in puzzle limits */
     bool IsInBounds(unsigned int x, unsigned int y);
-    bool IsInBounds(PicPoint &p);
+    bool IsInBounds(Point &p);
 
 
     /* returns the state of game board at p */
-    virtual int GetStateAt(PicPoint &p) = 0;
+    virtual int GetStateAt(Point &p) = 0;
     virtual int GetStateAt(unsigned int x, unsigned int y) = 0;
 
     /* returns the state of map at p */
-    virtual int GetMapAt(PicPoint &p) = 0;
+    virtual int GetMapAt(Point &p) = 0;
     virtual int GetMapAt(unsigned int x, unsigned int y) = 0;
 
     /* get / set current location */
-    PicPoint GetLocation();
+    Point GetLocation();
 
     /* try setting absolute / relative current location;
        returns true on success, false on failure */
-    bool TrySetLocation(PicPoint &p);
+    bool TrySetLocation(Point &p);
     bool TrySetLocationRel(int dx, int dy);
 
 
     /* perform operation (HIT/MARK) at p */
-    virtual void DoOpAt(PicPoint &p, int op) = 0;
+    virtual void DoOpAt(Point &p, int op) = 0;
 
     /* or at current location */
     virtual void DoOp(int op) = 0;
@@ -71,17 +72,17 @@ public:
 protected:
 
     /* convert coordinate to index */
-    int CToI(PicPoint &p) { return CToI(p.x, p.y); }
+    int CToI(Point &p) { return CToI(p.x, p.y); }
     int CToI(unsigned int x, unsigned int y) { return y*width + x; }
 
     /* set state of board at p */
-    virtual void SetStateAt(PicPoint &p, int state) = 0;
+    virtual void SetStateAt(Point &p, int state) = 0;
 
     /* stores current location on board */
-    PicPoint location;
+    Point location;
 
     /* game timer */
-    PicTimer timer;
+    Timer timer;
 
     unsigned int
             width,
@@ -92,7 +93,7 @@ protected:
        painter + inputhandler need access to them */
 
     /* left upper corner of puzzle (in pixels) */
-    PicPoint puzzleLocation;
+    Point puzzleLocation;
 
     /* size of tiles in pixels */
     unsigned int celllength;
@@ -100,5 +101,5 @@ protected:
     /* zoom */
     unsigned int zoom;
 };
-
+}
 #endif // B_BOARDGAME_H

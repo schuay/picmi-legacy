@@ -8,13 +8,13 @@
  ***************************************************************************/
 
 #include "b_picinputhandler.h"
-
+namespace BoardGame {
 PicInputHandler::PicInputHandler(BoardGame* p)
 {
     game = dynamic_cast<Picross*>(p);
 
     if (!game)
-        throw PicException("Game object not set");
+        throw Exception("Game object not set");
 
     dragDirection = DRAG_UNDEF;
     dragOperation = DRAG_UNDEF;
@@ -29,7 +29,7 @@ void PicInputHandler::InitSystems() {
 void PicInputHandler::DebugKeyAction() {}
 
 int PicInputHandler::HandleMouseEvent(int x, int y, int btn, int event) {
-    PicPoint newLocation(
+    Point newLocation(
             (x - game->PixOffsetX() * game->Zoom()) / (game->CellLength() * game->Zoom()),
             (y - game->PixOffsetY() * game->Zoom()) / (game->CellLength() * game->Zoom()));
 
@@ -149,4 +149,5 @@ void PicInputHandler::HandleInput() {
         if (op != OP_NONE)
             game->DoOp(op);
     }
+}
 }

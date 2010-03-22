@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_sdlsprite.h"
-
+namespace BoardGame {
 SDLSprite::SDLSprite()
 {
     Surface = NULL;
@@ -32,7 +32,7 @@ void SDLSprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int
     Surface = IMG_Load(Filename.c_str());
 
     if (!Surface) {
-        throw PicException("Loading sprite failed.");
+        throw Exception("Loading sprite failed.");
     }
 
     if (ZoomFactor != 1)
@@ -51,7 +51,7 @@ void SDLSprite::Zoom(unsigned int ZoomFactor) {
     tmpSurface = rotozoomSurface(Surface, 0, ZoomFactor, 0);
 
     if (!tmpSurface) {
-        throw PicException("Zooming sprite %s failed.");
+        throw Exception("Zooming sprite %s failed.");
     }
     else {
         if (Surface)
@@ -62,9 +62,9 @@ void SDLSprite::Zoom(unsigned int ZoomFactor) {
 void SDLSprite::Rotate(unsigned int Rotation) {
 
     if (!Surface)
-        throw PicException("Rotating sprite failed: No sprite to rotate.");
+        throw Exception("Rotating sprite failed: No sprite to rotate.");
     if (!(Rotation < 360 && Rotation%90 == 0))
-        throw PicException("Rotating sprite failed: Invalid angle.");
+        throw Exception("Rotating sprite failed: Invalid angle.");
 
     SDL_Rect from, to;
     SDL_Surface *tmpSurface =
@@ -81,7 +81,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     to.y = 0;
 
     if (!tmpSurface)
-        throw PicException("Rotating sprite failed.");
+        throw Exception("Rotating sprite failed.");
     else {
         SDL_Surface *oldSurface = Surface;
         Surface = SDL_CreateRGBSurface(
@@ -122,7 +122,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     SDL_FreeSurface(tmpSurface);
 }
 
-void SDLSprite::Blit(SDL_Surface *target, PicPoint p, int justify) {
+void SDLSprite::Blit(SDL_Surface *target, Point p, int justify) {
     SDL_Rect to, from;
 
     to.x = p.x;
@@ -156,5 +156,6 @@ void SDLSprite::Blit(SDL_Surface *target, PicPoint p, int justify) {
     from.h = Surface->h;
 
     if ( SDL_BlitSurface( Surface, &from, target, &to) < 0 )
-        throw PicException(SDL_GetError());
+        throw Exception(SDL_GetError());
+}
 }

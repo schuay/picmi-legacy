@@ -8,14 +8,14 @@
  ***************************************************************************/
 
 #include "b_picpainter.h"
-
+namespace BoardGame {
 PicPainter::PicPainter(BoardGame *p, std::string customBackground)
     : screen(NULL), game(NULL)
 {
     game = dynamic_cast<Picross*>(p);
 
     if (!game)
-        throw PicException("Game object not set");
+        throw Exception("Game object not set");
 
     InitSystems();
     LoadSprites();
@@ -60,7 +60,7 @@ void PicPainter::LoadSprites() {
 
 void PicPainter::InitSystems() {
     if (TTF_Init() == -1)
-        throw PicException("Could not initialize sdl_ttf");
+        throw Exception("Could not initialize sdl_ttf");
 
     screen = SDL_SetVideoMode(
             (game->PixOffsetX() + game->Width() * game->CellLength() + 5) * game->Zoom(),
@@ -68,7 +68,7 @@ void PicPainter::InitSystems() {
             24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF);
 
     if (!screen)
-        throw PicException(SDL_GetError());
+        throw Exception(SDL_GetError());
 }
 
 void PicPainter::Paint() {
@@ -84,13 +84,13 @@ void PicPainter::Paint() {
 
 void PicPainter::PaintBackground() {
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));  /* paint bg white */
-    sprBackground.Blit(screen, PicPoint(0,0));
+    sprBackground.Blit(screen, Point(0,0));
 }
 void PicPainter::PaintInfoArea() {
     SDL_Rect to;
     SDL_Color color;
     std::stringstream out;
-    PicPoint p;
+    Point p;
 
     to.x = to.y = 0;
     to.w = game->PixOffsetX();
@@ -141,7 +141,7 @@ void PicPainter::PaintInfoArea() {
 }
 void PicPainter::PaintStreakArea() {
     unsigned int i, j;
-    PicPoint p;
+    Point p;
     SDL_Color colorSolved,
               colorUnsolved;
 
@@ -244,7 +244,7 @@ void PicPainter::PaintStreakArea() {
 }
 void PicPainter::PaintBoardArea() {
     unsigned int i, j;
-    PicPoint p, q;
+    Point p, q;
 
     for (i = 0; i < game->Width(); i++) {
         for (j = 0; j < game->Height(); j++) {
@@ -285,4 +285,5 @@ void PicPainter::PaintBoardArea() {
             }
         }
     }
+}
 }

@@ -9,7 +9,7 @@
 
 #ifndef STREAK_H
 #define STREAK_H
-
+namespace BoardGame {
 class PicStreak
 {
 public:
@@ -21,5 +21,5 @@ public:
 private:
     unsigned int length;
 };
-
+}
 #endif // STREAK_H

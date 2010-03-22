@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_picpngloader.h"
-
+namespace BoardGame {
 PicPngLoader::PicPngLoader() { 
     std::string path = getenv("HOME");
 
@@ -19,7 +19,7 @@ PicPngLoader::PicPngLoader() {
     if (!d) {
         int success = mkdir(defaultPath.c_str(), S_IRWXU);
         if (success != 0)
-            throw PicException("Could not create directory " + defaultPath);
+            throw Exception("Could not create directory " + defaultPath);
     }
     else
         closedir(d);
@@ -33,7 +33,7 @@ PicPngLoader::PicPngLoader(std::string defpath) {
     if (!d) {
         int success = mkdir(defpath.c_str(), S_IRWXU);
         if (success != 0)
-            throw PicException("Could not create directory " + defpath);
+            throw Exception("Could not create directory " + defpath);
     }
     else
         closedir(d);
@@ -62,7 +62,7 @@ void PicPngLoader::ConvertPath(std::string path, int threshold) {
     struct dirent *ep;
 
     if (!d)
-        throw PicException("Dir could not be opened");
+        throw Exception("Dir could not be opened");
 
     while ( (ep = readdir(d)) ) {
         if (ep->d_type != DT_REG)
@@ -118,7 +118,7 @@ void PicPngLoader::LoadRandom(BoardSettings &settings) {
     struct dirent *ep;
 
     if (!d)
-        throw PicException("Dir could not be opened");
+        throw Exception("Dir could not be opened");
 
     std::vector<std::string> v;
 
@@ -143,7 +143,7 @@ void PicPngLoader::LoadRandom(BoardSettings &settings) {
     closedir(d);
 
     if (v.size() == 0)
-        throw PicException("No files found in directory");
+        throw Exception("No files found in directory");
 
     srand(time(NULL));
 
@@ -151,4 +151,5 @@ void PicPngLoader::LoadRandom(BoardSettings &settings) {
     settings.LoadRandomFromPath = false;
 
     Load(settings);
+}
 }

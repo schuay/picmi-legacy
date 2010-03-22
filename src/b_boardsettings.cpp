@@ -1,5 +1,5 @@
 #include "b_boardsettings.h"
-
+namespace BoardGame {
 BoardSettings::BoardSettings()
 {
     /* set default values */
@@ -102,7 +102,7 @@ void BoardSettings::Save() {
 
     std::ofstream write(confFilePath.c_str());
     if (!write.is_open())
-        throw PicException("Could not open conf file.");
+        throw Exception("Could not open conf file.");
 
     write << "# TUX PICROSS CONFIG FILE" << std::endl;
     write << "PUZZLEPATH=" << PuzzlePath << std::endl;
@@ -122,8 +122,9 @@ void BoardSettings::CheckForConfDir() {
     if (!d) {
         int success = mkdir(basePath.c_str(), S_IRWXU);
         if (success != 0)
-            throw PicException("Could not find or create default conf dir.");
+            throw Exception("Could not find or create default conf dir.");
     }
     else
         closedir(d);
+}
 }

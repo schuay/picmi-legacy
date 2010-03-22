@@ -12,17 +12,17 @@
 
 #include <exception>
 #include <string>
-
-class PicException : public std::exception
+namespace BoardGame {
+class Exception : public std::exception
 {
 public:
-    PicException();
-    PicException(std::string message);
-    ~PicException() throw();
+    Exception();
+    Exception(std::string message);
+    ~Exception() throw();
 
     const char* what() const throw();
 private:
     std::string Message;
 };
-
+}
 #endif // PICROSSEXCEPTION_H

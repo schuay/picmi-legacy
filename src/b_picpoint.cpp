@@ -8,30 +8,31 @@
  ***************************************************************************/
 
 #include "b_picpoint.h"
-
-PicPoint::PicPoint() {
+namespace BoardGame {
+Point::Point() {
     x = 0;
     y = 0;
 }
-PicPoint::PicPoint(PicPoint *p) {
+Point::Point(Point *p) {
     x = p->x;
     y = p->y;
 }
-PicPoint::PicPoint(unsigned int _x, unsigned int _y)
+Point::Point(unsigned int _x, unsigned int _y)
 {
     x = _x;
     y = _y;
 }
 
-bool PicPoint::operator==(PicPoint const &p) {
+bool Point::operator==(Point const &p) {
     return ((this->x == p.x) && (this->y == p.y));
 }
-bool PicPoint::operator!=(PicPoint const &p) {
+bool Point::operator!=(Point const &p) {
     return ((this->x != p.x) || (this->y != p.y));
 }
-PicPoint& PicPoint::operator=(PicPoint const &rhs) {
+Point& Point::operator=(Point const &rhs) {
     this->x = rhs.x;
     this->y = rhs.y;
 
     return *this;
+}
 }

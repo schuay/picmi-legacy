@@ -13,7 +13,7 @@
 #include <QThread>
 
 #include "b_gamemanager.h"
-
+namespace BoardGame {
 class QTPicThread : public QThread
 {
 public:
@@ -27,5 +27,5 @@ public:
 private:
     BoardSettings *settings;
 };
-
+}
 #endif // F_QTPICTHREAD_H

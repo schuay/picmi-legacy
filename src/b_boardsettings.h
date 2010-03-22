@@ -20,6 +20,7 @@
 #include "b_picdefines.h"
 #include "b_picexception.h"
 
+namespace BoardGame {
 class BoardSettings
 {
 public:
@@ -54,5 +55,5 @@ private:
             defaultPuzzlePath,
             confFilePath;
 };
-
+}
 #endif // PICSETTINGS_H

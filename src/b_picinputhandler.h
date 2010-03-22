@@ -20,7 +20,7 @@
 #define DRAG_VER 1
 
 #define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
-
+namespace BoardGame {
 class PicInputHandler : public InputHandler
 {
 public:
@@ -36,7 +36,7 @@ private:
 
     int HandleMouseEvent(int x, int y, int btn, int event);
 
-    PicPoint
+    Point
         lastClickLocation,
         lastDragLocation;
 
@@ -45,5 +45,5 @@ private:
 
     Picross* game;
 };
-
+}
 #endif // B_PICINPUTHANDLER_H

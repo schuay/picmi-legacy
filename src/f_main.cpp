@@ -20,7 +20,7 @@
 #include "f_sdlfrontend.h"
 #endif
 
-SDL_Surface *Screen;
+using namespace BoardGame;
 
 bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv);
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
         }
 #endif
     }
-    catch (PicException e) {
+    catch (Exception e) {
         printf("Error: %s\n\n", e.what());
         return 1;
     }
@@ -153,3 +153,4 @@ bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
 
     return true;
 }
+

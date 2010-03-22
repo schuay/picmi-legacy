@@ -16,7 +16,7 @@
 #include "b_sweepdefines.h"
 #include "b_boardsettings.h"
 #include "b_boardgame.h"
-
+namespace BoardGame {
 class Sweeper : public BoardGame
 {
 public:
@@ -25,29 +25,29 @@ public:
 
     bool GameWon();
 
-    int GetStateAt(PicPoint &p);
+    int GetStateAt(Point &p);
     int GetStateAt(unsigned int x, unsigned int y);
 
-    int GetMapAt(PicPoint &p);
+    int GetMapAt(Point &p);
     int GetMapAt(unsigned int x, unsigned int y);
 
-    void SetStateAt(PicPoint &p, int state);
+    void SetStateAt(Point &p, int state);
 
-    void DoOpAt(PicPoint &p, int op);
+    void DoOpAt(Point &p, int op);
     void DoOp(int op);
 
 private:
 
     void RandomPuzzle(BoardSettings &s);
-    int CalcBombCount(PicPoint &p);
+    int CalcBombCount(Point &p);
 
     /* creates an array of all target points in targetArray and returns nr of neighbors */
     /* the caller is responsible for freeing the array */
     /* if noDiagonals is true, diagonal neighbors are not returned */
-    int GetNeighborCoords(PicPoint &p, PicPoint *targetArray, bool noDiagonals);
+    int GetNeighborCoords(Point &p, Point *targetArray, bool noDiagonals);
 
     /* exposing tiles is a recursive operation. expose all clear tiles connected to original tile. diagonal connections are not allowed */
-    void ExposeTile(PicPoint &p);
+    void ExposeTile(Point &p);
 
     static const int
             mapNone = 0,
@@ -60,5 +60,5 @@ private:
     int *map,
         *boardState;
 };
-
+}
 #endif // B_SWEEPER_H

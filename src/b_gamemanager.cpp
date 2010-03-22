@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_gamemanager.h"
-
+namespace BoardGame {
 void GameManager::GameWon() {
 
     SDL_Delay(1000);
@@ -44,7 +44,7 @@ void GameManager::MainLoop() {
 
 void GameManager::InitSystems() {
     if (SDL_Init(SDL_INIT_VIDEO) == -1 )
-        throw PicException(SDL_GetError());
+        throw Exception(SDL_GetError());
 
     SDL_WM_SetCaption(WINDOWCAPTION, NULL);
 }
@@ -70,4 +70,5 @@ GameManager::~GameManager() {
         delete inputhandler;
 
     SDL_Quit();
+}
 }

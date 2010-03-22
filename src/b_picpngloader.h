@@ -23,7 +23,7 @@
 
 #define PIC_MAP_FALSE '.'   //these defines exist because i haven't figured out how
 #define PIC_MAP_TRUE '#'    //picpngloader and picross should relate
-
+namespace BoardGame {
 class PicPngLoader
 {
 public:
@@ -41,5 +41,5 @@ private:
 
     std::string defaultPath;
 };
-
+}
 #endif // B_PICPNGLOADER_H

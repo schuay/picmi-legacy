@@ -11,11 +11,11 @@
 #define B_PICTIMER_H
 
 #include <time.h>
-
-class PicTimer
+namespace BoardGame {
+class Timer
 {
 public:
-    PicTimer();
+    Timer();
 
     void Start();
     void Stop();
@@ -40,5 +40,5 @@ private:
     static const unsigned int
             basePenaltyTime = 120;
 };
-
+}
 #endif // B_PICTIMER_H

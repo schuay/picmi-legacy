@@ -8,8 +8,8 @@
  ***************************************************************************/
 
 #include "b_pictimer.h"
-
-PicTimer::PicTimer()
+namespace BoardGame {
+Timer::Timer()
 {
     started = false;
     stopped = false;
@@ -20,27 +20,27 @@ PicTimer::PicTimer()
     penaltyMultiplier = 1;
 }
 
-void PicTimer::Start() {
+void Timer::Start() {
     startTime = time(NULL);
     started = true;
 }
-void PicTimer::Stop() {
+void Timer::Stop() {
     finishTime = time(NULL);
     stopped = true;
 }
 
-void PicTimer::AddPenalty() {
+void Timer::AddPenalty() {
     if (!stopped)
         penaltyTime += basePenaltyTime * penaltyMultiplier++;
 }
 
-unsigned int PicTimer::GetTime() {
+unsigned int Timer::GetTime() {
     if (!started)
         return 0;
 
     return GetRealTime() + penaltyTime;
 }
-unsigned int PicTimer::GetRealTime() {
+unsigned int Timer::GetRealTime() {
 
     if (!started)
         return 0;
@@ -51,6 +51,7 @@ unsigned int PicTimer::GetRealTime() {
     return time(NULL) - startTime;
 }
 
-unsigned int PicTimer::GetPenaltyTime() {
+unsigned int Timer::GetPenaltyTime() {
     return penaltyTime;
+}
 }

@@ -8,14 +8,16 @@
  ***************************************************************************/
 
 #include "b_picexception.h"
+namespace BoardGame {
 
-PicException::PicException() { }
-PicException::PicException(std::string message) {
+Exception::Exception() { }
+Exception::Exception(std::string message) {
     Message = message;
 }
 
-PicException::~PicException() throw() { }
+Exception::~Exception() throw() { }
 
-const char* PicException::what() const throw() {
+const char* Exception::what() const throw() {
     return Message.c_str();
+}
 }

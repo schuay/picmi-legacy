@@ -9,7 +9,7 @@
 
 #include "f_qtmainwindow.h"
 #include "ui_f_qtmainwindow.h"
-
+namespace BoardGame {
 QTMainWindow::QTMainWindow(BoardSettings &settings, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::QTMainWindow)
@@ -173,4 +173,5 @@ QString QTMainWindow::browse(QFileDialog::FileMode mode) {
         return fd.selectedFiles().at(0);
     else
         return "";
+}
 }

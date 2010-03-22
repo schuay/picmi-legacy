@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_picross.h"
-
+namespace BoardGame {
 Picross::Picross(BoardSettings &s) : BoardGame(),
         ColStreaks(NULL), RowStreaks(NULL), map(NULL), boardState(NULL)
 {
@@ -219,11 +219,11 @@ void Picross::Load(BoardSettings &s) {
             loader.Load(s);
     }
     else
-        throw PicException("Invalid puzzle type passed");
+        throw Exception("Invalid puzzle type passed");
 }
 void Picross::Initialize(BoardSettings &s) {
     if (!s.Validate())
-        throw PicException("Settings validation failed");
+        throw Exception("Settings validation failed");
 
     width = s.x;
     height = s.y;
@@ -238,7 +238,7 @@ void Picross::Initialize(BoardSettings &s) {
             nrOfBoxes++;
         if (s.Map[i] == mapTrue || s.Map[i] == mapFalse)
             map[i] = s.Map[i];
-        else throw PicException("Illegal character in input map");
+        else throw Exception("Illegal character in input map");
     }
 
     ColStreaks = CalculateStreaksFromMap(false);
@@ -285,24 +285,24 @@ void Picross::RandomPuzzle(BoardSettings &s) {
     s.Map = map;
 }
 
-int Picross::GetMapAt(PicPoint &p) {
+int Picross::GetMapAt(Point &p) {
     return GetMapAt(p.x, p.y);
 }
 int Picross::GetMapAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
-        throw PicException("GetMapAt failed: Point not within puzzle dimensions.");
+        throw Exception("GetMapAt failed: Point not within puzzle dimensions.");
 
     if (map[y*width + x] == mapTrue)
         return MAP_TRUE;
     else
         return MAP_FALSE;
 }
-int Picross::GetStateAt(PicPoint &p) {
+int Picross::GetStateAt(Point &p) {
     return GetStateAt(p.x, p.y);
 }
 int Picross::GetStateAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
-        throw PicException("GetStateAt failed: Point not within puzzle dimensions.");
+        throw Exception("GetStateAt failed: Point not within puzzle dimensions.");
 
     if (boardState[y*width + x] == boardClean)
         return BOARD_CLEAN;
@@ -312,11 +312,11 @@ int Picross::GetStateAt(unsigned int x, unsigned int y) {
         return BOARD_MARKED;
 }
 
-void Picross::SetStateAt(PicPoint &p, int state) {
+void Picross::SetStateAt(Point &p, int state) {
     if (state != BOARD_CLEAN && state != BOARD_HIT && state != BOARD_MARKED)
-        throw PicException("SetStateAt failed: invalid state passed");
+        throw Exception("SetStateAt failed: invalid state passed");
     if (!IsInBounds(p))
-        throw PicException("SetStateAt failed: Point not within puzzle dimensions.");
+        throw Exception("SetStateAt failed: Point not within puzzle dimensions.");
 
     char c;
 
@@ -336,12 +336,12 @@ void Picross::SetStateAt(PicPoint &p, int state) {
     boardState[p.y*width + p.x] = c;
 }
 
-void Picross::DoOpAt(PicPoint &p, int op) {    
+void Picross::DoOpAt(Point &p, int op) {    
     if (op == OP_NONE)
         return;
 
     if (op != OP_MARK && op != OP_HIT && op != OP_FORCE_CLEAR && op != OP_FORCE_MARK)
-        throw PicException("DoOpAt failed: Incorrect operation passed.");
+        throw Exception("DoOpAt failed: Incorrect operation passed.");
 
     int
             state = GetStateAt(p),
@@ -474,4 +474,5 @@ float Picross::GetCompletedPercentageBoxes() {
             NrOfHitTiles++;
 
     return ((float)NrOfHitTiles * 100.0f) / (float)nrOfBoxes;
+}
 }

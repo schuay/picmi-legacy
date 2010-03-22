@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_sweeper.h"
-
+namespace BoardGame {
 Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
 {
     width = s.x;
@@ -49,15 +49,15 @@ void Sweeper::RandomPuzzle(BoardSettings &s) {
         map[randY*width + randX] = mapBomb;
     }
 
-    PicPoint p;
+    Point p;
     for (p.x=0; p.x<width; p.x++)
         for (p.y=0; p.y<height; p.y++)
             if (map[CToI(p)] != mapBomb)
                 map[p.y*width + p.x] = CalcBombCount(p);
 }
-int Sweeper::CalcBombCount(PicPoint &p) {
+int Sweeper::CalcBombCount(Point &p) {
     unsigned int bombCount = 0;
-    PicPoint *neighbors = NULL;
+    Point *neighbors = NULL;
     int neighborCount;
 
     neighborCount = GetNeighborCoords(p, neighbors, false);
@@ -80,12 +80,12 @@ bool Sweeper::GameWon() {
     return true;
 }
 
-int Sweeper::GetStateAt(PicPoint &p) {
+int Sweeper::GetStateAt(Point &p) {
     return GetStateAt(p.x, p.y);
 }
 int Sweeper::GetStateAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
-        throw PicException("GetStateAt failed: Point not within puzzle dimensions.");
+        throw Exception("GetStateAt failed: Point not within puzzle dimensions.");
 
     switch (boardState[y*width + x]) {
     case boardClean:
@@ -101,21 +101,21 @@ int Sweeper::GetStateAt(unsigned int x, unsigned int y) {
         return S_BOARD_TENTATIVE;
         break;
     default:
-        throw PicException("Boardstate in invalid state");
+        throw Exception("Boardstate in invalid state");
     }
 }
 
-int Sweeper::GetMapAt(PicPoint &p) {
+int Sweeper::GetMapAt(Point &p) {
     return GetMapAt(p.x, p.y);
 }
 int Sweeper::GetMapAt(unsigned int x, unsigned int y) {
     if (!IsInBounds(x, y))
-        throw PicException("GetMapAt failed: Point not within puzzle dimensions.");
+        throw Exception("GetMapAt failed: Point not within puzzle dimensions.");
 
     int i = map[y*width + x];
     if (i != mapNone && i != mapBomb &&
         !(i>=1 && i <= 8))
-        throw PicException("Map in invalid state");
+        throw Exception("Map in invalid state");
 
     switch (i) {
     case mapNone:
@@ -129,23 +129,23 @@ int Sweeper::GetMapAt(unsigned int x, unsigned int y) {
     }
 }
 
-void Sweeper::SetStateAt(PicPoint &p, int state) {
+void Sweeper::SetStateAt(Point &p, int state) {
     if (!IsInBounds(p.x, p.y))
-        throw PicException("SetStateAt failed: Point not within puzzle dimensions.");
+        throw Exception("SetStateAt failed: Point not within puzzle dimensions.");
 
     if (state != boardClean && state != boardExposed &&
         state != boardMarked && state != boardTentative)
-        throw PicException("Invalid state passed");
+        throw Exception("Invalid state passed");
 
     boardState[p.y*width + p.x] = state;
 }
 
-void Sweeper::DoOpAt(PicPoint &p, int op) {
+void Sweeper::DoOpAt(Point &p, int op) {
     if (op == S_OP_NONE)
         return;
 
     if (op != S_OP_EXPOSE && op != S_OP_MARK && op != S_OP_TENTATIVE)
-        throw PicException("DoOpAt failed: Incorrect operation passed.");
+        throw Exception("DoOpAt failed: Incorrect operation passed.");
 
     int
             state = boardState[CToI(p)];
@@ -175,7 +175,7 @@ void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-int Sweeper::GetNeighborCoords(PicPoint &p, PicPoint *targetArray, bool noDiagonals) {
+int Sweeper::GetNeighborCoords(Point &p, Point *targetArray, bool noDiagonals) {
     bool pos[3][3];
     int nrOfNeighborTiles = 0,
         pointerPos = 0,
@@ -202,18 +202,18 @@ int Sweeper::GetNeighborCoords(PicPoint &p, PicPoint *targetArray, bool noDiagon
             if (pos[i][j])
                 nrOfNeighborTiles++;
 
-    targetArray = new PicPoint[nrOfNeighborTiles];
+    targetArray = new Point[nrOfNeighborTiles];
 
     for (i=0; i<3; i++)
         for (j=0; j<3; j++)
             if (pos[i][j]) {
-                targetArray[pointerPos++] = PicPoint(p.x + i - 1, p.y + j - 1);
+                targetArray[pointerPos++] = Point(p.x + i - 1, p.y + j - 1);
             }
 
     return pointerPos;
 }
 
-void Sweeper::ExposeTile(PicPoint &p) {
+void Sweeper::ExposeTile(Point &p) {
 
     boardState[CToI(p)] = boardExposed;
 
@@ -224,7 +224,7 @@ void Sweeper::ExposeTile(PicPoint &p) {
 
     /* recurse over all nondiagonal neighbor tiles */
 
-    PicPoint *neighbors = NULL;
+    Point *neighbors = NULL;
     int neighborCount;
 
     neighborCount = GetNeighborCoords(p, neighbors, true);
@@ -234,4 +234,5 @@ void Sweeper::ExposeTile(PicPoint &p) {
 
     if (neighbors)
         delete[] neighbors;
+}
 }

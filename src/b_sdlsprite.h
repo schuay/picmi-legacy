@@ -21,7 +21,7 @@
 #define JUSTIFY_LB   1
 #define JUSTIFY_RT   2
 #define JUSTIFY_RB   3
-
+namespace BoardGame {
 class SDLSprite
 {
 public:
@@ -30,7 +30,7 @@ public:
 
     void SetAsIcon();
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(SDL_Surface *target, PicPoint p, int justify = JUSTIFY_LT);
+    void Blit(SDL_Surface *target, Point p, int justify = JUSTIFY_LT);
 
 private:
 
@@ -39,5 +39,5 @@ private:
 
     SDL_Surface *Surface;
 };
-
+}
 #endif // SPRITE_H

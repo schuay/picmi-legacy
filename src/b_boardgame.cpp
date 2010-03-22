@@ -8,7 +8,7 @@
  ***************************************************************************/
 
 #include "b_boardgame.h"
-
+namespace BoardGame {
 BoardGame::BoardGame()
 {
     /* initialize to default values */
@@ -20,17 +20,17 @@ BoardGame::BoardGame()
 }
 BoardGame::~BoardGame() {}
 
-bool BoardGame::IsInBounds(PicPoint &p) {
+bool BoardGame::IsInBounds(Point &p) {
     return IsInBounds(p.x, p.y);
 }
 bool BoardGame::IsInBounds(unsigned int x, unsigned int y) {
     return (x < width && y < height);
 }
 
-PicPoint BoardGame::GetLocation() {
-    return PicPoint(&location);
+Point BoardGame::GetLocation() {
+    return Point(&location);
 }
-bool BoardGame::TrySetLocation(PicPoint &p) {
+bool BoardGame::TrySetLocation(Point &p) {
     if (!IsInBounds(p))
         return false;
 
@@ -39,7 +39,7 @@ bool BoardGame::TrySetLocation(PicPoint &p) {
     return true;
 }
 bool BoardGame::TrySetLocationRel(int dx, int dy) {
-    PicPoint p(location.x + dx, location.y + dy);
+    Point p(location.x + dx, location.y + dy);
 
     if (!IsInBounds(location.x + dx, location.y + dy))
         return false;
@@ -52,4 +52,5 @@ bool BoardGame::TrySetLocationRel(int dx, int dy) {
 
 unsigned int BoardGame::GetElapsedTime() {
     return timer.GetTime();
+}
 }

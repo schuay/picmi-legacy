@@ -20,7 +20,7 @@
 namespace Ui {
     class QTMainWindow;
 }
-
+namespace BoardGame {
 class QTMainWindow : public QMainWindow {
     Q_OBJECT
 public:
@@ -53,5 +53,5 @@ private:
     void ReadSettings(BoardSettings &settings);
     BoardSettings* WriteSettings();
 };
-
+}
 #endif // F_QTMAINWINDOW_H

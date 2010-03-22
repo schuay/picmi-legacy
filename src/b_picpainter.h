@@ -20,7 +20,7 @@
 #include "b_sdltext.h"
 
 #define FILEPREFIX ""               /* set the location of gfx and fonts */
-
+namespace BoardGame {
 class PicPainter : public Painter
 {
 public:
@@ -72,5 +72,5 @@ private:
     /* the game instance - painter reads state from here and paints accordingly */
     Picross *game;
 };
-
+}
 #endif // B_SDLPAINTER_H

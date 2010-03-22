@@ -9,11 +9,11 @@
 
 #ifndef B_PAINTER_H
 #define B_PAINTER_H
-
+namespace BoardGame {
 class Painter
 {
 public:
     virtual void Paint() = 0;
 };
-
+}
 #endif // B_PAINTER_H

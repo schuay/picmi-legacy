@@ -22,7 +22,7 @@
 #include "b_picdefines.h"
 #include "b_picpngloader.h"
 #include "b_pictimer.h"
-
+namespace BoardGame {
 class Picross : public BoardGame
 {
 public:
@@ -31,10 +31,10 @@ public:
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
 
-    int GetStateAt(PicPoint &p);                    /* returns the state of game board at p */
+    int GetStateAt(Point &p);                    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y);
 
-    void DoOpAt(PicPoint &p, int op);   /* perform operation (HIT/MARK) at p */
+    void DoOpAt(Point &p, int op);   /* perform operation (HIT/MARK) at p */
     void DoOp(int op);                  /* or at current location */
 
     void CalculateStreakSolvedState();  /* call this to update streak.Solved states - ideally once before drawing each frame */
@@ -50,9 +50,9 @@ public:
 
 private:
 
-    void SetStateAt(PicPoint &p, int state); /* set state of board at p */
+    void SetStateAt(Point &p, int state); /* set state of board at p */
 
-    int GetMapAt(PicPoint &p);                      /* returns the state of map at p */
+    int GetMapAt(Point &p);                      /* returns the state of map at p */
     int GetMapAt(unsigned int x, unsigned int y);
 
     std::vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
@@ -83,5 +83,5 @@ private:
             boardMarked = 'X',
             boardHit = 'H';
 };
-
+}
 #endif // PUZZLE_H

@@ -9,21 +9,21 @@
 
 #ifndef POINT_H
 #define POINT_H
-
-class PicPoint
+namespace BoardGame {
+class Point
 {
 public:
-    PicPoint();
-    PicPoint(PicPoint *p);
-    PicPoint(unsigned int _x, unsigned int _y);
+    Point();
+    Point(Point *p);
+    Point(unsigned int _x, unsigned int _y);
 
-    bool operator==(PicPoint const &p);
-    bool operator!=(PicPoint const &p);
-    PicPoint& operator=(PicPoint const &rhs);
+    bool operator==(Point const &p);
+    bool operator!=(Point const &p);
+    Point& operator=(Point const &rhs);
 
     unsigned int
             x,
             y;
 };
-
+}
 #endif // POINT_H

@@ -24,7 +24,7 @@
 #define FONT_NORMAL 0
 #define FONT_BOLD   1
 #define FONT_ITALIC 2
-
+namespace BoardGame {
 class SDLText
 {
 public:
@@ -32,8 +32,8 @@ public:
     ~SDLText();
 
     void Load(std::string fnNormal, std::string fnBold, std::string fnItalic);
-    void Blit(SDL_Surface *target, std::string txt, PicPoint p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
-    void Blit(SDL_Surface *target, std::string txt, PicPoint p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void Blit(SDL_Surface *target, std::string txt, Point p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void Blit(SDL_Surface *target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
 
     int WidthOf(std::string txt, unsigned int fontType = FONT_NORMAL);
     int HeightOf(std::string txt, unsigned int fontType = FONT_NORMAL);
@@ -47,5 +47,5 @@ private:
              *fontBold,
              *fontItalic;
 };
-
+}
 #endif // TEXT_H
