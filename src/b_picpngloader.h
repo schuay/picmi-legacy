@@ -18,7 +18,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
-#include "b_picsettings.h"
+#include "b_boardsettings.h"
 #include "b_picexception.h"
 
 #define PIC_MAP_FALSE '.'   //these defines exist because i haven't figured out how
@@ -34,8 +34,8 @@ public:
     void Convert(std::string path, std::string filename, int threshold);
     void ConvertPath(std::string path, int threshold);
 
-    void Load(PicSettings& settings);
-    void LoadRandom(PicSettings& settings);
+    void Load(BoardSettings& settings);
+    void LoadRandom(BoardSettings& settings);
 
 private:
 

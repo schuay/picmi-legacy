@@ -14,13 +14,13 @@
 #include <cstdio>
 
 #include "b_sweepdefines.h"
-#include "b_picsettings.h"
+#include "b_boardsettings.h"
 #include "b_boardgame.h"
 
 class Sweeper : public BoardGame
 {
 public:
-    Sweeper(PicSettings &s);
+    Sweeper(BoardSettings &s);
     ~Sweeper();
 
     bool GameWon();
@@ -38,7 +38,7 @@ public:
 
 private:
 
-    void RandomPuzzle(PicSettings &s);
+    void RandomPuzzle(BoardSettings &s);
     int CalcBombCount(unsigned int x, unsigned int y);
     int GetMapInternal(unsigned int x, unsigned int y);
     int GetStateInternal(unsigned int x, unsigned int y);

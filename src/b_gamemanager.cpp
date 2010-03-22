@@ -49,7 +49,7 @@ void GameManager::InitSystems() {
     SDL_WM_SetCaption(WINDOWCAPTION, NULL);
 }
 
-GameManager::GameManager(PicSettings &s) {
+GameManager::GameManager(BoardSettings &s) {
     game = NULL;
     painter = NULL;
     inputhandler = NULL;

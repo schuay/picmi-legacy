@@ -15,7 +15,7 @@
 #include <cstdlib>
 
 #include "b_boardgame.h"
-#include "b_picsettings.h"
+#include "b_boardsettings.h"
 #include "b_picstreak.h"
 #include "b_picpoint.h"
 #include "b_picexception.h"
@@ -26,7 +26,7 @@
 class Picross : public BoardGame
 {
 public:
-    Picross(PicSettings &s);
+    Picross(BoardSettings &s);
     ~Picross();
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
@@ -62,9 +62,9 @@ private:
 
     bool NoHintsMode;   /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
 
-    void Load(PicSettings &s);            /* generate / load a map before initializing class */
-    void Initialize(PicSettings &s);      /* check integrity and initialize class */
-    void RandomPuzzle(PicSettings &s);    /* generates random puzzle with given dimensions and sets map in settings */
+    void Load(BoardSettings &s);            /* generate / load a map before initializing class */
+    void Initialize(BoardSettings &s);      /* check integrity and initialize class */
+    void RandomPuzzle(BoardSettings &s);    /* generates random puzzle with given dimensions and sets map in settings */
 
     unsigned int nrOfBoxes;          /* number of boxes in map - set only once in constructor */;
 

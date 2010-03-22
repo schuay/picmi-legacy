@@ -1,6 +1,6 @@
-#include "b_picsettings.h"
+#include "b_boardsettings.h"
 
-PicSettings::PicSettings()
+BoardSettings::BoardSettings()
 {
     /* set default values */
 
@@ -22,7 +22,7 @@ PicSettings::PicSettings()
     y = 15;
 }
 
-bool PicSettings::Validate() {
+bool BoardSettings::Validate() {
     if (Map.length() != x*y)
         return false;
 
@@ -38,7 +38,7 @@ bool PicSettings::Validate() {
     return true;
 }
 
-void PicSettings::Load() {
+void BoardSettings::Load() {
     CheckForConfDir();
 
     std::ifstream read(confFilePath.c_str());
@@ -53,7 +53,7 @@ void PicSettings::Load() {
 
     read.close();
 }
-void PicSettings::HandleConfLine(std::string line) {
+void BoardSettings::HandleConfLine(std::string line) {
 
     /* skip empty lines */
     if (line.length() == 0)
@@ -97,7 +97,7 @@ void PicSettings::HandleConfLine(std::string line) {
     }
 }
 
-void PicSettings::Save() {
+void BoardSettings::Save() {
     CheckForConfDir();
 
     std::ofstream write(confFilePath.c_str());
@@ -115,7 +115,7 @@ void PicSettings::Save() {
 
     write.close();
 }
-void PicSettings::CheckForConfDir() {
+void BoardSettings::CheckForConfDir() {
 
     DIR* d = opendir(basePath.c_str());
 

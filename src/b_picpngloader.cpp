@@ -85,7 +85,7 @@ void PicPngLoader::ConvertPath(std::string path, int threshold) {
     closedir(d);
 }
 
-void PicPngLoader::Load(PicSettings& settings) {
+void PicPngLoader::Load(BoardSettings& settings) {
 
     Magick::Image img(settings.PuzzlePath.c_str());
 
@@ -113,7 +113,7 @@ void PicPngLoader::Load(PicSettings& settings) {
     settings.x = w;
     settings.y = w;
 }
-void PicPngLoader::LoadRandom(PicSettings &settings) {
+void PicPngLoader::LoadRandom(BoardSettings &settings) {
     DIR* d = opendir(settings.PuzzlePath.c_str());
     struct dirent *ep;
 

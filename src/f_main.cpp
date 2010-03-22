@@ -22,11 +22,11 @@
 
 SDL_Surface *Screen;
 
-bool HandleArguments(PicSettings &s, bool &disableQt, int argc, char **argv);
+bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv);
 
 int main(int argc, char **argv) {
 
-    PicSettings s;
+    BoardSettings s;
     bool disableQt = false;
 
     try {
@@ -61,7 +61,7 @@ void ConvertPath(char *path) {
     PicPngLoader loader;
     loader.ConvertPath(s, 30000);
 }
-bool HandleArguments(PicSettings &s, bool &disableQt, int argc, char **argv) {
+bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
     int c;
     char *cvalue = NULL;
 

@@ -8,7 +8,6 @@ SOURCES += src/f_main.cpp \
     src/b_picexception.cpp \
     src/b_picpoint.cpp \
     src/b_picstreak.cpp \
-    src/b_picsettings.cpp \
     src/b_picpngloader.cpp \
     src/f_qtmainwindow.cpp \
     src/f_qtpicthread.cpp \
@@ -19,12 +18,12 @@ SOURCES += src/f_main.cpp \
     src/b_sdlsprite.cpp \
     src/b_picinputhandler.cpp \
     src/b_gamemanager.cpp \
-    src/b_sweeper.cpp
+    src/b_sweeper.cpp \
+    src/b_boardsettings.cpp
 HEADERS += src/b_picross.h \
     src/b_picexception.h \
     src/b_picpoint.h \
     src/b_picstreak.h \
-    src/b_picsettings.h \
     src/b_picdefines.h \
     src/b_picpngloader.h \
     src/f_qtmainwindow.h \
@@ -39,7 +38,8 @@ HEADERS += src/b_picross.h \
     src/b_picinputhandler.h \
     src/b_gamemanager.h \
     src/b_sweeper.h \
-    src/b_sweepdefines.h
+    src/b_sweepdefines.h \
+    src/b_boardsettings.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \

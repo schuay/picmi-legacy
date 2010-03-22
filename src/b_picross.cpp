@@ -9,7 +9,7 @@
 
 #include "b_picross.h"
 
-Picross::Picross(PicSettings &s) : BoardGame(),
+Picross::Picross(BoardSettings &s) : BoardGame(),
         ColStreaks(NULL), RowStreaks(NULL), map(NULL), boardState(NULL)
 {
     Load(s);
@@ -207,7 +207,7 @@ void Picross::CalculateStreakSolvedState() {
     }
 }
 
-void Picross::Load(PicSettings &s) {
+void Picross::Load(BoardSettings &s) {
     if (s.Type == PUZ_RAND) {
         RandomPuzzle(s);
     }
@@ -221,7 +221,7 @@ void Picross::Load(PicSettings &s) {
     else
         throw PicException("Invalid puzzle type passed");
 }
-void Picross::Initialize(PicSettings &s) {
+void Picross::Initialize(BoardSettings &s) {
     if (!s.Validate())
         throw PicException("Settings validation failed");
 
@@ -258,7 +258,7 @@ void Picross::Initialize(PicSettings &s) {
     NoHintsMode = s.NoHintsMode;
     timer.Start();
 }
-void Picross::RandomPuzzle(PicSettings &s) {
+void Picross::RandomPuzzle(BoardSettings &s) {
 
     if (s.Difficulty > 99) {
         s.Map = std::string(s.x * s.y, mapTrue);

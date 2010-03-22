@@ -20,10 +20,10 @@
 #include "b_picdefines.h"
 #include "b_picexception.h"
 
-class PicSettings
+class BoardSettings
 {
 public:
-    PicSettings();
+    BoardSettings();
     bool Validate();
     void Load();
     void Save();

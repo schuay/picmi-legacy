@@ -18,7 +18,7 @@ QTPicThread::~QTPicThread() {
         delete settings;
 }
 
-void QTPicThread::PassSettings(PicSettings *s) {
+void QTPicThread::PassSettings(BoardSettings *s) {
     if (settings) {
         delete settings;
         settings = NULL;

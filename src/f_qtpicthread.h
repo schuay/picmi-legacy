@@ -21,11 +21,11 @@ public:
     ~QTPicThread();
 
     void run();
-    void PassSettings(PicSettings *s);
+    void PassSettings(BoardSettings *s);
     void LoadBackground(std::string path);
 
 private:
-    PicSettings *settings;
+    BoardSettings *settings;
 };
 
 #endif // F_QTPICTHREAD_H

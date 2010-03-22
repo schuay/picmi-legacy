@@ -10,7 +10,7 @@
 #include "f_qtmainwindow.h"
 #include "ui_f_qtmainwindow.h"
 
-QTMainWindow::QTMainWindow(PicSettings &settings, QWidget *parent) :
+QTMainWindow::QTMainWindow(BoardSettings &settings, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::QTMainWindow)
 {
@@ -45,7 +45,7 @@ void QTMainWindow::changeEvent(QEvent *e)
     }
 }
 
-void QTMainWindow::ReadSettings(PicSettings &settings) {
+void QTMainWindow::ReadSettings(BoardSettings &settings) {
 
     if (settings.Type == PUZ_RAND)
         ui->rbPuzTypeRandom->setChecked(true);
@@ -64,8 +64,8 @@ void QTMainWindow::ReadSettings(PicSettings &settings) {
 
     setGuiEnabledState(true);
 }
-PicSettings* QTMainWindow::WriteSettings() {
-    PicSettings *settings = new PicSettings();
+BoardSettings* QTMainWindow::WriteSettings() {
+    BoardSettings *settings = new BoardSettings();
 
     if (ui->rbPuzTypeRandom->isChecked())
         settings->Type = PUZ_RAND;

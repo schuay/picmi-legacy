@@ -22,7 +22,7 @@
 class GameManager {
 public:
 
-    GameManager(PicSettings &s);
+    GameManager(BoardSettings &s);
     ~GameManager();
 
     void MainLoop();

@@ -9,7 +9,7 @@
 
 #include "b_sweeper.h"
 
-Sweeper::Sweeper(PicSettings &s) : BoardGame(), map(NULL), boardState(NULL)
+Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
 {
     width = s.x;
     height = s.y;
@@ -23,7 +23,7 @@ Sweeper::~Sweeper() {
         delete[] boardState;
 }
 
-void Sweeper::RandomPuzzle(PicSettings &s) {
+void Sweeper::RandomPuzzle(BoardSettings &s) {
     int randX, randY, mineCount;
 
     mineCount = width*height*s.Difficulty/100;

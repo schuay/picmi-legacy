@@ -24,7 +24,7 @@ namespace Ui {
 class QTMainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    QTMainWindow(PicSettings &settings, QWidget *parent = 0);
+    QTMainWindow(BoardSettings &settings, QWidget *parent = 0);
     ~QTMainWindow();
 
 protected:
@@ -50,8 +50,8 @@ private:
 
     void setGuiEnabledState(bool b);
 
-    void ReadSettings(PicSettings &settings);
-    PicSettings* WriteSettings();
+    void ReadSettings(BoardSettings &settings);
+    BoardSettings* WriteSettings();
 };
 
 #endif // F_QTMAINWINDOW_H
