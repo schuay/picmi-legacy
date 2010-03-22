@@ -29,6 +29,11 @@ public:
     void Load();
     void Save();
 
+    enum GameTypeEnum {
+        Picross,
+        Minesweeper
+    };
+
     std::string
             Map,
             PuzzlePath,
@@ -46,9 +51,11 @@ public:
             x,
             y;
 
+    GameTypeEnum GameType;
+
 private:
     void CheckForConfDir();
-    void HandleConfLine(std::string line);
+    void HandleConfLine(const std::string line);
 
     std::string
             basePath,

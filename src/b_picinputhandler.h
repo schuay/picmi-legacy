@@ -20,6 +20,7 @@
 #define DRAG_VER 1
 
 #define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
+
 namespace BoardGame {
 class PicInputHandler : public InputHandler
 {
@@ -34,7 +35,7 @@ private:
 
     void DebugKeyAction();
 
-    int HandleMouseEvent(int x, int y, int btn, int event);
+    int HandleMouseEvent(const int x, const int y, const int btn, const int event);
 
     Point
         lastClickLocation,

@@ -9,11 +9,94 @@
 
 #include "b_sweepinputhandler.h"
 namespace BoardGame {
-    SweepInputHandler::SweepInputHandler()
+    SweepInputHandler::SweepInputHandler(BoardGame *p)
     {
+        game = dynamic_cast<Sweeper*>(p);
+
+        if (!game)
+            throw Exception("Game object not set");
+
+        InitSystems();
     }
 
-    void SweepInputHandler::HandleInput() {
+    void SweepInputHandler::InitSystems() {
+        SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+    }
 
+    int SweepInputHandler::HandleMouseEvent(int x, int y, int btn, int event) {
+        Point newLocation(
+                (x - game->PixOffsetX() * game->Zoom()) / (game->CellLength() * game->Zoom()),
+                (y - game->PixOffsetY() * game->Zoom()) / (game->CellLength() * game->Zoom()));
+
+        /* only handle mouse events in game board area */
+        if (!game->IsInBounds(newLocation))
+            return OP_NONE;
+
+        game->TrySetLocation(newLocation);
+
+        if (btn == SDL_BUTTON_LEFT)
+            return S_OP_EXPOSE;
+        else if (btn == SDL_BUTTON_RIGHT)
+            return S_OP_MARK;
+        else if (btn == SDL_BUTTON_MIDDLE)
+            return S_OP_TENTATIVE;
+
+        return OP_NONE;
+    }
+    void SweepInputHandler::HandleInput() {
+        SDL_Event ev;
+
+        while (SDL_PollEvent(&ev) == 1) {
+            int dx = 0, dy = 0, op = OP_NONE;
+
+            /* get input... */
+
+            switch (ev.type) {
+            case SDL_KEYDOWN:
+                switch (ev.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                    game->Quit = true;
+                    break;
+                case SDLK_LEFT:
+                    dx = -1;
+                    break;
+                case SDLK_RIGHT:
+                    dx = 1;
+                    break;
+                case SDLK_UP:
+                    dy = -1;
+                    break;
+                case SDLK_DOWN:
+                    dy = 1;
+                    break;
+                case SDLK_RCTRL:
+                case SDLK_LCTRL:
+                    op = S_OP_MARK;
+                    break;
+                case SDLK_SPACE:
+                    op = S_OP_EXPOSE;
+                    break;
+                default:
+                    break;
+                }
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button, ev.type);
+                break;
+             case SDL_QUIT:
+                game->Quit = true;
+                break;
+             default:
+                break;
+            }
+
+            /* perform actual logic... */
+
+            if (dx || dy)
+                game->TrySetLocationRel(dx, dy);
+
+            if (op != OP_NONE)
+                game->DoOp(op);
+        }
     }
 }

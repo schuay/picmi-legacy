@@ -112,12 +112,11 @@ void PicInputHandler::HandleInput() {
             case SDLK_DOWN:
                 dy = 1;
                 break;
-            case SDLK_RCTRL:
-            case SDLK_LCTRL:
+            case SDLK_SPACE:
                 op = OP_HIT;
                 break;
-            case SDLK_RSHIFT:
-            case SDLK_LSHIFT:
+            case SDLK_RCTRL:
+            case SDLK_LCTRL:
                 op = OP_MARK;
                 break;
             default:

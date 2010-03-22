@@ -56,13 +56,21 @@ GameManager::GameManager(BoardSettings &s) {
 
     InitSystems();
 
+    //TEMP
+    s.GameType = BoardSettings::Minesweeper;
+    s.Difficulty = 10;
+
     /* create game objects */
-//    game = new Picross(s);
-//    painter = new PicPainter(game, s.BackgroundPath);
-//    inputhandler = new PicInputHandler(game);
-    game = new Sweeper(s);
-    painter = new SweepPainter(game, s.BackgroundPath);
-    inputhandler = new SweepInputHandler();
+    if (s.GameType == BoardSettings::Picross) {
+        game = new Picross(s);
+        painter = new PicPainter(game, s.BackgroundPath);
+        inputhandler = new PicInputHandler(game);
+    }
+    else if (s.GameType == BoardSettings::Minesweeper) {
+        game = new Sweeper(s);
+        painter = new SweepPainter(game, s.BackgroundPath);
+        inputhandler = new SweepInputHandler(game);
+    }
 }
 GameManager::~GameManager() {
     if (game)

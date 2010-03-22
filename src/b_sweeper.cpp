@@ -96,7 +96,34 @@ int Sweeper::GetStateAt(unsigned int x, unsigned int y) {
         return S_BOARD_CLEAN;
         break;
     case boardExposed:
-        return S_BOARD_EXPOSED;
+        switch (map[CToI(x,y)]) {
+        case 1:
+            return S_BOARD_EXPOSED_1;
+            break;
+        case 2:
+            return S_BOARD_EXPOSED_2;
+            break;
+        case 3:
+            return S_BOARD_EXPOSED_3;
+            break;
+        case 4:
+            return S_BOARD_EXPOSED_4;
+            break;
+        case 5:
+            return S_BOARD_EXPOSED_5;
+            break;
+        case 6:
+            return S_BOARD_EXPOSED_6;
+            break;
+        case 7:
+            return S_BOARD_EXPOSED_7;
+            break;
+        case 8:
+            return S_BOARD_EXPOSED_8;
+            break;
+        default:
+            return S_BOARD_EXPOSED;
+        }
         break;
     case boardMarked:
         return S_BOARD_MARKED;
@@ -238,7 +265,8 @@ void Sweeper::ExposeTile(Point &p) {
     neighbors = GetNeighborCoords(p, neighborCount, true);
 
     for (int i=0; i<neighborCount; i++)
-        ExposeTile(neighbors[i]);
+        if (boardState[CToI(neighbors[i])] != boardExposed)
+            ExposeTile(neighbors[i]);
 
     if (neighbors)
         delete[] neighbors;

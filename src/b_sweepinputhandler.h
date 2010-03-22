@@ -10,15 +10,26 @@
 #ifndef B_SWEEPINPUTHANDLER_H
 #define B_SWEEPINPUTHANDLER_H
 
+#include <SDL/SDL.h>
+
+#include "b_sweeper.h"
 #include "b_inputhandler.h"
 
 namespace BoardGame {
     class SweepInputHandler : public InputHandler
     {
     public:
-        SweepInputHandler();
+        SweepInputHandler(BoardGame *p);
 
         void HandleInput();
+
+    private:
+
+        void InitSystems();
+
+        int HandleMouseEvent(const int x, const int y, const int btn, const int event);
+
+        Sweeper* game;
     };
 }
 #endif // B_SWEEPINPUTHANDLER_H

@@ -18,6 +18,8 @@ BoardSettings::BoardSettings()
     NoHintsMode = false;
     LoadRandomFromPath = false;
 
+    GameType = Picross;
+
     x = 15;
     y = 15;
 }
@@ -53,7 +55,7 @@ void BoardSettings::Load() {
 
     read.close();
 }
-void BoardSettings::HandleConfLine(std::string line) {
+void BoardSettings::HandleConfLine(const std::string line) {
 
     /* skip empty lines */
     if (line.length() == 0)
@@ -90,6 +92,9 @@ void BoardSettings::HandleConfLine(std::string line) {
             Difficulty = atoi(settingValue.c_str());
         else if (settingType == "NOHINTSMODE")
             NoHintsMode = atoi(settingValue.c_str());
+        else if (settingType == "GAMETYPE")
+            GameType = static_cast<BoardSettings::GameTypeEnum>(
+                    atoi(settingValue.c_str()));
     }
     catch (std::exception) {
         printf("Invalid settings value, ignored. Setting type: %s, Setting value: %s ",
@@ -112,6 +117,7 @@ void BoardSettings::Save() {
     write << "HEIGHT=" << y << std::endl;
     write << "DIFFICULTY=" << Difficulty << std::endl;
     write << "NOHINTSMODE=" << NoHintsMode << std::endl;
+    write << "GAMETYPE=" << GameType << std::endl;
 
     write.close();
 }
