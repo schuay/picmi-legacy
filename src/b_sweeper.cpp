@@ -14,6 +14,9 @@ Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
     width = s.x;
     height = s.y;
 
+    puzzleLocation.x = 0;
+    puzzleLocation.y = 0;
+
     RandomPuzzle(s);
 }
 Sweeper::~Sweeper() {
@@ -58,13 +61,14 @@ void Sweeper::RandomPuzzle(BoardSettings &s) {
 int Sweeper::CalcBombCount(Point &p) {
     unsigned int bombCount = 0;
     Point *neighbors = NULL;
-    int neighborCount;
+    int neighborCount = 0;
 
-    neighborCount = GetNeighborCoords(p, neighbors, false);
+    neighbors = GetNeighborCoords(p, neighborCount, false);
 
-    for (int i=0; i<neighborCount; i++)
-        if (map[CToI(neighbors[i])] == mapBomb)
+    for (int i=0; i<neighborCount; i++) {
+        if (map[CToI(neighbors[i].x, neighbors[i].y)] == mapBomb)
             bombCount++;
+    }
 
     if (neighbors)
         delete[] neighbors;
@@ -175,11 +179,13 @@ void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-int Sweeper::GetNeighborCoords(Point &p, Point *targetArray, bool noDiagonals) {
+Point *Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) {
     bool pos[3][3];
     int nrOfNeighborTiles = 0,
-        pointerPos = 0,
         i,j;
+    Point *targetArray;
+
+    targetCount = 0;
 
     for (i=0; i<3; i++)
         for (j=0; j<3; j++)
@@ -187,6 +193,8 @@ int Sweeper::GetNeighborCoords(Point &p, Point *targetArray, bool noDiagonals) {
 
     if (noDiagonals)
         pos[0][0]=pos[2][2]=pos[0][2]=pos[2][0]=false;
+
+    pos[1][1] = false;  /* self */
 
     if (p.x == 0)
         pos[0][0]=pos[0][1]=pos[0][2]=false;
@@ -207,10 +215,10 @@ int Sweeper::GetNeighborCoords(Point &p, Point *targetArray, bool noDiagonals) {
     for (i=0; i<3; i++)
         for (j=0; j<3; j++)
             if (pos[i][j]) {
-                targetArray[pointerPos++] = Point(p.x + i - 1, p.y + j - 1);
+                targetArray[targetCount++] = Point(p.x + i - 1, p.y + j - 1);
             }
 
-    return pointerPos;
+    return targetArray;
 }
 
 void Sweeper::ExposeTile(Point &p) {
@@ -227,7 +235,7 @@ void Sweeper::ExposeTile(Point &p) {
     Point *neighbors = NULL;
     int neighborCount;
 
-    neighborCount = GetNeighborCoords(p, neighbors, true);
+    neighbors = GetNeighborCoords(p, neighborCount, true);
 
     for (int i=0; i<neighborCount; i++)
         ExposeTile(neighbors[i]);

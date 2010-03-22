@@ -14,8 +14,8 @@
 #include <SDL/SDL_rotozoom.h>
 #include <SDL/SDL_image.h>
 
-#include "b_picpoint.h"
-#include "b_picexception.h"
+#include "b_point.h"
+#include "b_exception.h"
 
 #define JUSTIFY_LT   0
 #define JUSTIFY_LB   1

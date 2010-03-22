@@ -17,11 +17,11 @@
 #include "b_boardgame.h"
 #include "b_boardsettings.h"
 #include "b_picstreak.h"
-#include "b_picpoint.h"
-#include "b_picexception.h"
+#include "b_point.h"
+#include "b_exception.h"
 #include "b_picdefines.h"
 #include "b_picpngloader.h"
-#include "b_pictimer.h"
+#include "b_timer.h"
 namespace BoardGame {
 class Picross : public BoardGame
 {

@@ -19,7 +19,10 @@ SOURCES += src/f_main.cpp \
     src/b_boardsettings.cpp \
     src/b_timer.cpp \
     src/b_point.cpp \
-    src/b_exception.cpp
+    src/b_exception.cpp \
+    src/b_sweeppainter.cpp \
+    src/b_painter.cpp \
+    src/b_sweepinputhandler.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -39,7 +42,9 @@ HEADERS += src/b_picross.h \
     src/b_boardsettings.h \
     src/b_timer.h \
     src/b_point.h \
-    src/b_exception.h
+    src/b_exception.h \
+    src/b_sweeppainter.h \
+    src/b_sweepinputhandler.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \

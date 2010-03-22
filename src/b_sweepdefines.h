@@ -13,10 +13,18 @@
 #define S_MAP_NONE        0 /* map state defines for interfacing with frontends */
 #define S_MAP_BOMB        9
 
-#define S_BOARD_CLEAN     0 /* board state defines for interfacing with frontends */
-#define S_BOARD_EXPOSED   1
-#define S_BOARD_MARKED    2
-#define S_BOARD_TENTATIVE 3
+#define S_BOARD_EXPOSED   0 /* board state defines for interfacing with frontends */
+#define S_BOARD_EXPOSED_1 1
+#define S_BOARD_EXPOSED_2 2
+#define S_BOARD_EXPOSED_3 3
+#define S_BOARD_EXPOSED_4 4
+#define S_BOARD_EXPOSED_5 5
+#define S_BOARD_EXPOSED_6 6
+#define S_BOARD_EXPOSED_7 7
+#define S_BOARD_EXPOSED_8 8
+#define S_BOARD_CLEAN     9
+#define S_BOARD_MARKED    10
+#define S_BOARD_TENTATIVE 11
 
 #define S_OP_NONE         0 /* defines for game actions, NONE */
 #define S_OP_EXPOSE       1 /* uncover a tile */

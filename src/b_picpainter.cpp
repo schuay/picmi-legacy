@@ -10,7 +10,7 @@
 #include "b_picpainter.h"
 namespace BoardGame {
 PicPainter::PicPainter(BoardGame *p, std::string customBackground)
-    : screen(NULL), game(NULL)
+    : Painter(), game(NULL)
 {
     game = dynamic_cast<Picross*>(p);
 
@@ -23,19 +23,11 @@ PicPainter::PicPainter(BoardGame *p, std::string customBackground)
     if (customBackground.length() != 0)
         LoadCustomBackground(customBackground);
 }
-PicPainter::~PicPainter() {
-    TTF_Quit();
-}
-
-void PicPainter::LoadCustomBackground(std::string path) {
-    sprBackground.Load( path, game->Zoom(), 0);
-}
 
 void PicPainter::LoadSprites() {
     txt.Load(FILEPREFIX "gfx/LiberationMono-Regular.ttf",
              FILEPREFIX "gfx/LiberationMono-Bold.ttf",
              FILEPREFIX "gfx/LiberationMono-Italic.ttf");
-
 
     sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
     sprIcon.SetAsIcon();
@@ -59,8 +51,6 @@ void PicPainter::LoadSprites() {
 }
 
 void PicPainter::InitSystems() {
-    if (TTF_Init() == -1)
-        throw Exception("Could not initialize sdl_ttf");
 
     screen = SDL_SetVideoMode(
             (game->PixOffsetX() + game->Width() * game->CellLength() + 5) * game->Zoom(),
@@ -82,10 +72,6 @@ void PicPainter::Paint() {
     SDL_Flip(screen);
 }
 
-void PicPainter::PaintBackground() {
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));  /* paint bg white */
-    sprBackground.Blit(screen, Point(0,0));
-}
 void PicPainter::PaintInfoArea() {
     SDL_Rect to;
     SDL_Color color;

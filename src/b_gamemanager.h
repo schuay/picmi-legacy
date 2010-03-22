@@ -13,6 +13,8 @@
 #include <SDL/SDL.h>
 
 #include "b_sweeper.h"
+#include "b_sweeppainter.h"
+#include "b_sweepinputhandler.h"
 #include "b_picinputhandler.h"
 #include "b_picross.h"
 #include "b_picpainter.h"

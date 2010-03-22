@@ -7,7 +7,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "b_pictimer.h"
+#include "b_timer.h"
+
 namespace BoardGame {
 Timer::Timer()
 {

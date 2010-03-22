@@ -19,7 +19,7 @@
 #include <dirent.h>
 
 #include "b_boardsettings.h"
-#include "b_picexception.h"
+#include "b_exception.h"
 
 #define PIC_MAP_FALSE '.'   //these defines exist because i haven't figured out how
 #define PIC_MAP_TRUE '#'    //picpngloader and picross should relate

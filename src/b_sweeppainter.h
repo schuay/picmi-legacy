@@ -7,41 +7,47 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef B_PAINTER_H
-#define B_PAINTER_H
+#ifndef B_SWEEPPAINTER_H
+#define B_SWEEPPAINTER_H
 
 #include <SDL/SDL.h>
 #include <sstream>
 #include <iomanip>
 
-#include "SDL/SDL.h"
+#include "b_painter.h"
+#include "b_sweeper.h"
 #include "b_sdlsprite.h"
 #include "b_sdltext.h"
 
+#define FILEPREFIX ""               /* set the location of gfx and fonts */
+
 namespace BoardGame {
-class Painter
+
+class SweepPainter : public Painter
 {
 public:
-    Painter();
-    ~Painter();
+    SweepPainter(BoardGame *p, std::string customBackground);
 
-    virtual void Paint() = 0;
+    void Paint();
 
 protected:
 
-    void PaintBackground();
+    void PaintBoardArea();
 
-    void LoadCustomBackground(std::string path);
+    void LoadSprites();
+    void InitSystems();
 
-    virtual void LoadSprites() = 0;
+    /* all sprites used in the game */
+    SDLSprite
+            sprCellFrame,
+            sprMarkedTile,
+            sprTentativeTile,
+            sprNumbers[7],
+            sprIcon;
 
-    /* the screen surface - everything is blitted to this */
-    SDL_Surface *screen;
-
-    /* text object  */
-    SDLText txt;
-
-    SDLSprite sprBackground;
+    Sweeper *game;
 };
+
 }
-#endif // B_PAINTER_H
+
+#endif // B_SWEEPPAINTER_H

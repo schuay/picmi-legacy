@@ -7,7 +7,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "b_picpoint.h"
+#include "b_point.h"
+
 namespace BoardGame {
 Point::Point() {
     x = 0;

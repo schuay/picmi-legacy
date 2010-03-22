@@ -12,9 +12,9 @@
 
 #include <string>
 
-#include "b_picexception.h"
-#include "b_pictimer.h"
-#include "b_picpoint.h"
+#include "b_exception.h"
+#include "b_timer.h"
+#include "b_point.h"
 
 namespace BoardGame {
 class BoardGame

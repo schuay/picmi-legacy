@@ -7,41 +7,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef B_PAINTER_H
-#define B_PAINTER_H
+#ifndef B_SWEEPINPUTHANDLER_H
+#define B_SWEEPINPUTHANDLER_H
 
-#include <SDL/SDL.h>
-#include <sstream>
-#include <iomanip>
-
-#include "SDL/SDL.h"
-#include "b_sdlsprite.h"
-#include "b_sdltext.h"
+#include "b_inputhandler.h"
 
 namespace BoardGame {
-class Painter
-{
-public:
-    Painter();
-    ~Painter();
+    class SweepInputHandler : public InputHandler
+    {
+    public:
+        SweepInputHandler();
 
-    virtual void Paint() = 0;
-
-protected:
-
-    void PaintBackground();
-
-    void LoadCustomBackground(std::string path);
-
-    virtual void LoadSprites() = 0;
-
-    /* the screen surface - everything is blitted to this */
-    SDL_Surface *screen;
-
-    /* text object  */
-    SDLText txt;
-
-    SDLSprite sprBackground;
-};
+        void HandleInput();
+    };
 }
-#endif // B_PAINTER_H
+#endif // B_SWEEPINPUTHANDLER_H

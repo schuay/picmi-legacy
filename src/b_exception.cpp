@@ -7,7 +7,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "b_picexception.h"
+#include "b_exception.h"
+
 namespace BoardGame {
 
 Exception::Exception() { }

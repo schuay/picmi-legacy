@@ -57,9 +57,12 @@ GameManager::GameManager(BoardSettings &s) {
     InitSystems();
 
     /* create game objects */
-    game = new Picross(s);
-    painter = new PicPainter(game, s.BackgroundPath);
-    inputhandler = new PicInputHandler(game);
+//    game = new Picross(s);
+//    painter = new PicPainter(game, s.BackgroundPath);
+//    inputhandler = new PicInputHandler(game);
+    game = new Sweeper(s);
+    painter = new SweepPainter(game, s.BackgroundPath);
+    inputhandler = new SweepInputHandler();
 }
 GameManager::~GameManager() {
     if (game)

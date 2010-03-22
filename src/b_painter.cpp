@@ -7,41 +7,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef B_PAINTER_H
-#define B_PAINTER_H
-
-#include <SDL/SDL.h>
-#include <sstream>
-#include <iomanip>
-
-#include "SDL/SDL.h"
-#include "b_sdlsprite.h"
-#include "b_sdltext.h"
+#include "b_painter.h"
 
 namespace BoardGame {
-class Painter
-{
-public:
-    Painter();
-    ~Painter();
 
-    virtual void Paint() = 0;
+    Painter::Painter() {
+        screen = NULL;
 
-protected:
+        if (TTF_Init() == -1)
+            throw Exception("Could not initialize sdl_ttf");
+    }
 
-    void PaintBackground();
+    Painter::~Painter() {
+        if (screen)
+            SDL_FreeSurface(screen);
 
-    void LoadCustomBackground(std::string path);
+        TTF_Quit();
+    }
 
-    virtual void LoadSprites() = 0;
+    void Painter::LoadCustomBackground(std::string path) {
+        sprBackground.Load( path, 1, 0);
+    }
 
-    /* the screen surface - everything is blitted to this */
-    SDL_Surface *screen;
-
-    /* text object  */
-    SDLText txt;
-
-    SDLSprite sprBackground;
-};
+    void Painter::PaintBackground() {
+        SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));  /* paint bg white */
+        sprBackground.Blit(screen, Point(0,0));
+    }
 }
-#endif // B_PAINTER_H

@@ -18,7 +18,7 @@
 #include <fstream>
 
 #include "b_picdefines.h"
-#include "b_picexception.h"
+#include "b_exception.h"
 
 namespace BoardGame {
 class BoardSettings

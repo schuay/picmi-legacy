@@ -10,14 +10,8 @@
 #ifndef B_SDLPAINTER_H
 #define B_SDLPAINTER_H
 
-#include <SDL/SDL.h>
-#include <sstream>
-#include <iomanip>
-
 #include "b_painter.h"
 #include "b_picross.h"
-#include "b_sdlsprite.h"
-#include "b_sdltext.h"
 
 #define FILEPREFIX ""               /* set the location of gfx and fonts */
 namespace BoardGame {
@@ -25,29 +19,19 @@ class PicPainter : public Painter
 {
 public:
     PicPainter(BoardGame *p, std::string customBackground);
-    ~PicPainter();
-
-    void LoadCustomBackground(std::string path);
 
     void Paint();
 
 private:
 
-    void PaintBackground();
     void PaintInfoArea();
     void PaintStreakArea();
     void PaintBoardArea();
 
-    /* (de)initialize sdl systems (including global sdl + key repeat settings) */
+    /* (initialize sdl video systems */
     void InitSystems();
 
-
-    virtual void LoadSprites();
-
-
-    /* the screen surface - everything is blitted to this */
-    SDL_Surface *screen;
-
+    void LoadSprites();
 
     /* all sprites used in the game */
     SDLSprite
@@ -63,11 +47,7 @@ private:
             sprStreakAreaHorB,
             sprStreakAreaVerA,
             sprStreakAreaVerB,
-            sprBackground,
             sprIcon;
-
-    /* text object  */
-    SDLText txt;
 
     /* the game instance - painter reads state from here and paints accordingly */
     Picross *game;
