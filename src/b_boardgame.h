@@ -70,6 +70,10 @@ public:
 
 protected:
 
+    /* convert coordinate to index */
+    int CToI(PicPoint &p) { return CToI(p.x, p.y); }
+    int CToI(unsigned int x, unsigned int y) { return y*width + x; }
+
     /* set state of board at p */
     virtual void SetStateAt(PicPoint &p, int state) = 0;
 

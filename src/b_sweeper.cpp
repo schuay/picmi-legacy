@@ -49,45 +49,25 @@ void Sweeper::RandomPuzzle(BoardSettings &s) {
         map[randY*width + randX] = mapBomb;
     }
 
-    for (unsigned int i=0; i<width; i++)
-        for (unsigned int j=0; j<height; j++)
-            if (GetMapInternal(i,j) != mapBomb)
-                map[j*width + i] = CalcBombCount(i,j);
+    PicPoint p;
+    for (p.x=0; p.x<width; p.x++)
+        for (p.y=0; p.y<height; p.y++)
+            if (map[CToI(p)] != mapBomb)
+                map[p.y*width + p.x] = CalcBombCount(p);
 }
-int Sweeper::CalcBombCount(unsigned int x, unsigned int y) {
+int Sweeper::CalcBombCount(PicPoint &p) {
     unsigned int bombCount = 0;
+    PicPoint *neighbors = NULL;
+    int neighborCount;
 
-    if (x != 0 && y != 0)
-        if (GetMapInternal(x-1, y-1) == mapBomb)
+    neighborCount = GetNeighborCoords(p, neighbors, false);
+
+    for (int i=0; i<neighborCount; i++)
+        if (map[CToI(neighbors[i])] == mapBomb)
             bombCount++;
 
-    if (y != 0)
-        if (GetMapInternal(x, y-1) == mapBomb)
-            bombCount++;
-
-    if (y != 0 && x != width-1)
-        if (GetMapInternal(x+1, y-1) == mapBomb)
-            bombCount++;
-
-    if (x != 0)
-        if (GetMapInternal(x-1, y) == mapBomb)
-            bombCount++;
-
-    if (x != width-1)
-        if (GetMapInternal(x+1, y) == mapBomb)
-            bombCount++;
-
-    if (x != 0 && y != height-1)
-        if (GetMapInternal(x-1, y+1) == mapBomb)
-            bombCount++;
-
-    if (y != height-1)
-        if (GetMapInternal(x, y+1) == mapBomb)
-            bombCount++;
-
-    if (y != height-1 && x != width-1)
-        if (GetMapInternal(x+1, y+1) == mapBomb)
-            bombCount++;
+    if (neighbors)
+        delete[] neighbors;
 
     return bombCount;
 }
@@ -95,16 +75,9 @@ int Sweeper::CalcBombCount(unsigned int x, unsigned int y) {
 bool Sweeper::GameWon() {
     for (unsigned int x = 0; x<width; x++)
         for (unsigned int y = 0; y<height; y++)
-            if (GetMapInternal(x,y) == mapBomb && GetStateInternal(x,y) != boardMarked)
+            if (map[CToI(x,y)] == mapBomb && boardState[CToI(x,y)] != boardMarked)
                 return false;
     return true;
-}
-
-int Sweeper::GetMapInternal(unsigned int x, unsigned int y) {
-    return map[y*width + x];
-}
-int Sweeper::GetStateInternal(unsigned int x, unsigned int y) {
-    return boardState[y*width + x];
 }
 
 int Sweeper::GetStateAt(PicPoint &p) {
@@ -175,15 +148,14 @@ void Sweeper::DoOpAt(PicPoint &p, int op) {
         throw PicException("DoOpAt failed: Incorrect operation passed.");
 
     int
-            state = GetStateInternal(p.x, p.y),
-            map = GetMapInternal(p.x, p.y);
+            state = boardState[CToI(p)];
 
     if (state == boardExposed)  /* exposed tiles cannot be altered */
         return;
 
     switch (op) {
     case S_OP_EXPOSE:       /* recursive expose */
-        /* TODO */
+        ExposeTile(p);
         break;
     case S_OP_MARK:         /* mark tile as bomb */
         if (state == boardClean)
@@ -201,4 +173,65 @@ void Sweeper::DoOpAt(PicPoint &p, int op) {
 }
 void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
+}
+
+int Sweeper::GetNeighborCoords(PicPoint &p, PicPoint *targetArray, bool noDiagonals) {
+    bool pos[3][3];
+    int nrOfNeighborTiles = 0,
+        pointerPos = 0,
+        i,j;
+
+    for (i=0; i<3; i++)
+        for (j=0; j<3; j++)
+            pos[i][j]=true;
+
+    if (noDiagonals)
+        pos[0][0]=pos[2][2]=pos[0][2]=pos[2][0]=false;
+
+    if (p.x == 0)
+        pos[0][0]=pos[0][1]=pos[0][2]=false;
+    if (p.y == 0)
+        pos[0][0]=pos[1][0]=pos[2][0]=false;
+    if (p.x == width-1)
+        pos[2][0]=pos[2][1]=pos[2][2]=false;
+    if (p.y == height-1)
+        pos[0][2]=pos[1][2]=pos[2][2]=false;
+
+    for (i=0; i<3; i++)
+        for (j=0; j<3; j++)
+            if (pos[i][j])
+                nrOfNeighborTiles++;
+
+    targetArray = new PicPoint[nrOfNeighborTiles];
+
+    for (i=0; i<3; i++)
+        for (j=0; j<3; j++)
+            if (pos[i][j]) {
+                targetArray[pointerPos++] = PicPoint(p.x + i - 1, p.y + j - 1);
+            }
+
+    return pointerPos;
+}
+
+void Sweeper::ExposeTile(PicPoint &p) {
+
+    boardState[CToI(p)] = boardExposed;
+
+    /* if maptile is NOT empty, stop recursion */
+
+    if (map[CToI(p)] != mapNone)
+        return;
+
+    /* recurse over all nondiagonal neighbor tiles */
+
+    PicPoint *neighbors = NULL;
+    int neighborCount;
+
+    neighborCount = GetNeighborCoords(p, neighbors, true);
+
+    for (int i=0; i<neighborCount; i++)
+        ExposeTile(neighbors[i]);
+
+    if (neighbors)
+        delete[] neighbors;
 }

@@ -39,9 +39,15 @@ public:
 private:
 
     void RandomPuzzle(BoardSettings &s);
-    int CalcBombCount(unsigned int x, unsigned int y);
-    int GetMapInternal(unsigned int x, unsigned int y);
-    int GetStateInternal(unsigned int x, unsigned int y);
+    int CalcBombCount(PicPoint &p);
+
+    /* creates an array of all target points in targetArray and returns nr of neighbors */
+    /* the caller is responsible for freeing the array */
+    /* if noDiagonals is true, diagonal neighbors are not returned */
+    int GetNeighborCoords(PicPoint &p, PicPoint *targetArray, bool noDiagonals);
+
+    /* exposing tiles is a recursive operation. expose all clear tiles connected to original tile. diagonal connections are not allowed */
+    void ExposeTile(PicPoint &p);
 
     static const int
             mapNone = 0,
