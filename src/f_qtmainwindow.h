@@ -35,7 +35,8 @@ private slots:
     void start();
     void setPuzzleFolder();
     void enableGui();
-    void radioButtonToggled();
+    void rbTypeToggled();
+    void rbGameTypeToogled();
     void setDefaultBG();
     void setCustomBG();
 

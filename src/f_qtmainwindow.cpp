@@ -19,10 +19,11 @@ QTMainWindow::QTMainWindow(BoardSettings &settings, QWidget *parent) :
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(setPuzzleFolder()));
-    connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggled()));
+    connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(rbTypeToggled()));
     connect(&t, SIGNAL(finished()), this, SLOT(enableGui()));
     connect(ui->bBGCustom, SIGNAL(clicked()), this, SLOT(setCustomBG()));
     connect(ui->bBGDefault, SIGNAL(clicked()), this, SLOT(setDefaultBG()));
+    connect(ui->rbPicross, SIGNAL(toggled(bool)), this, SLOT(rbGameTypeToogled()));
 
     settings.Load();
     ReadSettings(settings);
@@ -47,6 +48,11 @@ void QTMainWindow::changeEvent(QEvent *e)
 
 void QTMainWindow::ReadSettings(BoardSettings &settings) {
 
+    if (settings.GameType == settings.Minesweeper)
+        ui->rbMinesweeper->setChecked(true);
+    else
+        ui->rbPicross->setChecked(true);
+
     if (settings.Type == PUZ_RAND)
         ui->rbPuzTypeRandom->setChecked(true);
     else
@@ -66,6 +72,11 @@ void QTMainWindow::ReadSettings(BoardSettings &settings) {
 }
 BoardSettings* QTMainWindow::WriteSettings() {
     BoardSettings *settings = new BoardSettings();
+
+    if (ui->rbMinesweeper->isChecked())
+        settings->GameType = settings->Minesweeper;
+    else
+        settings->GameType = settings->Picross;
 
     if (ui->rbPuzTypeRandom->isChecked())
         settings->Type = PUZ_RAND;
@@ -126,9 +137,13 @@ void QTMainWindow::setPuzzleFolder() {
 void QTMainWindow::enableGui() {
     setGuiEnabledState(true);
 }
-void QTMainWindow::radioButtonToggled() {
+void QTMainWindow::rbTypeToggled() {
     setGuiEnabledState(true);
 }
+void QTMainWindow::rbGameTypeToogled() {
+    setGuiEnabledState(true);
+}
+
 void QTMainWindow::setDefaultBG() {
     bgPath = "";
 }
@@ -140,6 +155,7 @@ void QTMainWindow::setCustomBG() {
 }
 
 void QTMainWindow::setGuiEnabledState(bool b) {
+
     ui->rbPuzTypeRandom->setEnabled(b);
     ui->rbPuzTypeStatic->setEnabled(b);
     ui->lePath->setEnabled(b);
@@ -152,6 +168,18 @@ void QTMainWindow::setGuiEnabledState(bool b) {
     ui->sbDifficulty->setEnabled(b);
     ui->bBGCustom->setEnabled(b);
     ui->bBGDefault->setEnabled(b);
+
+    /* quick hack for minesweeper */
+    if (ui->rbMinesweeper->isChecked()) {
+
+        ui->rbPuzTypeRandom->setEnabled(!b);
+        ui->rbPuzTypeStatic->setEnabled(!b);
+        ui->lePath->setEnabled(!b);
+        ui->cbNoHintsMode->setEnabled(!b);
+        ui->bBrowse->setEnabled(!b);
+
+        return;
+    }
 
     bool randomSelected = ui->rbPuzTypeRandom->isChecked();
 

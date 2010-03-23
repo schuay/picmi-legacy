@@ -58,10 +58,6 @@ GameManager::GameManager(BoardSettings &s) {
 
     InitSystems();
 
-    //TEMP
-    s.GameType = BoardSettings::Minesweeper;
-    s.Difficulty = 10;
-
     /* create game objects */
     if (s.GameType == BoardSettings::Picross) {
         game = new Picross(s);
