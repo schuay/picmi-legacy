@@ -24,6 +24,7 @@ public:
     ~Sweeper();
 
     bool GameWon();
+    bool GameLost();
 
     int GetStateAt(Point &p);
     int GetStateAt(unsigned int x, unsigned int y);

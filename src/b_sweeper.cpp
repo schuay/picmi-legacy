@@ -83,6 +83,13 @@ bool Sweeper::GameWon() {
                 return false;
     return true;
 }
+bool Sweeper::GameLost() {
+    for (unsigned int x = 0; x<width; x++)
+        for (unsigned int y = 0; y<height; y++)
+            if (map[CToI(x,y)] == mapBomb && boardState[CToI(x,y)] == boardExposed)
+                return true;
+    return false;
+}
 
 int Sweeper::GetStateAt(Point &p) {
     return GetStateAt(p.x, p.y);
@@ -189,7 +196,10 @@ void Sweeper::DoOpAt(Point &p, int op) {
 
     switch (op) {
     case S_OP_EXPOSE:       /* recursive expose */
-        ExposeTile(p);
+        if (state == boardMarked || state == boardTentative)
+            SetStateAt(p, boardClean);
+        else
+            ExposeTile(p);
         break;
     case S_OP_MARK:         /* mark tile as bomb */
         if (state == boardClean)

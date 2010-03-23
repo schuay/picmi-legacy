@@ -9,7 +9,7 @@
 
 #include "b_gamemanager.h"
 namespace BoardGame {
-void GameManager::GameWon() {
+void GameManager::GameOver() {
 
     SDL_Delay(1000);
 
@@ -37,8 +37,10 @@ void GameManager::MainLoop() {
 
         SDL_Delay(30);  /* relinquish cpu time we don't need */
 
-        if (game->GameWon())
-            GameWon();
+        if (game->GameLost())
+            GameOver();
+        else if (game->GameWon())
+            GameOver();
     }
 }
 

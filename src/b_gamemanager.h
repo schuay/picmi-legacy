@@ -33,7 +33,7 @@ private:
 
     void InitSystems();
 
-    void GameWon();
+    void GameOver();
 
     BoardGame *game;
     Painter *painter;

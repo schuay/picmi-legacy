@@ -30,6 +30,7 @@ public:
     ~Picross();
 
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
+    inline bool GameLost() { return false; }
 
     int GetStateAt(Point &p);                    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y);
