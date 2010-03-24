@@ -1,32 +1,40 @@
 CC=g++
 SOURCES       = src/f_main.cpp \
                 src/b_picross.cpp \
-                src/b_picexception.cpp \
-                src/b_picpoint.cpp \
                 src/b_picstreak.cpp \
-                src/b_picsettings.cpp \
                 src/b_picpngloader.cpp \
-                src/b_pictimer.cpp \
                 src/b_boardgame.cpp \
                 src/b_picpainter.cpp \
                 src/b_sdltext.cpp \
                 src/b_sdlsprite.cpp \
                 src/b_picinputhandler.cpp \
-                src/b_gamemanager.cpp
+                src/b_gamemanager.cpp \
+                src/b_sweeper.cpp \
+                src/b_boardsettings.cpp \
+                src/b_timer.cpp \
+                src/b_point.cpp \
+                src/b_exception.cpp \
+                src/b_sweeppainter.cpp \
+                src/b_painter.cpp \
+                src/b_sweepinputhandler.cpp
 OBJECTS       = src/f_main.o \
                 src/b_picross.o \
-                src/b_picexception.o \
-                src/b_picpoint.o \
                 src/b_picstreak.o \
-                src/b_picsettings.o \
                 src/b_picpngloader.o \
-                src/b_pictimer.o \
                 src/b_boardgame.o \
                 src/b_picpainter.o \
                 src/b_sdltext.o \
                 src/b_sdlsprite.o \
                 src/b_picinputhandler.o \
-                src/b_gamemanager.o
+                src/b_gamemanager.o \
+                src/b_sweeper.o \
+                src/b_boardsettings.o \
+                src/b_timer.o \
+                src/b_point.o \
+                src/b_exception.o \
+                src/b_sweeppainter.o \
+                src/b_painter.o \
+                src/b_sweepinputhandler.o
 LIBS= -lSDL -lSDL_image -lSDL_gfx -lSDL_ttf -lMagick++ -lpng -lpthread
 INCLUDEDIRS= -I/usr/include/ImageMagick -I/usr/include/SDL
 EXECUTABLE= tuxpicross
