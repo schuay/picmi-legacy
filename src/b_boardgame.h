@@ -21,7 +21,7 @@ class BoardGame
 {
 public:
     BoardGame();
-    ~BoardGame();
+    virtual ~BoardGame();
 
     /* returns true if the puzzle has been completely solved  */
     virtual bool GameWon() = 0;

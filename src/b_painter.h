@@ -23,7 +23,7 @@ class Painter
 {
 public:
     Painter();
-    ~Painter();
+    virtual ~Painter();
 
     virtual void Paint() = 0;
 
