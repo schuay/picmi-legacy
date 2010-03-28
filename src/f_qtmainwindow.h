@@ -33,12 +33,12 @@ protected:
 private slots:
     void quit();
     void start();
-    void setPuzzleFolder();
-    void enableGui();
-    void rbTypeToggled();
-    void rbGameTypeToogled();
-    void setDefaultBG();
-    void setCustomBG();
+//    void setPuzzleFolder();
+//    void enableGui();
+//    void rbTypeToggled();
+//    void rbGameTypeToogled();
+//    void setDefaultBG();
+//    void setCustomBG();
 
 private:
     Ui::QTMainWindow *ui;

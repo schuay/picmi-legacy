@@ -22,7 +22,8 @@ SOURCES += src/f_main.cpp \
     src/b_exception.cpp \
     src/b_sweeppainter.cpp \
     src/b_painter.cpp \
-    src/b_sweepinputhandler.cpp
+    src/b_sweepinputhandler.cpp \
+    src/f_qtsettings.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -44,7 +45,8 @@ HEADERS += src/b_picross.h \
     src/b_point.h \
     src/b_exception.h \
     src/b_sweeppainter.h \
-    src/b_sweepinputhandler.h
+    src/b_sweepinputhandler.h \
+    src/f_qtsettings.h
 unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \
@@ -58,4 +60,5 @@ OTHER_FILES += src/makefile \
     AUTHORS \
     INSTALL \
     COPYING
-FORMS += src/f_qtmainwindow.ui
+FORMS += src/f_qtmainwindow.ui \
+    src/f_qtsettings.ui
