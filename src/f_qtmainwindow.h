@@ -16,6 +16,7 @@
 #include <QFileDialog>
 
 #include "f_qtpicthread.h"
+#include "f_qtsettings.h"
 
 namespace Ui {
     class QTMainWindow;
@@ -33,6 +34,7 @@ protected:
 private slots:
     void quit();
     void start();
+    void settings();
 //    void setPuzzleFolder();
 //    void enableGui();
 //    void rbTypeToggled();

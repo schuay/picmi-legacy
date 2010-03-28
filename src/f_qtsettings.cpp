@@ -1,19 +1,19 @@
 #include "f_qtsettings.h"
 #include "ui_f_qtsettings.h"
 
-QtSettings::QtSettings(QWidget *parent) :
-    QWidget(parent),
+QTSettings::QTSettings(QWidget *parent) :
+    QDialog(parent),
     ui(new Ui::QtSettings)
 {
     ui->setupUi(this);
 }
 
-QtSettings::~QtSettings()
+QTSettings::~QTSettings()
 {
     delete ui;
 }
 
-void QtSettings::changeEvent(QEvent *e)
+void QTSettings::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
     switch (e->type()) {

@@ -1,17 +1,17 @@
 #ifndef F_QTSETTINGS_H
 #define F_QTSETTINGS_H
 
-#include <QWidget>
+#include <QDialog>
 
 namespace Ui {
     class QtSettings;
 }
 
-class QtSettings : public QWidget {
+class QTSettings : public QDialog {
     Q_OBJECT
 public:
-    QtSettings(QWidget *parent = 0);
-    ~QtSettings();
+    QTSettings(QWidget *parent = 0);
+    ~QTSettings();
 
 protected:
     void changeEvent(QEvent *e);

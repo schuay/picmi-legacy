@@ -18,6 +18,8 @@ QTMainWindow::QTMainWindow(BoardSettings &settings, QWidget *parent) :
 
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
+    connect(ui->bSettings, SIGNAL(clicked()), this, SLOT(settings()));
+
 //    connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(setPuzzleFolder()));
 //    connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(rbTypeToggled()));
 //    connect(&t, SIGNAL(finished()), this, SLOT(enableGui()));
@@ -128,6 +130,11 @@ void QTMainWindow::start() {
 //    t.PassSettings(WriteSettings());
     t.start();
 }
+void QTMainWindow::settings() {
+    QTSettings settings(this);
+    settings.exec();
+}
+
 //void QTMainWindow::setPuzzleFolder() {
 //    QString path = browse(QFileDialog::Directory);
 //
