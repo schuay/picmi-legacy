@@ -7,6 +7,9 @@ namespace Ui {
     class QtSettings;
 }
 
+namespace BoardGame {
+
+
 class QTSettings : public QDialog {
     Q_OBJECT
 public:
@@ -24,4 +27,5 @@ private:
     Ui::QtSettings *ui;
 };
 
+}
 #endif // F_QTSETTINGS_H

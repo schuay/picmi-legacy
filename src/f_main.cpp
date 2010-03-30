@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
         }
         else {
             QApplication a(argc, argv);
-            QTMainWindow w(s);
+            QTMainWindow w;
 
             w.show();
 

@@ -11,9 +11,6 @@
 #define F_QTMAINWINDOW_H
 
 #include <QMainWindow>
-#include <QFile>
-#include <QDir>
-#include <QFileDialog>
 #include <QImage>
 #include <QPixmap>
 #include <QDesktopWidget>
@@ -24,11 +21,13 @@
 namespace Ui {
     class QTMainWindow;
 }
+
 namespace BoardGame {
+
 class QTMainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    QTMainWindow(BoardSettings &settings, QWidget *parent = 0);
+    QTMainWindow(QWidget *parent = 0);
     ~QTMainWindow();
 
 protected:
@@ -37,27 +36,17 @@ protected:
 private slots:
     void quit();
     void start();
-    void settings();
-//    void setPuzzleFolder();
-//    void enableGui();
-//    void rbTypeToggled();
+    void showSettings();
     void gameTypeToogled();
-//    void setDefaultBG();
-//    void setCustomBG();
+    void unlockGui();
 
 private:
     Ui::QTMainWindow *ui;
 
     QTPicThread t;
 
-    QString bgPath;
-
-    QString browse(QFileDialog::FileMode mode);
-
-    void setGuiEnabledState(bool b);
-
-    void ReadSettings(BoardSettings &settings);
-    BoardSettings* WriteSettings();
+    void setGuiLocked(bool locked);
 };
+
 }
 #endif // F_QTMAINWINDOW_H
