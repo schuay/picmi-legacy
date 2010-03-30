@@ -16,17 +16,37 @@ QTMainWindow::QTMainWindow(BoardSettings &settings, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    /* fix window size */
+    this->setMinimumHeight(this->size().height());
+    this->setMaximumHeight(this->size().height());
+    this->setMinimumWidth(this->size().width());
+    this->setMaximumWidth(this->size().width());
+
+    /* center window on screen */
+    QDesktopWidget desktopWidget;
+    QRect desktopRect(desktopWidget.availableGeometry(desktopWidget.primaryScreen()));
+    QRect widgetRect(this->rect());
+    this->move(desktopRect.center() - widgetRect.center());
+
+    /* connect slots */
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->bSettings, SIGNAL(clicked()), this, SLOT(settings()));
+    connect(ui->rbPicross, SIGNAL(toggled(bool)), this, SLOT(gameTypeToogled()));
 
 //    connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(setPuzzleFolder()));
 //    connect(ui->rbPuzTypeRandom, SIGNAL(toggled(bool)), this, SLOT(rbTypeToggled()));
 //    connect(&t, SIGNAL(finished()), this, SLOT(enableGui()));
 //    connect(ui->bBGCustom, SIGNAL(clicked()), this, SLOT(setCustomBG()));
 //    connect(ui->bBGDefault, SIGNAL(clicked()), this, SLOT(setDefaultBG()));
-//    connect(ui->rbPicross, SIGNAL(toggled(bool)), this, SLOT(rbGameTypeToogled()));
 
+    /* set game preview images */
+    QImage srcPicross(FILEPREFIX "gfx/scrpicross.jpg");
+
+    ui->lPicross->setPixmap(QPixmap::fromImage(srcPicross));
+    ui->lMinesweeper->setPixmap(QPixmap::fromImage(srcPicross));
+
+    /* load settings */
     settings.Load();
 //    ReadSettings(settings);
 }
@@ -147,9 +167,17 @@ void QTMainWindow::settings() {
 //void QTMainWindow::rbTypeToggled() {
 //    setGuiEnabledState(true);
 //}
-//void QTMainWindow::rbGameTypeToogled() {
-//    setGuiEnabledState(true);
-//}
+void QTMainWindow::gameTypeToogled() {
+    bool picrossEnabled;
+
+    if (ui->rbPicross->isChecked())
+        picrossEnabled = true;
+    else
+        picrossEnabled = false;
+
+    ui->lPicross->setEnabled(picrossEnabled);
+    ui->lMinesweeper->setEnabled(!picrossEnabled);
+}
 //
 //void QTMainWindow::setDefaultBG() {
 //    bgPath = "";

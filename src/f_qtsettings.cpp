@@ -6,6 +6,9 @@ QTSettings::QTSettings(QWidget *parent) :
     ui(new Ui::QtSettings)
 {
     ui->setupUi(this);
+
+    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(cancel()));
+    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(ok()));
 }
 
 QTSettings::~QTSettings()
@@ -23,4 +26,11 @@ void QTSettings::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+void QTSettings::ok() {
+    this->accept();
+}
+void QTSettings::cancel() {
+    this->reject();
 }

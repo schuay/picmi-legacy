@@ -16,6 +16,10 @@ public:
 protected:
     void changeEvent(QEvent *e);
 
+private slots:
+    void cancel();
+    void ok();
+
 private:
     Ui::QtSettings *ui;
 };

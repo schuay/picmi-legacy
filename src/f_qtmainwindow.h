@@ -14,6 +14,9 @@
 #include <QFile>
 #include <QDir>
 #include <QFileDialog>
+#include <QImage>
+#include <QPixmap>
+#include <QDesktopWidget>
 
 #include "f_qtpicthread.h"
 #include "f_qtsettings.h"
@@ -38,7 +41,7 @@ private slots:
 //    void setPuzzleFolder();
 //    void enableGui();
 //    void rbTypeToggled();
-//    void rbGameTypeToogled();
+    void gameTypeToogled();
 //    void setDefaultBG();
 //    void setCustomBG();
 
