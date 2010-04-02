@@ -60,18 +60,15 @@ void Sweeper::RandomPuzzle(BoardSettings &s) {
 }
 int Sweeper::CalcBombCount(Point &p) {
     unsigned int bombCount = 0;
-    Point *neighbors = NULL;
-    int neighborCount = 0;
 
-    neighbors = GetNeighborCoords(p, neighborCount, false);
+    int neighborCount = 0;
+    boost::shared_array<Point> neighbors =
+            GetNeighborCoords(p, neighborCount, false);
 
     for (int i=0; i<neighborCount; i++) {
         if (map[CToI(neighbors[i].x, neighbors[i].y)] == mapBomb)
             bombCount++;
     }
-
-    if (neighbors)
-        delete[] neighbors;
 
     return bombCount;
 }
@@ -222,11 +219,10 @@ void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-Point *Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) {
+boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) {
     bool pos[3][3];
     int nrOfNeighborTiles = 0,
         i,j;
-    Point *targetArray;
 
     targetCount = 0;
 
@@ -253,7 +249,8 @@ Point *Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) 
             if (pos[i][j])
                 nrOfNeighborTiles++;
 
-    targetArray = new Point[nrOfNeighborTiles];
+    boost::shared_array<Point> targetArray(
+            new Point[nrOfNeighborTiles]);
 
     for (i=0; i<3; i++)
         for (j=0; j<3; j++)
@@ -265,8 +262,6 @@ Point *Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) 
 }
 
 void Sweeper::ExposeNeighborTiles() {
-    Point *neighbors = NULL;
-    int neighborCount = 0;
     int markCount = 0;
 
     int currentTile = map[CToI(location)];
@@ -274,7 +269,9 @@ void Sweeper::ExposeNeighborTiles() {
     if (currentTile == mapBomb || currentTile == mapNone)
         return;
 
-    neighbors = GetNeighborCoords(location, neighborCount, false);
+    int neighborCount = 0;
+    boost::shared_array<Point> neighbors =
+            GetNeighborCoords(location, neighborCount, false);
 
     for (int i=0; i<neighborCount; i++) {
         if (boardState[CToI(neighbors[i].x, neighbors[i].y)] == boardMarked)
@@ -285,9 +282,6 @@ void Sweeper::ExposeNeighborTiles() {
         for (int i = 0; i < neighborCount; i++)
             if (boardState[CToI(neighbors[i].x, neighbors[i].y)] != boardMarked)
                 ExposeTile(neighbors[i]);
-
-    if (neighbors)
-        delete[] neighbors;
 }
 void Sweeper::ExposeTile(Point &p) {
 
@@ -300,16 +294,12 @@ void Sweeper::ExposeTile(Point &p) {
 
     /* recurse over all nondiagonal neighbor tiles */
 
-    Point *neighbors = NULL;
-    int neighborCount;
-
-    neighbors = GetNeighborCoords(p, neighborCount, false);
+    int neighborCount = 0;
+    boost::shared_array<Point> neighbors =
+            GetNeighborCoords(p, neighborCount, false);
 
     for (int i=0; i<neighborCount; i++)
         if (boardState[CToI(neighbors[i])] != boardExposed)
             ExposeTile(neighbors[i]);
-
-    if (neighbors)
-        delete[] neighbors;
 }
 }

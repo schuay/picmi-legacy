@@ -12,10 +12,12 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <boost/shared_array.hpp>
 
 #include "b_sweepdefines.h"
 #include "b_boardsettings.h"
 #include "b_boardgame.h"
+
 namespace BoardGame {
 class Sweeper : public BoardGame
 {
@@ -45,7 +47,7 @@ private:
     /* creates an array of all target points in targetArray and returns nr of neighbors */
     /* the caller is responsible for freeing the array */
     /* if noDiagonals is true, diagonal neighbors are not returned */
-    Point *GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals);
+    boost::shared_array<Point> GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals);
 
     /* exposing tiles is a recursive operation. expose all clear tiles connected to original tile. diagonal connections are not allowed */
     void ExposeTile(Point &p);

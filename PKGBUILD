@@ -9,7 +9,7 @@ arch=('i686' 'x86_64')
 url="http://github.com/schuay/$_pkgname/"
 license=('GPL')
 depends=('sdl' 'sdl_gfx' 'sdl_image' 'sdl_ttf' 'imagemagick' 'qt')
-makedepends=('git')
+makedepends=('git' 'boost')
 
 build() {
 
