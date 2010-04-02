@@ -24,15 +24,15 @@ namespace BoardGame {
 class BoardSettings
 {
 public:
-    BoardSettings();
-    bool Validate();
-    void Load();
-    void Save();
-
     enum GameTypeEnum {
         Picross,
         Minesweeper
     };
+
+    BoardSettings(GameTypeEnum t);
+    bool Validate();
+    void Load();
+    void Save();
 
     std::string
             Map,
@@ -56,6 +56,8 @@ public:
 private:
     void CheckForConfDir();
     void HandleConfLine(const std::string line);
+
+    static std::string TypeToStr(GameTypeEnum t) { if (t == Picross) return "picross"; else return "minesweeper"; }
 
     std::string
             basePath,

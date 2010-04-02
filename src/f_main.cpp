@@ -26,7 +26,7 @@ bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv);
 
 int main(int argc, char **argv) {
 
-    BoardSettings s;
+    BoardSettings s(BoardSettings::Picross);
     bool disableQt = false;
 
     try {

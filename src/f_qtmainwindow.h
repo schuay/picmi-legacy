@@ -44,6 +44,7 @@ private:
     Ui::QTMainWindow *ui;
 
     QTPicThread t;
+    BoardSettings::GameTypeEnum gameType;
 
     void setGuiLocked(bool locked);
 };

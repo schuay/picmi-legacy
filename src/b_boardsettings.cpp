@@ -1,11 +1,11 @@
 #include "b_boardsettings.h"
 namespace BoardGame {
-BoardSettings::BoardSettings()
+BoardSettings::BoardSettings(GameTypeEnum t)
 {
     /* set default values */
 
     basePath = std::string(getenv("HOME")) + "/.config/tuxpicross/";
-    confFilePath = basePath + "tuxpicross.conf";
+    confFilePath = basePath + TypeToStr(t) + ".conf";
     defaultPuzzlePath = basePath + "puzzles/";
 
     Map = "";
@@ -18,7 +18,7 @@ BoardSettings::BoardSettings()
     NoHintsMode = false;
     LoadRandomFromPath = false;
 
-    GameType = Picross;
+    GameType = t;
 
     x = 15;
     y = 15;
