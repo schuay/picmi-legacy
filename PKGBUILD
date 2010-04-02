@@ -23,7 +23,7 @@ build() {
   #git checkout -b installer $_pkgname-$pkgver || return 1
 
   #set file path
-  sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/tuxpicross/"_' src/b_picpainter.h || return 1
+  sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/tuxpicross/"_' src/b_painter.h || return 1
 
   # START:  QT ENABLED. if you want to disable qt, remove qt from depends(),
   #         comment this section and uncomment the QT DISABLED section

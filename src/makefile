@@ -44,7 +44,7 @@ all:
 	sed -i 's_#define QTENABLED__' f_main.cpp
 	sed -i \
 		"s_#define FILEPREFIX.*_#define FILEPREFIX \"/usr/share/tuxpicross/\"_" \
-                b_picpainter.h
+                b_painter.h
 	$(CC) -c $(INCLUDEDIRS) $(SOURCES)
 	$(CC) $(LIBS) $(OBJECTS) -o $(EXECUTABLE)
  

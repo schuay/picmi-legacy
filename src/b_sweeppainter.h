@@ -19,8 +19,6 @@
 #include "b_sdlsprite.h"
 #include "b_sdltext.h"
 
-#define FILEPREFIX ""               /* set the location of gfx and fonts */
-
 namespace BoardGame {
 
 class SweepPainter : public Painter

@@ -13,7 +13,6 @@
 #include "b_painter.h"
 #include "b_picross.h"
 
-#define FILEPREFIX ""               /* set the location of gfx and fonts */
 namespace BoardGame {
 class PicPainter : public Painter
 {
