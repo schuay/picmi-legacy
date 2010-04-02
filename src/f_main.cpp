@@ -36,7 +36,8 @@ int main(int argc, char **argv) {
 #ifdef QTENABLED
         if (disableQt) {
 #endif
-            GameManager game(s);
+            GameManager game;
+            game.Initialize(s);
             game.MainLoop();
 #ifdef QTENABLED
         }

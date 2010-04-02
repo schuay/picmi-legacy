@@ -11,11 +11,14 @@
 #define F_QTPICTHREAD_H
 
 #include <QThread>
+#include <string>
 
 #include "b_gamemanager.h"
+
 namespace BoardGame {
 class QTPicThread : public QThread
 {
+    Q_OBJECT
 public:
     QTPicThread();
     ~QTPicThread();
@@ -23,6 +26,9 @@ public:
     void run();
     void PassSettings(BoardSettings *s);
     void LoadBackground(std::string path);
+
+signals:
+    void ExceptionThrown(QString);
 
 private:
     BoardSettings *settings;

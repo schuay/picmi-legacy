@@ -14,6 +14,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QDesktopWidget>
+#include <QMessageBox>
 
 #include "f_qtpicthread.h"
 #include "f_qtsettings.h"
@@ -39,6 +40,7 @@ private slots:
     void showSettings();
     void gameTypeToogled();
     void unlockGui();
+    void displayException(QString message);
 
 private:
     Ui::QTMainWindow *ui;

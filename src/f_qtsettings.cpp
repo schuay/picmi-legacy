@@ -23,6 +23,8 @@ QTSettings::QTSettings(QWidget *parent) :
 
 QTSettings::~QTSettings()
 {
+    delete picross;
+    delete minesweeper;
     delete ui;
 }
 
@@ -99,12 +101,12 @@ void QTSettings::ReadSettings() {
 
     /* minesweeper */
 
-    ui->leBGPath->setText(minesweeper->BackgroundPath.c_str());
+    ui->leMSBGPath->setText(minesweeper->BackgroundPath.c_str());
 
-    ui->sbWidth->setValue(minesweeper->x);
-    ui->sbHeight->setValue(minesweeper->y);
+    ui->sbMSWidth->setValue(minesweeper->x);
+    ui->sbMSHeight->setValue(minesweeper->y);
 
-    ui->sbDifficulty->setValue(minesweeper->Difficulty);
+    ui->sbMSDifficulty->setValue(minesweeper->Difficulty);
 }
 void QTSettings::WriteSettings() {
 
@@ -138,5 +140,6 @@ void QTSettings::WriteSettings() {
 
     /* save settings to disk */
     picross->Save();
+    minesweeper->Save();
 }
 }

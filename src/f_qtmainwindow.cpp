@@ -35,6 +35,7 @@ QTMainWindow::QTMainWindow(QWidget *parent) :
     connect(ui->bSettings, SIGNAL(clicked()), this, SLOT(showSettings()));
     connect(ui->rbPicross, SIGNAL(toggled(bool)), this, SLOT(gameTypeToogled()));
     connect(&t, SIGNAL(finished()), this, SLOT(unlockGui()));
+    connect(&t, SIGNAL(ExceptionThrown(QString)), this, SLOT(displayException(QString)));
 
     /* set game preview images */
     QImage srcPicross(FILEPREFIX "gfx/scrpicross.jpg");
@@ -108,5 +109,11 @@ void QTMainWindow::setGuiLocked(bool locked) {
     ui->bSettings->setEnabled(!locked);
     ui->bStart->setEnabled(!locked);
 }
-
+void QTMainWindow::displayException(QString message) {
+    QMessageBox::critical(NULL,
+                          QString("Error"),
+                          message,
+                          QMessageBox::Ok,
+                          QMessageBox::NoButton);
+}
 }

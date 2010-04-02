@@ -50,11 +50,7 @@ void GameManager::InitSystems() {
 
     SDL_WM_SetCaption(WINDOWCAPTION, NULL);
 }
-
-GameManager::GameManager(BoardSettings &s) {
-    game = NULL;
-    painter = NULL;
-    inputhandler = NULL;
+void GameManager::Initialize(BoardSettings &s) {
 
     InitSystems();
 
@@ -69,6 +65,12 @@ GameManager::GameManager(BoardSettings &s) {
         painter = new SweepPainter(game, s.BackgroundPath);
         inputhandler = new SweepInputHandler(game);
     }
+}
+
+GameManager::GameManager() {
+    game = NULL;
+    painter = NULL;
+    inputhandler = NULL;
 }
 GameManager::~GameManager() {
     if (game)

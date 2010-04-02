@@ -24,10 +24,11 @@ namespace BoardGame {
 class GameManager {
 public:
 
-    GameManager(BoardSettings &s);
+    GameManager();
     ~GameManager();
 
     void MainLoop();
+    void Initialize(BoardSettings &s);
 
 private:
 
