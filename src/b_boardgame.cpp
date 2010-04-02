@@ -17,6 +17,8 @@ BoardGame::BoardGame()
     puzzleLocation.y = 200;
 
     zoom = 1;
+
+    Quit = false;
 }
 BoardGame::~BoardGame() {}
 
