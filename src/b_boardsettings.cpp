@@ -2,26 +2,44 @@
 namespace BoardGame {
 BoardSettings::BoardSettings(GameTypeEnum t)
 {
-    /* set default values */
+    GameType = t;
+    SetDefaultValues();
+}
+
+void BoardSettings::SetDefaultValues() {
 
     basePath = std::string(getenv("HOME")) + "/.config/tuxpicross/";
-    confFilePath = basePath + TypeToStr(t) + ".conf";
     defaultPuzzlePath = basePath + "puzzles/";
+    confFilePath = basePath + TypeToStr(GameType) + ".conf";
 
-    Map = "";
-    PuzzlePath = defaultPuzzlePath;
-    BackgroundPath = "";
+    if (GameType == Picross) {
+        Map = "";
+        PuzzlePath = defaultPuzzlePath;
+        BackgroundPath = "";
 
-    Type = PUZ_RAND;
-    Difficulty = 55;
+        Type = PUZ_RAND;
+        Difficulty = 55;
 
-    NoHintsMode = false;
-    LoadRandomFromPath = false;
+        NoHintsMode = false;
+        LoadRandomFromPath = false;
 
-    GameType = t;
+        x = 15;
+        y = 15;
+    }
+    else if (GameType == Minesweeper) {
+        Map = "";
+        PuzzlePath = defaultPuzzlePath;
+        BackgroundPath = "";
 
-    x = 15;
-    y = 15;
+        Type = PUZ_RAND;
+        Difficulty = 20;
+
+        NoHintsMode = false;
+        LoadRandomFromPath = false;
+
+        x = 20;
+        y = 20;
+    }
 }
 
 bool BoardSettings::Validate() {

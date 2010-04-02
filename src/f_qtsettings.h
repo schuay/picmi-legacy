@@ -2,6 +2,7 @@
 #define F_QTSETTINGS_H
 
 #include <QDialog>
+#include "b_boardsettings.h"
 
 namespace Ui {
     class QtSettings;
@@ -25,6 +26,13 @@ private slots:
 
 private:
     Ui::QtSettings *ui;
+
+    BoardSettings
+            *picross,
+            *minesweeper;
+
+    void ReadSettings();
+    void WriteSettings();
 };
 
 }

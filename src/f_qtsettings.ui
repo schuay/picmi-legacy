@@ -89,7 +89,10 @@
               </widget>
              </item>
              <item row="3" column="1">
-              <widget class="QComboBox" name="comboBox">
+              <widget class="QComboBox" name="cbBackground">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <item>
                 <property name="text">
                  <string>Default</string>
@@ -169,7 +172,7 @@
              <item row="1" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <widget class="QLineEdit" name="lePath">
+                <widget class="QLineEdit" name="lePuzzlePath">
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -177,6 +180,9 @@
                </item>
                <item>
                 <widget class="QPushButton" name="bBrowse">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -194,7 +200,7 @@
              <item row="4" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
-                <widget class="QLineEdit" name="lePath_2">
+                <widget class="QLineEdit" name="leBGPath">
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -202,6 +208,9 @@
                </item>
                <item>
                 <widget class="QPushButton" name="bBrowse_2">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -252,7 +261,10 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QComboBox" name="comboBox_2">
+              <widget class="QComboBox" name="cbMSBackground">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <item>
                 <property name="text">
                  <string>Default</string>
@@ -273,7 +285,7 @@
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QSpinBox" name="sbDifficulty_2">
+              <widget class="QSpinBox" name="sbMSDifficulty">
                <property name="minimum">
                 <number>1</number>
                </property>
@@ -290,7 +302,7 @@
               </widget>
              </item>
              <item row="3" column="1">
-              <widget class="QSpinBox" name="sbWidth_2">
+              <widget class="QSpinBox" name="sbMSWidth">
                <property name="minimum">
                 <number>5</number>
                </property>
@@ -310,7 +322,7 @@
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QSpinBox" name="sbHeight_2">
+              <widget class="QSpinBox" name="sbMSHeight">
                <property name="minimum">
                 <number>5</number>
                </property>
@@ -332,7 +344,7 @@
              <item row="1" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_9">
                <item>
-                <widget class="QLineEdit" name="lePath_4">
+                <widget class="QLineEdit" name="leMSBGPath">
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -340,6 +352,9 @@
                </item>
                <item>
                 <widget class="QPushButton" name="bBrowse_4">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>

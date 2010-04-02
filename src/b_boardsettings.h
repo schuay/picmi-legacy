@@ -57,6 +57,7 @@ private:
     void CheckForConfDir();
     void HandleConfLine(const std::string line);
 
+    void SetDefaultValues();
     static std::string TypeToStr(GameTypeEnum t) { if (t == Picross) return "picross"; else return "minesweeper"; }
 
     std::string

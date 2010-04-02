@@ -11,6 +11,14 @@ QTSettings::QTSettings(QWidget *parent) :
 
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(cancel()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(ok()));
+
+    picross = new BoardSettings(BoardSettings::Picross);
+    minesweeper = new BoardSettings(BoardSettings::Minesweeper);
+
+    picross->Load();
+    minesweeper->Load();
+
+    ReadSettings();
 }
 
 QTSettings::~QTSettings()
@@ -31,6 +39,8 @@ void QTSettings::changeEvent(QEvent *e)
 }
 
 void QTSettings::ok() {
+    WriteSettings();
+
     this->accept();
 }
 void QTSettings::cancel() {
@@ -67,74 +77,66 @@ void QTSettings::cancel() {
 //        return "";
 //}
 
-//void QTMainWindow::ReadSettings(BoardSettings &settings) {
-//
-//    if (settings.GameType == settings.Minesweeper)
-//        ui->rbMinesweeper->setChecked(true);
-//    else
-//        ui->rbPicross->setChecked(true);
-//
-//    if (settings.Type == PUZ_RAND)
-//        ui->rbPuzTypeRandom->setChecked(true);
-//    else
-//        ui->rbPuzTypeStatic->setChecked(true);
-//
-//    ui->lePath->setText(settings.PuzzlePath.c_str());
-//    bgPath = QString(settings.BackgroundPath.c_str());
-//
-//    ui->sbWidth->setValue(settings.x);
-//    ui->sbHeight->setValue(settings.y);
-//
-//    ui->sbDifficulty->setValue(settings.Difficulty);
-//
-//    ui->cbNoHintsMode->setChecked(settings.NoHintsMode);
-//
-//    setGuiEnabledState(true);
-//}
-//BoardSettings* QTMainWindow::WriteSettings() {
-//    BoardSettings *settings = new BoardSettings();
-//
-//    if (ui->rbMinesweeper->isChecked())
-//        settings->GameType = settings->Minesweeper;
-//    else
-//        settings->GameType = settings->Picross;
-//
-//    if (ui->rbPuzTypeRandom->isChecked())
-//        settings->Type = PUZ_RAND;
-//    else
-//        settings->Type = PUZ_STAT;
-//
-//    settings->x = ui->sbWidth->value();
-//    settings->y = ui->sbHeight->value();
-//
-//    settings->NoHintsMode = ui->cbNoHintsMode->isChecked();
-//
-//    settings->Difficulty = ui->sbDifficulty->value();
-//
-//    /* test whether path exists and set path */
-//    QString path(ui->lePath->displayText());
-//    QFile f(path);
-//    QDir d(path);
-//    if (path.length() == 0)
-//        settings->Type = PUZ_RAND;
-//    else if (d.exists())
-//        settings->LoadRandomFromPath = true;
-//    else if (f.exists())
-//        settings->LoadRandomFromPath = false;
-//    else
-//        settings->Type = PUZ_RAND;
-//
-//    settings->PuzzlePath = path.toStdString();
-//
-//    /* test whether bgPath exists and set it */
-//    QFile bgFile(bgPath);
-//    if (bgFile.exists())
-//        settings->BackgroundPath = bgPath.toStdString();
-//
-//    /* save settings to disk */
-//    settings->Save();
-//
-//    return settings;
-//}
+void QTSettings::ReadSettings() {
 
+    /* picross */
+
+    if (picross->Type == PUZ_RAND)
+        ui->rbPuzTypeRandom->setChecked(true);
+    else
+        ui->rbPuzTypeStatic->setChecked(true);
+
+    ui->lePuzzlePath->setText(picross->PuzzlePath.c_str());
+    ui->leBGPath->setText(picross->BackgroundPath.c_str());
+
+    ui->sbWidth->setValue(picross->x);
+    ui->sbHeight->setValue(picross->y);
+
+    ui->sbDifficulty->setValue(picross->Difficulty);
+
+    ui->cbNoHintsMode->setChecked(picross->NoHintsMode);
+
+
+    /* minesweeper */
+
+    ui->leBGPath->setText(minesweeper->BackgroundPath.c_str());
+
+    ui->sbWidth->setValue(minesweeper->x);
+    ui->sbHeight->setValue(minesweeper->y);
+
+    ui->sbDifficulty->setValue(minesweeper->Difficulty);
+}
+void QTSettings::WriteSettings() {
+
+    /* picross */
+
+    if (ui->rbPuzTypeRandom->isChecked())
+        picross->Type = PUZ_RAND;
+    else
+        picross->Type = PUZ_STAT;
+
+    picross->x = ui->sbWidth->value();
+    picross->y = ui->sbHeight->value();
+
+    picross->NoHintsMode = ui->cbNoHintsMode->isChecked();
+
+    picross->Difficulty = ui->sbDifficulty->value();
+
+    picross->PuzzlePath = ui->lePuzzlePath->text().toStdString();
+    picross->BackgroundPath = ui->leBGPath->text().toStdString();
+
+
+    /* minesweeper */
+
+    minesweeper->x = ui->sbMSWidth->value();
+    minesweeper->y = ui->sbMSHeight->value();
+
+    minesweeper->Difficulty = ui->sbMSDifficulty->value();
+
+    minesweeper->BackgroundPath = ui->leMSBGPath->text().toStdString();
+
+
+    /* save settings to disk */
+    picross->Save();
+}
 }
