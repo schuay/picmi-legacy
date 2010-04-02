@@ -191,13 +191,16 @@ void Sweeper::DoOpAt(Point &p, int op) {
     int
             state = boardState[CToI(p)];
 
-    if (state == boardExposed)  /* exposed tiles cannot be altered */
+    /* exposed tiles can only be used to expose neighbors*/
+    if (state == boardExposed && op != S_OP_EXPOSE)
         return;
 
     switch (op) {
     case S_OP_EXPOSE:       /* recursive expose */
         if (state == boardMarked || state == boardTentative)
             SetStateAt(p, boardClean);
+        else if (state == boardExposed)
+            ExposeNeighborTiles();
         else
             ExposeTile(p);
         break;
@@ -261,6 +264,31 @@ Point *Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) 
     return targetArray;
 }
 
+void Sweeper::ExposeNeighborTiles() {
+    Point *neighbors = NULL;
+    int neighborCount = 0;
+    int markCount = 0;
+
+    int currentTile = map[CToI(location)];
+
+    if (currentTile == mapBomb || currentTile == mapNone)
+        return;
+
+    neighbors = GetNeighborCoords(location, neighborCount, false);
+
+    for (int i=0; i<neighborCount; i++) {
+        if (boardState[CToI(neighbors[i].x, neighbors[i].y)] == boardMarked)
+            markCount++;
+    }
+
+    if (markCount == currentTile)
+        for (int i = 0; i < neighborCount; i++)
+            if (boardState[CToI(neighbors[i].x, neighbors[i].y)] != boardMarked)
+                ExposeTile(neighbors[i]);
+
+    if (neighbors)
+        delete[] neighbors;
+}
 void Sweeper::ExposeTile(Point &p) {
 
     boardState[CToI(p)] = boardExposed;

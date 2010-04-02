@@ -39,9 +39,10 @@ QTMainWindow::QTMainWindow(QWidget *parent) :
 
     /* set game preview images */
     QImage srcPicross(FILEPREFIX "gfx/scrpicross.jpg");
+    QImage srcMinesweeper(FILEPREFIX "gfx/scrminesweeper.jpg");
 
     ui->lPicross->setPixmap(QPixmap::fromImage(srcPicross));
-    ui->lMinesweeper->setPixmap(QPixmap::fromImage(srcPicross));
+    ui->lMinesweeper->setPixmap(QPixmap::fromImage(srcMinesweeper));
 
     gameType = BoardSettings::Picross;
 }

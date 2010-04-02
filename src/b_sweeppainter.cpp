@@ -83,8 +83,8 @@ namespace BoardGame {
         sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
         sprIcon.SetAsIcon();
 
-        sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", game->Zoom(), 0);
-        sprClearTile.Load(FILEPREFIX "gfx/box.png", game->Zoom(), 0);
+        sprCellFrame.Load(FILEPREFIX "gfx/mscellframe.png", game->Zoom(), 0);
+        sprClearTile.Load(FILEPREFIX "gfx/msbox.png", game->Zoom(), 0);
         sprMarkedTile.Load(FILEPREFIX "gfx/sweepermarked.png", game->Zoom(), 0);
         sprTentativeTile.Load(FILEPREFIX "gfx/tentative.png", game->Zoom(), 0);
         sprBomb.Load(FILEPREFIX "gfx/bomb.png", game->Zoom(), 0);
@@ -98,6 +98,6 @@ namespace BoardGame {
         sprNumbers[6].Load(FILEPREFIX "gfx/7.png", game->Zoom(), 0);
         sprNumbers[7].Load(FILEPREFIX "gfx/8.png", game->Zoom(), 0);
 
-        sprBackground.Load(FILEPREFIX "gfx/background.jpg", game->Zoom(), 0);
+        sprBackground.Load(FILEPREFIX "gfx/msbackground.jpg", game->Zoom(), 0);
     }
 }

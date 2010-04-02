@@ -50,6 +50,9 @@ private:
     /* exposing tiles is a recursive operation. expose all clear tiles connected to original tile. diagonal connections are not allowed */
     void ExposeTile(Point &p);
 
+    /* this is called when clicking on an exposed tile. if the amount of marks matches the mapCount, start exposing all neighbors */
+    void ExposeNeighborTiles();
+
     static const int
             mapNone = 0,
             mapBomb = 9,
