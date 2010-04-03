@@ -15,9 +15,11 @@ Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
     height = s.y;
 
     puzzleLocation.x = 0;
-    puzzleLocation.y = 0;
+    puzzleLocation.y = 30;
 
     RandomPuzzle(s);
+
+    timer.Start();
 }
 Sweeper::~Sweeper() {
     if (map)
@@ -26,10 +28,19 @@ Sweeper::~Sweeper() {
         delete[] boardState;
 }
 
-void Sweeper::RandomPuzzle(BoardSettings &s) {
-    int randX, randY, mineCount;
+unsigned int Sweeper::MarkedBombCount() {
+    unsigned int markedCount = 0;
+    for (unsigned int i = 0; i < width*height; i++)
+        if (boardState[i] == boardMarked)
+            markedCount++;
 
-    mineCount = width*height*s.Difficulty/100;
+    return markedCount;
+}
+
+void Sweeper::RandomPuzzle(BoardSettings &s) {
+    int randX, randY;
+
+    bombCount = width*height*s.Difficulty/100;
 
     map = new int[width*height];
     boardState = new int[width*height];
@@ -41,7 +52,7 @@ void Sweeper::RandomPuzzle(BoardSettings &s) {
 
     srand(time(NULL));
 
-    for (int i=0; i<mineCount; i++) {
+    for (unsigned int i=0; i<bombCount; i++) {
 
         do {
             randX = rand() % width;

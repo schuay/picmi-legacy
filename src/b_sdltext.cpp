@@ -14,6 +14,8 @@ SDLText::SDLText()
     fontNormal = NULL;
     fontBold = NULL;
     fontItalic = NULL;
+
+    Size = 17;
 }
 
 SDLText::~SDLText() {
@@ -31,9 +33,11 @@ SDLText::~SDLText() {
     }
 }
 
-void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic) {
+void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int size) {
     if (fontNormal)
         throw Exception("Font already loaded, Text::Load cannot be called twice.");
+
+    Size = size;
 
     fontNormal = TTF_OpenFont(fnNormal.c_str(), Size);
     fontBold = TTF_OpenFont(fnBold.c_str(), Size);

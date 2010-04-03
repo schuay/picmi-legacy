@@ -31,6 +31,7 @@ public:
 protected:
 
     void PaintBoardArea();
+    void PaintInfoArea();
 
     void LoadSprites();
     void InitSystems();

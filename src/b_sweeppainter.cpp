@@ -29,6 +29,7 @@ namespace BoardGame {
     void SweepPainter::Paint() {
         PaintBackground();
         PaintBoardArea();
+        PaintInfoArea();
 
         SDL_Flip(screen);
     }
@@ -63,6 +64,34 @@ namespace BoardGame {
             }
         }
     }
+    void SweepPainter::PaintInfoArea() {
+        SDL_Rect to;
+        SDL_Color color;
+        std::stringstream out;
+        Point p;
+
+        to.x = to.y = 0;
+        to.w = game->Width() * game->CellLength();
+        to.h = game->PixOffsetY();
+
+        p.x = 10 * game->Zoom();
+        p.y = 10 * game->Zoom();
+
+        color.r = color.g = color.b = 255;
+
+        /* info -> black bg */
+        SDL_FillRect(screen, &to, SDL_MapRGB(screen->format, 0, 0, 0));
+
+        /* draw text */
+        out << "Elapsed Time: " << game->GetElapsedTime();
+        txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_L);
+
+        p.x = game->Width() * game->CellLength() - 10 * game->Zoom();
+        out.str("");
+
+        out << "Completed: " << game->MarkedBombCount() << " / " << game->TotalBombCount();
+        txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_R);
+    }
 
     void SweepPainter::InitSystems() {
 
@@ -78,7 +107,7 @@ namespace BoardGame {
     void SweepPainter::LoadSprites() {
         txt.Load(FILEPREFIX "gfx/LiberationMono-Regular.ttf",
                  FILEPREFIX "gfx/LiberationMono-Bold.ttf",
-                 FILEPREFIX "gfx/LiberationMono-Italic.ttf");
+                 FILEPREFIX "gfx/LiberationMono-Italic.ttf", 12);
 
         sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
         sprIcon.SetAsIcon();

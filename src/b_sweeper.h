@@ -39,6 +39,9 @@ public:
     void DoOpAt(Point &p, int op);
     void DoOp(int op);
 
+    unsigned int MarkedBombCount();
+    unsigned int TotalBombCount() { return bombCount; }
+
 private:
 
     void RandomPuzzle(BoardSettings &s);
@@ -62,6 +65,8 @@ private:
             boardExposed = 1,
             boardMarked = 2,
             boardTentative = 3;
+
+    unsigned int bombCount;
 
     int *map,
         *boardState;
