@@ -37,6 +37,9 @@
               <layout class="QHBoxLayout" name="horizontalLayout">
                <item>
                 <widget class="QRadioButton" name="rbPuzTypeRandom">
+                 <property name="toolTip">
+                  <string>Generate a random puzzle according to the Difficulty, Width and Height settings.</string>
+                 </property>
                  <property name="text">
                   <string>Random</string>
                  </property>
@@ -47,6 +50,9 @@
                </item>
                <item>
                 <widget class="QRadioButton" name="rbPuzTypeStatic">
+                 <property name="toolTip">
+                  <string>Load a puzzle from an image file located in the 'Board Maps' path.</string>
+                 </property>
                  <property name="text">
                   <string>From File</string>
                  </property>
@@ -76,6 +82,11 @@
              </item>
              <item row="2" column="1">
               <widget class="QCheckBox" name="cbNoHintsMode">
+               <property name="toolTip">
+                <string>In No Hints Mode, incorrectly marking tiles as filled is allowed. There is no feedback whether the tile is actually filled or not.
+
+Penalty time is disabled in this mode.</string>
+               </property>
                <property name="text">
                 <string/>
                </property>
@@ -92,6 +103,9 @@
               <widget class="QComboBox" name="cbBackground">
                <property name="enabled">
                 <bool>true</bool>
+               </property>
+               <property name="toolTip">
+                <string>Toggle between default and custom background.</string>
                </property>
                <item>
                 <property name="text">
@@ -114,6 +128,9 @@
              </item>
              <item row="5" column="1">
               <widget class="QSpinBox" name="sbDifficulty">
+               <property name="toolTip">
+                <string>Percentage of game board filled with boxes. A good starting point is 55%. Less is harder, more is easier.</string>
+               </property>
                <property name="minimum">
                 <number>1</number>
                </property>
@@ -131,6 +148,9 @@
              </item>
              <item row="6" column="1">
               <widget class="QSpinBox" name="sbWidth">
+               <property name="toolTip">
+                <string>Width of the game board in tiles.</string>
+               </property>
                <property name="minimum">
                 <number>5</number>
                </property>
@@ -151,6 +171,9 @@
              </item>
              <item row="7" column="1">
               <widget class="QSpinBox" name="sbHeight">
+               <property name="toolTip">
+                <string>Height of the game board in tiles.</string>
+               </property>
                <property name="minimum">
                 <number>5</number>
                </property>
@@ -173,6 +196,9 @@
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
                 <widget class="QLineEdit" name="leMapsPath">
+                 <property name="toolTip">
+                  <string>The directory to search for images used as puzzles.</string>
+                 </property>
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -182,6 +208,9 @@
                 <widget class="QPushButton" name="bBrowseMaps">
                  <property name="enabled">
                   <bool>true</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>Choose the directory to search for images used as puzzles.</string>
                  </property>
                  <property name="text">
                   <string>...</string>
@@ -201,6 +230,9 @@
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
                 <widget class="QLineEdit" name="leBGPath">
+                 <property name="toolTip">
+                  <string>Path to image used as custom background.</string>
+                 </property>
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -210,6 +242,9 @@
                 <widget class="QPushButton" name="bBrowseBG">
                  <property name="enabled">
                   <bool>true</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>Choose image used as custom background.</string>
                  </property>
                  <property name="text">
                   <string>...</string>
@@ -265,6 +300,9 @@
                <property name="enabled">
                 <bool>true</bool>
                </property>
+               <property name="toolTip">
+                <string>Toggle between default and custom background.</string>
+               </property>
                <item>
                 <property name="text">
                  <string>Default</string>
@@ -286,11 +324,14 @@
              </item>
              <item row="2" column="1">
               <widget class="QSpinBox" name="sbMSDifficulty">
+               <property name="toolTip">
+                <string>Percentage of game board filled with mines. A good starting point is 15%. Less is easier, more is harder.</string>
+               </property>
                <property name="minimum">
                 <number>1</number>
                </property>
                <property name="value">
-                <number>55</number>
+                <number>15</number>
                </property>
               </widget>
              </item>
@@ -303,6 +344,9 @@
              </item>
              <item row="3" column="1">
               <widget class="QSpinBox" name="sbMSWidth">
+               <property name="toolTip">
+                <string>Width of the game board in tiles.</string>
+               </property>
                <property name="minimum">
                 <number>5</number>
                </property>
@@ -310,7 +354,7 @@
                 <number>40</number>
                </property>
                <property name="value">
-                <number>15</number>
+                <number>20</number>
                </property>
               </widget>
              </item>
@@ -323,6 +367,9 @@
              </item>
              <item row="4" column="1">
               <widget class="QSpinBox" name="sbMSHeight">
+               <property name="toolTip">
+                <string>Height of the game board in tiles.</string>
+               </property>
                <property name="minimum">
                 <number>5</number>
                </property>
@@ -330,7 +377,7 @@
                 <number>40</number>
                </property>
                <property name="value">
-                <number>15</number>
+                <number>20</number>
                </property>
               </widget>
              </item>
@@ -345,6 +392,9 @@
               <layout class="QHBoxLayout" name="horizontalLayout_9">
                <item>
                 <widget class="QLineEdit" name="leMSBGPath">
+                 <property name="toolTip">
+                  <string>Path to image used as custom background.</string>
+                 </property>
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
@@ -354,6 +404,9 @@
                 <widget class="QPushButton" name="bMSBrowseBG">
                  <property name="enabled">
                   <bool>true</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>Choose image used as custom background.</string>
                  </property>
                  <property name="text">
                   <string>...</string>
