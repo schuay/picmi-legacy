@@ -24,7 +24,7 @@ namespace BoardGame {
 class SweepPainter : public Painter
 {
 public:
-    SweepPainter(BoardGame *p, std::string customBackground);
+    SweepPainter(BoardGame *p, BoardSettings &s);
 
     void Paint();
 

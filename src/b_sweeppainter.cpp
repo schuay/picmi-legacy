@@ -11,7 +11,7 @@
 
 namespace BoardGame {
 
-    SweepPainter::SweepPainter(BoardGame *p, std::string customBackground) :
+    SweepPainter::SweepPainter(BoardGame *p, BoardSettings &s) :
             Painter(), game(NULL)
     {
         game = dynamic_cast<Sweeper*>(p);
@@ -22,8 +22,8 @@ namespace BoardGame {
         InitSystems();
         LoadSprites();
 
-        if (customBackground.length() != 0)
-            LoadCustomBackground(customBackground);
+        if (s.UseCustomBG && s.BackgroundPath.length() != 0)
+            LoadCustomBackground(s.BackgroundPath);
     }
 
     void SweepPainter::Paint() {

@@ -12,6 +12,8 @@ void BoardSettings::SetDefaultValues() {
     defaultPuzzlePath = basePath + "puzzles/";
     confFilePath = basePath + TypeToStr(GameType) + ".conf";
 
+    UseCustomBG = false;
+
     if (GameType == Picross) {
         Map = "";
         PuzzlePath = defaultPuzzlePath;
@@ -113,6 +115,8 @@ void BoardSettings::HandleConfLine(const std::string line) {
         else if (settingType == "GAMETYPE")
             GameType = static_cast<BoardSettings::GameTypeEnum>(
                     atoi(settingValue.c_str()));
+        else if (settingType == "USECUSTOMBG")
+            UseCustomBG = atoi(settingValue.c_str());
     }
     catch (std::exception) {
         printf("Invalid settings value, ignored. Setting type: %s, Setting value: %s ",
@@ -136,6 +140,7 @@ void BoardSettings::Save() {
     write << "DIFFICULTY=" << Difficulty << std::endl;
     write << "NOHINTSMODE=" << NoHintsMode << std::endl;
     write << "GAMETYPE=" << GameType << std::endl;
+    write << "USECUSTOMBG=" << UseCustomBG << std::endl;
 
     write.close();
 }

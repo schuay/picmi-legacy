@@ -9,7 +9,7 @@
 
 #include "b_picpainter.h"
 namespace BoardGame {
-PicPainter::PicPainter(BoardGame *p, std::string customBackground)
+PicPainter::PicPainter(BoardGame *p, BoardSettings &s)
     : Painter(), game(NULL)
 {
     game = dynamic_cast<Picross*>(p);
@@ -20,8 +20,8 @@ PicPainter::PicPainter(BoardGame *p, std::string customBackground)
     InitSystems();
     LoadSprites();
 
-    if (customBackground.length() != 0)
-        LoadCustomBackground(customBackground);
+    if (s.UseCustomBG && s.BackgroundPath.length() != 0)
+        LoadCustomBackground(s.BackgroundPath);
 }
 
 void PicPainter::LoadSprites() {

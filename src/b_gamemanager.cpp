@@ -57,12 +57,12 @@ void GameManager::Initialize(BoardSettings &s) {
     /* create game objects */
     if (s.GameType == BoardSettings::Picross) {
         game = new Picross(s);
-        painter = new PicPainter(game, s.BackgroundPath);
+        painter = new PicPainter(game, s);
         inputhandler = new PicInputHandler(game);
     }
     else if (s.GameType == BoardSettings::Minesweeper) {
         game = new Sweeper(s);
-        painter = new SweepPainter(game, s.BackgroundPath);
+        painter = new SweepPainter(game, s);
         inputhandler = new SweepInputHandler(game);
     }
 }

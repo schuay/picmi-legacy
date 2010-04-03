@@ -91,7 +91,7 @@
              <item row="3" column="1">
               <widget class="QComboBox" name="cbBackground">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <item>
                 <property name="text">
@@ -263,7 +263,7 @@
              <item row="0" column="1">
               <widget class="QComboBox" name="cbMSBackground">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <item>
                 <property name="text">

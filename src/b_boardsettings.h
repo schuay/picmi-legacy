@@ -45,7 +45,8 @@ public:
 
     bool
             NoHintsMode,
-            LoadRandomFromPath;
+            LoadRandomFromPath,
+            UseCustomBG;
 
     unsigned int
             x,

@@ -17,7 +17,7 @@ namespace BoardGame {
 class PicPainter : public Painter
 {
 public:
-    PicPainter(BoardGame *p, std::string customBackground);
+    PicPainter(BoardGame *p, BoardSettings &s);
 
     void Paint();
 

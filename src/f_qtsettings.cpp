@@ -103,6 +103,7 @@ void QTSettings::ReadSettings() {
 
     ui->cbNoHintsMode->setChecked(picross->NoHintsMode);
 
+    ui->cbBackground->setCurrentIndex(picross->UseCustomBG);
 
     /* minesweeper */
 
@@ -112,6 +113,8 @@ void QTSettings::ReadSettings() {
     ui->sbMSHeight->setValue(minesweeper->y);
 
     ui->sbMSDifficulty->setValue(minesweeper->Difficulty);
+
+    ui->cbMSBackground->setCurrentIndex(minesweeper->UseCustomBG);
 }
 void QTSettings::WriteSettings() {
 
@@ -132,6 +135,7 @@ void QTSettings::WriteSettings() {
     picross->PuzzlePath = ui->leMapsPath->text().toStdString();
     picross->BackgroundPath = ui->leBGPath->text().toStdString();
 
+    picross->UseCustomBG = ui->cbBackground->currentIndex();
 
     /* minesweeper */
 
@@ -141,6 +145,8 @@ void QTSettings::WriteSettings() {
     minesweeper->Difficulty = ui->sbMSDifficulty->value();
 
     minesweeper->BackgroundPath = ui->leMSBGPath->text().toStdString();
+
+    minesweeper->UseCustomBG = ui->cbMSBackground->currentIndex();
 
 
     /* save settings to disk */
