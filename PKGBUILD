@@ -2,7 +2,7 @@
  
 _pkgname=picross
 pkgname=tuxpicross
-pkgver=1.1.0
+pkgver=1.1.1
 pkgdesc="A number logic game."
 pkgrel=1
 arch=('i686' 'x86_64')
