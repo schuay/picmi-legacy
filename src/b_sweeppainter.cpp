@@ -83,21 +83,21 @@ namespace BoardGame {
         sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
         sprIcon.SetAsIcon();
 
-        sprCellFrame.Load(FILEPREFIX "gfx/mscellframe.png", game->Zoom(), 0);
-        sprClearTile.Load(FILEPREFIX "gfx/msbox.png", game->Zoom(), 0);
-        sprMarkedTile.Load(FILEPREFIX "gfx/sweepermarked.png", game->Zoom(), 0);
-        sprTentativeTile.Load(FILEPREFIX "gfx/tentative.png", game->Zoom(), 0);
-        sprBomb.Load(FILEPREFIX "gfx/bomb.png", game->Zoom(), 0);
+        sprCellFrame.Load(      FILEPREFIX "gfx/ms_cellframe.png", game->Zoom(), 0);
+        sprClearTile.Load(      FILEPREFIX "gfx/ms_box.png", game->Zoom(), 0);
+        sprMarkedTile.Load(     FILEPREFIX "gfx/ms_marked.png", game->Zoom(), 0);
+        sprTentativeTile.Load(  FILEPREFIX "gfx/ms_tentative.png", game->Zoom(), 0);
+        sprBomb.Load(           FILEPREFIX "gfx/ms_bomb.png", game->Zoom(), 0);
 
-        sprNumbers[0].Load(FILEPREFIX "gfx/1.png", game->Zoom(), 0);
-        sprNumbers[1].Load(FILEPREFIX "gfx/2.png", game->Zoom(), 0);
-        sprNumbers[2].Load(FILEPREFIX "gfx/3.png", game->Zoom(), 0);
-        sprNumbers[3].Load(FILEPREFIX "gfx/4.png", game->Zoom(), 0);
-        sprNumbers[4].Load(FILEPREFIX "gfx/5.png", game->Zoom(), 0);
-        sprNumbers[5].Load(FILEPREFIX "gfx/6.png", game->Zoom(), 0);
-        sprNumbers[6].Load(FILEPREFIX "gfx/7.png", game->Zoom(), 0);
-        sprNumbers[7].Load(FILEPREFIX "gfx/8.png", game->Zoom(), 0);
+        sprNumbers[0].Load(FILEPREFIX "gfx/ms_1.png", game->Zoom(), 0);
+        sprNumbers[1].Load(FILEPREFIX "gfx/ms_2.png", game->Zoom(), 0);
+        sprNumbers[2].Load(FILEPREFIX "gfx/ms_3.png", game->Zoom(), 0);
+        sprNumbers[3].Load(FILEPREFIX "gfx/ms_4.png", game->Zoom(), 0);
+        sprNumbers[4].Load(FILEPREFIX "gfx/ms_5.png", game->Zoom(), 0);
+        sprNumbers[5].Load(FILEPREFIX "gfx/ms_6.png", game->Zoom(), 0);
+        sprNumbers[6].Load(FILEPREFIX "gfx/ms_7.png", game->Zoom(), 0);
+        sprNumbers[7].Load(FILEPREFIX "gfx/ms_8.png", game->Zoom(), 0);
 
-        sprBackground.Load(FILEPREFIX "gfx/msbackground.jpg", game->Zoom(), 0);
+        sprBackground.Load(FILEPREFIX "gfx/ms_background.jpg", game->Zoom(), 0);
     }
 }

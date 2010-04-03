@@ -194,16 +194,18 @@ void Sweeper::DoOpAt(Point &p, int op) {
 
     switch (op) {
     case S_OP_EXPOSE:       /* recursive expose */
-        if (state == boardMarked || state == boardTentative)
+        if (state == boardTentative)
             SetStateAt(p, boardClean);
         else if (state == boardExposed)
             ExposeNeighborTiles();
-        else
+        else if (state == boardClean)
             ExposeTile(p);
         break;
     case S_OP_MARK:         /* mark tile as bomb */
         if (state == boardClean)
             SetStateAt(p, boardMarked);
+        else if (state == boardMarked)
+            SetStateAt(p, boardClean);
         else if (state == boardTentative)
             SetStateAt(p, boardClean);
         break;

@@ -32,22 +32,22 @@ void PicPainter::LoadSprites() {
     sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
     sprIcon.SetAsIcon();
 
-    sprCellFrame.Load(FILEPREFIX "gfx/cellframe.png", game->Zoom(), 0);
-    sprBoxTile.Load(FILEPREFIX "gfx/box.png", game->Zoom(), 0);
-    sprMarkTile.Load(FILEPREFIX "gfx/mark.png", game->Zoom(), 0);
-    sprActiveTile.Load(FILEPREFIX "gfx/activecell.png", game->Zoom(), 0);
+    sprCellFrame.Load(FILEPREFIX    "gfx/p_cellframe.png", game->Zoom(), 0);
+    sprBoxTile.Load(FILEPREFIX      "gfx/p_box.png", game->Zoom(), 0);
+    sprMarkTile.Load(FILEPREFIX     "gfx/p_mark.png", game->Zoom(), 0);
+    sprActiveTile.Load(FILEPREFIX   "gfx/p_activecell.png", game->Zoom(), 0);
 
-    sprDividerR.Load(FILEPREFIX "gfx/divider.png", game->Zoom(),0);
-    sprDividerD.Load(FILEPREFIX "gfx/divider.png", game->Zoom(), 270);
-    sprDividerL.Load(FILEPREFIX "gfx/divider.png", game->Zoom(), 180);
-    sprDividerU.Load(FILEPREFIX "gfx/divider.png", game->Zoom(), 90);
+    sprDividerR.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(),0);
+    sprDividerD.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(), 270);
+    sprDividerL.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(), 180);
+    sprDividerU.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(), 90);
 
-    sprStreakAreaHorA.Load(FILEPREFIX "gfx/streakA.png", game->Zoom(), 0);
-    sprStreakAreaHorB.Load(FILEPREFIX "gfx/streakB.png", game->Zoom(), 0);
-    sprStreakAreaVerA.Load(FILEPREFIX "gfx/streakA.png", game->Zoom(), 270);
-    sprStreakAreaVerB.Load(FILEPREFIX "gfx/streakB.png", game->Zoom(), 270);
+    sprStreakAreaHorA.Load(FILEPREFIX "gfx/p_streakA.png", game->Zoom(), 0);
+    sprStreakAreaHorB.Load(FILEPREFIX "gfx/p_streakB.png", game->Zoom(), 0);
+    sprStreakAreaVerA.Load(FILEPREFIX "gfx/p_streakA.png", game->Zoom(), 270);
+    sprStreakAreaVerB.Load(FILEPREFIX "gfx/p_streakB.png", game->Zoom(), 270);
 
-    sprBackground.Load(FILEPREFIX "gfx/background.jpg", game->Zoom(), 0);
+    sprBackground.Load(FILEPREFIX "gfx/p_background.jpg", game->Zoom(), 0);
 }
 
 void PicPainter::InitSystems() {
