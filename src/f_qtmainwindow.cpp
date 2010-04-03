@@ -38,8 +38,8 @@ QTMainWindow::QTMainWindow(QWidget *parent) :
     connect(&t, SIGNAL(ExceptionThrown(QString)), this, SLOT(displayException(QString)));
 
     /* set game preview images */
-    QImage srcPicross(      FILEPREFIX "gfx/scr_picross.jpg");
-    QImage srcMinesweeper(  FILEPREFIX "gfx/scr_minesweeper.jpg");
+    QImage srcPicross(      FILEPREFIX "gfx/scr_picross.png");
+    QImage srcMinesweeper(  FILEPREFIX "gfx/scr_minesweeper.png");
 
     ui->lPicross->setPixmap(QPixmap::fromImage(srcPicross));
     ui->lMinesweeper->setPixmap(QPixmap::fromImage(srcMinesweeper));
