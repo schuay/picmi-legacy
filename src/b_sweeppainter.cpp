@@ -89,7 +89,8 @@ namespace BoardGame {
         p.x = game->Width() * game->CellLength() - 10 * game->Zoom();
         out.str("");
 
-        out << "Completed: " << game->MarkedBombCount() << " / " << game->TotalBombCount();
+        out << "Mines: " << game->TotalBombCount() - game->MarkedBombCount()
+                << " / " << game->TotalBombCount();
         txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_R);
     }
 
