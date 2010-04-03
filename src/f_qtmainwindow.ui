@@ -175,7 +175,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../../../usr/share/tuxpicross/gfx/mark.png</normaloff>../../../../usr/share/tuxpicross/gfx/mark.png</iconset>
+            <normaloff>../../../../usr/share/tuxpicross/gfx/p_mark.png</normaloff>../../../../usr/share/tuxpicross/gfx/p_mark.png</iconset>
           </property>
          </widget>
         </item>
