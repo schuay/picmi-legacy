@@ -58,6 +58,9 @@ private:
     /* this is called when clicking on an exposed tile. if the amount of marks matches the mapCount, start exposing all neighbors */
     void ExposeNeighborTiles();
 
+    /* this is called once for the first operation in a game. automatically finds an empty area and exposes it */
+    void ExposeInitialArea();
+
     static const int
             mapNone = 0,
             mapBomb = 9,
@@ -65,6 +68,8 @@ private:
             boardExposed = 1,
             boardMarked = 2,
             boardTentative = 3;
+
+    bool gameStarted;
 
     unsigned int bombCount;
 

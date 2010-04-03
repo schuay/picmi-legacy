@@ -19,7 +19,7 @@ Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
 
     RandomPuzzle(s);
 
-    timer.Start();
+    gameStarted = false;
 }
 Sweeper::~Sweeper() {
     if (map)
@@ -207,6 +207,9 @@ void Sweeper::DoOpAt(Point &p, int op) {
     if (op != S_OP_EXPOSE && op != S_OP_MARK && op != S_OP_TENTATIVE)
         throw Exception("DoOpAt failed: Incorrect operation passed.");
 
+    if (!gameStarted)
+        ExposeInitialArea();
+
     int
             state = boardState[CToI(p)];
 
@@ -283,6 +286,44 @@ boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount
             }
 
     return targetArray;
+}
+
+void Sweeper::ExposeInitialArea() {
+    /* whatever happens, mark gameStarted as true so this function is not called again */
+    gameStarted = true;
+    timer.Start();
+
+    int neighborCount = 0;
+    boost::shared_array<Point> neighbors;
+
+    Point p;
+    int emptyNeighbors = 0;
+
+    for (unsigned int i = 0; i < width; i++) {
+        for (unsigned int j = 0; j < height; j++) {
+            p.x = i;
+            p.y = j;
+
+            /* only check empty tiles */
+            if (map[CToI(p)] != mapNone)
+                continue;
+
+            /* initialize vars to default state and count empty neighbor tiles */
+            emptyNeighbors = 0;
+            neighbors = GetNeighborCoords(p, neighborCount, false);
+
+            for (int k = 0; k < neighborCount; k++)
+                if (map[CToI(neighbors[k])] == mapNone)
+                    emptyNeighbors++;
+
+            /* if more than 1 neighbor tile is empty, set current tile as location, expose all neighbors and return */
+            if (emptyNeighbors > 1) {
+                location = p;
+                ExposeNeighborTiles();
+                return;
+            }
+        }
+    }
 }
 
 void Sweeper::ExposeNeighborTiles() {

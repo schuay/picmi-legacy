@@ -57,25 +57,25 @@ namespace BoardGame {
                 case SDLK_ESCAPE:
                     game->Quit = true;
                     break;
-                case SDLK_LEFT:
-                    dx = -1;
-                    break;
-                case SDLK_RIGHT:
-                    dx = 1;
-                    break;
-                case SDLK_UP:
-                    dy = -1;
-                    break;
-                case SDLK_DOWN:
-                    dy = 1;
-                    break;
-                case SDLK_RCTRL:
-                case SDLK_LCTRL:
-                    op = S_OP_MARK;
-                    break;
-                case SDLK_SPACE:
-                    op = S_OP_EXPOSE;
-                    break;
+//                case SDLK_LEFT:
+//                    dx = -1;
+//                    break;
+//                case SDLK_RIGHT:
+//                    dx = 1;
+//                    break;
+//                case SDLK_UP:
+//                    dy = -1;
+//                    break;
+//                case SDLK_DOWN:
+//                    dy = 1;
+//                    break;
+//                case SDLK_RCTRL:
+//                case SDLK_LCTRL:
+//                    op = S_OP_MARK;
+//                    break;
+//                case SDLK_SPACE:
+//                    op = S_OP_EXPOSE;
+//                    break;
                 default:
                     break;
                 }
