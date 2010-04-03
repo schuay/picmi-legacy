@@ -2,7 +2,7 @@
  
 _pkgname=picross
 pkgname=tuxpicross
-pkgver=1.0.1
+pkgver=1.1.0
 pkgdesc="A number logic game."
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ build() {
   cd $srcdir || return 1
   git clone git://github.com/schuay/$_pkgname.git || return 1
   cd $srcdir/$_pkgname || return 1
-  #git checkout -b installer $_pkgname-$pkgver || return 1
+  git checkout -b installer $_pkgname-$pkgver || return 1
 
   #set file path
   sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/tuxpicross/"_' src/b_painter.h || return 1
