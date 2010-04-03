@@ -11,6 +11,9 @@ QTSettings::QTSettings(QWidget *parent) :
 
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(cancel()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(ok()));
+    connect(ui->bBrowseBG, SIGNAL(clicked()), this, SLOT(setBGPath()));
+    connect(ui->bMSBrowseBG, SIGNAL(clicked()), this, SLOT(msSetBGPath()));
+    connect(ui->bBrowseMaps, SIGNAL(clicked()), this, SLOT(setMapsPath()));
 
     picross = new BoardSettings(BoardSettings::Picross);
     minesweeper = new BoardSettings(BoardSettings::Minesweeper);
@@ -49,35 +52,37 @@ void QTSettings::cancel() {
     this->reject();
 }
 
-//void QTMainWindow::setPuzzleFolder() {
-//    QString path = browse(QFileDialog::Directory);
-//
-//    if (path != "")
-//        ui->lePath->setText(path);
-//}
-//
-//void QTMainWindow::setDefaultBG() {
-//    bgPath = "";
-//}
-//void QTMainWindow::setCustomBG() {
-//    QString path = browse(QFileDialog::ExistingFile);
-//
-//    if (path.length() != 0)
-//        bgPath = path;
-//}
-//
-//
-//QString QTMainWindow::browse(QFileDialog::FileMode mode) {
-//    QFileDialog fd;
-//
-//    fd.setFileMode(mode);
-//    fd.setOption(QFileDialog::ReadOnly);
-//
-//    if (fd.exec())
-//        return fd.selectedFiles().at(0);
-//    else
-//        return "";
-//}
+void QTSettings::setMapsPath() {
+    QString path = Browse(QFileDialog::Directory);
+
+    if (path != "")
+        ui->leMapsPath->setText(path);
+}
+void QTSettings::setBGPath() {
+    QString path = Browse(QFileDialog::ExistingFile);
+
+    if (path.length() != 0)
+        ui->leBGPath->setText(path);
+}
+void QTSettings::msSetBGPath() {
+    QString path = Browse(QFileDialog::ExistingFile);
+
+    if (path.length() != 0)
+        ui->leMSBGPath->setText(path);
+}
+
+
+QString QTSettings::Browse(QFileDialog::FileMode mode) {
+    QFileDialog fd;
+
+    fd.setFileMode(mode);
+    fd.setOption(QFileDialog::ReadOnly);
+
+    if (fd.exec())
+        return fd.selectedFiles().at(0);
+    else
+        return "";
+}
 
 void QTSettings::ReadSettings() {
 
@@ -88,7 +93,7 @@ void QTSettings::ReadSettings() {
     else
         ui->rbPuzTypeStatic->setChecked(true);
 
-    ui->lePuzzlePath->setText(picross->PuzzlePath.c_str());
+    ui->leMapsPath->setText(picross->PuzzlePath.c_str());
     ui->leBGPath->setText(picross->BackgroundPath.c_str());
 
     ui->sbWidth->setValue(picross->x);
@@ -124,7 +129,7 @@ void QTSettings::WriteSettings() {
 
     picross->Difficulty = ui->sbDifficulty->value();
 
-    picross->PuzzlePath = ui->lePuzzlePath->text().toStdString();
+    picross->PuzzlePath = ui->leMapsPath->text().toStdString();
     picross->BackgroundPath = ui->leBGPath->text().toStdString();
 
 

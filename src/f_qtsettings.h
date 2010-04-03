@@ -2,6 +2,8 @@
 #define F_QTSETTINGS_H
 
 #include <QDialog>
+#include <QFileDialog>
+
 #include "b_boardsettings.h"
 
 namespace Ui {
@@ -23,6 +25,9 @@ protected:
 private slots:
     void cancel();
     void ok();
+    void setMapsPath();
+    void setBGPath();
+    void msSetBGPath();
 
 private:
     Ui::QtSettings *ui;
@@ -30,6 +35,8 @@ private:
     BoardSettings
             *picross,
             *minesweeper;
+
+    QString Browse(QFileDialog::FileMode mode);
 
     void ReadSettings();
     void WriteSettings();
