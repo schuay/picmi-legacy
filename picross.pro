@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-01T00:05:51
 # -------------------------------------------------
-TARGET = tuxpicross
+TARGET = picmi
 TEMPLATE = app
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
@@ -59,6 +59,7 @@ OTHER_FILES += src/makefile \
     PKGBUILD \
     AUTHORS \
     INSTALL \
-    COPYING
+    COPYING \
+    src/picmi.desktop
 FORMS += src/f_qtmainwindow.ui \
     src/f_qtsettings.ui

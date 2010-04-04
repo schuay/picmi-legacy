@@ -207,8 +207,10 @@ void Sweeper::DoOpAt(Point &p, int op) {
     if (op != S_OP_EXPOSE && op != S_OP_MARK && op != S_OP_TENTATIVE)
         throw Exception("DoOpAt failed: Incorrect operation passed.");
 
-    if (!gameStarted)
+    if (!gameStarted) {
         ExposeInitialArea();
+        return;
+    }
 
     int
             state = boardState[CToI(p)];
@@ -318,8 +320,7 @@ void Sweeper::ExposeInitialArea() {
 
             /* if more than 1 neighbor tile is empty, set current tile as location, expose all neighbors and return */
             if (emptyNeighbors > 1) {
-                location = p;
-                ExposeNeighborTiles();
+                ExposeTile(p);
                 return;
             }
         }

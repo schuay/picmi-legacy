@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=Tux Picross
+Name=picmi
 GenericName=Logic Game
 Comment=A number logic game
-Exec=/usr/bin/tuxpicross
-Icon=/usr/share/tuxpicross/gfx/icon.png
+Exec=/usr/bin/picmi
+Icon=/usr/share/picmi/gfx/icon.png
 Terminal=false
 Type=Application
 Categories=Game;LogicGame;

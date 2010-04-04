@@ -1,4 +1,4 @@
-TUX PICROSS
+PICMI
 
 
 Project Information
@@ -47,7 +47,7 @@ Some of the things I'm planning on implementing
  * wishlist: an online DB with puzzle ratings from all users - puzzles can be loaded from here.
 
 
-Usage (for up to date instructions, run 'tuxpicross -h')
+Usage (for up to date instructions, run 'picmi -h')
 -------------------
 
 mouse controls:
@@ -64,12 +64,12 @@ arguments:
     -y num: y dimension of generated puzzle (defaults to 15)
     -n: enable no hints mode. incorrect tile marks are not prevented (default is disabled)
     -r num: generate random puzzle with percentage num of board filled
-            for example, 'tuxpicross -r 60' will generate a random board with 60% of all tiles filled
+            for example, 'picmi -r 60' will generate a random board with 60% of all tiles filled
             (defaults to 55)
     -s file: load puzzle from file (input file should be black and white .png)
     -t dir: load puzzle from a random file in dir
     -c dir: convert images from dir to a format suitable for puzzle input
-            files are stored in $HOME/.config/tuxpicross/puzzles by default
+            files are stored in $HOME/.config/picmi/puzzles by default
     -q: disable QT frontend
     -h: show this message
 

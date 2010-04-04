@@ -1,7 +1,6 @@
 # Maintainer: Jakob Gruber (jakob gruber kabelnet at)
- 
-_pkgname=picross
-pkgname=tuxpicross
+
+pkgname=picmi
 pkgver=1.1.1
 pkgdesc="A number logic game."
 pkgrel=1
@@ -18,33 +17,25 @@ build() {
 
   #git checkout
   cd $srcdir || return 1
-  git clone git://github.com/schuay/$_pkgname.git || return 1
-  cd $srcdir/$_pkgname || return 1
-  git checkout -b installer $_pkgname-$pkgver || return 1
+  git clone git://github.com/schuay/$pkgname.git || return 1
+  cd $srcdir/$pkgname || return 1
+  git checkout -b installer $pkgname-$pkgver || return 1
 
-  #set file path
-  sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/tuxpicross/"_' src/b_painter.h || return 1
+  # set file path
+  sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/picmi/"_' src/b_painter.h || return 1
 
-  # START:  QT ENABLED. if you want to disable qt, remove qt from depends(),
-  #         comment this section and uncomment the QT DISABLED section
-
+  # build
   qmake || return 1
   make || return 1
 
-  # END: QT ENABLED
-  # START: QT DISABLED
-  #
-  # cd $srcdir/$_pkgname/src || return 1
-  # make || return 1
-  # mv tuxpicross ../picross
-  # cd $srcdir/$_pkgname || return 1
-  #
-  # END: QT DISABLED
-
+  # install
   mkdir -p $pkgdir/usr/{bin,share/{applications,$pkgname/gfx}}
-  install -D -m755 $pkgname $pkgdir/usr/bin/$pkgname
-  install -D -m644 src/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -D -m755 $pkgname $pkgdir/usr/bin/
+  install -D -m644 src/$pkgname.desktop $pkgdir/usr/share/applications/
   install -D -m644 \
     gfx/* $pkgdir/usr/share/$pkgname/gfx/
 
+  # create symbolic link to old executable path
+  cd $pkgdir/usr/bin
+  ln -s $pkgname tuxpicross
 }

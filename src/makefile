@@ -37,13 +37,13 @@ OBJECTS       = src/f_main.o \
                 src/b_sweepinputhandler.o
 LIBS= -lSDL -lSDL_image -lSDL_gfx -lSDL_ttf -lMagick++ -lpng -lpthread
 INCLUDEDIRS= -I/usr/include/ImageMagick -I/usr/include/SDL
-EXECUTABLE= tuxpicross
+EXECUTABLE= picmi
 DESTDIR= /
  
 all:
 	sed -i 's_#define QTENABLED__' f_main.cpp
 	sed -i \
-		"s_#define FILEPREFIX.*_#define FILEPREFIX \"/usr/share/tuxpicross/\"_" \
+                "s_#define FILEPREFIX.*_#define FILEPREFIX \"/usr/share/picmi/\"_" \
                 b_painter.h
 	$(CC) -c $(INCLUDEDIRS) $(SOURCES)
 	$(CC) $(LIBS) $(OBJECTS) -o $(EXECUTABLE)
@@ -54,7 +54,7 @@ clean:
 install:
 	mkdir -p ${DESTDIR}/usr/{bin,share/{applications,${EXECUTABLE}/gfx}}
 	install -D -m755 ${EXECUTABLE} ${DESTDIR}/usr/bin/
-	install -D -m644 tuxpicross.desktop ${DESTDIR}/usr/share/applications/tuxpicross.desktop
+        install -D -m644 picmi.desktop ${DESTDIR}/usr/share/applications/picmi.desktop
 	install -D -m644 \
 		../gfx/*  \
 		${DESTDIR}/usr/share/${EXECUTABLE}/gfx/

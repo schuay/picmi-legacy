@@ -8,7 +8,7 @@ BoardSettings::BoardSettings(GameTypeEnum t)
 
 void BoardSettings::SetDefaultValues() {
 
-    basePath = std::string(getenv("HOME")) + "/.config/tuxpicross/";
+    basePath = std::string(getenv("HOME")) + "/.config/picmi/";
     defaultPuzzlePath = basePath + "puzzles/";
     confFilePath = basePath + TypeToStr(GameType) + ".conf";
 
@@ -131,7 +131,7 @@ void BoardSettings::Save() {
     if (!write.is_open())
         throw Exception("Could not open conf file.");
 
-    write << "# TUX PICROSS CONFIG FILE" << std::endl;
+    write << "# PICMI CONFIG FILE" << std::endl;
     write << "PUZZLEPATH=" << PuzzlePath << std::endl;
     write << "BGPATH=" << BackgroundPath<< std::endl;
     write << "TYPE=" << Type << std::endl;

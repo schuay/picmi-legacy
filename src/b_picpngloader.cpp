@@ -12,7 +12,7 @@ namespace BoardGame {
 PicPngLoader::PicPngLoader() { 
     std::string path = getenv("HOME");
 
-    defaultPath = path + "/.config/tuxpicross/puzzles/";
+    defaultPath = path + "/.config/picmi/puzzles/";
 
     DIR* d = opendir(defaultPath.c_str());
 

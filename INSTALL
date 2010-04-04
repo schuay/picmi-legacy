@@ -1,13 +1,13 @@
-TUX PICROSS
+PICMI
 
 Manual Installation
 -------------------
 
-The following dependencies need to be installed to compile and run tuxpicross:
+The following dependencies need to be installed to compile and run picmi:
 
 sdl, sdl_gfx, sdl_image, sdl_ttf, imagemagick
 
-To build tuxpicross, enter the src directory and run
+To build picmi, enter the src directory and run
 
 make
 
@@ -17,17 +17,17 @@ make install
 
 as root.
 
-By default, tuxpicross will install files in 
+By default, picmi will install files in
 
 /usr/bin/
 /usr/share/applications/
-/usr/share/tuxpicross/
+/usr/share/picmi/
 
 
 Installation from AUR (Archlinux)
 -------------------
 
-Package Name: tuxpicross
+Package Name: picmi (old name: tuxpicross)
 URL: http://aur.archlinux.org/packages.php?ID=35212
 
 

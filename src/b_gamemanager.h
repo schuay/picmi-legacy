@@ -19,7 +19,8 @@
 #include "b_picross.h"
 #include "b_picpainter.h"
 
-#define WINDOWCAPTION "Tux Picross"
+#define WINDOWCAPTION "picmi"
+
 namespace BoardGame {
 class GameManager {
 public:

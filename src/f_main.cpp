@@ -124,7 +124,7 @@ bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
         case 'h':
         case '?':
             printf("\n"
-                   "tuxpicross usage\n\n"
+                   "picmi usage\n\n"
                    "mouse controls:\n"
                    "    left click: expose a tile\n"
                    "    right click: mark/unmark a tile\n\n"
@@ -137,12 +137,12 @@ bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
                    "    -y num: y dimension of generated puzzle (defaults to 15)\n"
                    "    -n: enable no hints mode. incorrect tile marks are not prevented (default is disabled)\n"
                    "    -r num: generate random puzzle with percentage num of board filled\n"
-                   "            for example, 'tuxpicross -r 60' will generate a random board with 60%% of all tiles filled\n"
+                   "            for example, 'picmi -r 60' will generate a random board with 60%% of all tiles filled\n"
                    "            (defaults to 55)\n"
                    "    -s file: load puzzle from file (input file should be black and white .png)\n"
                    "    -t dir: load puzzle from a random file in dir\n"
                    "    -c dir: convert images from dir to a format suitable for puzzle input\n"
-                   "            files are stored in $HOME/.config/tuxpicross/puzzles by default\n"
+                   "            files are stored in $HOME/.config/picmi/puzzles by default\n"
                    "    -q: disable QT frontend\n"
                    "    -h: show this message\n");
             return false;

@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Tux Picross</string>
+   <string>picmi</string>
   </property>
   <property name="windowIcon">
    <iconset>
