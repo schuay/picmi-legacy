@@ -49,8 +49,7 @@ unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \
     -lSDL_ttf
-OTHER_FILES += src/makefile \
-    README \
+OTHER_FILES += README \
     PKGBUILD \
     AUTHORS \
     INSTALL \

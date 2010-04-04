@@ -27,7 +27,7 @@ namespace BoardGame {
 
         void InitSystems();
 
-        int HandleMouseEvent(const int x, const int y, const int btn, const int event);
+        int HandleMouseEvent(const int x, const int y, const int btn);
 
         Sweeper* game;
     };

@@ -23,7 +23,7 @@ namespace BoardGame {
         SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
     }
 
-    int SweepInputHandler::HandleMouseEvent(int x, int y, int btn, int event) {
+    int SweepInputHandler::HandleMouseEvent(int x, int y, int btn) {
         Point newLocation(
                 (x - game->PixOffsetX() * game->Zoom()) / (game->CellLength() * game->Zoom()),
                 (y - game->PixOffsetY() * game->Zoom()) / (game->CellLength() * game->Zoom()));
@@ -81,7 +81,7 @@ namespace BoardGame {
                 }
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button, ev.type);
+                op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
                 break;
              case SDL_QUIT:
                 game->Quit = true;
