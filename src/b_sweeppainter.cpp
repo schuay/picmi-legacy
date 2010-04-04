@@ -71,8 +71,8 @@ namespace BoardGame {
         Point p;
 
         to.x = to.y = 0;
-        to.w = game->Width() * game->CellLength();
-        to.h = game->PixOffsetY();
+        to.w = game->Width() * game->CellLength() * game->Zoom();
+        to.h = game->PixOffsetY() * game->Zoom();
 
         p.x = 10 * game->Zoom();
         p.y = 10 * game->Zoom();
@@ -82,15 +82,38 @@ namespace BoardGame {
         /* info -> black bg */
         SDL_FillRect(screen, &to, SDL_MapRGB(screen->format, 0, 0, 0));
 
+        /* retrieve infos */
+        int totalBombCount = game->TotalBombCount();
+        int markedBombCount = game->MarkedBombCount();
+        int elapsedTime = game->GetElapsedTime();
+        float minesPerSecond = elapsedTime == 0 ? 0 : markedBombCount / (float)elapsedTime;
+        bool lowWidth(false);
+
+        /* check if entire text fits on screen */
+        out << std::fixed << std::setprecision(2)
+            << "Time: " << elapsedTime << " "
+            << "Eff: " << minesPerSecond <<  " m/s "
+            << "Rem. mines: " << totalBombCount - markedBombCount
+                << " / " << totalBombCount;
+
+        if ((unsigned int)txt.WidthOf(out.str(), FONT_BOLD) > game->Width() * game->CellLength())
+            lowWidth = true;
+
         /* draw text */
-        out << "Elapsed Time: " << game->GetElapsedTime();
+        out.str("");
+        out << "Time: " << elapsedTime;
         txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_L);
 
-        p.x = game->Width() * game->CellLength() - 10 * game->Zoom();
-        out.str("");
+        if (!lowWidth) {
+            p.x = (game->Width() * game->CellLength()) / 2;
+            out.str("");
+            out << std::fixed << std::setprecision(2) << "Eff: " << minesPerSecond <<  " m/s";
+            txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_C);
+        }
 
-        out << "Mines: " << game->TotalBombCount() - game->MarkedBombCount()
-                << " / " << game->TotalBombCount();
+        p.x = (game->Width() * game->CellLength() - 10) * game->Zoom();
+        out.str("");
+        out << "Rem. mines: " << totalBombCount - markedBombCount << " / " << totalBombCount;
         txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_R);
     }
 
