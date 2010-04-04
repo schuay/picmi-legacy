@@ -13,7 +13,6 @@ QTSettings::QTSettings(QWidget *parent) :
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(ok()));
     connect(ui->bBrowseBG, SIGNAL(clicked()), this, SLOT(setBGPath()));
     connect(ui->bMSBrowseBG, SIGNAL(clicked()), this, SLOT(msSetBGPath()));
-    connect(ui->bBrowseMaps, SIGNAL(clicked()), this, SLOT(setMapsPath()));
 
     picross = new BoardSettings(BoardSettings::Picross);
     minesweeper = new BoardSettings(BoardSettings::Minesweeper);
@@ -52,12 +51,6 @@ void QTSettings::cancel() {
     this->reject();
 }
 
-void QTSettings::setMapsPath() {
-    QString path = Browse(QFileDialog::Directory);
-
-    if (path != "")
-        ui->leMapsPath->setText(path);
-}
 void QTSettings::setBGPath() {
     QString path = Browse(QFileDialog::ExistingFile);
 
@@ -88,12 +81,6 @@ void QTSettings::ReadSettings() {
 
     /* picross */
 
-    if (picross->Type == PUZ_RAND)
-        ui->rbPuzTypeRandom->setChecked(true);
-    else
-        ui->rbPuzTypeStatic->setChecked(true);
-
-    ui->leMapsPath->setText(picross->PuzzlePath.c_str());
     ui->leBGPath->setText(picross->BackgroundPath.c_str());
 
     ui->sbWidth->setValue(picross->x);
@@ -120,11 +107,6 @@ void QTSettings::WriteSettings() {
 
     /* picross */
 
-    if (ui->rbPuzTypeRandom->isChecked())
-        picross->Type = PUZ_RAND;
-    else
-        picross->Type = PUZ_STAT;
-
     picross->x = ui->sbWidth->value();
     picross->y = ui->sbHeight->value();
 
@@ -132,7 +114,6 @@ void QTSettings::WriteSettings() {
 
     picross->Difficulty = ui->sbDifficulty->value();
 
-    picross->PuzzlePath = ui->leMapsPath->text().toStdString();
     picross->BackgroundPath = ui->leBGPath->text().toStdString();
 
     picross->UseCustomBG = ui->cbBackground->currentIndex();

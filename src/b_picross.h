@@ -20,8 +20,8 @@
 #include "b_point.h"
 #include "b_exception.h"
 #include "b_picdefines.h"
-#include "b_picpngloader.h"
 #include "b_timer.h"
+
 namespace BoardGame {
 class Picross : public BoardGame
 {
@@ -63,7 +63,6 @@ private:
 
     bool NoHintsMode;   /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
 
-    void Load(BoardSettings &s);            /* generate / load a map before initializing class */
     void Initialize(BoardSettings &s);      /* check integrity and initialize class */
     void RandomPuzzle(BoardSettings &s);    /* generates random puzzle with given dimensions and sets map in settings */
 

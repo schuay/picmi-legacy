@@ -57,11 +57,6 @@ int main(int argc, char **argv) {
     }
 }
 
-void ConvertPath(char *path) {
-    std::string s = path;
-    PicPngLoader loader;
-    loader.ConvertPath(s, 30000);
-}
 bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
     int c;
     char *cvalue = NULL;
@@ -71,7 +66,6 @@ bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
     while ((c = getopt(argc, argv, "qnhkr:x:y:s:t:c:")) != -1) {
         switch (c) {
         case 'r':
-            s.Type = PUZ_RAND;
             cvalue = optarg;
             s.Difficulty = atoi(cvalue);
             if (s.Difficulty == 0) {
@@ -98,26 +92,6 @@ bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
                 return false;
             }
             break;
-        case 'c':
-            cvalue = optarg;
-            if (strlen(cvalue) == 0) {
-                printf("Argument %c must be followed by an integer argument.", c);
-                return false;
-            }
-            ConvertPath(cvalue);
-            printf("Path converted successfully.");
-            return false;
-        case 's':
-            cvalue = optarg;
-            s.Type = PUZ_STAT;
-            s.PuzzlePath = cvalue;
-            break;
-        case 't':
-            cvalue = optarg;
-            s.Type = PUZ_STAT;
-            s.PuzzlePath = cvalue;
-            s.LoadRandomFromPath = true;
-            break;
         case 'n':
             s.NoHintsMode = true;
             break;
@@ -139,10 +113,6 @@ bool HandleArguments(BoardSettings &s, bool &disableQt, int argc, char **argv) {
                    "    -r num: generate random puzzle with percentage num of board filled\n"
                    "            for example, 'picmi -r 60' will generate a random board with 60%% of all tiles filled\n"
                    "            (defaults to 55)\n"
-                   "    -s file: load puzzle from file (input file should be black and white .png)\n"
-                   "    -t dir: load puzzle from a random file in dir\n"
-                   "    -c dir: convert images from dir to a format suitable for puzzle input\n"
-                   "            files are stored in $HOME/.config/picmi/puzzles by default\n"
                    "    -q: disable QT frontend\n"
                    "    -h: show this message\n");
             return false;

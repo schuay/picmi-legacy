@@ -25,7 +25,6 @@ protected:
 private slots:
     void cancel();
     void ok();
-    void setMapsPath();
     void setBGPath();
     void msSetBGPath();
 

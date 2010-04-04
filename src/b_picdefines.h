@@ -23,7 +23,4 @@
 #define OP_FORCE_CLEAR  3 /* used for drag operation locking - only MARK -> CLEAR allowed */
 #define OP_FORCE_MARK   4 /* used for drag operation locking - only CLEAR -> MARK allowed */
 
-#define PUZ_RAND        1 /* defines for used puzzle type */
-#define PUZ_STAT        0
-
 #endif // B_PICDEFINES_H

@@ -6,7 +6,6 @@ TEMPLATE = app
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
     src/b_picstreak.cpp \
-    src/b_picpngloader.cpp \
     src/f_qtmainwindow.cpp \
     src/f_qtpicthread.cpp \
     src/b_boardgame.cpp \
@@ -27,7 +26,6 @@ SOURCES += src/f_main.cpp \
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
-    src/b_picpngloader.h \
     src/f_qtmainwindow.h \
     src/f_qtpicthread.h \
     src/b_boardgame.h \
@@ -47,13 +45,10 @@ HEADERS += src/b_picross.h \
     src/b_sweeppainter.h \
     src/b_sweepinputhandler.h \
     src/f_qtsettings.h
-unix:INCLUDEPATH += /usr/include/ImageMagick
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \
-    -lSDL_ttf \
-    -lMagick++ \
-    -lpng
+    -lSDL_ttf
 OTHER_FILES += src/makefile \
     README \
     PKGBUILD \

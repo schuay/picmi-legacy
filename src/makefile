@@ -35,8 +35,8 @@ OBJECTS       = src/f_main.o \
                 src/b_sweeppainter.o \
                 src/b_painter.o \
                 src/b_sweepinputhandler.o
-LIBS= -lSDL -lSDL_image -lSDL_gfx -lSDL_ttf -lMagick++ -lpng -lpthread
-INCLUDEDIRS= -I/usr/include/ImageMagick -I/usr/include/SDL
+LIBS= -lSDL -lSDL_image -lSDL_gfx -lSDL_ttf -lpthread
+INCLUDEDIRS= -I/usr/include/SDL
 EXECUTABLE= picmi
 DESTDIR= /
  

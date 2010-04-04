@@ -33,54 +33,14 @@
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout">
-               <item>
-                <widget class="QRadioButton" name="rbPuzTypeRandom">
-                 <property name="toolTip">
-                  <string>Generate a random puzzle according to the Difficulty, Width and Height settings.</string>
-                 </property>
-                 <property name="text">
-                  <string>Random</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="rbPuzTypeStatic">
-                 <property name="toolTip">
-                  <string>Load a puzzle from an image file located in the 'Board Maps' path.</string>
-                 </property>
-                 <property name="text">
-                  <string>From File</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="2" column="0">
+             <item row="0" column="0">
               <widget class="QLabel" name="label_4">
                <property name="text">
                 <string>No Hints Mode:</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
+             <item row="0" column="1">
               <widget class="QCheckBox" name="cbNoHintsMode">
                <property name="toolTip">
                 <string>In No Hints Mode, incorrectly marking tiles as filled is allowed. There is no feedback whether the tile is actually filled or not.
@@ -92,14 +52,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="1" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
                 <string>Background:</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="1" column="1">
               <widget class="QComboBox" name="cbBackground">
                <property name="enabled">
                 <bool>true</bool>
@@ -119,14 +79,14 @@ Penalty time is disabled in this mode.</string>
                </item>
               </widget>
              </item>
-             <item row="5" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="lDifficulty">
                <property name="text">
                 <string>Difficulty:</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1">
+             <item row="3" column="1">
               <widget class="QSpinBox" name="sbDifficulty">
                <property name="toolTip">
                 <string>Percentage of game board filled with boxes. A good starting point is 55%. Less is harder, more is easier.</string>
@@ -139,14 +99,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="label">
                <property name="text">
                 <string>Width:</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
+             <item row="4" column="1">
               <widget class="QSpinBox" name="sbWidth">
                <property name="toolTip">
                 <string>Width of the game board in tiles.</string>
@@ -162,14 +122,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label_2">
                <property name="text">
                 <string>Height:</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="1">
+             <item row="5" column="1">
               <widget class="QSpinBox" name="sbHeight">
                <property name="toolTip">
                 <string>Height of the game board in tiles.</string>
@@ -185,48 +145,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_6">
-               <property name="text">
-                <string>Board Maps:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
-               <item>
-                <widget class="QLineEdit" name="leMapsPath">
-                 <property name="toolTip">
-                  <string>The directory to search for images used as puzzles.</string>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="bBrowseMaps">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>Choose the directory to search for images used as puzzles.</string>
-                 </property>
-                 <property name="text">
-                  <string>...</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="4" column="0">
+             <item row="2" column="0">
               <widget class="QLabel" name="label_7">
                <property name="text">
                 <string>Custom BG:</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="2" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
                 <widget class="QLineEdit" name="leBGPath">
@@ -252,13 +178,6 @@ Penalty time is disabled in this mode.</string>
                 </widget>
                </item>
               </layout>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>Board Generation:</string>
-               </property>
-              </widget>
              </item>
             </layout>
            </item>

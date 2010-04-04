@@ -36,16 +36,13 @@ public:
 
     std::string
             Map,
-            PuzzlePath,
             BackgroundPath;
 
     int
-            Type,
             Difficulty;
 
     bool
             NoHintsMode,
-            LoadRandomFromPath,
             UseCustomBG;
 
     unsigned int
@@ -63,7 +60,6 @@ private:
 
     std::string
             basePath,
-            defaultPuzzlePath,
             confFilePath;
 };
 }

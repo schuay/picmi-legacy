@@ -12,7 +12,7 @@ namespace BoardGame {
 Picross::Picross(BoardSettings &s) : BoardGame(),
         ColStreaks(NULL), RowStreaks(NULL), map(NULL), boardState(NULL)
 {
-    Load(s);
+    RandomPuzzle(s);
     Initialize(s);
 }
 Picross::~Picross() {
@@ -207,20 +207,6 @@ void Picross::CalculateStreakSolvedState() {
     }
 }
 
-void Picross::Load(BoardSettings &s) {
-    if (s.Type == PUZ_RAND) {
-        RandomPuzzle(s);
-    }
-    else if (s.Type == PUZ_STAT) {
-        PicPngLoader loader;
-        if (s.LoadRandomFromPath)
-            loader.LoadRandom(s);
-        else
-            loader.Load(s);
-    }
-    else
-        throw Exception("Invalid puzzle type passed");
-}
 void Picross::Initialize(BoardSettings &s) {
     if (!s.Validate())
         throw Exception("Settings validation failed");

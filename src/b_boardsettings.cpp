@@ -9,35 +9,28 @@ BoardSettings::BoardSettings(GameTypeEnum t)
 void BoardSettings::SetDefaultValues() {
 
     basePath = std::string(getenv("HOME")) + "/.config/picmi/";
-    defaultPuzzlePath = basePath + "puzzles/";
     confFilePath = basePath + TypeToStr(GameType) + ".conf";
 
     UseCustomBG = false;
 
     if (GameType == Picross) {
         Map = "";
-        PuzzlePath = defaultPuzzlePath;
         BackgroundPath = "";
 
-        Type = PUZ_RAND;
         Difficulty = 55;
 
         NoHintsMode = false;
-        LoadRandomFromPath = false;
 
         x = 15;
         y = 15;
     }
     else if (GameType == Minesweeper) {
         Map = "";
-        PuzzlePath = defaultPuzzlePath;
         BackgroundPath = "";
 
-        Type = PUZ_RAND;
         Difficulty = 20;
 
         NoHintsMode = false;
-        LoadRandomFromPath = false;
 
         x = 20;
         y = 20;
@@ -46,12 +39,6 @@ void BoardSettings::SetDefaultValues() {
 
 bool BoardSettings::Validate() {
     if (Map.length() != x*y)
-        return false;
-
-    if (Type == PUZ_STAT && PuzzlePath.length() == 0)
-        return false;
-
-    if (Type != PUZ_STAT && Type != PUZ_RAND)
         return false;
 
     if (Difficulty < 1 || Difficulty > 99)
@@ -98,12 +85,8 @@ void BoardSettings::HandleConfLine(const std::string line) {
             settingValue = line.substr(pos + 1);
 
     try {
-        if      (settingType == "PUZZLEPATH")
-            PuzzlePath = settingValue;
-        else if (settingType == "BGPATH")
+        if (settingType == "BGPATH")
             BackgroundPath = settingValue;
-        else if (settingType == "TYPE")
-            Type = atoi(settingValue.c_str());
         else if (settingType == "WIDTH")
             x = atoi(settingValue.c_str());
         else if (settingType == "HEIGHT")
@@ -132,9 +115,7 @@ void BoardSettings::Save() {
         throw Exception("Could not open conf file.");
 
     write << "# PICMI CONFIG FILE" << std::endl;
-    write << "PUZZLEPATH=" << PuzzlePath << std::endl;
     write << "BGPATH=" << BackgroundPath<< std::endl;
-    write << "TYPE=" << Type << std::endl;
     write << "WIDTH=" << x << std::endl;
     write << "HEIGHT=" << y << std::endl;
     write << "DIFFICULTY=" << Difficulty << std::endl;
