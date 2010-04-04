@@ -4,16 +4,21 @@ PICMI
 Project Information
 -------------------
 
-This project was originally started by Tobias Hellgren ( see http://www.thanius.com/picross/ ). 
-Currently it is being developed by Jakob Gruber ( jakob.gruber@kabelnet.at )
+Picmi was inspired by Tux Picross which was originally started in 2004
+by Tobias Hellgren ( see http://www.thanius.com/picross/ ).
+
+Picmi includes
+
+* a picross clone ( http://en.wikipedia.org/wiki/Picross )
+* and a minesweeper clone ( http://en.wikipedia.org/wiki/Minesweeper_(computer_game) )
+
+Currently it is being developed by Jakob Gruber.
 
 Picross is a number logic game in which cells in a grid have to be colored or left 
 blank according to numbers given at the side of the grid to reveal a hidden picture. 
 
-For more information, see http://en.wikipedia.org/wiki/Picross .
-
-So far, the core gameplay has been implemented. Puzzles are randomly 
-generated for now.
+Minesweeper is a single-player video game. The object of the game is to clear an
+abstract minefield  without detonating a mine.
 
 
 Features
@@ -22,59 +27,52 @@ Features
 * basic picross gameplay
 * no hints mode: do not automatically prevent incorrect tile hits - the player must solve the 
   puzzle correctly without hints. there is no penalty time in this mode.
-* randomly generated puzzles arbitraty size and difficulty
+* randomly generated puzzles with arbitraty size and difficulty
 * display which streaks are solved by greying out numbers
 * drag locking: during a drag, movement is locked either to the row or 
   column to prevent undesired movement
 * drag operation locking: during a right mouse button drag, either all 
   affected tiles are cleared OR marked, not both
-* conversion of png images into format suitable for picross (use your system icons as 
-  picross boards!)
-* puzzle loading from black and white png files
-* optional (compile- and runtime) qt loader
 
-Some of the things I'm planning on implementing
--------------------
-
-* Usability Tweaks
- * right clicking on a row/column header marks all clear tiles
-
-* Appearance Tweaks / Polish
- * Animations, nicer font, nicer sprites and background
- 
-* GUI Loader Additions
- * displaying things like high scores, available puzzles / puzzlesets, restoring saved settings
- * wishlist: an online DB with puzzle ratings from all users - puzzles can be loaded from here.
+* basic minesweeper gameplay
 
 
-Usage (for up to date instructions, run 'picmi -h')
+Picross Controls
 -------------------
 
 mouse controls:
     left click: expose a tile
-    right click: mark/unmark a tile
+    right click: mark a tile
 
 keyboard controls:
     arrow keys: move
-    ctrl: expose a tile
-    shift: mark/unmark a tile
+    ctrl: mark a tile
+    spacebar: expose a tile
 
-arguments:
-    -x num: x dimension of generated puzzle (defaults to 15)
-    -y num: y dimension of generated puzzle (defaults to 15)
-    -n: enable no hints mode. incorrect tile marks are not prevented (default is disabled)
-    -r num: generate random puzzle with percentage num of board filled
-            for example, 'picmi -r 60' will generate a random board with 60% of all tiles filled
-            (defaults to 55)
-    -s file: load puzzle from file (input file should be black and white .png)
-    -t dir: load puzzle from a random file in dir
-    -c dir: convert images from dir to a format suitable for puzzle input
-            files are stored in $HOME/.config/picmi/puzzles by default
-    -q: disable QT frontend
-    -h: show this message
+
+Minesweeper Controls
+-------------------
+
+mouse controls:
+    left click (on an unexposed tile): expose a tile
+    left click (on an exposed tile): expose all neighboring tiles
+    right click: mark a tile
+    middle click: tentatively mark a tile
+
+
+Contact
+-------------------
+
+Archlinux forum thread: http://bbs.archlinux.org/viewtopic.php?id=92600
+Ubuntu forum thread: http://ubuntuforums.org/showthread.php?t=1433859
+
+Email: jakob.gruber@gmail.com
 
 
 Sources
 -------------------
 
 Font used: ttf-liberation ( https://fedorahosted.org/liberation-fonts/ )
+
+
+Enjoy!

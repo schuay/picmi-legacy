@@ -1,34 +1,68 @@
 PICMI
 
-Manual Installation
--------------------
-
-The following dependencies need to be installed to compile and run picmi:
-
-sdl, sdl_gfx, sdl_image, sdl_ttf, imagemagick
-
-To build picmi, enter the src directory and run
-
-make
-
-To install, run
-
-make install
-
-as root.
-
-By default, picmi will install files in
-
-/usr/bin/
-/usr/share/applications/
-/usr/share/picmi/
 
 
 Installation from AUR (Archlinux)
 -------------------
 
-Package Name: picmi (old name: tuxpicross)
-URL: http://aur.archlinux.org/packages.php?ID=35212
+Package Name: picmi
+URL: http://aur.archlinux.org/packages.php?ID=36179
+
+
+Installation on Ubuntu (and other Debian derivatives)
+-------------------
+
+Download and install the newest .deb from http://github.com/schuay/picmi/downloads.
+
+
+Manual Installation
+-------------------
+
+CAUTION: manual installation is NOT point and click!
+Check above for archlinux and ubuntu installation packages.
+
+
+Picmi has the following dependencies:
+
+At compile time:
+sdl_gfx, sdl_image, sdl_ttf, qt, boost
+
+At run time:
+sdl_gfx, sdl_image, sdl_ttf, qt
+
+
+The first step is to decide where to install picmi.
+The usual directories are
+
+/usr/share/picmi        (gfx)
+/usr/bin                (executable)
+/usr/share/applications (.desktop file)
+
+These instructions will assume you are using these default directories.
+
+
+Point picmi to the directory containing the graphics:
+
+1. edit src/b_painter.h and set the desired FILEPREFIX. For installation to /usr/share/picmi, the result will look as follows:
+
+#define FILEPREFIX "/usr/share/picmi/"
+
+
+To compile, enter the project directory and run
+
+1. qmake
+2. make
+
+
+Installation to /usr/share/picmi (you might want to check the archlinux PKGBUILD - see above - for up to date installation details):
+
+mkdir -p /usr/{bin,share/{applications,picmi/gfx}}
+install -D -m755 picmi /usr/bin/
+install -D -m644 src/picmi.desktop /usr/share/applications/
+install -D -m644 gfx/* /usr/share/picmi/gfx/
+
+
+All done, execute picmi to run the game.
 
 
 Enjoy!
