@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../usr/share/tuxpicross/gfx/icon.png</normaloff>../../../../usr/share/tuxpicross/gfx/icon.png</iconset>
+    <normaloff>../../../../usr/share/picmi/gfx/icon.png</normaloff>../../../../usr/share/picmi/gfx/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -175,7 +175,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../../../usr/share/tuxpicross/gfx/p_mark.png</normaloff>../../../../usr/share/tuxpicross/gfx/p_mark.png</iconset>
+            <normaloff>../../../../usr/share/picmi/gfx/p_mark.png</normaloff>../../../../usr/share/picmi/gfx/p_mark.png</iconset>
           </property>
          </widget>
         </item>
@@ -193,7 +193,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../../../usr/share/tuxpicross/gfx/icon.png</normaloff>../../../../usr/share/tuxpicross/gfx/icon.png</iconset>
+            <normaloff>../../../../usr/share/picmi/gfx/icon.png</normaloff>../../../../usr/share/picmi/gfx/icon.png</iconset>
           </property>
           <property name="iconSize">
            <size>
