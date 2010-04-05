@@ -7,40 +7,29 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef B_STATISTICSMANAGER_H
+#define B_STATISTICSMANAGER_H
 
-#include <SDL/SDL.h>
+#include <vector>
+#include <boost/shared_ptr.hpp>
+#include <QtXml/QXmlStreamReader>
+#include <QtXml/QXmlStreamWriter>
+#include <QFile>
 
-#include "b_sweeper.h"
-#include "b_sweeppainter.h"
-#include "b_sweepinputhandler.h"
-#include "b_picinputhandler.h"
-#include "b_picross.h"
-#include "b_picpainter.h"
-#include "b_statisticsmanager.h"
+#include "b_statisticselement.h"
+#include "b_sweepstatisticselement.h"
 
-#define WINDOWCAPTION "picmi"
-
-namespace BoardGame {
-class GameManager {
+class StatisticsManager
+{
 public:
+    StatisticsManager();
 
-    GameManager();
-    ~GameManager();
-
-    void MainLoop();
-    void Initialize(BoardSettings &s);
-
+    void Read();
+    void Write();
+    void Add(boost::shared_ptr<StatisticsElement> e);
 private:
-
-    void InitSystems();
-
-    void GameOver();
-
-    BoardGame *game;
-    Painter *painter;
-    InputHandler *inputhandler;
+    std::vector<boost::shared_ptr<StatisticsElement> > elements;
+    QString filePath;
 };
-}
-#endif // GAME_H
+
+#endif // B_STATISTICSMANAGER_H

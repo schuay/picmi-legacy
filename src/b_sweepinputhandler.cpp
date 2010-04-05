@@ -56,6 +56,7 @@ namespace BoardGame {
                 switch (ev.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     game->Quit = true;
+                    game->SetResolution(GR_ABORTED);
                     break;
 //                case SDLK_LEFT:
 //                    dx = -1;
@@ -84,6 +85,7 @@ namespace BoardGame {
                 op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
                 break;
              case SDL_QUIT:
+                game->SetResolution(GR_ABORTED);
                 game->Quit = true;
                 break;
              default:

@@ -11,12 +11,16 @@
 #define B_BOARDGAME_H
 
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 #include "b_exception.h"
 #include "b_timer.h"
 #include "b_point.h"
+#include "b_enums.h"
+#include "b_statisticselement.h"
 
 namespace BoardGame {
+
 class BoardGame
 {
 public:
@@ -60,6 +64,11 @@ public:
     /* returns elapsed time since gamestart in seconds */
     unsigned int GetElapsedTime();
 
+    /* returns stats element (information about game, like dimensions, difficulty, time played) */
+    virtual boost::shared_ptr<StatisticsElement> GetStats() = 0;
+
+    /* sets game resolution (aborted/won/lost) and stops timer */
+    virtual void SetResolution(GameResolutionEnum r) { resolution = r; timer.Stop(); }
 
     unsigned int Width() { return width; }
     unsigned int Height() { return height; }
@@ -102,6 +111,9 @@ protected:
 
     /* zoom */
     unsigned int zoom;
+
+    /* game state - in progress, aborted, won, lost */
+    GameResolutionEnum resolution;    
 };
 }
 #endif // B_BOARDGAME_H

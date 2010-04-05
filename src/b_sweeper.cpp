@@ -100,14 +100,36 @@ bool Sweeper::GameWon() {
                 wonByExpose = false;
         }
 
-    return wonByMark || wonByExpose;
+    if (!(wonByMark || wonByExpose))
+        return false;
+
+    SetResolution(GR_WON);
+    return true;
 }
 bool Sweeper::GameLost() {
     for (unsigned int x = 0; x<width; x++)
         for (unsigned int y = 0; y<height; y++)
-            if (map[CToI(x,y)] == mapBomb && boardState[CToI(x,y)] == boardExposed)
+            if (map[CToI(x,y)] == mapBomb && boardState[CToI(x,y)] == boardExposed) {
+                SetResolution(GR_LOST);
                 return true;
+            }
+
     return false;
+}
+
+boost::shared_ptr<StatisticsElement> Sweeper::GetStats() {
+    boost::shared_ptr<SweepStatisticsElement> stats(new SweepStatisticsElement);
+
+    stats->difficulty = 0;
+    stats->height = height;
+    stats->width = width;
+    stats->playedTime = timer.GetTime();
+    stats->resolution = resolution;
+
+    stats->totalBombCount = bombCount;
+    stats->markedBombCount = 0;
+
+    return stats;
 }
 
 int Sweeper::GetStateAt(Point &p) {

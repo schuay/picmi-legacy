@@ -19,16 +19,12 @@
 
 #include "b_picdefines.h"
 #include "b_exception.h"
+#include "b_enums.h"
 
 namespace BoardGame {
 class BoardSettings
 {
 public:
-    enum GameTypeEnum {
-        Picross,
-        Minesweeper
-    };
-
     BoardSettings(GameTypeEnum t);
     bool Validate();
     void Load();
@@ -56,7 +52,7 @@ private:
     void HandleConfLine(const std::string line);
 
     void SetDefaultValues();
-    static std::string TypeToStr(GameTypeEnum t) { if (t == Picross) return "picross"; else return "minesweeper"; }
+    static std::string TypeToStr(GameTypeEnum t) { if (t == GT_PICROSS) return "picross"; else return "minesweeper"; }
 
     std::string
             basePath,

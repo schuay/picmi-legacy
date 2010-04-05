@@ -7,40 +7,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef B_ENUMS_H
+#define B_ENUMS_H
 
-#include <SDL/SDL.h>
-
-#include "b_sweeper.h"
-#include "b_sweeppainter.h"
-#include "b_sweepinputhandler.h"
-#include "b_picinputhandler.h"
-#include "b_picross.h"
-#include "b_picpainter.h"
-#include "b_statisticsmanager.h"
-
-#define WINDOWCAPTION "picmi"
-
-namespace BoardGame {
-class GameManager {
-public:
-
-    GameManager();
-    ~GameManager();
-
-    void MainLoop();
-    void Initialize(BoardSettings &s);
-
-private:
-
-    void InitSystems();
-
-    void GameOver();
-
-    BoardGame *game;
-    Painter *painter;
-    InputHandler *inputhandler;
+enum GameTypeEnum {
+    GT_PICROSS,
+    GT_MINESWEEPER
 };
-}
-#endif // GAME_H
+
+enum GameResolutionEnum {
+    GR_INPROGRESS,
+    GR_ABORTED,
+    GR_LOST,
+    GR_WON
+};
+
+#endif // B_ENUMS_H

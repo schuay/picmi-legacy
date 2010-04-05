@@ -22,7 +22,10 @@ SOURCES += src/f_main.cpp \
     src/b_sweeppainter.cpp \
     src/b_painter.cpp \
     src/b_sweepinputhandler.cpp \
-    src/f_qtsettings.cpp
+    src/f_qtsettings.cpp \
+    src/b_statisticsmanager.cpp \
+    src/b_statisticselement.cpp \
+    src/b_sweepstatisticselement.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -44,7 +47,11 @@ HEADERS += src/b_picross.h \
     src/b_exception.h \
     src/b_sweeppainter.h \
     src/b_sweepinputhandler.h \
-    src/f_qtsettings.h
+    src/f_qtsettings.h \
+    src/b_statisticsmanager.h \
+    src/b_statisticselement.h \
+    src/b_sweepstatisticselement.h \
+    src/b_enums.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \

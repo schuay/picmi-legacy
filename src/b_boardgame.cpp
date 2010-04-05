@@ -18,6 +18,8 @@ BoardGame::BoardGame()
 
     zoom = 1;
 
+    resolution = GR_INPROGRESS;
+
     Quit = false;
 }
 BoardGame::~BoardGame() {}

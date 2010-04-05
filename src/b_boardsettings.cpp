@@ -13,7 +13,7 @@ void BoardSettings::SetDefaultValues() {
 
     UseCustomBG = false;
 
-    if (GameType == Picross) {
+    if (GameType == GT_PICROSS) {
         Map = "";
         BackgroundPath = "";
 
@@ -24,7 +24,7 @@ void BoardSettings::SetDefaultValues() {
         x = 15;
         y = 15;
     }
-    else if (GameType == Minesweeper) {
+    else if (GameType == GT_MINESWEEPER) {
         Map = "";
         BackgroundPath = "";
 
@@ -96,7 +96,7 @@ void BoardSettings::HandleConfLine(const std::string line) {
         else if (settingType == "NOHINTSMODE")
             NoHintsMode = atoi(settingValue.c_str());
         else if (settingType == "GAMETYPE")
-            GameType = static_cast<BoardSettings::GameTypeEnum>(
+            GameType = static_cast<GameTypeEnum>(
                     atoi(settingValue.c_str()));
         else if (settingType == "USECUSTOMBG")
             UseCustomBG = atoi(settingValue.c_str());

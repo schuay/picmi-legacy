@@ -34,7 +34,20 @@ bool Picross::GameWon() {
             return false;
     }
 
+    SetResolution(GR_WON);
     return true;
+}
+
+boost::shared_ptr<StatisticsElement> Picross::GetStats() {
+    boost::shared_ptr<StatisticsElement> stats(new StatisticsElement);
+
+    stats->difficulty = 0;
+    stats->height = height;
+    stats->width = width;
+    stats->playedTime = timer.GetTime();
+    stats->resolution = resolution;
+
+    return stats;
 }
 
 std::vector<PicStreak>* Picross::CalculateStreaksFromMap(bool horizontal) {

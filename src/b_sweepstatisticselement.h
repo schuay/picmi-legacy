@@ -7,40 +7,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef B_SWEEPSTATISTICSELEMENT_H
+#define B_SWEEPSTATISTICSELEMENT_H
 
-#include <SDL/SDL.h>
+#include "b_statisticselement.h"
 
-#include "b_sweeper.h"
-#include "b_sweeppainter.h"
-#include "b_sweepinputhandler.h"
-#include "b_picinputhandler.h"
-#include "b_picross.h"
-#include "b_picpainter.h"
-#include "b_statisticsmanager.h"
-
-#define WINDOWCAPTION "picmi"
-
-namespace BoardGame {
-class GameManager {
+class SweepStatisticsElement : public StatisticsElement
+{
 public:
+    SweepStatisticsElement();
 
-    GameManager();
-    ~GameManager();
+    virtual void FromXml(QXmlStreamAttributes attributes);
+    virtual QXmlStreamAttributes ToXml();
 
-    void MainLoop();
-    void Initialize(BoardSettings &s);
+    unsigned int
+            totalBombCount,
+            markedBombCount;
 
-private:
-
-    void InitSystems();
-
-    void GameOver();
-
-    BoardGame *game;
-    Painter *painter;
-    InputHandler *inputhandler;
+    virtual QString type() const { return "SweepStatisticsElement"; }
+    static QString ClassToStr() { return "SweepStatisticsElement"; }
 };
-}
-#endif // GAME_H
+
+#endif // B_SWEEPSTATISTICSELEMENT_H

@@ -44,7 +44,7 @@ QTMainWindow::QTMainWindow(QWidget *parent) :
     ui->lPicross->setPixmap(QPixmap::fromImage(srcPicross));
     ui->lMinesweeper->setPixmap(QPixmap::fromImage(srcMinesweeper));
 
-    gameType = BoardSettings::Picross;
+    gameType = GT_PICROSS;
 }
 
 QTMainWindow::~QTMainWindow()
@@ -69,11 +69,11 @@ void QTMainWindow::gameTypeToogled() {
 
     if (ui->rbPicross->isChecked()) {
         picrossEnabled = true;
-        gameType = BoardSettings::Picross;
+        gameType = GT_PICROSS;
     }
     else {
         picrossEnabled = false;
-        gameType = BoardSettings::Minesweeper;
+        gameType = GT_MINESWEEPER;
     }
 
     ui->lPicross->setEnabled(picrossEnabled);

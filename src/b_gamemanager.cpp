@@ -22,11 +22,6 @@ void GameManager::GameOver() {
         if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
             game->Quit = true;
     }
-
-    printf("\n-----------------------------\n\n"
-           "Game solved in %u s!\n\n"
-           "------------------------------\n",
-           game->GetElapsedTime());
 }
 
 void GameManager::MainLoop() {
@@ -42,6 +37,11 @@ void GameManager::MainLoop() {
         else if (game->GameWon())
             GameOver();
     }
+
+    StatisticsManager m;
+    m.Read();
+    m.Add(game->GetStats());
+    m.Write();
 }
 
 void GameManager::InitSystems() {
@@ -55,12 +55,12 @@ void GameManager::Initialize(BoardSettings &s) {
     InitSystems();
 
     /* create game objects */
-    if (s.GameType == BoardSettings::Picross) {
+    if (s.GameType == GT_PICROSS) {
         game = new Picross(s);
         painter = new PicPainter(game, s);
         inputhandler = new PicInputHandler(game);
     }
-    else if (s.GameType == BoardSettings::Minesweeper) {
+    else if (s.GameType == GT_MINESWEEPER) {
         game = new Sweeper(s);
         painter = new SweepPainter(game, s);
         inputhandler = new SweepInputHandler(game);

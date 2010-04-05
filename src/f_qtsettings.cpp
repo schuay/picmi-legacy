@@ -14,8 +14,8 @@ QTSettings::QTSettings(QWidget *parent) :
     connect(ui->bBrowseBG, SIGNAL(clicked()), this, SLOT(setBGPath()));
     connect(ui->bMSBrowseBG, SIGNAL(clicked()), this, SLOT(msSetBGPath()));
 
-    picross = new BoardSettings(BoardSettings::Picross);
-    minesweeper = new BoardSettings(BoardSettings::Minesweeper);
+    picross = new BoardSettings(GT_PICROSS);
+    minesweeper = new BoardSettings(GT_MINESWEEPER);
 
     picross->Load();
     minesweeper->Load();

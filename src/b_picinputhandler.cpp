@@ -95,6 +95,7 @@ void PicInputHandler::HandleInput() {
         case SDL_KEYDOWN:
             switch (ev.key.keysym.sym) {
             case SDLK_ESCAPE:
+                game->SetResolution(GR_ABORTED);
                 game->Quit = true;
                 break;
             case SDLK_d:
@@ -134,6 +135,7 @@ void PicInputHandler::HandleInput() {
             else HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE, ev.type);
             break;
          case SDL_QUIT:
+            game->SetResolution(GR_ABORTED);
             game->Quit = true;
             break;
          default:
