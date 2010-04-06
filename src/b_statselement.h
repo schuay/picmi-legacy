@@ -12,6 +12,7 @@
 
 #include <QtXml/QXmlStreamAttributes>
 #include <QtXml/QDomDocument>
+#include <QDateTime>
 #include <string>
 
 #include "b_enums.h"
@@ -23,6 +24,9 @@ public:
 
     virtual void FromXml(QDomElement node);
     virtual QXmlStreamAttributes ToXml();
+
+    QDateTime
+            datetime;
 
     unsigned int
             width,
@@ -39,6 +43,8 @@ public:
 
 protected:
     QXmlStreamAttributes attributes;
+
+    const QString dateFormat;
 };
 
 #endif // B_STATISTICSELEMENT_H

@@ -9,13 +9,15 @@
 
 #include "b_statselement.h"
 
-StatsElement::StatsElement()
+StatsElement::StatsElement() : dateFormat("yyyyMMddhhmm")
 {
     width = 0;
     height = 0;
 
     playedTime = 0;
     resolution = GR_ABORTED;
+
+    datetime = QDateTime::currentDateTime();
 }
 
 void StatsElement::FromXml(QDomElement node) {
@@ -23,6 +25,8 @@ void StatsElement::FromXml(QDomElement node) {
     height = node.attribute("height","0").toInt();
     playedTime = node.attribute("playedTime","0").toInt();
     resolution = static_cast<GameResolutionEnum>(node.attribute("resolution","0").toInt());
+    datetime = QDateTime::fromString(
+            node.attribute("datetime", QDateTime::currentDateTime().toString(dateFormat)), dateFormat);
 }
 QXmlStreamAttributes StatsElement::ToXml() {
 
@@ -44,6 +48,10 @@ QXmlStreamAttributes StatsElement::ToXml() {
 
     name = "resolution";
     val.setNum(resolution);
+    attributes.append(name, val);
+
+    name = "datetime";
+    val = datetime.toString(dateFormat);
     attributes.append(name, val);
 
     return attributes;
