@@ -17,7 +17,7 @@ class SweepStatisticsElement : public StatisticsElement
 public:
     SweepStatisticsElement();
 
-    virtual void FromXml(QXmlStreamAttributes attributes);
+    virtual void FromXml(QDomElement node);
     virtual QXmlStreamAttributes ToXml();
 
     unsigned int

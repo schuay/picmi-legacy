@@ -16,17 +16,11 @@ SweepStatisticsElement::SweepStatisticsElement() :
     markedBombCount = 0;
 }
 
-void SweepStatisticsElement::FromXml(QXmlStreamAttributes attributes) {
-    StatisticsElement::FromXml(attributes);
+void SweepStatisticsElement::FromXml(QDomElement node) {
+    StatisticsElement::FromXml(node);
 
-    for (int i = 0; i < attributes.count(); i++) {
-        QXmlStreamAttribute a = attributes.at(i);
-
-        if (a.name() == "totalBombCount")
-            totalBombCount = a.value().toString().toInt();
-        else if (a.name() == "markedBombCount")
-            markedBombCount = a.value().toString().toInt();
-    }
+    totalBombCount = node.attribute("totalBombCount", "0").toInt();
+    markedBombCount = node.attribute("markedBombCount", "0").toInt();
 }
 
 QXmlStreamAttributes SweepStatisticsElement::ToXml() {

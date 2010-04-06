@@ -18,26 +18,32 @@ void StatisticsManager::Read() {
     QFile inFile(filePath);
     inFile.open(QIODevice::ReadOnly);
 
-    QXmlStreamReader xml(&inFile);
+    QDomDocument xml("stats");
 
-    xml.readNextStartElement();
-    while (!xml.atEnd()) {
-
-        boost::shared_ptr<StatisticsElement> e;
-
-        if (xml.name() == StatisticsElement::ClassToStr())
-            e.reset(new StatisticsElement);
-        else if (xml.name() == SweepStatisticsElement::ClassToStr())
-            e.reset(new SweepStatisticsElement);
-
-        e->FromXml(xml.attributes());
-
-        Add(e);
-
-        xml.readNextStartElement();
+    if (!xml.setContent(&inFile)) {
+        inFile.close();
+        return;
     }
 
     inFile.close();
+
+    QDomNode node = xml.firstChild().nextSibling().firstChild();
+
+    while (!node.isNull()) {
+        QDomElement el = node.toElement();
+
+        boost::shared_ptr<StatisticsElement> e;
+
+        if (el.tagName() == StatisticsElement::ClassToStr())
+            e.reset(new StatisticsElement);
+        else if (el.tagName() == SweepStatisticsElement::ClassToStr())
+            e.reset(new SweepStatisticsElement);
+
+        e->FromXml(el);
+        Add(e);
+
+        node = node.nextSibling();
+    }
 }
 void StatisticsManager::Write() {
     QFile outFile(filePath);
@@ -45,12 +51,16 @@ void StatisticsManager::Write() {
 
     QXmlStreamWriter xml(&outFile);
 
+    xml.setAutoFormatting(true);
+
     xml.writeStartDocument();
+    xml.writeStartElement("picmi");
     for (unsigned int i = 0; i < elements.size(); i++) {
         xml.writeStartElement(elements.at(i)->type());
         xml.writeAttributes(elements.at(i)->ToXml());
         xml.writeEndElement();
     }
+    xml.writeEndElement();
     xml.writeEndDocument();
 
     outFile.close();

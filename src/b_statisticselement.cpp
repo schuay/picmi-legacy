@@ -20,22 +20,12 @@ StatisticsElement::StatisticsElement()
     resolution = GR_ABORTED;
 }
 
-void StatisticsElement::FromXml(QXmlStreamAttributes attributes) {
-    for (int i = 0; i < attributes.count(); i++) {
-        QXmlStreamAttribute a = attributes.at(i);
-
-        if (a.name() == "width")
-            width = a.value().toString().toInt();
-        else if (a.name() == "height")
-            height = a.value().toString().toInt();
-        else if (a.name() == "difficulty")
-            difficulty = a.value().toString().toInt();
-        else if (a.name() == "playedTime")
-            playedTime = a.value().toString().toInt();
-        else if (a.name() == "resolution")
-            resolution = static_cast<GameResolutionEnum>(a.value().toString().toInt());
-    }
-
+void StatisticsElement::FromXml(QDomElement node) {
+    width = node.attribute("width","0").toInt();
+    height = node.attribute("height","0").toInt();
+    difficulty = node.attribute("difficulty","0").toInt();
+    playedTime = node.attribute("playedTime","0").toInt();
+    resolution = static_cast<GameResolutionEnum>(node.attribute("resolution","0").toInt());
 }
 QXmlStreamAttributes StatisticsElement::ToXml() {
 

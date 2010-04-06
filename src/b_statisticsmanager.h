@@ -12,7 +12,7 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include <QtXml/QXmlStreamReader>
+#include <QtXml/QDomDocument>
 #include <QtXml/QXmlStreamWriter>
 #include <QFile>
 

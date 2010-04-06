@@ -2,6 +2,7 @@
 # Project created by QtCreator 2010-03-01T00:05:51
 # -------------------------------------------------
 TARGET = picmi
+QT += xml
 TEMPLATE = app
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \

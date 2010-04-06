@@ -11,6 +11,7 @@
 #define B_STATISTICSELEMENT_H
 
 #include <QtXml/QXmlStreamAttributes>
+#include <QtXml/QDomDocument>
 #include <string>
 
 #include "b_enums.h"
@@ -20,7 +21,7 @@ class StatisticsElement
 public:
     StatisticsElement();
 
-    virtual void FromXml(QXmlStreamAttributes attributes);
+    virtual void FromXml(QDomElement node);
     virtual QXmlStreamAttributes ToXml();
 
     unsigned int
