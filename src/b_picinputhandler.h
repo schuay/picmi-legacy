@@ -33,8 +33,6 @@ private:
 
     void InitSystems();
 
-    void DebugKeyAction();
-
     int HandleMouseEvent(const int x, const int y, const int btn, const int event);
 
     Point

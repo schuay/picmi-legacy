@@ -26,8 +26,6 @@ void PicInputHandler::InitSystems() {
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 }
 
-void PicInputHandler::DebugKeyAction() {}
-
 int PicInputHandler::HandleMouseEvent(int x, int y, int btn, int event) {
     Point newLocation(
             (x - game->PixOffsetX() * game->Zoom()) / (game->CellLength() * game->Zoom()),
@@ -97,9 +95,6 @@ void PicInputHandler::HandleInput() {
             case SDLK_ESCAPE:
                 game->SetResolution(GR_ABORTED);
                 game->Quit = true;
-                break;
-            case SDLK_d:
-                DebugKeyAction();
                 break;
             case SDLK_LEFT:
                 dx = -1;

@@ -26,7 +26,7 @@ class BoardSettings
 {
 public:
     BoardSettings(GameTypeEnum t);
-    bool Validate();
+    bool Validate() const;
     void Load();
     void Save();
 

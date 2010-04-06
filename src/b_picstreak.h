@@ -15,7 +15,7 @@ class PicStreak
 public:
     PicStreak(unsigned int l);
 
-    unsigned int GetLength();
+    unsigned int GetLength() const { return length; }
     bool Solved;
 
 private:

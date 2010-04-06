@@ -41,10 +41,10 @@ public:
 
     void CalculateStreakSolvedState();  /* call this to update streak.Solved states - ideally once before drawing each frame */
 
-    unsigned int GetElapsedRealTime();
-    unsigned int GetElapsedPenaltyTime();
+    unsigned int GetElapsedRealTime() const;
+    unsigned int GetElapsedPenaltyTime() const;
 
-    float GetCompletedPercentageBoxes();
+    float GetCompletedPercentageBoxes() const;
 
     boost::shared_ptr<StatsElement> GetStats() const;
 

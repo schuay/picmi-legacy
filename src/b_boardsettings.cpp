@@ -37,7 +37,7 @@ void BoardSettings::SetDefaultValues() {
     }
 }
 
-bool BoardSettings::Validate() {
+bool BoardSettings::Validate() const {
     if (Map.length() != x*y)
         return false;
 

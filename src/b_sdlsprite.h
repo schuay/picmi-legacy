@@ -21,6 +21,7 @@
 #define JUSTIFY_LB   1
 #define JUSTIFY_RT   2
 #define JUSTIFY_RB   3
+
 namespace BoardGame {
 class SDLSprite
 {

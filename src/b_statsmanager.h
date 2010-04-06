@@ -25,7 +25,7 @@ public:
     StatsManager();
 
     void Read();
-    void Write();
+    void Write() const;
     void Add(boost::shared_ptr<StatsElement> e);
 private:
     std::vector<boost::shared_ptr<StatsElement> > elements;

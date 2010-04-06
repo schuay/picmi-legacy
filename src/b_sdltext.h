@@ -24,6 +24,7 @@
 #define FONT_NORMAL 0
 #define FONT_BOLD   1
 #define FONT_ITALIC 2
+
 namespace BoardGame {
 class SDLText
 {

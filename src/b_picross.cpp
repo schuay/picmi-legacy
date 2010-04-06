@@ -458,14 +458,14 @@ void Picross::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-unsigned int Picross::GetElapsedPenaltyTime() {
+unsigned int Picross::GetElapsedPenaltyTime() const {
     return timer.GetPenaltyTime();
 }
-unsigned int Picross::GetElapsedRealTime() {
+unsigned int Picross::GetElapsedRealTime() const {
     return timer.GetRealTime();
 }
 
-float Picross::GetCompletedPercentageBoxes() {
+float Picross::GetCompletedPercentageBoxes() const {
     int NrOfHitTiles = 0;
 
     for (unsigned int i = 0; i < width*height; i++)

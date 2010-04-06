@@ -39,13 +39,15 @@ void StatsManager::Read() {
         else if (el.tagName() == SweepStatsElement::ClassToStr())
             e.reset(new SweepStatsElement);
 
-        e->FromXml(el);
-        Add(e);
+        if (e) {
+            e->FromXml(el);
+            Add(e);
+        }
 
         node = node.nextSibling();
     }
 }
-void StatsManager::Write() {
+void StatsManager::Write() const {
     QFile outFile(filePath);
     outFile.open(QIODevice::WriteOnly);
 
