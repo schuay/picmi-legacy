@@ -16,19 +16,19 @@
 #include <QtXml/QXmlStreamWriter>
 #include <QFile>
 
-#include "b_statisticselement.h"
-#include "b_sweepstatisticselement.h"
+#include "b_statselement.h"
+#include "b_sweepstatselement.h"
 
-class StatisticsManager
+class StatsManager
 {
 public:
-    StatisticsManager();
+    StatsManager();
 
     void Read();
     void Write();
-    void Add(boost::shared_ptr<StatisticsElement> e);
+    void Add(boost::shared_ptr<StatsElement> e);
 private:
-    std::vector<boost::shared_ptr<StatisticsElement> > elements;
+    std::vector<boost::shared_ptr<StatsElement> > elements;
     QString filePath;
 };
 

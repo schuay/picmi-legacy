@@ -15,14 +15,14 @@ PicStatsElement::PicStatsElement()
 }
 
 void PicStatsElement::FromXml(QDomElement node) {
-    StatisticsElement::FromXml(node);
+    StatsElement::FromXml(node);
 
     nrOfBoxes = node.attribute("difficulty", "0").toInt();
 }
 
 QXmlStreamAttributes PicStatsElement::ToXml() {
 
-    StatisticsElement::ToXml();
+    StatsElement::ToXml();
 
     QString name, val;
 

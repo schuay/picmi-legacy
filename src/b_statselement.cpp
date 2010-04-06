@@ -7,9 +7,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "b_statisticselement.h"
+#include "b_statselement.h"
 
-StatisticsElement::StatisticsElement()
+StatsElement::StatsElement()
 {
     width = 0;
     height = 0;
@@ -18,13 +18,13 @@ StatisticsElement::StatisticsElement()
     resolution = GR_ABORTED;
 }
 
-void StatisticsElement::FromXml(QDomElement node) {
+void StatsElement::FromXml(QDomElement node) {
     width = node.attribute("width","0").toInt();
     height = node.attribute("height","0").toInt();
     playedTime = node.attribute("playedTime","0").toInt();
     resolution = static_cast<GameResolutionEnum>(node.attribute("resolution","0").toInt());
 }
-QXmlStreamAttributes StatisticsElement::ToXml() {
+QXmlStreamAttributes StatsElement::ToXml() {
 
     attributes.clear();
 

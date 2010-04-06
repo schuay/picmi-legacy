@@ -38,7 +38,7 @@ void GameManager::MainLoop() {
             GameOver();
     }
 
-    StatisticsManager m;
+    StatsManager m;
     m.Read();
     m.Add(game->GetStats());
     m.Write();

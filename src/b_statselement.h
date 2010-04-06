@@ -7,25 +7,38 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef B_SWEEPSTATISTICSELEMENT_H
-#define B_SWEEPSTATISTICSELEMENT_H
+#ifndef B_STATISTICSELEMENT_H
+#define B_STATISTICSELEMENT_H
 
-#include "b_statisticselement.h"
+#include <QtXml/QXmlStreamAttributes>
+#include <QtXml/QDomDocument>
+#include <string>
 
-class SweepStatisticsElement : public StatisticsElement
+#include "b_enums.h"
+
+class StatsElement
 {
 public:
-    SweepStatisticsElement();
+    StatsElement();
 
     virtual void FromXml(QDomElement node);
     virtual QXmlStreamAttributes ToXml();
 
     unsigned int
-            totalBombCount,
-            markedBombCount;
+            width,
+            height;
 
-    virtual QString type() const { return "SweepStatisticsElement"; }
-    static QString ClassToStr() { return "SweepStatisticsElement"; }
+    unsigned int
+            playedTime;
+
+    GameResolutionEnum
+            resolution;
+
+    virtual QString type() const { return "StatisticsElement"; }
+    static QString ClassToStr() { return  "StatisticsElement"; }
+
+protected:
+    QXmlStreamAttributes attributes;
 };
 
-#endif // B_SWEEPSTATISTICSELEMENT_H
+#endif // B_STATISTICSELEMENT_H

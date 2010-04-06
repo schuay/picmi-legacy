@@ -7,14 +7,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "b_statisticsmanager.h"
+#include "b_statsmanager.h"
 
-StatisticsManager::StatisticsManager()
+StatsManager::StatsManager()
 {
     filePath = QString(getenv("HOME")) + "/.config/picmi/stats";
 }
 
-void StatisticsManager::Read() {
+void StatsManager::Read() {
     QFile inFile(filePath);
     inFile.open(QIODevice::ReadOnly);
 
@@ -32,12 +32,12 @@ void StatisticsManager::Read() {
     while (!node.isNull()) {
         QDomElement el = node.toElement();
 
-        boost::shared_ptr<StatisticsElement> e;
+        boost::shared_ptr<StatsElement> e;
 
-        if (el.tagName() == StatisticsElement::ClassToStr())
-            e.reset(new StatisticsElement);
-        else if (el.tagName() == SweepStatisticsElement::ClassToStr())
-            e.reset(new SweepStatisticsElement);
+        if (el.tagName() == StatsElement::ClassToStr())
+            e.reset(new StatsElement);
+        else if (el.tagName() == SweepStatsElement::ClassToStr())
+            e.reset(new SweepStatsElement);
 
         e->FromXml(el);
         Add(e);
@@ -45,7 +45,7 @@ void StatisticsManager::Read() {
         node = node.nextSibling();
     }
 }
-void StatisticsManager::Write() {
+void StatsManager::Write() {
     QFile outFile(filePath);
     outFile.open(QIODevice::WriteOnly);
 
@@ -66,6 +66,6 @@ void StatisticsManager::Write() {
     outFile.close();
 }
 
-void StatisticsManager::Add(boost::shared_ptr<StatisticsElement> e) {
+void StatsManager::Add(boost::shared_ptr<StatsElement> e) {
     elements.push_back(e);
 }

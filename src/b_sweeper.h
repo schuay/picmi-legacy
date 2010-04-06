@@ -17,7 +17,7 @@
 #include "b_sweepdefines.h"
 #include "b_boardsettings.h"
 #include "b_boardgame.h"
-#include "b_sweepstatisticselement.h"
+#include "b_sweepstatselement.h"
 
 namespace BoardGame {
 class Sweeper : public BoardGame
@@ -43,7 +43,7 @@ public:
     unsigned int MarkedBombCount() const;
     unsigned int TotalBombCount() const { return bombCount; }
 
-    boost::shared_ptr<StatisticsElement> GetStats() const;
+    boost::shared_ptr<StatsElement> GetStats() const;
 
 private:
 

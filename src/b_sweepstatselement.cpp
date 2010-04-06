@@ -7,25 +7,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "b_sweepstatisticselement.h"
+#include "b_sweepstatselement.h"
 
-SweepStatisticsElement::SweepStatisticsElement() :
-        StatisticsElement()
+SweepStatsElement::SweepStatsElement() :
+        StatsElement()
 {
     totalBombCount = 0;
     markedBombCount = 0;
 }
 
-void SweepStatisticsElement::FromXml(QDomElement node) {
-    StatisticsElement::FromXml(node);
+void SweepStatsElement::FromXml(QDomElement node) {
+    StatsElement::FromXml(node);
 
     totalBombCount = node.attribute("totalBombCount", "0").toInt();
     markedBombCount = node.attribute("markedBombCount", "0").toInt();
 }
 
-QXmlStreamAttributes SweepStatisticsElement::ToXml() {
+QXmlStreamAttributes SweepStatsElement::ToXml() {
 
-    StatisticsElement::ToXml();
+    StatsElement::ToXml();
 
     QString name, val;
 

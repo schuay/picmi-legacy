@@ -18,7 +18,7 @@
 #include "b_picinputhandler.h"
 #include "b_picross.h"
 #include "b_picpainter.h"
-#include "b_statisticsmanager.h"
+#include "b_statsmanager.h"
 
 #define WINDOWCAPTION "picmi"
 

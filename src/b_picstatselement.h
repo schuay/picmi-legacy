@@ -10,9 +10,9 @@
 #ifndef B_PICSTATSELEMENT_H
 #define B_PICSTATSELEMENT_H
 
-#include "b_statisticselement.h"
+#include "b_statselement.h"
 
-class PicStatsElement : public StatisticsElement
+class PicStatsElement : public StatsElement
 {
 public:
     PicStatsElement();

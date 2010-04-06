@@ -46,7 +46,7 @@ public:
 
     float GetCompletedPercentageBoxes();
 
-    boost::shared_ptr<StatisticsElement> GetStats() const;
+    boost::shared_ptr<StatsElement> GetStats() const;
 
     std::vector<PicStreak>
             *ColStreaks,    /* stores streaks */
