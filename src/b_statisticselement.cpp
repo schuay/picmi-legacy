@@ -14,8 +14,6 @@ StatisticsElement::StatisticsElement()
     width = 0;
     height = 0;
 
-    difficulty = 0;
-
     playedTime = 0;
     resolution = GR_ABORTED;
 }
@@ -23,7 +21,6 @@ StatisticsElement::StatisticsElement()
 void StatisticsElement::FromXml(QDomElement node) {
     width = node.attribute("width","0").toInt();
     height = node.attribute("height","0").toInt();
-    difficulty = node.attribute("difficulty","0").toInt();
     playedTime = node.attribute("playedTime","0").toInt();
     resolution = static_cast<GameResolutionEnum>(node.attribute("resolution","0").toInt());
 }
@@ -39,10 +36,6 @@ QXmlStreamAttributes StatisticsElement::ToXml() {
 
     name = "height";
     val.setNum(height);
-    attributes.append(name, val);
-
-    name = "difficulty";
-    val.setNum(difficulty);
     attributes.append(name, val);
 
     name = "playedTime";

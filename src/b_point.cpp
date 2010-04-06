@@ -14,7 +14,7 @@ Point::Point() {
     x = 0;
     y = 0;
 }
-Point::Point(Point *p) {
+Point::Point(Point const *p) {
     x = p->x;
     y = p->y;
 }

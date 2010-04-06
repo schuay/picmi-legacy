@@ -14,7 +14,7 @@ class Point
 {
 public:
     Point();
-    Point(Point *p);
+    Point(Point const *p);
     Point(unsigned int _x, unsigned int _y);
 
     bool operator==(Point const &p);

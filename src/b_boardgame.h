@@ -34,20 +34,20 @@ public:
     virtual bool GameLost() = 0;
 
     /* returns true if coordinate is in puzzle limits */
-    bool IsInBounds(unsigned int x, unsigned int y);
-    bool IsInBounds(Point &p);
+    bool IsInBounds(unsigned int x, unsigned int y) const;
+    bool IsInBounds(Point &p) const;
 
 
     /* returns the state of game board at p */
-    virtual int GetStateAt(Point &p) = 0;
-    virtual int GetStateAt(unsigned int x, unsigned int y) = 0;
+    virtual int GetStateAt(Point &p) const = 0;
+    virtual int GetStateAt(unsigned int x, unsigned int y) const = 0;
 
     /* returns the state of map at p */
-    virtual int GetMapAt(Point &p) = 0;
-    virtual int GetMapAt(unsigned int x, unsigned int y) = 0;
+    virtual int GetMapAt(Point &p) const = 0;
+    virtual int GetMapAt(unsigned int x, unsigned int y) const = 0;
 
     /* get / set current location */
-    Point GetLocation();
+    Point GetLocation() const;
 
     /* try setting absolute / relative current location;
        returns true on success, false on failure */
@@ -62,29 +62,29 @@ public:
     virtual void DoOp(int op) = 0;
 
     /* returns elapsed time since gamestart in seconds */
-    unsigned int GetElapsedTime();
+    unsigned int GetElapsedTime() const;
 
     /* returns stats element (information about game, like dimensions, difficulty, time played) */
-    virtual boost::shared_ptr<StatisticsElement> GetStats() = 0;
+    virtual boost::shared_ptr<StatisticsElement> GetStats() const = 0;
 
     /* sets game resolution (aborted/won/lost) and stops timer */
     virtual void SetResolution(GameResolutionEnum r) { resolution = r; timer.Stop(); }
 
-    unsigned int Width() { return width; }
-    unsigned int Height() { return height; }
+    unsigned int Width() const { return width; }
+    unsigned int Height() const { return height; }
 
-    unsigned int PixOffsetX() { return puzzleLocation.x; }
-    unsigned int PixOffsetY() { return puzzleLocation.y; }
-    unsigned int CellLength() { return celllength; }
-    unsigned int Zoom() { return zoom; }
+    unsigned int PixOffsetX() const { return puzzleLocation.x; }
+    unsigned int PixOffsetY() const { return puzzleLocation.y; }
+    unsigned int CellLength() const { return celllength; }
+    unsigned int Zoom() const { return zoom; }
 
     bool Quit;
 
 protected:
 
     /* convert coordinate to index */
-    int CToI(Point &p) { return CToI(p.x, p.y); }
-    int CToI(unsigned int x, unsigned int y) { return y*width + x; }
+    int CToI(Point &p) const { return CToI(p.x, p.y); }
+    int CToI(unsigned int x, unsigned int y) const { return y*width + x; }
 
     /* set state of board at p */
     virtual void SetStateAt(Point &p, int state) = 0;

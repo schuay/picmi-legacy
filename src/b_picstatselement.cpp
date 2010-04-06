@@ -7,38 +7,28 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef B_PICTIMER_H
-#define B_PICTIMER_H
+#include "b_picstatselement.h"
 
-#include <time.h>
-namespace BoardGame {
-class Timer
+PicStatsElement::PicStatsElement()
 {
-public:
-    Timer();
-
-    void Start();
-    void Stop();
-
-    void AddPenalty();
-
-    unsigned int GetTime() const;
-    unsigned int GetRealTime() const;
-    unsigned int GetPenaltyTime() const;
-
-private:
-    bool
-            started,
-            stopped;
-
-    unsigned int
-            startTime,
-            finishTime,
-            penaltyTime,
-            penaltyMultiplier;
-
-    static const unsigned int
-            basePenaltyTime = 120;
-};
+    nrOfBoxes = 0;
 }
-#endif // B_PICTIMER_H
+
+void PicStatsElement::FromXml(QDomElement node) {
+    StatisticsElement::FromXml(node);
+
+    nrOfBoxes = node.attribute("difficulty", "0").toInt();
+}
+
+QXmlStreamAttributes PicStatsElement::ToXml() {
+
+    StatisticsElement::ToXml();
+
+    QString name, val;
+
+    name = "difficulty";
+    val.setNum(nrOfBoxes);
+    attributes.append(name, val);
+
+    return attributes;
+}

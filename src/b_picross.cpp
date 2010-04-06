@@ -38,10 +38,10 @@ bool Picross::GameWon() {
     return true;
 }
 
-boost::shared_ptr<StatisticsElement> Picross::GetStats() {
-    boost::shared_ptr<StatisticsElement> stats(new StatisticsElement);
+boost::shared_ptr<StatisticsElement> Picross::GetStats() const {
+    boost::shared_ptr<PicStatsElement> stats(new PicStatsElement);
 
-    stats->difficulty = 0;
+    stats->nrOfBoxes = nrOfBoxes;
     stats->height = height;
     stats->width = width;
     stats->playedTime = timer.GetTime();
@@ -284,10 +284,10 @@ void Picross::RandomPuzzle(BoardSettings &s) {
     s.Map = map;
 }
 
-int Picross::GetMapAt(Point &p) {
+int Picross::GetMapAt(Point &p) const {
     return GetMapAt(p.x, p.y);
 }
-int Picross::GetMapAt(unsigned int x, unsigned int y) {
+int Picross::GetMapAt(unsigned int x, unsigned int y) const {
     if (!IsInBounds(x, y))
         throw Exception("GetMapAt failed: Point not within puzzle dimensions.");
 
@@ -296,10 +296,10 @@ int Picross::GetMapAt(unsigned int x, unsigned int y) {
     else
         return MAP_FALSE;
 }
-int Picross::GetStateAt(Point &p) {
+int Picross::GetStateAt(Point &p) const {
     return GetStateAt(p.x, p.y);
 }
-int Picross::GetStateAt(unsigned int x, unsigned int y) {
+int Picross::GetStateAt(unsigned int x, unsigned int y) const {
     if (!IsInBounds(x, y))
         throw Exception("GetStateAt failed: Point not within puzzle dimensions.");
 

@@ -28,7 +28,7 @@ Sweeper::~Sweeper() {
         delete[] boardState;
 }
 
-unsigned int Sweeper::MarkedBombCount() {
+unsigned int Sweeper::MarkedBombCount() const {
     unsigned int markedCount = 0;
     for (unsigned int i = 0; i < width*height; i++)
         if (boardState[i] == boardMarked)
@@ -69,7 +69,7 @@ void Sweeper::RandomPuzzle(BoardSettings &s) {
             if (map[CToI(p)] != mapBomb)
                 map[p.y*width + p.x] = CalcBombCount(p);
 }
-int Sweeper::CalcBombCount(Point &p) {
+int Sweeper::CalcBombCount(Point &p) const {
     unsigned int bombCount = 0;
 
     int neighborCount = 0;
@@ -117,25 +117,24 @@ bool Sweeper::GameLost() {
     return false;
 }
 
-boost::shared_ptr<StatisticsElement> Sweeper::GetStats() {
+boost::shared_ptr<StatisticsElement> Sweeper::GetStats() const {
     boost::shared_ptr<SweepStatisticsElement> stats(new SweepStatisticsElement);
 
-    stats->difficulty = 0;
     stats->height = height;
     stats->width = width;
     stats->playedTime = timer.GetTime();
     stats->resolution = resolution;
 
     stats->totalBombCount = bombCount;
-    stats->markedBombCount = 0;
+    stats->markedBombCount = MarkedBombCount();
 
     return stats;
 }
 
-int Sweeper::GetStateAt(Point &p) {
+int Sweeper::GetStateAt(Point &p) const {
     return GetStateAt(p.x, p.y);
 }
-int Sweeper::GetStateAt(unsigned int x, unsigned int y) {
+int Sweeper::GetStateAt(unsigned int x, unsigned int y) const {
     if (!IsInBounds(x, y))
         throw Exception("GetStateAt failed: Point not within puzzle dimensions.");
 
@@ -187,10 +186,10 @@ int Sweeper::GetStateAt(unsigned int x, unsigned int y) {
     }
 }
 
-int Sweeper::GetMapAt(Point &p) {
+int Sweeper::GetMapAt(Point &p) const {
     return GetMapAt(p.x, p.y);
 }
-int Sweeper::GetMapAt(unsigned int x, unsigned int y) {
+int Sweeper::GetMapAt(unsigned int x, unsigned int y) const {
     if (!IsInBounds(x, y))
         throw Exception("GetMapAt failed: Point not within puzzle dimensions.");
 
@@ -270,7 +269,7 @@ void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) {
+boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) const {
     bool pos[3][3];
     int nrOfNeighborTiles = 0,
         i,j;

@@ -26,7 +26,8 @@ SOURCES += src/f_main.cpp \
     src/f_qtsettings.cpp \
     src/b_statisticsmanager.cpp \
     src/b_statisticselement.cpp \
-    src/b_sweepstatisticselement.cpp
+    src/b_sweepstatisticselement.cpp \
+    src/b_picstatselement.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -52,7 +53,8 @@ HEADERS += src/b_picross.h \
     src/b_statisticsmanager.h \
     src/b_statisticselement.h \
     src/b_sweepstatisticselement.h \
-    src/b_enums.h
+    src/b_enums.h \
+    src/b_picstatselement.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \

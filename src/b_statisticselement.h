@@ -29,9 +29,6 @@ public:
             height;
 
     unsigned int
-            difficulty;
-
-    unsigned int
             playedTime;
 
     GameResolutionEnum

@@ -7,38 +7,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef B_PICTIMER_H
-#define B_PICTIMER_H
+#ifndef B_PICSTATSELEMENT_H
+#define B_PICSTATSELEMENT_H
 
-#include <time.h>
-namespace BoardGame {
-class Timer
+#include "b_statisticselement.h"
+
+class PicStatsElement : public StatisticsElement
 {
 public:
-    Timer();
+    PicStatsElement();
 
-    void Start();
-    void Stop();
-
-    void AddPenalty();
-
-    unsigned int GetTime() const;
-    unsigned int GetRealTime() const;
-    unsigned int GetPenaltyTime() const;
-
-private:
-    bool
-            started,
-            stopped;
+    virtual void FromXml(QDomElement node);
+    virtual QXmlStreamAttributes ToXml();
 
     unsigned int
-            startTime,
-            finishTime,
-            penaltyTime,
-            penaltyMultiplier;
+            nrOfBoxes;
 
-    static const unsigned int
-            basePenaltyTime = 120;
+    virtual QString type() const { return "PicStatisticsElement"; }
+    static QString ClassToStr() { return "PicStatisticsElement"; }
 };
-}
-#endif // B_PICTIMER_H
+
+#endif // B_PICSTATSELEMENT_H

@@ -24,14 +24,14 @@ BoardGame::BoardGame()
 }
 BoardGame::~BoardGame() {}
 
-bool BoardGame::IsInBounds(Point &p) {
+bool BoardGame::IsInBounds(Point &p) const {
     return IsInBounds(p.x, p.y);
 }
-bool BoardGame::IsInBounds(unsigned int x, unsigned int y) {
+bool BoardGame::IsInBounds(unsigned int x, unsigned int y) const {
     return (x < width && y < height);
 }
 
-Point BoardGame::GetLocation() {
+Point BoardGame::GetLocation() const {
     return Point(&location);
 }
 bool BoardGame::TrySetLocation(Point &p) {
@@ -54,7 +54,7 @@ bool BoardGame::TrySetLocationRel(int dx, int dy) {
     return true;
 }
 
-unsigned int BoardGame::GetElapsedTime() {
+unsigned int BoardGame::GetElapsedTime() const {
     return timer.GetTime();
 }
 }

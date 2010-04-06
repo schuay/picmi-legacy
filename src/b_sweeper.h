@@ -29,31 +29,31 @@ public:
     bool GameWon();
     bool GameLost();
 
-    int GetStateAt(Point &p);
-    int GetStateAt(unsigned int x, unsigned int y);
+    int GetStateAt(Point &p) const;
+    int GetStateAt(unsigned int x, unsigned int y) const;
 
-    int GetMapAt(Point &p);
-    int GetMapAt(unsigned int x, unsigned int y);
+    int GetMapAt(Point &p) const;
+    int GetMapAt(unsigned int x, unsigned int y) const;
 
     void SetStateAt(Point &p, int state);
 
     void DoOpAt(Point &p, int op);
     void DoOp(int op);
 
-    unsigned int MarkedBombCount();
-    unsigned int TotalBombCount() { return bombCount; }
+    unsigned int MarkedBombCount() const;
+    unsigned int TotalBombCount() const { return bombCount; }
 
-    boost::shared_ptr<StatisticsElement> GetStats();
+    boost::shared_ptr<StatisticsElement> GetStats() const;
 
 private:
 
     void RandomPuzzle(BoardSettings &s);
-    int CalcBombCount(Point &p);
+    int CalcBombCount(Point &p) const;
 
     /* creates an array of all target points in targetArray and returns nr of neighbors */
     /* the caller is responsible for freeing the array */
     /* if noDiagonals is true, diagonal neighbors are not returned */
-    boost::shared_array<Point> GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals);
+    boost::shared_array<Point> GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) const;
 
     /* exposing tiles is a recursive operation. expose all clear tiles connected to original tile. diagonal connections are not allowed */
     void ExposeTile(Point &p);

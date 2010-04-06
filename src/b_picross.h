@@ -21,6 +21,7 @@
 #include "b_exception.h"
 #include "b_picdefines.h"
 #include "b_timer.h"
+#include "b_picstatselement.h"
 
 namespace BoardGame {
 class Picross : public BoardGame
@@ -32,8 +33,8 @@ public:
     bool GameWon(); /* returns true if the puzzle has been completely solved  */
     inline bool GameLost() { return false; }
 
-    int GetStateAt(Point &p);                    /* returns the state of game board at p */
-    int GetStateAt(unsigned int x, unsigned int y);
+    int GetStateAt(Point &p) const;                    /* returns the state of game board at p */
+    int GetStateAt(unsigned int x, unsigned int y) const;
 
     void DoOpAt(Point &p, int op);   /* perform operation (HIT/MARK) at p */
     void DoOp(int op);                  /* or at current location */
@@ -45,7 +46,7 @@ public:
 
     float GetCompletedPercentageBoxes();
 
-    boost::shared_ptr<StatisticsElement> GetStats();
+    boost::shared_ptr<StatisticsElement> GetStats() const;
 
     std::vector<PicStreak>
             *ColStreaks,    /* stores streaks */
@@ -55,8 +56,8 @@ private:
 
     void SetStateAt(Point &p, int state); /* set state of board at p */
 
-    int GetMapAt(Point &p);                      /* returns the state of map at p */
-    int GetMapAt(unsigned int x, unsigned int y);
+    int GetMapAt(Point &p) const;                      /* returns the state of map at p */
+    int GetMapAt(unsigned int x, unsigned int y) const;
 
     std::vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
     std::vector<PicStreak> CalculateStreaksFromState(              /* startFromEnd: when true, starts calculation from end of row.*/

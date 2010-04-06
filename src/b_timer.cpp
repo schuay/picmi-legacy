@@ -35,13 +35,13 @@ void Timer::AddPenalty() {
         penaltyTime += basePenaltyTime * penaltyMultiplier++;
 }
 
-unsigned int Timer::GetTime() {
+unsigned int Timer::GetTime() const {
     if (!started)
         return 0;
 
     return GetRealTime() + penaltyTime;
 }
-unsigned int Timer::GetRealTime() {
+unsigned int Timer::GetRealTime() const {
 
     if (!started)
         return 0;
@@ -52,7 +52,7 @@ unsigned int Timer::GetRealTime() {
     return time(NULL) - startTime;
 }
 
-unsigned int Timer::GetPenaltyTime() {
+unsigned int Timer::GetPenaltyTime() const {
     return penaltyTime;
 }
 }
