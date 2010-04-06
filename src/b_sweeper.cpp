@@ -103,6 +103,7 @@ bool Sweeper::GameWon() {
     if (!(wonByMark || wonByExpose))
         return false;
 
+    SolveBoard();
     SetResolution(GR_WON);
     return true;
 }
@@ -388,5 +389,19 @@ void Sweeper::ExposeTile(Point &p) {
     for (int i=0; i<neighborCount; i++)
         if (boardState[CToI(neighbors[i])] != boardExposed)
             ExposeTile(neighbors[i]);
+}
+
+void Sweeper::SolveBoard() {
+    for (unsigned int i = 0; i < width * height; i++) {
+        if (boardState[i] != boardClean && boardState[i] != boardTentative)
+            continue;
+
+        switch (map[i]) {
+        case mapNone:
+            boardState[i] = boardExposed;
+        case mapBomb:
+            boardState[i] = boardMarked;
+        }
+    }
 }
 }

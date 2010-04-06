@@ -11,6 +11,8 @@
 namespace BoardGame {
 void GameManager::GameOver() {
 
+    painter->Paint();
+
     SDL_Delay(1000);
 
     /* empty event loop, then wait for user input */

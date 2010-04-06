@@ -64,6 +64,9 @@ private:
     /* this is called once for the first operation in a game. automatically finds an empty area and exposes it */
     void ExposeInitialArea();
 
+    /* solves the entire board - this is called once the game is won */
+    void SolveBoard();
+
     static const int
             mapNone = 0,
             mapBomb = 9,
