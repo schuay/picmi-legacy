@@ -34,8 +34,8 @@ void StatsManager::Read() {
 
         boost::shared_ptr<StatsElement> e;
 
-        if (el.tagName() == StatsElement::ClassToStr())
-            e.reset(new StatsElement);
+        if (el.tagName() == PicStatsElement::ClassToStr())
+            e.reset(new PicStatsElement);
         else if (el.tagName() == SweepStatsElement::ClassToStr())
             e.reset(new SweepStatsElement);
 

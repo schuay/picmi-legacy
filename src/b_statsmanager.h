@@ -16,7 +16,7 @@
 #include <QtXml/QXmlStreamWriter>
 #include <QFile>
 
-#include "b_statselement.h"
+#include "b_picstatselement.h"
 #include "b_sweepstatselement.h"
 
 class StatsManager
