@@ -1,7 +1,7 @@
 # Maintainer: Jakob Gruber (jakob gruber kabelnet at)
 
 pkgname=picmi
-pkgver=1.1.1
+pkgver=1.1.2
 pkgdesc="A number logic game."
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -12,14 +12,14 @@ makedepends=('git' 'boost')
 
 build() {
 
-  #clean source directory
+  # clean source directory
   rm -rf $srcdir/*
 
-  #git checkout
+  # git checkout
   cd $srcdir || return 1
   git clone git://github.com/schuay/$pkgname.git || return 1
   cd $srcdir/$pkgname || return 1
-  #git checkout -b installer $pkgname-$pkgver || return 1
+  git checkout -b installer $pkgname-$pkgver || return 1
 
   # set file path
   sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/picmi/"_' src/b_painter.h || return 1
