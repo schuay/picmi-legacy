@@ -12,6 +12,7 @@
 
 #include "b_statselement.h"
 
+namespace BoardGame {
 class PicStatsElement : public StatsElement
 {
 public:
@@ -26,5 +27,6 @@ public:
     virtual QString type() const { return "PicStatisticsElement"; }
     static QString ClassToStr() { return "PicStatisticsElement"; }
 };
+}
 
 #endif // B_PICSTATSELEMENT_H

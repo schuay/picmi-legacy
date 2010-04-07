@@ -9,6 +9,7 @@
 
 #include "b_picstatselement.h"
 
+namespace BoardGame {
 PicStatsElement::PicStatsElement()
 {
     nrOfBoxes = 0;
@@ -31,4 +32,5 @@ QXmlStreamAttributes PicStatsElement::ToXml() {
     attributes.append(name, val);
 
     return attributes;
+}
 }

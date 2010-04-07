@@ -9,6 +9,7 @@
 
 #include "b_sweepstatselement.h"
 
+namespace BoardGame {
 SweepStatsElement::SweepStatsElement() :
         StatsElement()
 {
@@ -38,4 +39,5 @@ QXmlStreamAttributes SweepStatsElement::ToXml() {
     attributes.append(name, val);
 
     return attributes;
+}
 }

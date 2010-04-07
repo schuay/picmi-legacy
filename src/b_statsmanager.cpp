@@ -9,12 +9,18 @@
 
 #include "b_statsmanager.h"
 
+namespace BoardGame {
 StatsManager::StatsManager()
 {
     filePath = QString(getenv("HOME")) + "/.config/picmi/stats";
+
+    Load();
 }
 
-void StatsManager::Read() {
+void StatsManager::Load() {
+    if (latestElement || elements.size() != 0)
+        throw Exception("Stats may only be read once and before Add is called.");
+
     QFile inFile(filePath);
     inFile.open(QIODevice::ReadOnly);
 
@@ -70,4 +76,6 @@ void StatsManager::Write() const {
 
 void StatsManager::Add(boost::shared_ptr<StatsElement> e) {
     elements.push_back(e);
+    latestElement = e;
+}
 }

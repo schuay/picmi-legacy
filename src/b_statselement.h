@@ -17,6 +17,7 @@
 
 #include "b_enums.h"
 
+namespace BoardGame {
 class StatsElement
 {
 public:
@@ -46,5 +47,5 @@ protected:
 
     const QString dateFormat;
 };
-
+}
 #endif // B_STATISTICSELEMENT_H

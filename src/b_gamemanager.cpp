@@ -41,7 +41,6 @@ void GameManager::MainLoop() {
     }
 
     StatsManager m;
-    m.Read();
     m.Add(game->GetStats());
     m.Write();
 }

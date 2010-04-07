@@ -12,6 +12,7 @@
 
 #include "b_statselement.h"
 
+namespace BoardGame {
 class SweepStatsElement : public StatsElement
 {
 public:
@@ -27,5 +28,6 @@ public:
     virtual QString type() const { return "SweepStatisticsElement"; }
     static QString ClassToStr() { return "SweepStatisticsElement"; }
 };
+}
 
 #endif // B_SWEEPSTATISTICSELEMENT_H

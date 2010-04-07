@@ -9,6 +9,7 @@
 
 #include "b_statselement.h"
 
+namespace BoardGame {
 StatsElement::StatsElement() : dateFormat("yyyyMMddhhmm")
 {
     width = 0;
@@ -55,4 +56,5 @@ QXmlStreamAttributes StatsElement::ToXml() {
     attributes.append(name, val);
 
     return attributes;
+}
 }
