@@ -25,7 +25,12 @@ public:
             totalBombCount,
             markedBombCount;
 
-    virtual QString type() const { return "SweepStatisticsElement"; }
+    virtual GameTypeEnum Type() const { return GT_MINESWEEPER; }
+
+    virtual unsigned int Difficulty() const { return totalBombCount / (height * width); }
+    virtual float Efficiency() const { return totalBombCount / (float)playedTime; }
+
+    virtual QString TypeStr() const { return "SweepStatisticsElement"; }
     static QString ClassToStr() { return "SweepStatisticsElement"; }
 };
 }

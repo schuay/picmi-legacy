@@ -40,9 +40,28 @@ void GameManager::MainLoop() {
             GameOver();
     }
 
+    /* BEGIN TEMP CODE for stats tests */
     StatsManager m;
-    m.Add(game->GetStats());
+    boost::shared_ptr<StatsElement> e(game->GetStats());
+    m.Add(e);
+
+    printf("\n"
+           "Games played: %u\n"
+           "Games won: %u\n"
+           "Games lost: %u\n"
+           "Games aborted: %u\n",
+           m.GetPlayedCount(e->Type()),
+           m.GetWonCount(e->Type()),
+           m.GetLostCount(e->Type()),
+           m.GetAbortedCount(e->Type()));
+
+    if (e->resolution == GR_WON)
+        printf("\n"
+               "Rank: %u\n",
+               m.GetRankInCurrentCat());
+
     m.Write();
+    /* END TEMP CODE */
 }
 
 void GameManager::InitSystems() {

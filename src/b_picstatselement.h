@@ -24,7 +24,12 @@ public:
     unsigned int
             nrOfBoxes;
 
-    virtual QString type() const { return "PicStatisticsElement"; }
+    virtual GameTypeEnum Type() const { return GT_PICROSS; }
+
+    virtual unsigned int Difficulty() const { return nrOfBoxes / (height * width); }
+    virtual float Efficiency() const { return nrOfBoxes / (float)playedTime; }
+
+    virtual QString TypeStr() const { return "PicStatisticsElement"; }
     static QString ClassToStr() { return "PicStatisticsElement"; }
 };
 }

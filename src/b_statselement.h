@@ -39,7 +39,12 @@ public:
     GameResolutionEnum
             resolution;
 
-    virtual QString type() const { return "StatisticsElement"; }
+    virtual unsigned int Difficulty() const = 0;
+    virtual float Efficiency() const = 0;
+
+    virtual GameTypeEnum Type() const = 0;
+
+    virtual QString TypeStr() const { return "StatisticsElement"; }
     static QString ClassToStr() { return  "StatisticsElement"; }
 
 protected:
