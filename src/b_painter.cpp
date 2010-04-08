@@ -33,7 +33,48 @@ namespace BoardGame {
         SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));  /* paint bg white */
         sprBackground.Blit(screen, Point(0,0));
     }
-    void Painter::PaintGameOverScreen() {
+    void Painter::PaintGameOverScreen(StatsCollection c) {
+        SDL_Rect r;
 
+        r.x = screen->w / 2 - 75;
+        r.y = screen->h / 2 - 60;
+        r.w = 150;
+        r.h = 120;
+
+        SDL_FillRect(screen, &r, SDL_MapRGB(screen->format, 0, 0, 0));
+
+        std::stringstream out;
+
+        Point p(r.x + 20, r.y + 20);
+
+        SDL_Color col;
+        col.r = col.g = col.b = 255;
+
+        out << "Games played: " << c.PlayedCount;
+        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+
+        unsigned int textHeight = txt.HeightOf(out.str(), FONT_BOLD);
+
+        out.str("");
+        p.y += textHeight;
+        out << "Won: " << c.WonCount << " ( " << c.WonCount * 100 / (float)c.PlayedCount << "%)";
+        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+
+        out.str("");
+        p.y += textHeight;
+        out << "Lost: " << c.LostCount << " ( " << c.LostCount * 100 / (float)c.PlayedCount << "%)";
+        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+
+        out.str("");
+        p.y += textHeight;
+        out << "Aborted: " << c.AbortedCount << " ( " << c.AbortedCount * 100 / (float)c.PlayedCount << "%)";
+        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+
+        out.str("");
+        p.y += textHeight;
+        out << "Overall rank: " << c.Rank;
+        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+
+        SDL_Flip(screen);
     }
 }

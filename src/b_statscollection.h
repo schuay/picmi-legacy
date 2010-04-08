@@ -21,11 +21,6 @@ namespace BoardGame {
                 LostCount,
                 AbortedCount,
                 Rank;
-
-        StatsElement
-                BestByTime,
-                BestByRank;
-
     };
 }
 

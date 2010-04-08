@@ -79,65 +79,6 @@ void StatsManager::Add(boost::shared_ptr<StatsElement> e) {
     latestElement = e;
 }
 
-unsigned int StatsManager::GetPlayedCount(GameTypeEnum t) const {
-    unsigned int playedCount = 0;
-
-    for (unsigned int i = 0; i < elements.size(); i++)
-        if (elements.at(i)->Type() == t)
-            playedCount++;
-
-    return playedCount;
-}
-unsigned int StatsManager::GetWonCount(GameTypeEnum t) const {
-    unsigned int wonCount = 0;
-
-    for (unsigned int i = 0; i < elements.size(); i++)
-        if (elements.at(i)->Type() == t && elements.at(i)->resolution == GR_WON)
-            wonCount++;
-
-    return wonCount;
-}
-unsigned int StatsManager::GetLostCount(GameTypeEnum t) const {
-    unsigned int lostCount = 0;
-
-    for (unsigned int i = 0; i < elements.size(); i++)
-        if (elements.at(i)->Type() == t && elements.at(i)->resolution == GR_LOST)
-            lostCount++;
-
-    return lostCount;
-}
-unsigned int StatsManager::GetAbortedCount(GameTypeEnum t) const {
-    unsigned int abortedCount = 0;
-
-    for (unsigned int i = 0; i < elements.size(); i++)
-        if (elements.at(i)->Type() == t && elements.at(i)->resolution == GR_ABORTED)
-            abortedCount++;
-
-    return abortedCount;
-}
-unsigned int StatsManager::GetRankInCurrentCat() const {
-    unsigned int rank = 1;
-
-    if (!latestElement)
-        return 0;
-
-    if (latestElement->resolution != GR_WON)
-        return 0;
-
-    for (unsigned int i = 0; i < elements.size(); i++) {
-        boost::shared_ptr<StatsElement> e(elements.at(i));
-        if (e != latestElement &&
-            e->resolution   == GR_WON &&
-            e->Type()       == latestElement->Type() &&
-            e->height       == latestElement->height &&
-            e->width        == latestElement->width &&
-            e->Difficulty() == latestElement->Difficulty() &&
-            e->playedTime    < latestElement->playedTime)
-            rank++;
-    }
-
-    return rank;
-}
 boost::shared_ptr<StatsElement> StatsManager::GetBestByTimeInCurrentCat() const {
     unsigned int bestIndex = 0;
 
@@ -180,7 +121,7 @@ boost::shared_ptr<StatsElement> StatsManager::GetBestByEfficiencyInCurrentCat() 
 
     return best;
 }
-StatsCollection StatsManager::AggregateStats() {
+StatsCollection StatsManager::AggregateStats() const {
     StatsCollection c;
 
     if (!latestElement)
@@ -196,7 +137,8 @@ StatsCollection StatsManager::AggregateStats() {
             rank = 1;
 
     for (unsigned int i = 0; i < elements.size(); i++) {
-        if (elements.at(i)->Type() == t) {
+        boost::shared_ptr<StatsElement> e(elements.at(i));
+        if (e->Type() == t) {
             playedCount++;
             if (elements.at(i)->resolution == GR_WON)
                 wonCount++;
@@ -204,6 +146,13 @@ StatsCollection StatsManager::AggregateStats() {
                 lostCount++;
             if (elements.at(i)->resolution == GR_ABORTED)
                 abortedCount++;
+            if (latestElement->resolution == GR_WON &&
+                e->resolution   == GR_WON &&
+                e->height       == latestElement->height &&
+                e->width        == latestElement->width &&
+                e->Difficulty() == latestElement->Difficulty() &&
+                e->playedTime    < latestElement->playedTime)
+                rank++;
         }
     }
 

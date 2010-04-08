@@ -31,34 +31,11 @@ public:
     void Add(boost::shared_ptr<StatsElement> e);
 
 
-    /* stat aggregation functions
-
-       most of the time we will probably use all of them at once, which is inefficient because each
-       function loops through all elements -> rewrite them into one function that returns struct?
-
-       additionally, we probably don't want to return a pointer (BestByTime, BestByEfficiency)
-     */
-
-    StatsCollection AggregateStats();
-
-    unsigned int /* total count of played games of type t */
-            GetPlayedCount(GameTypeEnum t) const;
-
-    unsigned int /* total count of won games of type t */
-            GetWonCount(GameTypeEnum t) const;
-
-    unsigned int /* total count of lost games of type t */
-            GetLostCount(GameTypeEnum t) const;
-
-    unsigned int /* total count of aborted games of type t */
-            GetAbortedCount(GameTypeEnum t) const;
-
-
+    /* aggregate stats (of type matching latestElement) */
+    StatsCollection AggregateStats() const;
+    
     /* all InCurrentCat functions are based on the type, dimensions, and difficulty
      * of latestElement */
-
-    unsigned int /* rank is calculated by time and only counts won games */
-            GetRankInCurrentCat() const;
 
     boost::shared_ptr<StatsElement> /* fastest time within won games */
             GetBestByTimeInCurrentCat() const;

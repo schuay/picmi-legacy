@@ -17,6 +17,7 @@
 #include "SDL/SDL.h"
 #include "b_sdlsprite.h"
 #include "b_sdltext.h"
+#include "b_statscollection.h"
 
 #define FILEPREFIX ""               /* set the location of gfx and fonts */
 
@@ -28,11 +29,11 @@ public:
     virtual ~Painter();
 
     virtual void Paint() = 0;
+    virtual void PaintGameOverScreen(StatsCollection c);
 
 protected:
 
     void PaintBackground();
-    void PaintGameOverScreen();
 
     void LoadCustomBackground(std::string path);
 

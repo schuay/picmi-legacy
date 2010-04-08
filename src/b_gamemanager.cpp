@@ -11,8 +11,18 @@
 namespace BoardGame {
 void GameManager::GameOver() {
 
+    /* paint final game state */
     painter->Paint();
 
+    /* load, display and write stats */
+    /* note to self: when called here, aborted games are NOT stored in statistics */
+    StatsManager m;
+    m.Add(game->GetStats());
+    m.Write();
+
+    painter->PaintGameOverScreen(m.AggregateStats());
+
+    /* pause for 1 second */
     SDL_Delay(1000);
 
     /* empty event loop, then wait for user input */
@@ -34,34 +44,9 @@ void GameManager::MainLoop() {
 
         SDL_Delay(30);  /* relinquish cpu time we don't need */
 
-        if (game->GameLost())
-            GameOver();
-        else if (game->GameWon())
+        if (game->GameLost() || game->GameWon())
             GameOver();
     }
-
-    /* BEGIN TEMP CODE for stats tests */
-    StatsManager m;
-    boost::shared_ptr<StatsElement> e(game->GetStats());
-    m.Add(e);
-
-    printf("\n"
-           "Games played: %u\n"
-           "Games won: %u\n"
-           "Games lost: %u\n"
-           "Games aborted: %u\n",
-           m.GetPlayedCount(e->Type()),
-           m.GetWonCount(e->Type()),
-           m.GetLostCount(e->Type()),
-           m.GetAbortedCount(e->Type()));
-
-    if (e->resolution == GR_WON)
-        printf("\n"
-               "Rank: %u\n",
-               m.GetRankInCurrentCat());
-
-    m.Write();
-    /* END TEMP CODE */
 }
 
 void GameManager::InitSystems() {
