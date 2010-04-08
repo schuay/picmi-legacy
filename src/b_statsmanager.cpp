@@ -180,4 +180,39 @@ boost::shared_ptr<StatsElement> StatsManager::GetBestByEfficiencyInCurrentCat() 
 
     return best;
 }
+StatsCollection StatsManager::AggregateStats() {
+    StatsCollection c;
+
+    if (!latestElement)
+        throw Exception("No current stats found.");
+
+    GameTypeEnum t = latestElement->Type();
+
+    unsigned int
+            playedCount = 0,
+            wonCount = 0,
+            lostCount = 0,
+            abortedCount = 0,
+            rank = 1;
+
+    for (unsigned int i = 0; i < elements.size(); i++) {
+        if (elements.at(i)->Type() == t) {
+            playedCount++;
+            if (elements.at(i)->resolution == GR_WON)
+                wonCount++;
+            if (elements.at(i)->resolution == GR_LOST)
+                lostCount++;
+            if (elements.at(i)->resolution == GR_ABORTED)
+                abortedCount++;
+        }
+    }
+
+    c.PlayedCount = playedCount;
+    c.WonCount = wonCount;
+    c.LostCount = lostCount;
+    c.AbortedCount = abortedCount;
+    c.Rank = rank;
+
+    return c;
+}
 }

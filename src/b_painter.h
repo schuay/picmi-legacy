@@ -32,6 +32,7 @@ public:
 protected:
 
     void PaintBackground();
+    void PaintGameOverScreen();
 
     void LoadCustomBackground(std::string path);
 

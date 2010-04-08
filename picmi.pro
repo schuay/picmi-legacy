@@ -54,7 +54,8 @@ HEADERS += src/b_picross.h \
     src/b_statselement.h \
     src/b_sweepstatselement.h \
     src/b_enums.h \
-    src/b_picstatselement.h
+    src/b_picstatselement.h \
+    src/b_statscollection.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \

@@ -19,6 +19,7 @@
 #include "b_picstatselement.h"
 #include "b_sweepstatselement.h"
 #include "b_exception.h"
+#include "b_statscollection.h"
 
 namespace BoardGame {
 class StatsManager
@@ -37,6 +38,8 @@ public:
 
        additionally, we probably don't want to return a pointer (BestByTime, BestByEfficiency)
      */
+
+    StatsCollection AggregateStats();
 
     unsigned int /* total count of played games of type t */
             GetPlayedCount(GameTypeEnum t) const;

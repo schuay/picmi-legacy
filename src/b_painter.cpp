@@ -33,4 +33,7 @@ namespace BoardGame {
         SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));  /* paint bg white */
         sprBackground.Blit(screen, Point(0,0));
     }
+    void Painter::PaintGameOverScreen() {
+
+    }
 }
