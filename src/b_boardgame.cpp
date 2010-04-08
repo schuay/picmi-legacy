@@ -20,7 +20,7 @@ BoardGame::BoardGame()
 
     resolution = GR_INPROGRESS;
 
-    Quit = false;
+    quit = false;
 }
 BoardGame::~BoardGame() {}
 

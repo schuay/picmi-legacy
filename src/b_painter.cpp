@@ -36,10 +36,10 @@ namespace BoardGame {
     void Painter::PaintGameOverScreen(StatsCollection c) {
         SDL_Rect r;
 
-        r.x = screen->w / 2 - 75;
-        r.y = screen->h / 2 - 60;
-        r.w = 150;
-        r.h = 120;
+        r.x = (screen->w / 2) - 100;
+        r.y = (screen->h / 2) - 70;
+        r.w = 200;
+        r.h = 140;
 
         SDL_FillRect(screen, &r, SDL_MapRGB(screen->format, 0, 0, 0));
 
@@ -50,7 +50,7 @@ namespace BoardGame {
         SDL_Color col;
         col.r = col.g = col.b = 255;
 
-        out << "Games played: " << c.PlayedCount;
+        out << std::setprecision(2) << "Games played: " << c.PlayedCount;
         txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
 
         unsigned int textHeight = txt.HeightOf(out.str(), FONT_BOLD);

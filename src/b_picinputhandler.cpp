@@ -94,7 +94,6 @@ void PicInputHandler::HandleInput() {
             switch (ev.key.keysym.sym) {
             case SDLK_ESCAPE:
                 game->SetResolution(GR_ABORTED);
-                game->Quit = true;
                 break;
             case SDLK_LEFT:
                 dx = -1;
@@ -131,7 +130,6 @@ void PicInputHandler::HandleInput() {
             break;
          case SDL_QUIT:
             game->SetResolution(GR_ABORTED);
-            game->Quit = true;
             break;
          default:
             break;

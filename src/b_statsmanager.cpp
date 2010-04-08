@@ -134,7 +134,7 @@ StatsCollection StatsManager::AggregateStats() const {
             wonCount = 0,
             lostCount = 0,
             abortedCount = 0,
-            rank = 1;
+            rank = (latestElement->resolution == GR_WON ? 1 : 0);
 
     for (unsigned int i = 0; i < elements.size(); i++) {
         boost::shared_ptr<StatsElement> e(elements.at(i));

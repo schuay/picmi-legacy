@@ -55,7 +55,6 @@ namespace BoardGame {
             case SDL_KEYDOWN:
                 switch (ev.key.keysym.sym) {
                 case SDLK_ESCAPE:
-                    game->Quit = true;
                     game->SetResolution(GR_ABORTED);
                     break;
 //                case SDLK_LEFT:
@@ -86,7 +85,6 @@ namespace BoardGame {
                 break;
              case SDL_QUIT:
                 game->SetResolution(GR_ABORTED);
-                game->Quit = true;
                 break;
              default:
                 break;

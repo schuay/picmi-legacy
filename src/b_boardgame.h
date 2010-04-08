@@ -68,7 +68,7 @@ public:
     virtual boost::shared_ptr<StatsElement> GetStats() const = 0;
 
     /* sets game resolution (aborted/won/lost) and stops timer */
-    virtual void SetResolution(GameResolutionEnum r) { resolution = r; timer.Stop(); }
+    virtual void SetResolution(GameResolutionEnum r) { resolution = r; timer.Stop(); quit = true; }
 
     unsigned int Width() const { return width; }
     unsigned int Height() const { return height; }
@@ -78,7 +78,7 @@ public:
     unsigned int CellLength() const { return celllength; }
     unsigned int Zoom() const { return zoom; }
 
-    bool Quit;
+    bool GetQuit() { return quit; }
 
 protected:
 
@@ -114,6 +114,8 @@ protected:
 
     /* game state - in progress, aborted, won, lost */
     GameResolutionEnum resolution;    
+
+    bool quit;
 };
 }
 #endif // B_BOARDGAME_H

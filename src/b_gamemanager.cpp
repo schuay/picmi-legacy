@@ -15,7 +15,6 @@ void GameManager::GameOver() {
     painter->Paint();
 
     /* load, display and write stats */
-    /* note to self: when called here, aborted games are NOT stored in statistics */
     StatsManager m;
     m.Add(game->GetStats());
     m.Write();
@@ -29,24 +28,26 @@ void GameManager::GameOver() {
     SDL_Event ev;
     while (SDL_PollEvent(&ev) == 1) {}
 
-    while (!game->Quit) {
+    while (true) {
         SDL_WaitEvent(&ev);
         if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
-            game->Quit = true;
+            break;
     }
 }
 
 void GameManager::MainLoop() {
 
-    while (!game->Quit) {
+    while (!game->GetQuit()) {
         inputhandler->HandleInput();
         painter->Paint();
 
-        SDL_Delay(30);  /* relinquish cpu time we don't need */
+        game->GameLost();   /* todo: merge these and give them a reasonable name */
+        game->GameWon();    /* they now set game.quit automatically */
 
-        if (game->GameLost() || game->GameWon())
-            GameOver();
+        SDL_Delay(30);  /* relinquish cpu time we don't need */
     }
+
+    GameOver();
 }
 
 void GameManager::InitSystems() {
