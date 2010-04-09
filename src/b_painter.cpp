@@ -37,9 +37,9 @@ namespace BoardGame {
         SDL_Rect r;
 
         r.x = (screen->w / 2) - 100;
-        r.y = (screen->h / 2) - 70;
+        r.y = (screen->h / 2) - 80;
         r.w = 200;
-        r.h = 140;
+        r.h = 160;
 
         SDL_FillRect(screen, &r, SDL_MapRGB(screen->format, 0, 0, 0));
 
@@ -74,6 +74,12 @@ namespace BoardGame {
         p.y += textHeight;
         out << "Overall rank: " << c.Rank;
         txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+
+        out.str("");
+        p.y += textHeight;
+        out << "Best time: " << c.BestTime;
+        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+
 
         SDL_Flip(screen);
     }

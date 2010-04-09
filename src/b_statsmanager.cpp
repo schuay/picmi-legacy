@@ -80,7 +80,7 @@ void StatsManager::Add(boost::shared_ptr<StatsElement> e) {
 }
 
 boost::shared_ptr<StatsElement> StatsManager::GetBestByTimeInCurrentCat() const {
-    unsigned int bestIndex = 0;
+    int bestIndex = -1;
 
     if (!latestElement)
         return boost::shared_ptr<StatsElement>();
@@ -92,30 +92,12 @@ boost::shared_ptr<StatsElement> StatsManager::GetBestByTimeInCurrentCat() const 
             e->height       == latestElement->height &&
             e->width        == latestElement->width &&
             e->Difficulty() == latestElement->Difficulty() &&
-            e->playedTime < elements.at(bestIndex)->playedTime)
+            (bestIndex == -1 || e->playedTime < elements.at(bestIndex)->playedTime))
             bestIndex = i;
     }
 
-    boost::shared_ptr<StatsElement> best(elements.at(bestIndex));
-
-    return best;
-}
-boost::shared_ptr<StatsElement> StatsManager::GetBestByEfficiencyInCurrentCat() const {
-    unsigned int bestIndex = 0;
-
-    if (!latestElement)
+    if (bestIndex == -1)
         return boost::shared_ptr<StatsElement>();
-
-    for (unsigned int i = 0; i < elements.size(); i++) {
-        boost::shared_ptr<StatsElement> e(elements.at(i));
-        if (e->resolution   == GR_WON &&
-            e->Type()       == latestElement->Type() &&
-            e->height       == latestElement->height &&
-            e->width        == latestElement->width &&
-            e->Difficulty() == latestElement->Difficulty() &&
-            e->Efficiency() > elements.at(bestIndex)->Efficiency())
-            bestIndex = i;
-    }
 
     boost::shared_ptr<StatsElement> best(elements.at(bestIndex));
 
@@ -161,6 +143,9 @@ StatsCollection StatsManager::AggregateStats() const {
     c.LostCount = lostCount;
     c.AbortedCount = abortedCount;
     c.Rank = rank;
+
+    boost::shared_ptr<StatsElement> bestByTime = GetBestByTimeInCurrentCat();
+    c.BestTime = (bestByTime ? bestByTime->playedTime : 0);
 
     return c;
 }

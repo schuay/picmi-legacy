@@ -20,7 +20,8 @@ namespace BoardGame {
                 WonCount,
                 LostCount,
                 AbortedCount,
-                Rank;
+                Rank,
+                BestTime;
     };
 }
 

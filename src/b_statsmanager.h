@@ -40,9 +40,6 @@ public:
     boost::shared_ptr<StatsElement> /* fastest time within won games */
             GetBestByTimeInCurrentCat() const;
 
-    boost::shared_ptr<StatsElement>  /* highest efficiency within won games */
-            GetBestByEfficiencyInCurrentCat() const;
-
 private:
     void Load();
 
