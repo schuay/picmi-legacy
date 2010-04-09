@@ -72,6 +72,9 @@ void SDLText::Blit(SDL_Surface *target, std::string txt, Point p, SDL_Color c, u
     if (!fontNormal || !fontBold || !fontItalic)
         throw Exception("Text::Blit failed, no font loaded.");
 
+    if (txt.length() == 0)
+        return;
+
     SDL_Rect to;
     SDL_Surface *s = NULL;
 

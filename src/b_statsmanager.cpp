@@ -138,6 +138,9 @@ StatsCollection StatsManager::AggregateStats() const {
         }
     }
 
+    c.CurrentResolution = latestElement->resolution;
+    c.CurrentTime = latestElement->playedTime;
+
     c.PlayedCount = playedCount;
     c.WonCount = wonCount;
     c.LostCount = lostCount;

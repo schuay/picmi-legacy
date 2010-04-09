@@ -21,7 +21,11 @@ namespace BoardGame {
                 LostCount,
                 AbortedCount,
                 Rank,
-                BestTime;
+                BestTime,
+                CurrentTime;
+
+        GameResolutionEnum
+                CurrentResolution;
     };
 }
 
