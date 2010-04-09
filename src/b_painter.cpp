@@ -35,52 +35,62 @@ namespace BoardGame {
     }
     void Painter::PaintGameOverScreen(StatsCollection c) {
         SDL_Rect r;
+        SDL_Surface *surface = SDL_CreateRGBSurface(screen->flags, 200, 180,
+                                                    screen->format->BitsPerPixel,
+                                                    screen->format->Rmask,
+                                                    screen->format->Gmask,
+                                                    screen->format->Bmask,
+                                                    screen->format->Amask);
 
-        r.x = (screen->w / 2) - 100;
-        r.y = (screen->h / 2) - 80;
-        r.w = 200;
-        r.h = 160;
+        SDL_SetAlpha(surface, SDL_SRCALPHA, 200);
 
-        SDL_FillRect(screen, &r, SDL_MapRGB(screen->format, 0, 0, 0));
+        r.x = (screen->w - surface->w) / 2;
+        r.y = (screen->h - surface->h) / 2;
+        r.w = surface->w;
+        r.h = surface->h;
 
-        std::stringstream out;
-
-        Point p(r.x + 20, r.y + 20);
+        Point p(surface->w / 2, 20);
 
         SDL_Color col;
         col.r = col.g = col.b = 255;
 
+        std::stringstream out;
+
+
         out << std::setprecision(2) << "Games played: " << c.PlayedCount;
-        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+        txt.Blit(surface, out.str(), p, col, FONT_NORMAL, JUSTIFY_C);
 
         unsigned int textHeight = txt.HeightOf(out.str(), FONT_BOLD);
 
         out.str("");
         p.y += textHeight;
-        out << "Won: " << c.WonCount << " ( " << c.WonCount * 100 / (float)c.PlayedCount << "%)";
-        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+        out << "Won: " << c.WonCount << " (" << c.WonCount * 100 / (float)c.PlayedCount << "%)";
+        txt.Blit(surface, out.str(), p, col, FONT_NORMAL, JUSTIFY_C);
 
         out.str("");
         p.y += textHeight;
-        out << "Lost: " << c.LostCount << " ( " << c.LostCount * 100 / (float)c.PlayedCount << "%)";
-        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+        out << "Lost: " << c.LostCount << " (" << c.LostCount * 100 / (float)c.PlayedCount << "%)";
+        txt.Blit(surface, out.str(), p, col, FONT_NORMAL, JUSTIFY_C);
 
         out.str("");
         p.y += textHeight;
-        out << "Aborted: " << c.AbortedCount << " ( " << c.AbortedCount * 100 / (float)c.PlayedCount << "%)";
-        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+        out << "Aborted: " << c.AbortedCount << " (" << c.AbortedCount * 100 / (float)c.PlayedCount << "%)";
+        txt.Blit(surface, out.str(), p, col, FONT_NORMAL, JUSTIFY_C);
 
         out.str("");
-        p.y += textHeight;
+        p.y += textHeight*2;
         out << "Overall rank: " << c.Rank;
-        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+        txt.Blit(surface, out.str(), p, col, FONT_NORMAL, JUSTIFY_C);
 
         out.str("");
         p.y += textHeight;
         out << "Best time: " << c.BestTime;
-        txt.Blit(screen, out.str(), p, col, FONT_BOLD, JUSTIFY_L);
+        txt.Blit(surface, out.str(), p, col, FONT_NORMAL, JUSTIFY_C);
 
 
+        SDL_BlitSurface(surface, NULL, screen, &r);
         SDL_Flip(screen);
+
+        SDL_FreeSurface(surface);
     }
 }
