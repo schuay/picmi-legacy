@@ -1,7 +1,7 @@
 # Maintainer: Jakob Gruber (jakob gruber kabelnet at)
 
 pkgname=picmi
-pkgver=1.1.2
+pkgver=1.1.3
 pkgdesc="A number logic game."
 pkgrel=1
 arch=('i686' 'x86_64')
