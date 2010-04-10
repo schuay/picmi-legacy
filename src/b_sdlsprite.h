@@ -18,6 +18,8 @@
 #include "b_point.h"
 #include "b_exception.h"
 
+using boost::shared_ptr;
+
 #define JUSTIFY_LT   0
 #define JUSTIFY_LB   1
 #define JUSTIFY_RT   2
@@ -31,14 +33,14 @@ public:
 
     void SetAsIcon();
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(boost::shared_ptr<SDL_Surface> , Point p, int justify = JUSTIFY_LT);
+    void Blit(shared_ptr<SDL_Surface> , Point p, int justify = JUSTIFY_LT);
 
 private:
 
     void Zoom(unsigned int Zoom);
     void Rotate(unsigned int Rotation); /* customized for my needs, 90/180/270 degrees and square sprites only */
 
-    boost::shared_ptr<SDL_Surface> Surface;
+    shared_ptr<SDL_Surface> Surface;
 };
 }
 #endif // SPRITE_H

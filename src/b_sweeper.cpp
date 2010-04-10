@@ -118,8 +118,8 @@ bool Sweeper::GameLost() {
     return false;
 }
 
-boost::shared_ptr<StatsElement> Sweeper::GetStats() const {
-    boost::shared_ptr<SweepStatsElement> stats(new SweepStatsElement);
+shared_ptr<StatsElement> Sweeper::GetStats() const {
+    shared_ptr<SweepStatsElement> stats(new SweepStatsElement);
 
     stats->height = height;
     stats->width = width;

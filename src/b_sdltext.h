@@ -26,6 +26,8 @@
 #define FONT_BOLD   1
 #define FONT_ITALIC 2
 
+using boost::shared_ptr;
+
 namespace BoardGame {
 class SDLText
 {
@@ -33,8 +35,8 @@ public:
     SDLText();
 
     void Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int size = 17);
-    void Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
-    void Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
 
     int WidthOf(std::string txt, unsigned int fontType = FONT_NORMAL);
     int HeightOf(std::string txt, unsigned int fontType = FONT_NORMAL);
@@ -42,9 +44,9 @@ public:
 private:
     unsigned int Size;
 
-    boost::shared_ptr<TTF_Font> GetFontForType(unsigned int fontType);
+    shared_ptr<TTF_Font> GetFontForType(unsigned int fontType);
 
-    boost::shared_ptr<TTF_Font>
+    shared_ptr<TTF_Font>
             fontNormal,
             fontBold,
             fontItalic;

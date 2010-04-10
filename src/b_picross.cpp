@@ -38,8 +38,8 @@ bool Picross::GameWon() {
     return true;
 }
 
-boost::shared_ptr<StatsElement> Picross::GetStats() const {
-    boost::shared_ptr<PicStatsElement> stats(new PicStatsElement);
+shared_ptr<StatsElement> Picross::GetStats() const {
+    shared_ptr<PicStatsElement> stats(new PicStatsElement);
 
     stats->nrOfBoxes = nrOfBoxes;
     stats->height = height;

@@ -35,7 +35,7 @@ void SDLSprite::Zoom(unsigned int ZoomFactor) {
     if (!Surface)
         return;
 
-    boost::shared_ptr<SDL_Surface> tmpSurface(
+    shared_ptr<SDL_Surface> tmpSurface(
             rotozoomSurface(Surface.get(), 0, ZoomFactor, 0), SDL_FreeSurface);
 
     if (!tmpSurface)
@@ -51,7 +51,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
         throw Exception("Rotating sprite failed: Invalid angle.");
 
     SDL_Rect from, to;
-    boost::shared_ptr<SDL_Surface> tmpSurface(
+    shared_ptr<SDL_Surface> tmpSurface(
             rotozoomSurface(Surface.get(), Rotation, 1, 0), SDL_FreeSurface);
 
     tmpSurface->flags = 0;  /* reset flags - blitting alpha transp image over another alpha transp image doesn't work */
@@ -67,7 +67,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     if (!tmpSurface)
         throw Exception("Rotating sprite failed.");
     else {
-        boost::shared_ptr<SDL_Surface> oldSurface(Surface);
+        shared_ptr<SDL_Surface> oldSurface(Surface);
         Surface.reset(SDL_CreateRGBSurface(
                 oldSurface->flags,
                 oldSurface->h,
@@ -101,7 +101,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     }
 }
 
-void SDLSprite::Blit(boost::shared_ptr<SDL_Surface> target, Point p, int justify) {
+void SDLSprite::Blit(shared_ptr<SDL_Surface> target, Point p, int justify) {
     SDL_Rect to, from;
 
     to.x = p.x;

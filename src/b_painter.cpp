@@ -31,7 +31,7 @@ namespace BoardGame {
     void Painter::PaintGameOverScreen(StatsCollection c) {
 
         /* clone original state of screen */
-        boost::shared_ptr<SDL_Surface> originalScreen(
+        shared_ptr<SDL_Surface> originalScreen(
                 SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
                                      screen->format->BitsPerPixel,
                                      screen->format->Rmask,
@@ -43,7 +43,7 @@ namespace BoardGame {
         SDL_BlitSurface(screen.get(), NULL, originalScreen.get(), NULL);
 
         /* construct a text overlay */
-        boost::shared_ptr<SDL_Surface> textOverlay(
+        shared_ptr<SDL_Surface> textOverlay(
                 SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
                                      screen->format->BitsPerPixel,
                                      screen->format->Rmask,
@@ -80,7 +80,7 @@ namespace BoardGame {
         }
     }
 
-    void Painter::Write(QString text, boost::shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify) {
+    void Painter::Write(QString text, shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify) {
         QStringList qsplittext = text.split('\n');
         unsigned int textHeight = txt.HeightOf(text.toStdString(), fontType);
 

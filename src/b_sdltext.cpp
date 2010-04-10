@@ -43,13 +43,13 @@ int SDLText::HeightOf(std::string txt, unsigned int fontType) {
     return h;
 }
 
-void SDLText::Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point p, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, unsigned int fontType, unsigned int justify) {
     SDL_Color c;
 
     c.r = c.g = c.b = 0;
     Blit(target, txt, p, c, fontType, justify);
 }
-void SDLText::Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
     if (!fontNormal || !fontBold || !fontItalic)
         throw Exception("Text::Blit failed, no font loaded.");
 
@@ -57,7 +57,7 @@ void SDLText::Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point
         return;
 
     SDL_Rect to;
-    boost::shared_ptr<SDL_Surface> s(
+    shared_ptr<SDL_Surface> s(
             TTF_RenderText_Solid(GetFontForType(fontType).get(), txt.c_str(), c),
             SDL_FreeSurface);
 
@@ -76,7 +76,7 @@ void SDLText::Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point
     SDL_BlitSurface(s.get(), NULL, target.get(), &to);
 }
 
-boost::shared_ptr<TTF_Font> SDLText::GetFontForType(unsigned int fontType) {
+shared_ptr<TTF_Font> SDLText::GetFontForType(unsigned int fontType) {
     if (fontType != FONT_NORMAL && fontType != FONT_BOLD && fontType != FONT_ITALIC)
         throw Exception("Invalid font type passed.");
 

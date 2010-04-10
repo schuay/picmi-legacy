@@ -21,6 +21,8 @@
 #include "b_exception.h"
 #include "b_statscollection.h"
 
+using boost::shared_ptr;
+
 namespace BoardGame {
 class StatsManager
 {
@@ -28,7 +30,7 @@ public:
     StatsManager();
 
     void Write() const;
-    void Add(boost::shared_ptr<StatsElement> e);
+    void Add(shared_ptr<StatsElement> e);
 
 
     /* aggregate stats (of type matching latestElement) */
@@ -37,14 +39,14 @@ public:
     /* all InCurrentCat functions are based on the type, dimensions, and difficulty
      * of latestElement */
 
-    boost::shared_ptr<StatsElement> /* fastest time within won games */
+    shared_ptr<StatsElement> /* fastest time within won games */
             GetBestByTimeInCurrentCat() const;
 
 private:
     void Load();
 
-    std::vector<boost::shared_ptr<StatsElement> > elements;
-    boost::shared_ptr<StatsElement> latestElement;  /* the most recently added element (= the just completed game) */
+    std::vector<shared_ptr<StatsElement> > elements;
+    shared_ptr<StatsElement> latestElement;  /* the most recently added element (= the just completed game) */
 
     QString filePath;
 };

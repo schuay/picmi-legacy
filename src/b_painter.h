@@ -22,6 +22,8 @@
 #include "b_statscollection.h"
 #include "boost/shared_ptr.hpp"
 
+using boost::shared_ptr;
+
 #define FILEPREFIX ""               /* set the location of gfx and fonts */
 
 namespace BoardGame {
@@ -43,10 +45,10 @@ protected:
     virtual void LoadSprites() = 0;
 
     /* multiline text writing */
-    void Write(QString text, boost::shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
+    void Write(QString text, shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
 
     /* the screen surface - everything is blitted to this */
-    boost::shared_ptr<SDL_Surface> screen;
+    shared_ptr<SDL_Surface> screen;
 
     /* text object  */
     SDLText txt;

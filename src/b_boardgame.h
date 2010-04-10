@@ -19,6 +19,8 @@
 #include "b_enums.h"
 #include "b_statselement.h"
 
+using boost::shared_ptr;
+
 namespace BoardGame {
 
 class BoardGame
@@ -65,7 +67,7 @@ public:
     unsigned int GetElapsedTime() const;
 
     /* returns stats element (information about game, like dimensions, difficulty, time played) */
-    virtual boost::shared_ptr<StatsElement> GetStats() const = 0;
+    virtual shared_ptr<StatsElement> GetStats() const = 0;
 
     /* sets game resolution (aborted/won/lost) and stops timer */
     virtual void SetResolution(GameResolutionEnum r) { resolution = r; timer.Stop(); quit = true; }

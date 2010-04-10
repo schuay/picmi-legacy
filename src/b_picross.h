@@ -23,6 +23,8 @@
 #include "b_timer.h"
 #include "b_picstatselement.h"
 
+using boost::shared_ptr;
+
 namespace BoardGame {
 class Picross : public BoardGame
 {
@@ -46,7 +48,7 @@ public:
 
     float GetCompletedPercentageBoxes() const;
 
-    boost::shared_ptr<StatsElement> GetStats() const;
+    shared_ptr<StatsElement> GetStats() const;
 
     std::vector<PicStreak>
             *ColStreaks,    /* stores streaks */

@@ -38,7 +38,7 @@ void StatsManager::Load() {
     while (!node.isNull()) {
         QDomElement el = node.toElement();
 
-        boost::shared_ptr<StatsElement> e;
+        shared_ptr<StatsElement> e;
 
         if (el.tagName() == PicStatsElement::ClassToStr())
             e.reset(new PicStatsElement);
@@ -74,19 +74,19 @@ void StatsManager::Write() const {
     outFile.close();
 }
 
-void StatsManager::Add(boost::shared_ptr<StatsElement> e) {
+void StatsManager::Add(shared_ptr<StatsElement> e) {
     elements.push_back(e);
     latestElement = e;
 }
 
-boost::shared_ptr<StatsElement> StatsManager::GetBestByTimeInCurrentCat() const {
+shared_ptr<StatsElement> StatsManager::GetBestByTimeInCurrentCat() const {
     int bestIndex = -1;
 
     if (!latestElement)
-        return boost::shared_ptr<StatsElement>();
+        return shared_ptr<StatsElement>();
 
     for (unsigned int i = 0; i < elements.size(); i++) {
-        boost::shared_ptr<StatsElement> e(elements.at(i));
+        shared_ptr<StatsElement> e(elements.at(i));
         if (e->resolution   == GR_WON &&
             e->Type()       == latestElement->Type() &&
             e->height       == latestElement->height &&
@@ -97,9 +97,9 @@ boost::shared_ptr<StatsElement> StatsManager::GetBestByTimeInCurrentCat() const 
     }
 
     if (bestIndex == -1)
-        return boost::shared_ptr<StatsElement>();
+        return shared_ptr<StatsElement>();
 
-    boost::shared_ptr<StatsElement> best(elements.at(bestIndex));
+    shared_ptr<StatsElement> best(elements.at(bestIndex));
 
     return best;
 }
@@ -119,7 +119,7 @@ StatsCollection StatsManager::AggregateStats() const {
             rank = (latestElement->resolution == GR_WON ? 1 : 0);
 
     for (unsigned int i = 0; i < elements.size(); i++) {
-        boost::shared_ptr<StatsElement> e(elements.at(i));
+        shared_ptr<StatsElement> e(elements.at(i));
         if (e->Type() == t) {
             playedCount++;
             if (elements.at(i)->resolution == GR_WON)
@@ -147,7 +147,7 @@ StatsCollection StatsManager::AggregateStats() const {
     c.AbortedCount = abortedCount;
     c.Rank = rank;
 
-    boost::shared_ptr<StatsElement> bestByTime = GetBestByTimeInCurrentCat();
+    shared_ptr<StatsElement> bestByTime = GetBestByTimeInCurrentCat();
     c.BestTime = (bestByTime ? bestByTime->playedTime : 0);
 
     return c;
