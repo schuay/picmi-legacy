@@ -12,16 +12,11 @@
 namespace BoardGame {
 
     Painter::Painter() {
-        screen = NULL;
-
         if (TTF_Init() == -1)
             throw Exception("Could not initialize sdl_ttf");
     }
 
     Painter::~Painter() {
-        if (screen)
-            SDL_FreeSurface(screen);
-
         TTF_Quit();
     }
 
@@ -30,7 +25,7 @@ namespace BoardGame {
     }
 
     void Painter::PaintBackground() {
-        SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));  /* paint bg white */
+        SDL_FillRect(screen.get(), NULL, SDL_MapRGB(screen->format, 255, 255, 255));  /* paint bg white */
         sprBackground.Blit(screen, Point(0,0));
     }
     void Painter::PaintGameOverScreen(StatsCollection c) {
@@ -45,7 +40,7 @@ namespace BoardGame {
                                      screen->format->Amask),
                 SDL_FreeSurface);
 
-        SDL_BlitSurface(screen, NULL, originalScreen.get(), NULL);
+        SDL_BlitSurface(screen.get(), NULL, originalScreen.get(), NULL);
 
         /* construct a text overlay */
         boost::shared_ptr<SDL_Surface> textOverlay(
@@ -79,9 +74,9 @@ namespace BoardGame {
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {
             SDL_SetAlpha(textOverlay.get(), SDL_SRCALPHA, i * 2);
-            SDL_BlitSurface(originalScreen.get(), NULL, screen, NULL);
-            SDL_BlitSurface(textOverlay.get(), NULL, screen, NULL);
-            SDL_Flip(screen);
+            SDL_BlitSurface(originalScreen.get(), NULL, screen.get(), NULL);
+            SDL_BlitSurface(textOverlay.get(), NULL, screen.get(), NULL);
+            SDL_Flip(screen.get());
         }
     }
 
@@ -91,7 +86,7 @@ namespace BoardGame {
 
         for (int i = 0; i < qsplittext.count(); i++) {
             p.y += textHeight;
-            txt.Blit(dst.get(), qsplittext.at(i).toStdString(), p, c, fontType, justify);
+            txt.Blit(dst, qsplittext.at(i).toStdString(), p, c, fontType, justify);
         }
     }
 }

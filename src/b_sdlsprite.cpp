@@ -11,29 +11,18 @@
 namespace BoardGame {
 SDLSprite::SDLSprite()
 {
-    Surface = NULL;
-}
-SDLSprite::~SDLSprite() {
-    if (Surface)
-        SDL_FreeSurface(Surface);
 }
 
 void SDLSprite::SetAsIcon() {
-    SDL_WM_SetIcon(Surface, NULL);
+    SDL_WM_SetIcon(Surface.get(), NULL);
 }
 
 void SDLSprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int Rotation) {
 
-    if (Surface) {
-        SDL_FreeSurface(Surface);
-        Surface = NULL;
-    }
+    Surface.reset(IMG_Load(Filename.c_str()), SDL_FreeSurface);
 
-    Surface = IMG_Load(Filename.c_str());
-
-    if (!Surface) {
+    if (!Surface)
         throw Exception("Loading sprite failed.");
-    }
 
     if (ZoomFactor != 1)
         Zoom(ZoomFactor);
@@ -46,18 +35,13 @@ void SDLSprite::Zoom(unsigned int ZoomFactor) {
     if (!Surface)
         return;
 
-    SDL_Surface *tmpSurface = NULL;
+    boost::shared_ptr<SDL_Surface> tmpSurface(
+            rotozoomSurface(Surface.get(), 0, ZoomFactor, 0), SDL_FreeSurface);
 
-    tmpSurface = rotozoomSurface(Surface, 0, ZoomFactor, 0);
-
-    if (!tmpSurface) {
+    if (!tmpSurface)
         throw Exception("Zooming sprite %s failed.");
-    }
-    else {
-        if (Surface)
-            SDL_FreeSurface(Surface);
+    else
         Surface = tmpSurface;
-    }
 }
 void SDLSprite::Rotate(unsigned int Rotation) {
 
@@ -67,8 +51,8 @@ void SDLSprite::Rotate(unsigned int Rotation) {
         throw Exception("Rotating sprite failed: Invalid angle.");
 
     SDL_Rect from, to;
-    SDL_Surface *tmpSurface =
-            rotozoomSurface(Surface, Rotation, 1, 0);
+    boost::shared_ptr<SDL_Surface> tmpSurface(
+            rotozoomSurface(Surface.get(), Rotation, 1, 0), SDL_FreeSurface);
 
     tmpSurface->flags = 0;  /* reset flags - blitting alpha transp image over another alpha transp image doesn't work */
 
@@ -83,8 +67,8 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     if (!tmpSurface)
         throw Exception("Rotating sprite failed.");
     else {
-        SDL_Surface *oldSurface = Surface;
-        Surface = SDL_CreateRGBSurface(
+        boost::shared_ptr<SDL_Surface> oldSurface(Surface);
+        Surface.reset(SDL_CreateRGBSurface(
                 oldSurface->flags,
                 oldSurface->h,
                 oldSurface->w,
@@ -92,9 +76,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
                 oldSurface->format->Rmask,
                 oldSurface->format->Gmask,
                 oldSurface->format->Bmask,
-                oldSurface->format->Amask);
-
-        SDL_FreeSurface(oldSurface);           /* throw out old surface and replace with empty surface of same size */
+                oldSurface->format->Amask), SDL_FreeSurface);
 
         switch (Rotation) { /* rotozoom doesn't handle rotating even sized images correctly */
         case 90:            /* which is why we need this custom handling */
@@ -111,18 +93,15 @@ void SDLSprite::Rotate(unsigned int Rotation) {
             break;
         }
 
-        SDL_FillRect(Surface, NULL, 0);
-        SDL_BlitSurface(tmpSurface,
+        SDL_FillRect(Surface.get(), NULL, 0);
+        SDL_BlitSurface(tmpSurface.get(),
                         &from,
-                        Surface,
-                        &to
-                        );
+                        Surface.get(),
+                        &to);
     }
-
-    SDL_FreeSurface(tmpSurface);
 }
 
-void SDLSprite::Blit(SDL_Surface *target, Point p, int justify) {
+void SDLSprite::Blit(boost::shared_ptr<SDL_Surface> target, Point p, int justify) {
     SDL_Rect to, from;
 
     to.x = p.x;
@@ -155,7 +134,7 @@ void SDLSprite::Blit(SDL_Surface *target, Point p, int justify) {
     from.w = Surface->w;
     from.h = Surface->h;
 
-    if ( SDL_BlitSurface( Surface, &from, target, &to) < 0 )
+    if ( SDL_BlitSurface( Surface.get(), &from, target.get(), &to) < 0 )
         throw Exception(SDL_GetError());
 }
 }

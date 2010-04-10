@@ -13,6 +13,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_rotozoom.h>
 #include <SDL/SDL_image.h>
+#include <boost/shared_ptr.hpp>
 
 #include "b_point.h"
 #include "b_exception.h"
@@ -27,18 +28,17 @@ class SDLSprite
 {
 public:
     SDLSprite();
-    ~SDLSprite();
 
     void SetAsIcon();
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(SDL_Surface *target, Point p, int justify = JUSTIFY_LT);
+    void Blit(boost::shared_ptr<SDL_Surface> , Point p, int justify = JUSTIFY_LT);
 
 private:
 
     void Zoom(unsigned int Zoom);
     void Rotate(unsigned int Rotation); /* customized for my needs, 90/180/270 degrees and square sprites only */
 
-    SDL_Surface *Surface;
+    boost::shared_ptr<SDL_Surface> Surface;
 };
 }
 #endif // SPRITE_H

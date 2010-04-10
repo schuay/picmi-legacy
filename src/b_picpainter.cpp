@@ -52,10 +52,11 @@ void PicPainter::LoadSprites() {
 
 void PicPainter::InitSystems() {
 
-    screen = SDL_SetVideoMode(
+    screen.reset(SDL_SetVideoMode(
             (game->PixOffsetX() + game->Width() * game->CellLength() + 5) * game->Zoom(),
             (game->PixOffsetY() + game->Height() * game->CellLength() + 5) * game->Zoom(),
-            24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF);
+            24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF),
+            SDL_FreeSurface);
 
     if (!screen)
         throw Exception(SDL_GetError());
@@ -69,7 +70,7 @@ void PicPainter::Paint() {
     PaintStreakArea();
     PaintBoardArea();
 
-    SDL_Flip(screen);
+    SDL_Flip(screen.get());
 }
 
 void PicPainter::PaintInfoArea() {
@@ -88,7 +89,7 @@ void PicPainter::PaintInfoArea() {
     color.r = color.g = color.b = 255;
 
 
-    SDL_FillRect(screen, &to, SDL_MapRGB(screen->format, 0, 0, 0)); /* info -> black bg */
+    SDL_FillRect(screen.get(), &to, SDL_MapRGB(screen->format, 0, 0, 0)); /* info -> black bg */
 
     /* draw text */
     out << "Elapsed Time";

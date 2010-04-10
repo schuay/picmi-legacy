@@ -11,26 +11,7 @@
 namespace BoardGame {
 SDLText::SDLText()
 {
-    fontNormal = NULL;
-    fontBold = NULL;
-    fontItalic = NULL;
-
     Size = 17;
-}
-
-SDLText::~SDLText() {
-    if (fontNormal) {
-        TTF_CloseFont(fontNormal);
-        fontNormal = NULL;
-    }
-    if (fontBold) {
-        TTF_CloseFont(fontBold);
-        fontBold = NULL;
-    }
-    if (fontItalic) {
-        TTF_CloseFont(fontItalic);
-        fontItalic = NULL;
-    }
 }
 
 void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int size) {
@@ -39,9 +20,9 @@ void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItali
 
     Size = size;
 
-    fontNormal = TTF_OpenFont(fnNormal.c_str(), Size);
-    fontBold = TTF_OpenFont(fnBold.c_str(), Size);
-    fontItalic = TTF_OpenFont(fnItalic.c_str(), Size);
+    fontNormal.reset(TTF_OpenFont(fnNormal.c_str(), Size), TTF_CloseFont);
+    fontBold.reset(TTF_OpenFont(fnBold.c_str(), Size), TTF_CloseFont);
+    fontItalic.reset(TTF_OpenFont(fnItalic.c_str(), Size), TTF_CloseFont);
 
     if (!fontNormal || !fontBold || !fontItalic)
         throw Exception(TTF_GetError());
@@ -50,25 +31,25 @@ void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItali
 int SDLText::WidthOf(std::string txt, unsigned int fontType) {
     int w;
 
-    TTF_SizeText(GetFontForType(fontType), txt.c_str(), &w, NULL);
+    TTF_SizeText(GetFontForType(fontType).get(), txt.c_str(), &w, NULL);
 
     return w;
 }
 int SDLText::HeightOf(std::string txt, unsigned int fontType) {
     int h;
 
-    TTF_SizeText(GetFontForType(fontType), txt.c_str(), NULL, &h);
+    TTF_SizeText(GetFontForType(fontType).get(), txt.c_str(), NULL, &h);
 
     return h;
 }
 
-void SDLText::Blit(SDL_Surface *target, std::string txt, Point p, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point p, unsigned int fontType, unsigned int justify) {
     SDL_Color c;
 
     c.r = c.g = c.b = 0;
     Blit(target, txt, p, c, fontType, justify);
 }
-void SDLText::Blit(SDL_Surface *target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(boost::shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
     if (!fontNormal || !fontBold || !fontItalic)
         throw Exception("Text::Blit failed, no font loaded.");
 
@@ -76,12 +57,9 @@ void SDLText::Blit(SDL_Surface *target, std::string txt, Point p, SDL_Color c, u
         return;
 
     SDL_Rect to;
-    SDL_Surface *s = NULL;
-
-    s = TTF_RenderText_Solid(
-            GetFontForType(fontType),
-            txt.c_str(),
-            c);
+    boost::shared_ptr<SDL_Surface> s(
+            TTF_RenderText_Solid(GetFontForType(fontType).get(), txt.c_str(), c),
+            SDL_FreeSurface);
 
     to.w = to.h = 1000; //should be enough to draw all strings
     to.y = p.y;
@@ -95,11 +73,10 @@ void SDLText::Blit(SDL_Surface *target, std::string txt, Point p, SDL_Color c, u
     if (!s)
         throw Exception("Text::Blit failed, TTF_RenderText failed");
 
-    SDL_BlitSurface(s, NULL, target, &to);
-    SDL_FreeSurface(s);
+    SDL_BlitSurface(s.get(), NULL, target.get(), &to);
 }
 
-TTF_Font *SDLText::GetFontForType(unsigned int fontType) {
+boost::shared_ptr<TTF_Font> SDLText::GetFontForType(unsigned int fontType) {
     if (fontType != FONT_NORMAL && fontType != FONT_BOLD && fontType != FONT_ITALIC)
         throw Exception("Invalid font type passed.");
 

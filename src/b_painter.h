@@ -46,7 +46,7 @@ protected:
     void Write(QString text, boost::shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
 
     /* the screen surface - everything is blitted to this */
-    SDL_Surface *screen;
+    boost::shared_ptr<SDL_Surface> screen;
 
     /* text object  */
     SDLText txt;
