@@ -103,12 +103,14 @@ namespace BoardGame {
         out.str("");
         out << "Time: " << elapsedTime;
         txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_LEFT);
+        p.y = 10 * game->Zoom();
 
         if (!lowWidth) {
             p.x = (game->Width() * game->CellLength()) / 2;
             out.str("");
             out << std::fixed << std::setprecision(2) << "Eff: " << minesPerSecond <<  " m/s";
             txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_CENTER);
+            p.y = 10 * game->Zoom();
         }
 
         p.x = (game->Width() * game->CellLength() - 10) * game->Zoom();
