@@ -69,7 +69,7 @@ namespace BoardGame {
             << "Overall rank: " << c.Rank << std::endl
             << "Best time: " << c.BestTime;
 
-        Write(QString(out.str().c_str()), textOverlay, p, col, FONT_BOLD, JUSTIFY_C);
+        txt.Blit(textOverlay, out.str(), p, col, FONT_BOLD, JUSTIFY_C);
 
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {
@@ -77,16 +77,6 @@ namespace BoardGame {
             SDL_BlitSurface(originalScreen.get(), NULL, screen.get(), NULL);
             SDL_BlitSurface(textOverlay.get(), NULL, screen.get(), NULL);
             SDL_Flip(screen.get());
-        }
-    }
-
-    void Painter::Write(QString text, shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify) {
-        QStringList qsplittext = text.split('\n');
-        unsigned int textHeight = txt.HeightOf(text.toStdString(), fontType);
-
-        for (int i = 0; i < qsplittext.count(); i++) {
-            p.y += textHeight;
-            txt.Blit(dst, qsplittext.at(i).toStdString(), p, c, fontType, justify);
         }
     }
 }

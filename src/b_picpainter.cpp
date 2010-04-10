@@ -92,39 +92,28 @@ void PicPainter::PaintInfoArea() {
     SDL_FillRect(screen.get(), &to, SDL_MapRGB(screen->format, 0, 0, 0)); /* info -> black bg */
 
     /* draw text */
+    out << std::fixed << std::setprecision(0);
+
     out << "Elapsed Time";
     txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_L);
-    p.y += txt.HeightOf(out.str());
 
     out.str("");
-    out << "--------------";
+    out << "--------------" << std::endl
+        << "Total: " << game->GetElapsedTime() << "s";
     txt.Blit(screen, out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
-    p.y += txt.HeightOf(out.str()) + 2;
 
     out.str("");
-    out << "Total: " << game->GetElapsedTime() << "s";
-    txt.Blit(screen, out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
-    p.y += txt.HeightOf(out.str()) + 2;
-
-    out.str("");
-    out << "Real: " << game->GetElapsedRealTime() << "s";
+    out << "Real: " << game->GetElapsedRealTime() << "s" << std::endl;
     txt.Blit(screen, out.str(), p, color, FONT_ITALIC, JUSTIFY_L);
-    p.y += txt.HeightOf(out.str()) + 25;
 
     out.str("");
     out << "Completed";
     txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_L);
-    p.y += txt.HeightOf(out.str());
 
     out.str("");
-    out << "--------------";
+    out << "--------------" << std::endl
+        << game->GetCompletedPercentageBoxes() << " % done";
     txt.Blit(screen, out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
-    p.y += txt.HeightOf(out.str()) + 2;
-
-    out.str("");
-    out << std::fixed << std::setprecision(0) << game->GetCompletedPercentageBoxes() << " % done";
-    txt.Blit(screen, out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
-    p.y += txt.HeightOf(out.str()) + 5;
 }
 void PicPainter::PaintStreakArea() {
     unsigned int i, j;

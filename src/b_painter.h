@@ -13,8 +13,6 @@
 #include <SDL/SDL.h>
 #include <sstream>
 #include <iomanip>
-#include <QStringList>
-#include <QString>
 
 #include "SDL/SDL.h"
 #include "b_sdlsprite.h"
@@ -43,9 +41,6 @@ protected:
     void LoadCustomBackground(std::string path);
 
     virtual void LoadSprites() = 0;
-
-    /* multiline text writing */
-    void Write(QString text, shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
 
     /* the screen surface - everything is blitted to this */
     shared_ptr<SDL_Surface> screen;

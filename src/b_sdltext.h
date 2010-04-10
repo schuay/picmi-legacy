@@ -14,6 +14,8 @@
 #include <SDL/SDL_ttf.h>
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <QString>
+#include <QStringList>
 
 #include "b_point.h"
 #include "b_exception.h"
@@ -35,14 +37,17 @@ public:
     SDLText();
 
     void Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int size = 17);
-    void Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, unsigned int fontType, unsigned int justify = JUSTIFY_L);
-    void Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+
+    /* multiline text writing */
+    void Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
 
     int WidthOf(std::string txt, unsigned int fontType = FONT_NORMAL);
     int HeightOf(std::string txt, unsigned int fontType = FONT_NORMAL);
 
 private:
     unsigned int Size;
+
+    void BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
 
     shared_ptr<TTF_Font> GetFontForType(unsigned int fontType);
 

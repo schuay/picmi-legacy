@@ -43,13 +43,7 @@ int SDLText::HeightOf(std::string txt, unsigned int fontType) {
     return h;
 }
 
-void SDLText::Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, unsigned int fontType, unsigned int justify) {
-    SDL_Color c;
-
-    c.r = c.g = c.b = 0;
-    Blit(target, txt, p, c, fontType, justify);
-}
-void SDLText::Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
+void SDLText::BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
     if (!fontNormal || !fontBold || !fontItalic)
         throw Exception("Text::Blit failed, no font loaded.");
 
@@ -61,6 +55,9 @@ void SDLText::Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL
             TTF_RenderText_Solid(GetFontForType(fontType).get(), txt.c_str(), c),
             SDL_FreeSurface);
 
+    if (!s)
+        throw Exception("Text::Blit failed, TTF_RenderText failed");
+
     to.w = to.h = 1000; //should be enough to draw all strings
     to.y = p.y;
     if (justify == JUSTIFY_R)
@@ -69,9 +66,6 @@ void SDLText::Blit(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL
         to.x = p.x - s->w / 2;
     else
         to.x = p.x;
-
-    if (!s)
-        throw Exception("Text::Blit failed, TTF_RenderText failed");
 
     SDL_BlitSurface(s.get(), NULL, target.get(), &to);
 }
@@ -88,6 +82,18 @@ shared_ptr<TTF_Font> SDLText::GetFontForType(unsigned int fontType) {
     case FONT_ITALIC:
     default:
         return fontItalic;
+    }
+}
+
+void SDLText::Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify) {
+
+    QString qtext(text.c_str());
+    QStringList qsplittext = qtext.split('\n');
+    unsigned int textHeight = HeightOf(text, fontType);
+
+    for (int i = 0; i < qsplittext.count(); i++) {
+        BlitLine(dst, qsplittext.at(i).toStdString(), p, c, fontType, justify);
+        p.y += textHeight;
     }
 }
 }
