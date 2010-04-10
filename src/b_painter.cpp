@@ -34,22 +34,30 @@ namespace BoardGame {
         sprBackground.Blit(screen, Point(0,0));
     }
     void Painter::PaintGameOverScreen(StatsCollection c) {
-        SDL_Rect r;
-        SDL_Surface *surface = SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
-                                                    screen->format->BitsPerPixel,
-                                                    screen->format->Rmask,
-                                                    screen->format->Gmask,
-                                                    screen->format->Bmask,
-                                                    screen->format->Amask);
 
-        SDL_SetAlpha(surface, SDL_SRCALPHA, 200);
+        /* clone original state of screen */
+        boost::shared_ptr<SDL_Surface> originalScreen(
+                SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
+                                     screen->format->BitsPerPixel,
+                                     screen->format->Rmask,
+                                     screen->format->Gmask,
+                                     screen->format->Bmask,
+                                     screen->format->Amask),
+                SDL_FreeSurface);
 
-        r.x = (screen->w - surface->w) / 2;
-        r.y = (screen->h - surface->h) / 2;
-        r.w = surface->w;
-        r.h = surface->h;
+        SDL_BlitSurface(screen, NULL, originalScreen.get(), NULL);
 
-        Point p(surface->w / 2, surface->h / 2 - 100);
+        /* construct a text overlay */
+        boost::shared_ptr<SDL_Surface> textOverlay(
+                SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
+                                     screen->format->BitsPerPixel,
+                                     screen->format->Rmask,
+                                     screen->format->Gmask,
+                                     screen->format->Bmask,
+                                     screen->format->Amask),
+                SDL_FreeSurface);
+
+        Point p(textOverlay->w / 2, textOverlay->h / 2 - 100);
 
         SDL_Color col;
         col.r = col.g = col.b = 255;
@@ -66,21 +74,24 @@ namespace BoardGame {
             << "Overall rank: " << c.Rank << std::endl
             << "Best time: " << c.BestTime;
 
-        Write(QString(out.str().c_str()), surface, p, col, FONT_BOLD, JUSTIFY_C);
+        Write(QString(out.str().c_str()), textOverlay, p, col, FONT_BOLD, JUSTIFY_C);
 
-        SDL_BlitSurface(surface, NULL, screen, &r);
-        SDL_FreeSurface(surface);
-
-        SDL_Flip(screen);
+        /* fade in text overlay over 100 frames */
+        for (int i = 1; i < 100; i++) {
+            SDL_SetAlpha(textOverlay.get(), SDL_SRCALPHA, i * 2);
+            SDL_BlitSurface(originalScreen.get(), NULL, screen, NULL);
+            SDL_BlitSurface(textOverlay.get(), NULL, screen, NULL);
+            SDL_Flip(screen);
+        }
     }
 
-    void Painter::Write(QString text, SDL_Surface *dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify) {
+    void Painter::Write(QString text, boost::shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify) {
         QStringList qsplittext = text.split('\n');
         unsigned int textHeight = txt.HeightOf(text.toStdString(), fontType);
 
         for (int i = 0; i < qsplittext.count(); i++) {
             p.y += textHeight;
-            txt.Blit(dst, qsplittext.at(i).toStdString(), p, c, fontType, justify);
+            txt.Blit(dst.get(), qsplittext.at(i).toStdString(), p, c, fontType, justify);
         }
     }
 }

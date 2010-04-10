@@ -53,7 +53,7 @@ namespace BoardGame {
 
                 if (state == S_BOARD_MARKED)
                     sprMarkedTile.Blit(screen, p);
-                if (state == S_BOARD_CLEAN)
+                else if (state == S_BOARD_CLEAN)
                     sprClearTile.Blit(screen, p);
                 else if (state == S_BOARD_TENTATIVE)
                     sprTentativeTile.Blit(screen, p);

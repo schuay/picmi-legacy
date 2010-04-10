@@ -20,6 +20,7 @@
 #include "b_sdlsprite.h"
 #include "b_sdltext.h"
 #include "b_statscollection.h"
+#include "boost/shared_ptr.hpp"
 
 #define FILEPREFIX ""               /* set the location of gfx and fonts */
 
@@ -42,7 +43,7 @@ protected:
     virtual void LoadSprites() = 0;
 
     /* multiline text writing */
-    void Write(QString text, SDL_Surface *dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
+    void Write(QString text, boost::shared_ptr<SDL_Surface> dst, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
 
     /* the screen surface - everything is blitted to this */
     SDL_Surface *screen;

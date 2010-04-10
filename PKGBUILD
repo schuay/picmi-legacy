@@ -1,8 +1,8 @@
 # Maintainer: Jakob Gruber (jakob gruber kabelnet at)
 
 pkgname=picmi
-pkgver=1.1.3
-pkgdesc="A number logic game."
+pkgver=1.1.4
+pkgdesc="A picross and minesweeper clone."
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://github.com/schuay/$pkgname/"
