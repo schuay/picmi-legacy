@@ -17,16 +17,9 @@
 #include <QString>
 #include <QStringList>
 
+#include "b_enums.h"
 #include "b_point.h"
 #include "b_exception.h"
-
-#define JUSTIFY_C   0
-#define JUSTIFY_L   1
-#define JUSTIFY_R   2
-
-#define FONT_NORMAL 0
-#define FONT_BOLD   1
-#define FONT_ITALIC 2
 
 using boost::shared_ptr;
 
@@ -39,15 +32,15 @@ public:
     void Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int size = 17);
 
     /* multiline text writing */
-    void Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify);
+    void Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, FontTypeEnum fontType, TextJustifyEnum justify = TJ_LEFT);
 
-    int WidthOf(std::string txt, unsigned int fontType = FONT_NORMAL);
-    int HeightOf(std::string txt, unsigned int fontType = FONT_NORMAL);
+    int WidthOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
+    int HeightOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
 
 private:
     unsigned int Size;
 
-    void BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify = JUSTIFY_L);
+    void BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, FontTypeEnum fontType, TextJustifyEnum justify);
 
     shared_ptr<TTF_Font> GetFontForType(unsigned int fontType);
 

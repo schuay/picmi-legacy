@@ -26,6 +26,16 @@ namespace BoardGame {
 
         GameResolutionEnum
                 CurrentResolution;
+
+        float WonPercentage() {
+            return (PlayedCount == 0 ? 0.0f : WonCount * 100 / (float) PlayedCount);
+        }
+        float LostPercentage() {
+            return (PlayedCount == 0 ? 0.0f : LostCount * 100 / (float) PlayedCount);
+        }
+        float AbortedPercentage() {
+            return (PlayedCount == 0 ? 0.0f : AbortedCount * 100 / (float) PlayedCount);
+        }
     };
 }
 

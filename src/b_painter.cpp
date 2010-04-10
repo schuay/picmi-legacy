@@ -63,13 +63,13 @@ namespace BoardGame {
             << (c.CurrentResolution == GR_WON ? "YOU WIN :)" : (c.CurrentResolution == GR_LOST ? "you lose :'(" : "game aborted")) << std::endl
             << c.CurrentTime << " seconds played" << std::endl << std::endl
             << "Games played: " << c.PlayedCount << std::endl
-            << "Won: " << c.WonCount << " (" << c.WonCount * 100 / (float)c.PlayedCount << "%)" << std::endl
-            << "Lost: " << c.LostCount << " (" << c.LostCount * 100 / (float)c.PlayedCount << "%)" << std::endl
-            << "Aborted: " << c.AbortedCount << " (" << c.AbortedCount * 100 / (float)c.PlayedCount << "%)" << std::endl << std::endl
+            << "Won: " << c.WonCount << " (" << c.WonPercentage() << "%)" << std::endl
+            << "Lost: " << c.LostCount << " (" << c.LostPercentage() << "%)" << std::endl
+            << "Aborted: " << c.AbortedCount << " (" << c.AbortedPercentage() << "%)" << std::endl << std::endl
             << "Overall rank: " << c.Rank << std::endl
             << "Best time: " << c.BestTime;
 
-        txt.Blit(textOverlay, out.str(), p, col, FONT_BOLD, JUSTIFY_C);
+        txt.Blit(textOverlay, out.str(), p, col, FT_BOLD, TJ_CENTER);
 
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {

@@ -28,14 +28,14 @@ void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItali
         throw Exception(TTF_GetError());
 }
 
-int SDLText::WidthOf(std::string txt, unsigned int fontType) {
+int SDLText::WidthOf(std::string txt, FontTypeEnum fontType) {
     int w;
 
     TTF_SizeText(GetFontForType(fontType).get(), txt.c_str(), &w, NULL);
 
     return w;
 }
-int SDLText::HeightOf(std::string txt, unsigned int fontType) {
+int SDLText::HeightOf(std::string txt, FontTypeEnum fontType) {
     int h;
 
     TTF_SizeText(GetFontForType(fontType).get(), txt.c_str(), NULL, &h);
@@ -43,7 +43,7 @@ int SDLText::HeightOf(std::string txt, unsigned int fontType) {
     return h;
 }
 
-void SDLText::BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, unsigned int fontType, unsigned int justify) {
+void SDLText::BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, FontTypeEnum fontType, TextJustifyEnum justify) {
     if (!fontNormal || !fontBold || !fontItalic)
         throw Exception("Text::Blit failed, no font loaded.");
 
@@ -60,9 +60,9 @@ void SDLText::BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p,
 
     to.w = to.h = 1000; //should be enough to draw all strings
     to.y = p.y;
-    if (justify == JUSTIFY_R)
+    if (justify == TJ_RIGHT)
         to.x = p.x - s->w;
-    else if (justify == JUSTIFY_C)
+    else if (justify == TJ_CENTER)
         to.x = p.x - s->w / 2;
     else
         to.x = p.x;
@@ -71,21 +71,18 @@ void SDLText::BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p,
 }
 
 shared_ptr<TTF_Font> SDLText::GetFontForType(unsigned int fontType) {
-    if (fontType != FONT_NORMAL && fontType != FONT_BOLD && fontType != FONT_ITALIC)
-        throw Exception("Invalid font type passed.");
-
     switch (fontType) {
-    case FONT_NORMAL:
+    case FT_NORMAL:
         return fontNormal;
-    case FONT_BOLD:
+    case FT_BOLD:
         return fontBold;
-    case FONT_ITALIC:
+    case FT_ITALIC:
     default:
         return fontItalic;
     }
 }
 
-void SDLText::Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, unsigned int fontType, unsigned int justify) {
+void SDLText::Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, FontTypeEnum fontType, TextJustifyEnum justify) {
 
     QString qtext(text.c_str());
     QStringList qsplittext = qtext.split('\n');

@@ -17,13 +17,9 @@
 
 #include "b_point.h"
 #include "b_exception.h"
+#include "b_enums.h"
 
 using boost::shared_ptr;
-
-#define JUSTIFY_LT   0
-#define JUSTIFY_LB   1
-#define JUSTIFY_RT   2
-#define JUSTIFY_RB   3
 
 namespace BoardGame {
 class SDLSprite
@@ -33,7 +29,7 @@ public:
 
     void SetAsIcon();
     void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
-    void Blit(shared_ptr<SDL_Surface> , Point p, int justify = JUSTIFY_LT);
+    void Blit(shared_ptr<SDL_Surface> , Point p, SpriteJustifyEnum justify = SJ_LEFTTOP);
 
 private:
 

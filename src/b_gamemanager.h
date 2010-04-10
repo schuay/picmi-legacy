@@ -20,8 +20,6 @@
 #include "b_picpainter.h"
 #include "b_statsmanager.h"
 
-#define WINDOWCAPTION "picmi"
-
 namespace BoardGame {
 class GameManager {
 public:

@@ -101,7 +101,7 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     }
 }
 
-void SDLSprite::Blit(shared_ptr<SDL_Surface> target, Point p, int justify) {
+void SDLSprite::Blit(shared_ptr<SDL_Surface> target, Point p, SpriteJustifyEnum justify) {
     SDL_Rect to, from;
 
     to.x = p.x;
@@ -110,20 +110,20 @@ void SDLSprite::Blit(shared_ptr<SDL_Surface> target, Point p, int justify) {
     to.h = Surface->h;
 
     switch (justify) {
-    case JUSTIFY_LT:
+    case SJ_LEFTTOP:
         from.x = from.y = 0;
         break;
-    case JUSTIFY_LB:
+    case SJ_LEFTBOTTOM:
         from.x = 0;
         from.y = Surface->h > target->h ?
                  Surface->h - target->h : 0;
         break;
-     case JUSTIFY_RT:
+     case SJ_RIGHTTOP:
          from.x = Surface->w > target->w ?
                   Surface->w - target->w : 0;
          from.y = 0;
          break;
-    case JUSTIFY_RB:
+    case SJ_RIGHTBOTTOM:
         from.x = Surface->w > target->w ?
                  Surface->w - target->w : 0;
         from.y = Surface->h > target->h ?

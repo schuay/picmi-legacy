@@ -95,25 +95,25 @@ void PicPainter::PaintInfoArea() {
     out << std::fixed << std::setprecision(0);
 
     out << "Elapsed Time";
-    txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_L);
+    txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_LEFT);
 
     out.str("");
     out << "--------------" << std::endl
         << "Total: " << game->GetElapsedTime() << "s";
-    txt.Blit(screen, out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
+    txt.Blit(screen, out.str(), p, color, FT_NORMAL, TJ_LEFT);
 
     out.str("");
     out << "Real: " << game->GetElapsedRealTime() << "s" << std::endl;
-    txt.Blit(screen, out.str(), p, color, FONT_ITALIC, JUSTIFY_L);
+    txt.Blit(screen, out.str(), p, color, FT_ITALIC, TJ_LEFT);
 
     out.str("");
     out << "Completed";
-    txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_L);
+    txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_LEFT);
 
     out.str("");
     out << "--------------" << std::endl
         << game->GetCompletedPercentageBoxes() << " % done";
-    txt.Blit(screen, out.str(), p, color, FONT_NORMAL, JUSTIFY_L);
+    txt.Blit(screen, out.str(), p, color, FT_NORMAL, TJ_LEFT);
 }
 void PicPainter::PaintStreakArea() {
     unsigned int i, j;
@@ -151,17 +151,17 @@ void PicPainter::PaintStreakArea() {
     for (i = 0; i < game->Width(); i++) {
         p.x = game->PixOffsetX()*game->Zoom() + i*game->CellLength()*game->Zoom();
         if (i%2 == 0)
-            sprStreakAreaVerA.Blit(screen, p, JUSTIFY_LB);
+            sprStreakAreaVerA.Blit(screen, p, SJ_LEFTBOTTOM);
         else
-            sprStreakAreaVerB.Blit(screen, p, JUSTIFY_LB);
+            sprStreakAreaVerB.Blit(screen, p, SJ_LEFTBOTTOM);
     }
     p.x = 0;
     for (j = 0; j < game->Height(); j++) {
         p.y = game->PixOffsetY()*game->Zoom() + j*game->CellLength()*game->Zoom();
         if (j%2 == 0)
-            sprStreakAreaHorA.Blit(screen, p, JUSTIFY_RT);
+            sprStreakAreaHorA.Blit(screen, p, SJ_RIGHTTOP);
         else
-            sprStreakAreaHorB.Blit(screen, p, JUSTIFY_RT);
+            sprStreakAreaHorB.Blit(screen, p, SJ_RIGHTTOP);
     }
 
     unsigned int streakLength;
@@ -185,8 +185,8 @@ void PicPainter::PaintStreakArea() {
                         out.str(),
                         p,
                         s.Solved ? colorSolved : colorUnsolved,
-                        s.Solved ? FONT_ITALIC : FONT_BOLD,
-                        JUSTIFY_R);
+                        s.Solved ? FT_ITALIC : FT_BOLD,
+                        TJ_RIGHT);
         }
     }
 
@@ -213,8 +213,8 @@ void PicPainter::PaintStreakArea() {
                         out.str(),
                         p,
                         s.Solved ? colorSolved : colorUnsolved,
-                        s.Solved ? FONT_ITALIC : FONT_BOLD,
-                        JUSTIFY_C);
+                        s.Solved ? FT_ITALIC : FT_BOLD,
+                        TJ_CENTER);
         }
     }
 }

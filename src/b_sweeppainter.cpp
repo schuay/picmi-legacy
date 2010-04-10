@@ -96,25 +96,25 @@ namespace BoardGame {
             << "Rem. mines: " << totalBombCount - markedBombCount
                 << " / " << totalBombCount;
 
-        if ((unsigned int)txt.WidthOf(out.str(), FONT_BOLD) > game->Width() * game->CellLength())
+        if ((unsigned int)txt.WidthOf(out.str(), FT_BOLD) > game->Width() * game->CellLength())
             lowWidth = true;
 
         /* draw text */
         out.str("");
         out << "Time: " << elapsedTime;
-        txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_L);
+        txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_LEFT);
 
         if (!lowWidth) {
             p.x = (game->Width() * game->CellLength()) / 2;
             out.str("");
             out << std::fixed << std::setprecision(2) << "Eff: " << minesPerSecond <<  " m/s";
-            txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_C);
+            txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_CENTER);
         }
 
         p.x = (game->Width() * game->CellLength() - 10) * game->Zoom();
         out.str("");
         out << "Rem. mines: " << totalBombCount - markedBombCount << " / " << totalBombCount;
-        txt.Blit(screen, out.str(), p, color, FONT_BOLD, JUSTIFY_R);
+        txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_RIGHT);
     }
 
     void SweepPainter::InitSystems() {

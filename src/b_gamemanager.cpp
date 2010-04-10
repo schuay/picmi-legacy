@@ -54,7 +54,7 @@ void GameManager::InitSystems() {
     if (SDL_Init(SDL_INIT_VIDEO) == -1 )
         throw Exception(SDL_GetError());
 
-    SDL_WM_SetCaption(WINDOWCAPTION, NULL);
+    SDL_WM_SetCaption("picmi", NULL);
 }
 void GameManager::Initialize(BoardSettings &s) {
 

@@ -10,6 +10,25 @@
 #ifndef B_ENUMS_H
 #define B_ENUMS_H
 
+enum FontTypeEnum {
+    FT_NORMAL,
+    FT_BOLD,
+    FT_ITALIC
+};
+
+enum SpriteJustifyEnum {
+    SJ_LEFTTOP,
+    SJ_LEFTBOTTOM,
+    SJ_RIGHTTOP,
+    SJ_RIGHTBOTTOM
+};
+
+enum TextJustifyEnum {
+    TJ_LEFT,
+    TJ_CENTER,
+    TJ_RIGHT
+};
+
 enum GameTypeEnum {
     GT_PICROSS,
     GT_MINESWEEPER
