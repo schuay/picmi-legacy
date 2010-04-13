@@ -59,7 +59,7 @@ namespace BoardGame {
 
         std::stringstream out;
 
-        out << std::setprecision(2)
+        out << std::fixed << std::setprecision(0)
             << (c.CurrentResolution == GR_WON ? "YOU WIN :)" : (c.CurrentResolution == GR_LOST ? "you lose :'(" : "game aborted")) << std::endl
             << c.CurrentTime << " seconds played" << std::endl << std::endl
             << "Games played: " << c.PlayedCount << std::endl
