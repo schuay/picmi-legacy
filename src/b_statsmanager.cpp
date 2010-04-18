@@ -52,6 +52,8 @@ void StatsManager::Load() {
 
         node = node.nextSibling();
     }
+
+    Sort();
 }
 void StatsManager::Write() const {
     QFile outFile(filePath);
@@ -77,6 +79,8 @@ void StatsManager::Write() const {
 void StatsManager::Add(shared_ptr<StatsElement> e) {
     elements.push_back(e);
     latestElement = e;
+
+    Sort();
 }
 
 shared_ptr<StatsElement> StatsManager::GetBestByTimeInCurrentCat() const {
@@ -116,7 +120,8 @@ StatsCollection StatsManager::AggregateStats() const {
             wonCount = 0,
             lostCount = 0,
             abortedCount = 0,
-            rank = (latestElement->resolution == GR_WON ? 1 : 0);
+            rank = (latestElement->resolution == GR_WON ? 1 : 0),
+            currentPosition = 0;
 
     for (unsigned int i = 0; i < elements.size(); i++) {
         shared_ptr<StatsElement> e(elements.at(i));
@@ -134,7 +139,18 @@ StatsCollection StatsManager::AggregateStats() const {
                 e->width        == latestElement->width &&
                 e->Difficulty() == latestElement->Difficulty() &&
                 e->playedTime    < latestElement->playedTime)
+
                 rank++;
+            if (e->resolution   == GR_WON &&
+                e->height       == latestElement->height &&
+                e->width        == latestElement->width &&
+                e->Difficulty() == latestElement->Difficulty() &&
+                currentPosition < 5) {
+
+                c.Top5Time[currentPosition] = e->playedTime;
+                c.Top5DateTime[currentPosition] = e->datetime;
+                currentPosition++;
+            }
         }
     }
 
@@ -151,5 +167,22 @@ StatsCollection StatsManager::AggregateStats() const {
     c.BestTime = (bestByTime ? bestByTime->playedTime : 0);
 
     return c;
+}
+
+void StatsManager::Sort() {
+    unsigned int nrOfOps;
+    shared_ptr<StatsElement> tmp;
+
+    do {
+        nrOfOps = 0;
+        for (unsigned int i = 0; i < elements.size() - 1; i++)
+            if (elements[i]->playedTime > elements[i+1]->playedTime) {
+                tmp = elements[i];
+                elements[i] = elements[i+1];
+                elements[i+1] = tmp;
+                nrOfOps++;
+            }
+    }
+    while (nrOfOps != 0);
 }
 }

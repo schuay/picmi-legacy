@@ -14,6 +14,18 @@
 
 namespace BoardGame {
     struct StatsCollection {
+        StatsCollection() {
+            PlayedCount = 0;
+            WonCount = 0;
+            LostCount = 0;
+            AbortedCount = 0;
+            Rank = 0;
+            BestTime = 0;
+            CurrentTime = 0;
+
+            for (int i = 0; i < 5; i++)
+                Top5Time[i] = 0;
+        }
 
         unsigned int
                 PlayedCount,
@@ -23,6 +35,12 @@ namespace BoardGame {
                 Rank,
                 BestTime,
                 CurrentTime;
+
+        unsigned int
+                Top5Time[5];
+
+        QDateTime
+                Top5DateTime[5];
 
         GameResolutionEnum
                 CurrentResolution;

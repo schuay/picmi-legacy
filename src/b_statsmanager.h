@@ -32,7 +32,6 @@ public:
     void Write() const;
     void Add(shared_ptr<StatsElement> e);
 
-
     /* aggregate stats (of type matching latestElement) */
     StatsCollection AggregateStats() const;
     
@@ -44,6 +43,8 @@ public:
 
 private:
     void Load();
+
+    void Sort(); /* sort elements by time (ascending) */
 
     std::vector<shared_ptr<StatsElement> > elements;
     shared_ptr<StatsElement> latestElement;  /* the most recently added element (= the just completed game) */

@@ -52,12 +52,14 @@ namespace BoardGame {
                                      screen->format->Amask),
                 SDL_FreeSurface);
 
-        Point p(textOverlay->w / 2, textOverlay->h / 2 - 100);
+        Point p(textOverlay->w / 2, textOverlay->h / 2 - 200);
 
         SDL_Color col;
         col.r = col.g = col.b = 255;
 
         std::stringstream out;
+
+        QString dateFormat("MMM dd yy, hh:mm:");
 
         out << std::fixed << std::setprecision(0)
             << (c.CurrentResolution == GR_WON ? "YOU WIN :)" : (c.CurrentResolution == GR_LOST ? "you lose :'(" : "game aborted")) << std::endl
@@ -66,8 +68,13 @@ namespace BoardGame {
             << "Won: " << c.WonCount << " (" << c.WonPercentage() << "%)" << std::endl
             << "Lost: " << c.LostCount << " (" << c.LostPercentage() << "%)" << std::endl
             << "Aborted: " << c.AbortedCount << " (" << c.AbortedPercentage() << "%)" << std::endl << std::endl
-            << "Overall rank: " << c.Rank << std::endl
-            << "Best time: " << c.BestTime;
+            << "Overall rank: " << c.Rank << std::endl << std::endl
+            << "Top 5 Games" << std::endl << std::endl
+            << "1. " << std::setw(20) << c.Top5DateTime[0].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[0] << "s" << std::endl
+            << "2. " << std::setw(20) << c.Top5DateTime[1].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[1] << "s" << std::endl
+            << "3. " << std::setw(20) << c.Top5DateTime[2].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[2] << "s" << std::endl
+            << "4. " << std::setw(20) << c.Top5DateTime[3].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[3] << "s" << std::endl
+            << "5. " << std::setw(20) << c.Top5DateTime[4].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[4] << "s" << std::endl;
 
         txt.Blit(textOverlay, out.str(), p, col, FT_BOLD, TJ_CENTER);
 
