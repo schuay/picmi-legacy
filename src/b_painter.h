@@ -40,6 +40,8 @@ protected:
 
     void LoadCustomBackground(std::string path);
 
+    virtual std::string GetGameOverText(StatsCollection c) = 0;
+
     virtual void LoadSprites() = 0;
 
     /* the screen surface - everything is blitted to this */

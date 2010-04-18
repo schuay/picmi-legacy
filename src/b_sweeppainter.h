@@ -33,6 +33,8 @@ protected:
     void PaintBoardArea();
     void PaintInfoArea();
 
+    virtual std::string GetGameOverText(StatsCollection c);
+
     void LoadSprites();
     void InitSystems();
 

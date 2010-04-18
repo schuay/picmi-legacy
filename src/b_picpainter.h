@@ -27,6 +27,8 @@ private:
     void PaintStreakArea();
     void PaintBoardArea();
 
+    virtual std::string GetGameOverText(StatsCollection c);
+
     /* (initialize sdl video systems */
     void InitSystems();
 
