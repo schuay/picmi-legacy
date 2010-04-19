@@ -36,18 +36,27 @@ Features
 
 * basic minesweeper gameplay
 
+* statistics / highscore tracking
+
+
+Global Controls
+-------------------
+
+    p: (un)pause game
+    esc: quit game
+
 
 Picross Controls
 -------------------
 
 mouse controls:
     left click: expose a tile
-    right click: mark a tile
+    right click: mark/unmark a tile
 
 keyboard controls:
     arrow keys: move
-    ctrl: mark a tile
-    spacebar: expose a tile
+    ctrl: (un)mark a tile
+    space: expose a tile
 
 
 Minesweeper Controls
@@ -56,8 +65,20 @@ Minesweeper Controls
 mouse controls:
     left click (on an unexposed tile): expose a tile
     left click (on an exposed tile): expose all neighboring tiles
-    right click: mark a tile
-    middle click: tentatively mark a tile
+    right click: (un)mark a tile
+    middle click: tentatively (un)mark a tile
+
+keyboard controls:
+    arrow keys: move
+    ctrl: (un)mark a tile
+    space (on an unexposed tile): expose a tile
+    space (on an exposed tile): expose all neighboring tiles
+
+
+License
+-------------------
+
+Picmi is licensed under the terms of the GNU General Public License version 2.
 
 
 Contact / More Information

@@ -47,15 +47,30 @@ bool HandleArguments(int argc, char **argv) {
         case '?':
             printf("\n"
                    "picmi usage\n\n"
+                   "global\n\n"
+                   "    p: (un)pause game\n"
+                   "    esc: quit game\n\n"
+                   "picross\n\n"
                    "mouse controls:\n"
                    "    left click: expose a tile\n"
                    "    right click: mark/unmark a tile\n\n"
                    "keyboard controls:\n"
                    "    arrow keys: move\n"
-                   "    ctrl: expose a tile\n"
-                   "    shift: mark/unmark a tile\n\n"
+                   "    ctrl: (un)mark a tile\n"
+                   "    space: expose a tile\n\n"
+                   "minesweeper\n\n"
+                   "mouse controls:\n"
+                   "    left click (on an unexposed tile): expose a tile\n"
+                   "    left click (on an exposed tile): expose all neighboring tiles\n"
+                   "    right click: (un)mark a tile\n"
+                   "    middle click: tentatively (un)mark a tile\n\n"
+                   "keyboard controls:\n"
+                   "    arrow keys: move\n"
+                   "    ctrl: (un)mark a tile\n"
+                   "    space (on an unexposed tile): expose a tile\n"
+                   "    space (on an exposed tile): expose all neighboring tiles\n\n"
                    "arguments:\n"
-                   "    -h: show this message\n");
+                   "    -h: show this message\n\n");
             return false;
             break;
         default:
