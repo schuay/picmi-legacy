@@ -15,6 +15,8 @@
 #include "b_sweeper.h"
 #include "b_inputhandler.h"
 
+#define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
+
 namespace BoardGame {
     class SweepInputHandler : public InputHandler
     {

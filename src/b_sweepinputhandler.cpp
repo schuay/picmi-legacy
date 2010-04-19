@@ -60,25 +60,25 @@ namespace BoardGame {
                 case SDLK_p:
                     game->SetPaused(!game->GetPaused());
                     break;
-//                case SDLK_LEFT:
-//                    dx = -1;
-//                    break;
-//                case SDLK_RIGHT:
-//                    dx = 1;
-//                    break;
-//                case SDLK_UP:
-//                    dy = -1;
-//                    break;
-//                case SDLK_DOWN:
-//                    dy = 1;
-//                    break;
-//                case SDLK_RCTRL:
-//                case SDLK_LCTRL:
-//                    op = S_OP_MARK;
-//                    break;
-//                case SDLK_SPACE:
-//                    op = S_OP_EXPOSE;
-//                    break;
+                case SDLK_LEFT:
+                    dx = -1;
+                    break;
+                case SDLK_RIGHT:
+                    dx = 1;
+                    break;
+                case SDLK_UP:
+                    dy = -1;
+                    break;
+                case SDLK_DOWN:
+                    dy = 1;
+                    break;
+                case SDLK_RCTRL:
+                case SDLK_LCTRL:
+                    op = S_OP_MARK;
+                    break;
+                case SDLK_SPACE:
+                    op = S_OP_EXPOSE;
+                    break;
                 default:
                     break;
                 }
@@ -86,10 +86,13 @@ namespace BoardGame {
             case SDL_MOUSEBUTTONDOWN:
                 op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
                 break;
-             case SDL_QUIT:
+            case SDL_MOUSEMOTION:
+                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE);
+                break;
+            case SDL_QUIT:
                 game->SetResolution(GR_ABORTED);
                 break;
-             default:
+            default:
                 break;
             }
 

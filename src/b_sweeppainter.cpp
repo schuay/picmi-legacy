@@ -41,7 +41,9 @@ namespace BoardGame {
     }
     void SweepPainter::PaintBoardArea() {
         unsigned int i, j;
-        Point p, q;
+        Point p, q, currentLocation;
+
+        currentLocation = game->GetLocation();
 
         for (i = 0; i < game->Width(); i++) {
             for (j = 0; j < game->Height(); j++) {
@@ -53,6 +55,10 @@ namespace BoardGame {
 
                 /* cell frame */
                 sprCellFrame.Blit(screen, p);
+
+                /* active tile */
+                if (q == currentLocation)
+                    sprActiveTile.Blit(screen, p);
 
                 /* tile states */
                 int state = game->GetStateAt(q);
@@ -146,6 +152,7 @@ namespace BoardGame {
         sprIcon.SetAsIcon();
 
         sprCellFrame.Load(      FILEPREFIX "gfx/ms_cellframe.png", game->Zoom(), 0);
+        sprActiveTile.Load(     FILEPREFIX "gfx/ms_activecell.png", game->Zoom(), 0);
         sprClearTile.Load(      FILEPREFIX "gfx/ms_box.png", game->Zoom(), 0);
         sprMarkedTile.Load(     FILEPREFIX "gfx/ms_marked.png", game->Zoom(), 0);
         sprTentativeTile.Load(  FILEPREFIX "gfx/ms_tentative.png", game->Zoom(), 0);

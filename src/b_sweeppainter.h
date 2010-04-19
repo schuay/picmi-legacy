@@ -41,6 +41,7 @@ protected:
     /* all sprites used in the game */
     SDLSprite
             sprCellFrame,
+            sprActiveTile,
             sprClearTile,
             sprMarkedTile,
             sprTentativeTile,
