@@ -21,6 +21,7 @@ BoardGame::BoardGame()
     resolution = GR_INPROGRESS;
 
     quit = false;
+    paused = false;
 }
 BoardGame::~BoardGame() {}
 
@@ -35,6 +36,9 @@ Point BoardGame::GetLocation() const {
     return Point(&location);
 }
 bool BoardGame::TrySetLocation(Point &p) {
+    if (paused)
+        return false;
+
     if (!IsInBounds(p))
         return false;
 
@@ -43,6 +47,9 @@ bool BoardGame::TrySetLocation(Point &p) {
     return true;
 }
 bool BoardGame::TrySetLocationRel(int dx, int dy) {
+    if (paused)
+        return false;
+
     Point p(location.x + dx, location.y + dy);
 
     if (!IsInBounds(location.x + dx, location.y + dy))

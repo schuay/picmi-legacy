@@ -19,6 +19,7 @@ public:
 
     void Start();
     void Stop();
+    void Pause(bool isPaused);
 
     void AddPenalty();
 
@@ -29,11 +30,13 @@ public:
 private:
     bool
             started,
-            stopped;
+            stopped,
+            paused;
 
     unsigned int
             startTime,
             finishTime,
+            pauseTime,
             penaltyTime,
             penaltyMultiplier;
 

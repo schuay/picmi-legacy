@@ -14,9 +14,11 @@ Timer::Timer()
 {
     started = false;
     stopped = false;
+    paused = false;
 
     startTime = 0;
     finishTime = 0;
+    pauseTime = 0;
     penaltyTime = 0;
     penaltyMultiplier = 1;
 }
@@ -28,6 +30,19 @@ void Timer::Start() {
 void Timer::Stop() {
     finishTime = time(NULL);
     stopped = true;
+}
+void Timer::Pause(bool isPaused) {
+    if (isPaused == paused)
+        return;
+
+    if (isPaused) {
+        paused = true;
+        pauseTime += time(NULL) - startTime;
+    }
+    else {
+        paused = false;
+        startTime = time(NULL);
+    }
 }
 
 void Timer::AddPenalty() {
@@ -47,9 +62,9 @@ unsigned int Timer::GetRealTime() const {
         return 0;
 
     if (stopped)
-        return finishTime - startTime;
+        return finishTime - startTime + pauseTime;
 
-    return time(NULL) - startTime;
+    return time(NULL) - startTime + pauseTime;
 }
 
 unsigned int Timer::GetPenaltyTime() const {

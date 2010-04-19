@@ -67,4 +67,13 @@ namespace BoardGame {
             SDL_Flip(screen.get());
         }
     }
+    void Painter::PaintPauseScreen() {
+
+        Point p(screen->w / 2, screen->h / 2);
+        SDL_Color col;
+        col.r = col.g = col.b = 255;
+
+        SDL_FillRect(screen.get(), NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+        txt.Blit(screen, "PAUSED (press p to continue)", p, col, FT_BOLD, TJ_CENTER);
+    }
 }

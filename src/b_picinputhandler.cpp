@@ -95,6 +95,9 @@ void PicInputHandler::HandleInput() {
             case SDLK_ESCAPE:
                 game->SetResolution(GR_ABORTED);
                 break;
+            case SDLK_p:
+                game->SetPaused(!game->GetPaused());
+                break;
             case SDLK_LEFT:
                 dx = -1;
                 break;

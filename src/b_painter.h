@@ -33,6 +33,7 @@ public:
 
     virtual void Paint() = 0;
     virtual void PaintGameOverScreen(StatsCollection c);
+    virtual void PaintPauseScreen();
 
 protected:
 

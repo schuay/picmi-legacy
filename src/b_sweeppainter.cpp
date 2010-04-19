@@ -27,6 +27,12 @@ namespace BoardGame {
     }
 
     void SweepPainter::Paint() {
+        if (game->GetPaused()) {
+            PaintPauseScreen();
+            SDL_Flip(screen.get());
+            return;
+        }
+
         PaintBackground();
         PaintBoardArea();
         PaintInfoArea();

@@ -223,6 +223,9 @@ void Sweeper::SetStateAt(Point &p, int state) {
 }
 
 void Sweeper::DoOpAt(Point &p, int op) {
+    if (paused)
+        return;
+
     if (op == S_OP_NONE)
         return;
 

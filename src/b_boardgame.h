@@ -80,7 +80,10 @@ public:
     unsigned int CellLength() const { return celllength; }
     unsigned int Zoom() const { return zoom; }
 
-    bool GetQuit() { return quit; }
+    bool GetQuit() const { return quit; }
+
+    bool GetPaused() const { return paused; }
+    void SetPaused(bool isPaused) { paused = isPaused; timer.Pause(isPaused); }
 
 protected:
 
@@ -92,10 +95,12 @@ protected:
     virtual void SetStateAt(Point &p, int state) = 0;
 
     /* stores current location on board */
-    Point location;
+    Point
+            location;
 
     /* game timer */
-    Timer timer;
+    Timer
+            timer;
 
     unsigned int
             width,
@@ -106,18 +111,24 @@ protected:
        painter + inputhandler need access to them */
 
     /* left upper corner of puzzle (in pixels) */
-    Point puzzleLocation;
+    Point
+            puzzleLocation;
 
     /* size of tiles in pixels */
-    unsigned int celllength;
+    unsigned int
+            celllength;
 
     /* zoom */
-    unsigned int zoom;
+    unsigned int
+            zoom;
 
     /* game state - in progress, aborted, won, lost */
-    GameResolutionEnum resolution;    
+    GameResolutionEnum
+            resolution;
 
-    bool quit;
+    bool
+            quit,
+            paused;
 };
 }
 #endif // B_BOARDGAME_H

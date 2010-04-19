@@ -63,6 +63,12 @@ void PicPainter::InitSystems() {
 }
 
 void PicPainter::Paint() {
+    if (game->GetPaused()) {
+        PaintPauseScreen();
+        SDL_Flip(screen.get());
+        return;
+    }
+
     game->CalculateStreakSolvedState();
 
     PaintBackground();

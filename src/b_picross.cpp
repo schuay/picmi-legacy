@@ -335,7 +335,10 @@ void Picross::SetStateAt(Point &p, int state) {
     boardState[p.y*width + p.x] = c;
 }
 
-void Picross::DoOpAt(Point &p, int op) {    
+void Picross::DoOpAt(Point &p, int op) {
+    if (paused)
+        return;
+
     if (op == OP_NONE)
         return;
 
