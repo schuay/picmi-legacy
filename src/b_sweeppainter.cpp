@@ -103,7 +103,7 @@ namespace BoardGame {
 
         /* check if entire text fits on screen */
         out << std::fixed << std::setprecision(2)
-            << "Time: " << elapsedTime << " "
+            << "Time: " << elapsedTime / 60 << "m " << elapsedTime % 60 << "s"
             << "Eff: " << minesPerSecond <<  " m/s "
             << "Rem. mines: " << totalBombCount - markedBombCount
                 << " / " << totalBombCount;
@@ -177,18 +177,18 @@ namespace BoardGame {
 
         out << std::fixed << std::setprecision(0)
             << (c.CurrentResolution == GR_WON ? "YOU WIN :)" : (c.CurrentResolution == GR_LOST ? "you lose :'(" : "game aborted")) << std::endl << std::endl
-            << c.CurrentTime << " seconds played" << std::endl
+            << c.CurrentTime / 60 << "m " << c.CurrentTime % 60 << "s played" << std::endl
             << "Overall rank: " << c.Rank << std::endl << std::endl
             << "Games played: " << c.PlayedCount << std::endl
             << "Won: " << c.WonCount << " (" << c.WonPercentage() << "%)" << std::endl
             << "Lost: " << c.LostCount << " (" << c.LostPercentage() << "%)" << std::endl
             << "Aborted: " << c.AbortedCount << " (" << c.AbortedPercentage() << "%)" << std::endl << std::endl
             << "Top 5 Games" << std::endl << std::endl
-            << "1. " << std::setw(18) << c.Top5DateTime[0].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[0] << "s" << std::endl
-            << "2. " << std::setw(18) << c.Top5DateTime[1].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[1] << "s" << std::endl
-            << "3. " << std::setw(18) << c.Top5DateTime[2].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[2] << "s" << std::endl
-            << "4. " << std::setw(18) << c.Top5DateTime[3].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[3] << "s" << std::endl
-            << "5. " << std::setw(18) << c.Top5DateTime[4].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[4] << "s" << std::endl;
+            << "1. " << std::setw(18) << c.Top5DateTime[0].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[0] / 60 << "m " << c.Top5Time[0] % 60 << "s" << std::endl
+            << "2. " << std::setw(18) << c.Top5DateTime[1].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[1] / 60 << "m " << c.Top5Time[1] % 60 << "s" << std::endl
+            << "3. " << std::setw(18) << c.Top5DateTime[2].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[2] / 60 << "m " << c.Top5Time[2] % 60 << "s" << std::endl
+            << "4. " << std::setw(18) << c.Top5DateTime[3].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[3] / 60 << "m " << c.Top5Time[3] % 60 << "s" << std::endl
+            << "5. " << std::setw(18) << c.Top5DateTime[4].toString(dateFormat).toStdString() << std::setw(5) << c.Top5Time[4] / 60 << "m " << c.Top5Time[4] % 60 << "s" << std::endl;
 
         return out.str();
     }
