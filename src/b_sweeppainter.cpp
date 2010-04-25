@@ -101,34 +101,40 @@ namespace BoardGame {
         float minesPerSecond = elapsedTime == 0 ? 0 : markedBombCount / (float)elapsedTime;
         bool lowWidth(false);
 
-        /* check if entire text fits on screen */
-        out << std::fixed << std::setprecision(2)
-            << "Time: " << elapsedTime / 60 << "m " << elapsedTime % 60 << "s"
-            << "Eff: " << minesPerSecond <<  " m/s "
-            << "Rem. mines: " << totalBombCount - markedBombCount
-                << " / " << totalBombCount;
+        /* generate info strings */
+        out.str("");
+        out << "Time: " << elapsedTime / 60 << "m " << elapsedTime % 60 << "s";
+        std::string strTime = out.str();
 
-        if ((unsigned int)txt.WidthOf(out.str(), FT_BOLD) > game->Width() * game->CellLength())
+        out.str("");
+        out << std::fixed << std::setprecision(2) << "Eff: " << minesPerSecond <<  " m/s";
+        std::string strEfficiency = out.str();
+
+        out.str("");
+        out << "Rem. mines: " << totalBombCount - markedBombCount << " / " << totalBombCount;
+        std::string strRemaining = out.str();
+
+        /* check if entire text fits on screen
+           since we do not display infos as a single string (time justified left, efficiency centered,
+           remaining bombs right), we need to check if the strings INCLUDING formatting overlap
+         */
+        if (     txt.WidthOf(strTime, FT_BOLD)      + txt.WidthOf(strEfficiency, FT_BOLD) / 2 + 25 > screen->w / 2)
+            lowWidth = true;
+        else if (txt.WidthOf(strRemaining, FT_BOLD) + txt.WidthOf(strEfficiency, FT_BOLD) / 2 + 25 > screen->w / 2)
             lowWidth = true;
 
         /* draw text */
-        out.str("");
-        out << "Time: " << elapsedTime;
-        txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_LEFT);
+        txt.Blit(screen, strTime, p, color, FT_BOLD, TJ_LEFT);
         p.y = 10 * game->Zoom();
 
         if (!lowWidth) {
             p.x = (game->Width() * game->CellLength()) / 2;
-            out.str("");
-            out << std::fixed << std::setprecision(2) << "Eff: " << minesPerSecond <<  " m/s";
-            txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_CENTER);
+            txt.Blit(screen, strEfficiency, p, color, FT_BOLD, TJ_CENTER);
             p.y = 10 * game->Zoom();
         }
 
         p.x = (game->Width() * game->CellLength() - 10) * game->Zoom();
-        out.str("");
-        out << "Rem. mines: " << totalBombCount - markedBombCount << " / " << totalBombCount;
-        txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_RIGHT);
+        txt.Blit(screen, strRemaining, p, color, FT_BOLD, TJ_RIGHT);
     }
 
     void SweepPainter::InitSystems() {
