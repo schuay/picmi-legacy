@@ -40,7 +40,16 @@ int SDLText::HeightOf(std::string txt, FontTypeEnum fontType) {
 
     TTF_SizeText(GetFontForType(fontType).get(), txt.c_str(), NULL, &h);
 
-    return h;
+    /* get linecount */
+    unsigned int lineCount = 0;
+    size_t found = 0;
+
+    while (found != std::string::npos) {
+        lineCount++;
+        found = txt.find('\n', ++found);
+    }
+
+    return h * lineCount;
 }
 
 void SDLText::BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, FontTypeEnum fontType, TextJustifyEnum justify) {
@@ -86,7 +95,11 @@ void SDLText::Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_
 
     QString qtext(text.c_str());
     QStringList qsplittext = qtext.split('\n');
-    unsigned int textHeight = HeightOf(text, fontType);
+
+    if (qsplittext.count() == 0)
+        return;
+
+    unsigned int textHeight = HeightOf(qsplittext[0].toStdString(), fontType);
 
     for (int i = 0; i < qsplittext.count(); i++) {
         BlitLine(dst, qsplittext.at(i).toStdString(), p, c, fontType, justify);

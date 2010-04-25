@@ -52,12 +52,14 @@ namespace BoardGame {
                                      screen->format->Amask),
                 SDL_FreeSurface);
 
-        Point p(textOverlay->w / 2, textOverlay->h / 2 - 200);
-
         SDL_Color col;
         col.r = col.g = col.b = 255;
 
-        txt.Blit(textOverlay, GetGameOverText(c), p, col, FT_BOLD, TJ_CENTER);
+        std::string infoText = GetGameOverText(c);
+
+        Point p(textOverlay->w / 2, (textOverlay->h - txt.HeightOf(infoText)) / 2);
+
+        txt.Blit(textOverlay, infoText, p, col, FT_BOLD, TJ_CENTER);
 
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {
