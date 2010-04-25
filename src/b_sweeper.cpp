@@ -85,26 +85,16 @@ int Sweeper::CalcBombCount(Point &p) const {
 }
 
 bool Sweeper::GameWon() {
-    /* the game can be won in one of two ways:
-       * mark all bombs
-       * expose all tiles without bombs
-     */
-    bool wonByMark = true,
-         wonByExpose = true;
+    /* the game is won by exposing all tiles without bombs */
 
-    for (unsigned int x = 0; x<width; x++)
-        for (unsigned int y = 0; y<height; y++) {
-            if (map[CToI(x,y)] == mapBomb && boardState[CToI(x,y)] != boardMarked)
-                wonByMark = false;
+    for (unsigned int x = 0; x < width; x++)
+        for (unsigned int y = 0; y < height; y++)
             if (map[CToI(x,y)] != mapBomb && boardState[CToI(x,y)] != boardExposed)
-                wonByExpose = false;
-        }
-
-    if (!(wonByMark || wonByExpose))
-        return false;
+                return false;
 
     SolveBoard();
     SetResolution(GR_WON);
+
     return true;
 }
 bool Sweeper::GameLost() {
