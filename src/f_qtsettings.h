@@ -3,7 +3,9 @@
 
 #include <QDialog>
 #include <QFileDialog>
+#include <QMessageBox>
 
+#include "b_statsmanager.h"
 #include "b_boardsettings.h"
 
 namespace Ui {

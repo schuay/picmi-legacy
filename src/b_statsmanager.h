@@ -32,6 +32,8 @@ public:
     void Write() const;
     void Add(shared_ptr<StatsElement> e);
 
+    void Clear(GameTypeEnum t);
+
     /* aggregate stats (of type matching latestElement) */
     StatsCollection AggregateStats() const;
     

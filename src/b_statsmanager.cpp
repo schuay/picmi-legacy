@@ -76,6 +76,12 @@ void StatsManager::Write() const {
     outFile.close();
 }
 
+void StatsManager::Clear(GameTypeEnum t) {
+    for (int i = elements.size() - 1; i >= 0; i--)
+        if (elements[i]->Type() == t)
+            elements.erase(elements.begin() + i);
+}
+
 void StatsManager::Add(shared_ptr<StatsElement> e) {
     elements.push_back(e);
     latestElement = e;

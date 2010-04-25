@@ -131,10 +131,36 @@ void QTSettings::msApplySettings() {
 }
 
 void QTSettings::clearStats() {
+    QMessageBox::StandardButton ret;
+    ret = QMessageBox::warning(
+            this,
+            "Clear all statistics?",
+            "All picross statistics will be deleted permanently. Continue?",
+            QMessageBox::Yes | QMessageBox::No,
+            QMessageBox::No);
 
+    if (ret != QMessageBox::Yes)
+        return;
+
+    StatsManager m;
+    m.Clear(GT_PICROSS);
+    m.Write();
 }
 void QTSettings::msClearStats() {
+    QMessageBox::StandardButton ret;
+    ret = QMessageBox::warning(
+            this,
+            "Clear all statistics?",
+            "All minesweeper statistics will be deleted permanently. Continue?",
+            QMessageBox::Yes | QMessageBox::No,
+            QMessageBox::No);
 
+    if (ret != QMessageBox::Yes)
+        return;
+
+    StatsManager m;
+    m.Clear(GT_MINESWEEPER);
+    m.Write();
 }
 
 QString QTSettings::Browse(QFileDialog::FileMode mode) {
