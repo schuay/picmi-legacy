@@ -27,7 +27,8 @@ SOURCES += src/f_main.cpp \
     src/b_statsmanager.cpp \
     src/b_statselement.cpp \
     src/b_sweepstatselement.cpp \
-    src/b_picstatselement.cpp
+    src/b_picstatselement.cpp \
+    src/f_qthelp.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -55,7 +56,8 @@ HEADERS += src/b_picross.h \
     src/b_sweepstatselement.h \
     src/b_enums.h \
     src/b_picstatselement.h \
-    src/b_statscollection.h
+    src/b_statscollection.h \
+    src/f_qthelp.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \
@@ -67,4 +69,5 @@ OTHER_FILES += README \
     COPYING \
     src/picmi.desktop
 FORMS += src/f_qtmainwindow.ui \
-    src/f_qtsettings.ui
+    src/f_qtsettings.ui \
+    src/f_qthelp.ui

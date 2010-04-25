@@ -33,6 +33,7 @@ QTMainWindow::QTMainWindow(QWidget *parent) :
     connect(ui->bQuit, SIGNAL(clicked()), this, SLOT(quit()));
     connect(ui->bStart, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->bSettings, SIGNAL(clicked()), this, SLOT(showSettings()));
+    connect(ui->bHelp, SIGNAL(clicked()), this, SLOT(showHelp()));
     connect(ui->rbPicross, SIGNAL(toggled(bool)), this, SLOT(gameTypeToogled()));
     connect(&t, SIGNAL(finished()), this, SLOT(unlockGui()));
     connect(&t, SIGNAL(ExceptionThrown(QString)), this, SLOT(displayException(QString)));
@@ -98,6 +99,10 @@ void QTMainWindow::start() {
 void QTMainWindow::showSettings() {
     QTSettings settings(this);
     settings.exec();
+}
+void QTMainWindow::showHelp() {
+    QTHelp help(this);
+    help.exec();
 }
 
 void QTMainWindow::unlockGui() {

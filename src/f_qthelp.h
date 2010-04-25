@@ -7,51 +7,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef F_QTMAINWINDOW_H
-#define F_QTMAINWINDOW_H
+#ifndef F_QTHELP_H
+#define F_QTHELP_H
 
-#include <QMainWindow>
-#include <QImage>
-#include <QPixmap>
-#include <QDesktopWidget>
-#include <QMessageBox>
-
-#include "f_qthelp.h"
-#include "f_qtpicthread.h"
-#include "f_qtsettings.h"
+#include <QDialog>
 
 namespace Ui {
-    class QTMainWindow;
+    class QTHelp;
 }
 
-namespace BoardGame {
-
-class QTMainWindow : public QMainWindow {
+class QTHelp : public QDialog {
     Q_OBJECT
 public:
-    QTMainWindow(QWidget *parent = 0);
-    ~QTMainWindow();
+    QTHelp(QWidget *parent = 0);
+    ~QTHelp();
 
 protected:
     void changeEvent(QEvent *e);
 
-private slots:
-    void quit();
-    void start();
-    void showSettings();
-    void gameTypeToogled();
-    void unlockGui();
-    void displayException(QString message);
-    void showHelp();
-
 private:
-    Ui::QTMainWindow *ui;
-
-    QTPicThread t;
-    GameTypeEnum gameType;
-
-    void setGuiLocked(bool locked);
+    Ui::QTHelp *ui;
 };
 
-}
-#endif // F_QTMAINWINDOW_H
+#endif // F_QTHELP_H
