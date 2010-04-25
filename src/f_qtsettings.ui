@@ -22,25 +22,25 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tabPicross">
         <attribute name="title">
          <string>Picross</string>
         </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="0">
+             <item row="1" column="0">
               <widget class="QLabel" name="label_4">
                <property name="text">
                 <string>No Hints Mode:</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
+             <item row="1" column="1">
               <widget class="QCheckBox" name="cbNoHintsMode">
                <property name="toolTip">
                 <string>In No Hints Mode, incorrectly marking tiles as filled is allowed. There is no feedback whether the tile is actually filled or not.
@@ -52,14 +52,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
+             <item row="2" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
                 <string>Background:</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
+             <item row="2" column="1">
               <widget class="QComboBox" name="cbBackground">
                <property name="enabled">
                 <bool>true</bool>
@@ -79,14 +79,14 @@ Penalty time is disabled in this mode.</string>
                </item>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="lDifficulty">
                <property name="text">
                 <string>Difficulty:</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="4" column="1">
               <widget class="QSpinBox" name="sbDifficulty">
                <property name="toolTip">
                 <string>Percentage of game board filled with boxes. A good starting point is 55%. Less is harder, more is easier.</string>
@@ -99,14 +99,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label">
                <property name="text">
                 <string>Width:</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="5" column="1">
               <widget class="QSpinBox" name="sbWidth">
                <property name="toolTip">
                 <string>Width of the game board in tiles.</string>
@@ -122,14 +122,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
+             <item row="6" column="0">
               <widget class="QLabel" name="label_2">
                <property name="text">
                 <string>Height:</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1">
+             <item row="6" column="1">
               <widget class="QSpinBox" name="sbHeight">
                <property name="toolTip">
                 <string>Height of the game board in tiles.</string>
@@ -145,14 +145,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="label_7">
                <property name="text">
                 <string>Custom BG:</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
+             <item row="3" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
                 <widget class="QLineEdit" name="leBGPath">
@@ -179,7 +179,60 @@ Penalty time is disabled in this mode.</string>
                </item>
               </layout>
              </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QComboBox" name="cbPreset">
+                 <property name="currentIndex">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>Easy</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Medium</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Hard</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="bApplyPreset">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Apply</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="bClearStats">
+             <property name="text">
+              <string>Clear Picross Statistics</string>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="verticalSpacer">
@@ -207,14 +260,14 @@ Penalty time is disabled in this mode.</string>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="0" column="0">
+             <item row="1" column="0">
               <widget class="QLabel" name="label_9">
                <property name="text">
                 <string>Background:</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
+             <item row="1" column="1">
               <widget class="QComboBox" name="cbMSBackground">
                <property name="enabled">
                 <bool>true</bool>
@@ -234,14 +287,14 @@ Penalty time is disabled in this mode.</string>
                </item>
               </widget>
              </item>
-             <item row="2" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="lDifficulty_2">
                <property name="text">
                 <string>Difficulty:</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
+             <item row="3" column="1">
               <widget class="QSpinBox" name="sbMSDifficulty">
                <property name="toolTip">
                 <string>Percentage of game board filled with mines. A good starting point is 15%. Less is easier, more is harder.</string>
@@ -254,14 +307,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="label_10">
                <property name="text">
                 <string>Width:</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="4" column="1">
               <widget class="QSpinBox" name="sbMSWidth">
                <property name="toolTip">
                 <string>Width of the game board in tiles.</string>
@@ -277,14 +330,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label_11">
                <property name="text">
                 <string>Height:</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="5" column="1">
               <widget class="QSpinBox" name="sbMSHeight">
                <property name="toolTip">
                 <string>Height of the game board in tiles.</string>
@@ -300,14 +353,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
+             <item row="2" column="0">
               <widget class="QLabel" name="label_13">
                <property name="text">
                 <string>Custom BG:</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
+             <item row="2" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_9">
                <item>
                 <widget class="QLineEdit" name="leMSBGPath">
@@ -334,7 +387,60 @@ Penalty time is disabled in this mode.</string>
                </item>
               </layout>
              </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Presets:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QComboBox" name="cbMSPreset">
+                 <property name="currentIndex">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>Easy</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Medium</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Hard</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="bMSApplyPreset">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Apply</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="bMSClearStats">
+             <property name="text">
+              <string>Clear Minesweeper Statistics</string>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="verticalSpacer_2">

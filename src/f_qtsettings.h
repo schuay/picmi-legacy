@@ -25,8 +25,15 @@ protected:
 private slots:
     void cancel();
     void ok();
+
     void setBGPath();
     void msSetBGPath();
+
+    void clearStats();
+    void msClearStats();
+
+    void applySettings();
+    void msApplySettings();
 
 private:
     Ui::QtSettings *ui;

@@ -9,10 +9,15 @@ QTSettings::QTSettings(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(cancel()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(ok()));
     connect(ui->bBrowseBG, SIGNAL(clicked()), this, SLOT(setBGPath()));
     connect(ui->bMSBrowseBG, SIGNAL(clicked()), this, SLOT(msSetBGPath()));
+    connect(ui->bApplyPreset, SIGNAL(clicked()), this, SLOT(applySettings()));
+    connect(ui->bMSApplyPreset, SIGNAL(clicked()), this, SLOT(msApplySettings()));
+    connect(ui->bClearStats, SIGNAL(clicked()), this, SLOT(clearStats()));
+    connect(ui->bMSClearStats, SIGNAL(clicked()), this, SLOT(msClearStats()));
 
     picross = new BoardSettings(GT_PICROSS);
     minesweeper = new BoardSettings(GT_MINESWEEPER);
@@ -64,6 +69,73 @@ void QTSettings::msSetBGPath() {
         ui->leMSBGPath->setText(path);
 }
 
+void QTSettings::applySettings() {
+    bool
+            noHintsMode;
+    unsigned int
+            difficulty,
+            width,
+            height;
+
+    switch (ui->cbPreset->currentIndex()) {
+    case 0:     /* easy */
+        width = height = 10;
+        difficulty = 60;
+        noHintsMode = false;
+        break;
+    case 1:     /* medium */
+        width = height = 15;
+        difficulty = 55;
+        noHintsMode = false;
+        break;
+    case 2:     /* hard */
+        width = height = 20;
+        difficulty = 50;
+        noHintsMode = true;
+        break;
+    default:
+        return;
+    }
+
+    ui->sbWidth->setValue(width);
+    ui->sbHeight->setValue(height);
+    ui->sbDifficulty->setValue(difficulty);
+    ui->cbNoHintsMode->setChecked(noHintsMode);
+}
+void QTSettings::msApplySettings() {
+    unsigned int
+            difficulty,
+            width,
+            height;
+
+    switch (ui->cbMSPreset->currentIndex()) {
+    case 0:     /* easy */
+        width = height = 10;
+        difficulty = 13;
+        break;
+    case 1:     /* medium */
+        width = height = 15;
+        difficulty = 16;
+        break;
+    case 2:     /* hard */
+        width = height = 20;
+        difficulty = 21;
+        break;
+    default:
+        return;
+    }
+
+    ui->sbMSWidth->setValue(width);
+    ui->sbMSHeight->setValue(height);
+    ui->sbMSDifficulty->setValue(difficulty);
+}
+
+void QTSettings::clearStats() {
+
+}
+void QTSettings::msClearStats() {
+
+}
 
 QString QTSettings::Browse(QFileDialog::FileMode mode) {
     QFileDialog fd;
