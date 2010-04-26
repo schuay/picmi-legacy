@@ -17,21 +17,9 @@ build() {
   # github names tag downloads after the tag commit
   cd $srcdir/schuay-$pkgname-$pkgname-$pkgver-0-g9afa53a || return 1
 
-  # set file path
-  sed -i 's_#define FILEPREFIX.*_#define FILEPREFIX "/usr/share/picmi/"_' src/b_painter.h || return 1
-
   # build
   qmake || return 1
+  make setpath || return 1	#sets gfx path in source files
   make || return 1
-
-  # install
-  mkdir -p $pkgdir/usr/{bin,share/{applications,$pkgname/gfx}}
-  install -D -m755 $pkgname $pkgdir/usr/bin/
-  install -D -m644 src/$pkgname.desktop $pkgdir/usr/share/applications/
-  install -D -m644 \
-    gfx/* $pkgdir/usr/share/$pkgname/gfx/
-
-  # create symbolic link to old executable path
-  cd $pkgdir/usr/bin
-  ln -s $pkgname tuxpicross
+  make INSTALL_ROOT=$pkgdir install || return 1
 }

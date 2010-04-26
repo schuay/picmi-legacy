@@ -71,3 +71,19 @@ OTHER_FILES += README \
 FORMS += src/f_qtmainwindow.ui \
     src/f_qtsettings.ui \
     src/f_qthelp.ui
+
+setpath.commands = $(SED) -i \'s_define FILEPREFIX.*_define FILEPREFIX \"/usr/share/picmi/\"_\' src/b_painter.h || return 1
+
+QMAKE_EXTRA_TARGETS += setpath
+
+gfx.path = /usr/share/picmi/gfx
+gfx.files = gfx/*
+
+desktop.path = /usr/share/applications
+desktop.files = src/picmi.desktop
+
+target.path = /usr/bin
+
+INSTALLS += gfx \
+    desktop \
+    target
