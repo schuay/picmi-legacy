@@ -36,7 +36,7 @@ void SDLSprite::Zoom(unsigned int ZoomFactor) {
         return;
 
     shared_ptr<SDL_Surface> tmpSurface(
-            rotozoomSurface(Surface.get(), 0, ZoomFactor, 0), SDL_FreeSurface);
+            zoomSurface(Surface.get(), ZoomFactor, ZoomFactor, 0), SDL_FreeSurface);
 
     if (!tmpSurface)
         throw Exception("Zooming sprite %s failed.");
@@ -50,55 +50,16 @@ void SDLSprite::Rotate(unsigned int Rotation) {
     if (!(Rotation < 360 && Rotation%90 == 0))
         throw Exception("Rotating sprite failed: Invalid angle.");
 
-    SDL_Rect from, to;
+    int turns = (360 - Rotation) / 90;
+
+    /* contrary to rotozoomSurface, rotatSurface90Degrees actually works for even sized images */
     shared_ptr<SDL_Surface> tmpSurface(
-            rotozoomSurface(Surface.get(), Rotation, 1, 0), SDL_FreeSurface);
-
-    tmpSurface->flags = 0;  /* reset flags - blitting alpha transp image over another alpha transp image doesn't work */
-
-    from.h = tmpSurface->h;
-    from.w = tmpSurface->w;
-
-    to.h = Surface->h;
-    to.w = Surface->w;
-    to.x = 0;
-    to.y = 0;
+            rotateSurface90Degrees(Surface.get(), turns), SDL_FreeSurface);
 
     if (!tmpSurface)
         throw Exception("Rotating sprite failed.");
-    else {
-        shared_ptr<SDL_Surface> oldSurface(Surface);
-        Surface.reset(SDL_CreateRGBSurface(
-                oldSurface->flags,
-                oldSurface->h,
-                oldSurface->w,
-                oldSurface->format->BitsPerPixel,
-                oldSurface->format->Rmask,
-                oldSurface->format->Gmask,
-                oldSurface->format->Bmask,
-                oldSurface->format->Amask), SDL_FreeSurface);
-
-        switch (Rotation) { /* rotozoom doesn't handle rotating even sized images correctly */
-        case 90:            /* which is why we need this custom handling */
-            from.x = 0;
-            from.y = 1;
-            break;
-        case 180:
-            from.x = 2;
-            from.y = 2;
-            break;
-        case 270:
-            from.x = 2;
-            from.y = 1;
-            break;
-        }
-
-        SDL_FillRect(Surface.get(), NULL, 0);
-        SDL_BlitSurface(tmpSurface.get(),
-                        &from,
-                        Surface.get(),
-                        &to);
-    }
+    else
+        Surface = tmpSurface;
 }
 
 void SDLSprite::Blit(shared_ptr<SDL_Surface> target, Point p, SpriteJustifyEnum justify) {
