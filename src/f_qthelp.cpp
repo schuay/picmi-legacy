@@ -15,6 +15,7 @@ QTHelp::QTHelp(QWidget *parent) :
     ui(new Ui::QTHelp)
 {
     ui->setupUi(this);
+    this->setFixedSize(this->width(), this->height());
 }
 
 QTHelp::~QTHelp()
