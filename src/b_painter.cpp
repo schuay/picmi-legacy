@@ -63,6 +63,17 @@ namespace BoardGame {
 
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {
+
+            /* check for user input during fade to allow early fade abort */
+            /* ugly because 'painter' shouldn't know about input..  */
+            /* necessary because game over has its own loop within the main loop.. this should be fixed sometime */
+            SDL_Event ev;
+            while (SDL_PollEvent(&ev) == 1)
+                if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT) {
+                    SDL_PushEvent(&ev);
+                    return;
+                }
+
             SDL_SetAlpha(textOverlay.get(), SDL_SRCALPHA, i * 2);
             SDL_BlitSurface(originalScreen.get(), NULL, screen.get(), NULL);
             SDL_BlitSurface(textOverlay.get(), NULL, screen.get(), NULL);

@@ -14,20 +14,19 @@ void GameManager::GameOver() {
     /* paint final game state */
     painter->Paint();
 
-    /* load, display and write stats */
+    /* load and write stats */
     StatsManager m;
     m.Add(game->GetStats());
     m.Write();
 
-    painter->PaintGameOverScreen(m.AggregateStats());
-
-    /* pause for 1 second */
-    SDL_Delay(1000);
-
-    /* empty event loop, then wait for user input */
+    /* empty event loop */
     SDL_Event ev;
     while (SDL_PollEvent(&ev) == 1) {}
 
+    /* display stats */
+    painter->PaintGameOverScreen(m.AggregateStats());
+
+    /* wait for user input */
     while (true) {
         SDL_WaitEvent(&ev);
         if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
