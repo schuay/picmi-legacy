@@ -30,11 +30,15 @@ public:
     void MainLoop();
     void Initialize(BoardSettings &s);
 
+    bool Retry() { return retry; }
+
 private:
 
     void InitSystems();
 
     void GameOver();
+
+    bool retry;
 
     BoardGame *game;
     Painter *painter;

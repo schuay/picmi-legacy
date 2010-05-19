@@ -29,7 +29,11 @@ void GameManager::GameOver() {
     /* wait for user input */
     while (true) {
         SDL_WaitEvent(&ev);
-        if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
+        if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_r) {
+            retry = true;
+            break;
+        }
+        else if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
             break;
     }
 }
@@ -58,6 +62,8 @@ void GameManager::InitSystems() {
 void GameManager::Initialize(BoardSettings &s) {
 
     InitSystems();
+
+    retry = false;
 
     /* create game objects */
     if (s.GameType == GT_PICROSS) {

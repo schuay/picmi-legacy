@@ -30,8 +30,11 @@ void QTPicThread::PassSettings(BoardSettings *s) {
 void QTPicThread::run() {
     GameManager game;
     try {
-        game.Initialize(*settings);
-        game.MainLoop();
+        do {
+            game.Initialize(*settings);
+            game.MainLoop();
+        }
+        while (game.Retry());
     }
     catch (Exception e) {
         emit ExceptionThrown(QString(e.what()));
