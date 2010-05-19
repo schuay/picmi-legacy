@@ -42,6 +42,7 @@ Features
 Global Controls
 -------------------
 
+    r: retry. only enabled while in game over screen.
     p: (un)pause game
     esc: quit game
 
