@@ -92,7 +92,10 @@ Penalty time is disabled in this mode.</string>
                 <string>Percentage of game board filled with boxes. A good starting point is 55%. Less is harder, more is easier.</string>
                </property>
                <property name="minimum">
-                <number>1</number>
+                <number>40</number>
+               </property>
+               <property name="maximum">
+                <number>70</number>
                </property>
                <property name="value">
                 <number>55</number>
@@ -112,7 +115,7 @@ Penalty time is disabled in this mode.</string>
                 <string>Width of the game board in tiles.</string>
                </property>
                <property name="minimum">
-                <number>5</number>
+                <number>10</number>
                </property>
                <property name="maximum">
                 <number>40</number>
@@ -135,7 +138,7 @@ Penalty time is disabled in this mode.</string>
                 <string>Height of the game board in tiles.</string>
                </property>
                <property name="minimum">
-                <number>5</number>
+                <number>10</number>
                </property>
                <property name="maximum">
                 <number>40</number>
@@ -309,7 +312,10 @@ Penalty time is disabled in this mode.</string>
                 <string>Percentage of game board filled with mines. A good starting point is 15%. Less is easier, more is harder.</string>
                </property>
                <property name="minimum">
-                <number>1</number>
+                <number>10</number>
+               </property>
+               <property name="maximum">
+                <number>30</number>
                </property>
                <property name="value">
                 <number>15</number>
@@ -329,7 +335,7 @@ Penalty time is disabled in this mode.</string>
                 <string>Width of the game board in tiles.</string>
                </property>
                <property name="minimum">
-                <number>5</number>
+                <number>10</number>
                </property>
                <property name="maximum">
                 <number>40</number>
@@ -352,7 +358,7 @@ Penalty time is disabled in this mode.</string>
                 <string>Height of the game board in tiles.</string>
                </property>
                <property name="minimum">
-                <number>5</number>
+                <number>10</number>
                </property>
                <property name="maximum">
                 <number>40</number>
