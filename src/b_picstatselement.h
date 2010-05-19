@@ -26,7 +26,7 @@ public:
 
     virtual GameTypeEnum Type() const { return GT_PICROSS; }
 
-    virtual unsigned int Difficulty() const { return nrOfBoxes / (height * width); }
+    virtual unsigned int Difficulty() const { return (nrOfBoxes * 100) / (height * width); }
     virtual float Efficiency() const { return nrOfBoxes / (float)playedTime; }
 
     virtual QString TypeStr() const { return "PicStatisticsElement"; }

@@ -27,7 +27,7 @@ public:
 
     virtual GameTypeEnum Type() const { return GT_MINESWEEPER; }
 
-    virtual unsigned int Difficulty() const { return totalBombCount / (height * width); }
+    virtual unsigned int Difficulty() const { return (totalBombCount * 100) / (height * width); }
     virtual float Efficiency() const { return totalBombCount / (float)playedTime; }
 
     virtual QString TypeStr() const { return "SweepStatisticsElement"; }
