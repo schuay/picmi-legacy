@@ -42,8 +42,8 @@ namespace BoardGame {
 
         SDL_BlitSurface(screen.get(), NULL, originalScreen.get(), NULL);
 
-        /* construct a text overlay */
-        shared_ptr<SDL_Surface> textOverlay(
+        /* construct a shade overlay */
+        shared_ptr<SDL_Surface> shadeOverlay(
                 SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
                                      screen->format->BitsPerPixel,
                                      screen->format->Rmask,
@@ -51,6 +51,17 @@ namespace BoardGame {
                                      screen->format->Bmask,
                                      screen->format->Amask),
                 SDL_FreeSurface);
+
+        /* construct a text overlay (and manually set alpha channel for transparent color) */
+        shared_ptr<SDL_Surface> textOverlay(
+                SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
+                                     screen->format->BitsPerPixel,
+                                     screen->format->Rmask,
+                                     screen->format->Gmask,
+                                     screen->format->Bmask,
+                                     SDL_BYTEORDER == SDL_BIG_ENDIAN ? 0x000000ff : 0xff000000),
+                SDL_FreeSurface);
+        SDL_FillRect(textOverlay.get(), NULL, SDL_MapRGBA(screen->format, 0, 0, 0, 0));
 
         SDL_Color col;
         col.r = col.g = col.b = 255;
@@ -74,8 +85,10 @@ namespace BoardGame {
                     return;
                 }
 
-            SDL_SetAlpha(textOverlay.get(), SDL_SRCALPHA, i * 2);
+            SDL_SetAlpha(shadeOverlay.get(), SDL_SRCALPHA, i * 2);
+            SDL_SetAlpha(textOverlay.get(), SDL_SRCALPHA, (( i * 127 ) / 100) * 2 ); /* 0 -> 255*/
             SDL_BlitSurface(originalScreen.get(), NULL, screen.get(), NULL);
+            SDL_BlitSurface(shadeOverlay.get(), NULL, screen.get(), NULL);
             SDL_BlitSurface(textOverlay.get(), NULL, screen.get(), NULL);
             SDL_Flip(screen.get());
         }
