@@ -182,7 +182,8 @@ namespace BoardGame {
         QString dateFormat("MMM dd yyyy, hh:mm");
 
         out << std::fixed << std::setprecision(0)
-            << (c.CurrentResolution == GR_WON ? "YOU WIN :)" : (c.CurrentResolution == GR_LOST ? "you lose :'(" : "game aborted")) << std::endl << std::endl
+            << (c.CurrentResolution == GR_WON ? "YOU WIN :)" : (c.CurrentResolution == GR_LOST ? "you lose :'(" : "game aborted")) << std::endl
+            << "press 'r' to retry, any key to quit" << std::endl << std::endl
             << c.CurrentTime / 60 << "m " << c.CurrentTime % 60 << "s played" << std::endl
             << "Overall rank: " << c.Rank << std::endl << std::endl
             << "Games played: " << c.PlayedCount << std::endl
