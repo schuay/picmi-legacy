@@ -12,6 +12,7 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 #include <boost/shared_array.hpp>
 
 #include "b_sweepdefines.h"
@@ -49,7 +50,7 @@ public:
 
 private:
 
-    void RandomPuzzle(BoardSettings &s);
+    void RandomPuzzle(const Point &clicked_location);
     int CalcBombCount(Point &p) const;
 
     /* creates an array of all target points in targetArray and returns nr of neighbors */
@@ -62,9 +63,6 @@ private:
 
     /* this is called when clicking on an exposed tile. if the amount of marks matches the mapCount, start exposing all neighbors */
     void ExposeNeighborTiles();
-
-    /* this is called once for the first operation in a game. automatically finds an empty area and exposes it */
-    void ExposeInitialArea();
 
     /* solves the entire board - this is called once the game is won */
     void SolveBoard();

@@ -17,9 +17,19 @@ Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
     puzzleLocation.x = 0;
     puzzleLocation.y = 30;
 
-    RandomPuzzle(s);
+    bombCount = width*height*s.Difficulty/100;
 
     gameStarted = false;
+
+    /* initialize map and board state */
+
+    map = new int[width*height];
+    boardState = new int[width*height];
+
+    for (unsigned int i = 0; i < width * height; i++) {
+        map[i] = mapNone;
+        boardState[i] = boardClean;
+    }
 }
 Sweeper::~Sweeper() {
     if (map)
@@ -37,37 +47,39 @@ unsigned int Sweeper::MarkedBombCount() const {
     return markedCount;
 }
 
-void Sweeper::RandomPuzzle(BoardSettings &s) {
-    int randX, randY;
+void Sweeper::RandomPuzzle(const Point &clicked_location) {
 
-    bombCount = width*height*s.Difficulty/100;
+    /* fill list with all possible bomb locations, excluding click
+       location and all neighboring tiles */
 
-    map = new int[width*height];
-    boardState = new int[width*height];
+    std::vector<int> tentative_bomb_locations;
+    for (unsigned int i = 0; i < width; i++)
+        for (unsigned int j = 0; j < height; j++)
+            if (!(abs(i - clicked_location.x) <= 1 && abs(j - clicked_location.y) <= 1))
+                tentative_bomb_locations.push_back(j * width + i);
 
-    for (unsigned int i=0; i < width*height; i++) {
-        map[i] = mapNone;
-        boardState[i] = boardClean;
-    }
+    /* place bombs in random locations */
 
     srand(time(NULL));
 
-    for (unsigned int i=0; i<bombCount; i++) {
+    for (unsigned int i = 0; i < bombCount; i++) {
+        int pos = rand() % tentative_bomb_locations.size();
 
-        do {
-            randX = rand() % width;
-            randY = rand() % height;
-        }
-        while (map[randY*width + randX] != mapNone);
-
-        map[randY*width + randX] = mapBomb;
+        map[tentative_bomb_locations[pos]] = mapBomb;
+        tentative_bomb_locations.erase(tentative_bomb_locations.begin() + pos);
     }
+
+    /* calculate and set hints */
 
     Point p;
     for (p.x=0; p.x<width; p.x++)
         for (p.y=0; p.y<height; p.y++)
             if (map[CToI(p)] != mapBomb)
                 map[p.y*width + p.x] = CalcBombCount(p);
+
+    /* start game */
+    gameStarted = true;
+    timer.Start();
 }
 int Sweeper::CalcBombCount(Point &p) const {
     unsigned int bombCount = 0;
@@ -222,10 +234,9 @@ void Sweeper::DoOpAt(Point &p, int op) {
     if (op != S_OP_EXPOSE && op != S_OP_MARK && op != S_OP_TENTATIVE)
         throw Exception("DoOpAt failed: Incorrect operation passed.");
 
-    if (!gameStarted) {
-        ExposeInitialArea();
-        return;
-    }
+    /* initialize game state depending on click location */
+    if (!gameStarted)
+        RandomPuzzle(p);
 
     int
             state = boardState[CToI(p)];
@@ -303,43 +314,6 @@ boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount
             }
 
     return targetArray;
-}
-
-void Sweeper::ExposeInitialArea() {
-    /* whatever happens, mark gameStarted as true so this function is not called again */
-    gameStarted = true;
-    timer.Start();
-
-    int neighborCount = 0;
-    boost::shared_array<Point> neighbors;
-
-    Point p;
-    int emptyNeighbors = 0;
-
-    for (unsigned int i = 0; i < width; i++) {
-        for (unsigned int j = 0; j < height; j++) {
-            p.x = i;
-            p.y = j;
-
-            /* only check empty tiles */
-            if (map[CToI(p)] != mapNone)
-                continue;
-
-            /* initialize vars to default state and count empty neighbor tiles */
-            emptyNeighbors = 0;
-            neighbors = GetNeighborCoords(p, neighborCount, false);
-
-            for (int k = 0; k < neighborCount; k++)
-                if (map[CToI(neighbors[k])] == mapNone)
-                    emptyNeighbors++;
-
-            /* if more than 1 neighbor tile is empty, set current tile as location, expose all neighbors and return */
-            if (emptyNeighbors > 1) {
-                ExposeTile(p);
-                return;
-            }
-        }
-    }
 }
 
 void Sweeper::ExposeNeighborTiles() {
