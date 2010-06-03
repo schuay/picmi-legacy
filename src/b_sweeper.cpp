@@ -276,42 +276,39 @@ void Sweeper::DoOp(int op) {
 
 boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) const {
     bool pos[3][3];
-    int nrOfNeighborTiles = 0,
-        i,j;
+    int nrOfNeighborTiles = 8,
+        i,j,
+        dx,dy;
 
     targetCount = 0;
 
-    for (i=0; i<3; i++)
-        for (j=0; j<3; j++)
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
             pos[i][j]=true;
 
-    if (noDiagonals)
-        pos[0][0]=pos[2][2]=pos[0][2]=pos[2][0]=false;
+    /* self */
+    pos[1][1] = false;
 
-    pos[1][1] = false;  /* self */
+    /* off the board / diagonals */
+    for (dx = -1, i = 0; dx <= 1; dx++, i++) {
+        for (dy = -1, j = 0; dy <= 1; dy++, j++) {
 
-    if (p.x == 0)
-        pos[0][0]=pos[0][1]=pos[0][2]=false;
-    if (p.y == 0)
-        pos[0][0]=pos[1][0]=pos[2][0]=false;
-    if (p.x == width-1)
-        pos[2][0]=pos[2][1]=pos[2][2]=false;
-    if (p.y == height-1)
-        pos[0][2]=pos[1][2]=pos[2][2]=false;
+            if ((noDiagonals && abs(dx) == 1 && abs(dy) == 1) ||
+                (!IsInBounds(p.x + dx, p.y + dy))) {
 
-    for (i=0; i<3; i++)
-        for (j=0; j<3; j++)
-            if (pos[i][j])
-                nrOfNeighborTiles++;
+                pos[i][j] = false;
+                nrOfNeighborTiles--;
+            }
+        }
+    }
 
     boost::shared_array<Point> targetArray(
             new Point[nrOfNeighborTiles]);
 
-    for (i=0; i<3; i++)
-        for (j=0; j<3; j++)
-            if (pos[i][j]) {
-                targetArray[targetCount++] = Point(p.x + i - 1, p.y + j - 1);
-            }
+    for (dx = -1, i = 0; dx <= 1; dx++, i++)
+        for (dy = -1, j = 0; dy <= 1; dy++, j++)
+            if (pos[i][j])
+                targetArray[targetCount++] = Point(p.x + dx, p.y + dy);
 
     return targetArray;
 }
@@ -347,7 +344,7 @@ void Sweeper::ExposeTile(Point &p) {
     if (map[CToI(p)] != mapNone)
         return;
 
-    /* recurse over all nondiagonal neighbor tiles */
+    /* recurse over all neighbor tiles */
 
     int neighborCount = 0;
     boost::shared_array<Point> neighbors =
