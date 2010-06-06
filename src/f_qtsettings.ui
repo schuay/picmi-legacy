@@ -299,14 +299,14 @@ Penalty time is disabled in this mode.</string>
                </item>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="lDifficulty_2">
                <property name="text">
                 <string>Difficulty:</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="4" column="1">
               <widget class="QSpinBox" name="sbMSDifficulty">
                <property name="toolTip">
                 <string>Percentage of game board filled with mines. A good starting point is 15%. Less is easier, more is harder.</string>
@@ -322,14 +322,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label_10">
                <property name="text">
                 <string>Width:</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="5" column="1">
               <widget class="QSpinBox" name="sbMSWidth">
                <property name="toolTip">
                 <string>Width of the game board in tiles.</string>
@@ -345,14 +345,14 @@ Penalty time is disabled in this mode.</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
+             <item row="6" column="0">
               <widget class="QLabel" name="label_11">
                <property name="text">
                 <string>Height:</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1">
+             <item row="6" column="1">
               <widget class="QSpinBox" name="sbMSHeight">
                <property name="toolTip">
                 <string>Height of the game board in tiles.</string>
@@ -434,6 +434,11 @@ Penalty time is disabled in this mode.</string>
                    <string>Hard</string>
                   </property>
                  </item>
+                 <item>
+                  <property name="text">
+                   <string>Very Hard</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item>
@@ -453,6 +458,23 @@ Penalty time is disabled in this mode.</string>
                 </widget>
                </item>
               </layout>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>Solver:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="cbMSSolver">
+               <property name="toolTip">
+                <string>When checked, generates puzzles which are guaranteed to be solvable without guesses.</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

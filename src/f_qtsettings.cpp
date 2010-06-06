@@ -121,6 +121,11 @@ void QTSettings::msApplySettings() {
         width = height = 20;
         difficulty = 21;
         break;
+    case 3:     /* very hard */
+        width = 30;
+        height = 16;
+        difficulty = 35;
+        break;
     default:
         return;
     }
@@ -200,6 +205,8 @@ void QTSettings::ReadSettings() {
     ui->sbMSDifficulty->setValue(minesweeper->Difficulty);
 
     ui->cbMSBackground->setCurrentIndex(minesweeper->UseCustomBG);
+
+    ui->cbMSSolver->setChecked(minesweeper->EnableSolver);
 }
 void QTSettings::WriteSettings() {
 
@@ -226,6 +233,8 @@ void QTSettings::WriteSettings() {
     minesweeper->BackgroundPath = ui->leMSBGPath->text().toStdString();
 
     minesweeper->UseCustomBG = ui->cbMSBackground->currentIndex();
+
+    minesweeper->EnableSolver = ui->cbMSSolver->isChecked();
 
 
     /* save settings to disk */

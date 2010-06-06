@@ -12,6 +12,7 @@ void BoardSettings::SetDefaultValues() {
     confFilePath = basePath + TypeToStr(GameType) + ".conf";
 
     UseCustomBG = false;
+    EnableSolver = true;
 
     if (GameType == GT_PICROSS) {
         Map = "";
@@ -100,6 +101,8 @@ void BoardSettings::HandleConfLine(const std::string line) {
                     atoi(settingValue.c_str()));
         else if (settingType == "USECUSTOMBG")
             UseCustomBG = atoi(settingValue.c_str());
+        else if (settingType == "ENABLESOLVER")
+            EnableSolver = atoi(settingValue.c_str());
     }
     catch (std::exception) {
         printf("Invalid settings value, ignored. Setting type: %s, Setting value: %s ",
@@ -122,6 +125,7 @@ void BoardSettings::Save() {
     write << "NOHINTSMODE=" << NoHintsMode << std::endl;
     write << "GAMETYPE=" << GameType << std::endl;
     write << "USECUSTOMBG=" << UseCustomBG << std::endl;
+    write << "ENABLESOLVER=" << EnableSolver << std::endl;
 
     write.close();
 }

@@ -39,7 +39,8 @@ public:
 
     bool
             NoHintsMode,
-            UseCustomBG;
+            UseCustomBG,
+            EnableSolver;
 
     unsigned int
             x,

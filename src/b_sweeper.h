@@ -79,8 +79,10 @@ private:
     /* this is called when clicking on an exposed tile. if the amount of marks matches the mapCount, start exposing all neighbors */
     void ExposeNeighborTiles();
 
-    /* solves the entire board - this is called once the game is won */
-    void SolveBoard();
+    /* reveales the entire board - this is called once the game is won */
+    void RevealBoard();
+
+    void StartGame();
 
     static const int
             mapNone = 0,
@@ -92,7 +94,8 @@ private:
 
     bool
             gameStarted,
-            solverWorking;
+            solverWorking,
+            solverEnabled;
 
     unsigned int bombCount;
 

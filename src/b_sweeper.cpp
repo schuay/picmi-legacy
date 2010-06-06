@@ -14,6 +14,8 @@ Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
     width = s.x;
     height = s.y;
 
+    solverEnabled = s.EnableSolver;
+
     puzzleLocation.x = 0;
     puzzleLocation.y = 30;
 
@@ -104,7 +106,7 @@ bool Sweeper::GameWon() {
             if (map[CToI(x,y)] != mapBomb && boardState[CToI(x,y)] != boardExposed)
                 return false;
 
-    SolveBoard();
+    RevealBoard();
     SetResolution(GR_WON);
 
     return true;
@@ -245,8 +247,11 @@ void Sweeper::DoOpAt(Point &p, int op) {
     /* initialize game state depending on click location */
     if (!gameStarted) {
         RandomPuzzle(p);
-        solverThread = thread(&Sweeper::SlvSolve, this, p);
-        return;
+        if (solverEnabled) {
+            solverThread = thread(&Sweeper::SlvSolve, this, p);
+            return;
+        }
+        else StartGame();
     }
 
     int
@@ -368,7 +373,7 @@ void Sweeper::ExposeTile(Point &p) {
     ExposeTile(p, boardState);
 }
 
-void Sweeper::SolveBoard() {
+void Sweeper::RevealBoard() {
     for (unsigned int i = 0; i < width * height; i++) {
         if (boardState[i] != boardClean && boardState[i] != boardTentative)
             continue;
@@ -380,6 +385,11 @@ void Sweeper::SolveBoard() {
             boardState[i] = boardMarked;
         }
     }
+}
+void Sweeper::StartGame() {
+    solverWorking = false;
+    gameStarted = true;
+    timer.Start();
 }
 
 int Sweeper::SlvSolve(Point clickedLocation) {
@@ -545,9 +555,7 @@ int Sweeper::SlvSolve(Point clickedLocation) {
 
     /* start game */
     ExposeTile(clickedLocation);
-    solverWorking = false;
-    gameStarted = true;
-    timer.Start();
+    StartGame();
 
     return 0;
 }
