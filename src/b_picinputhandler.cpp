@@ -98,21 +98,55 @@ void PicInputHandler::HandleInput() {
             case SDLK_p:
                 game->SetPaused(!game->GetPaused());
                 break;
+            case SDLK_KP7:
+            case SDLK_y:
+                dx = -1;
+                dy = -1;
+                break;
+            case SDLK_KP9:
+            case SDLK_u:
+                dx = 1;
+                dy = -1;
+                break;
+            case SDLK_KP1:
+            case SDLK_b:
+                dx = -1;
+                dy = 1;
+                break;
+            case SDLK_KP3:
+            case SDLK_n:
+                dx = 1;
+                dy = 1;
+                break;
+            case SDLK_KP4:
+            case SDLK_h:
+            case SDLK_a:
             case SDLK_LEFT:
                 dx = -1;
                 break;
+            case SDLK_KP6:
+            case SDLK_l:
+            case SDLK_d:
             case SDLK_RIGHT:
                 dx = 1;
                 break;
+            case SDLK_KP8:
+            case SDLK_k:
+            case SDLK_w:
             case SDLK_UP:
                 dy = -1;
                 break;
+            case SDLK_KP2:
+            case SDLK_j:
+            case SDLK_s:
             case SDLK_DOWN:
                 dy = 1;
                 break;
+            case SDLK_KP0:
             case SDLK_SPACE:
                 op = OP_HIT;
                 break;
+            case SDLK_KP5:
             case SDLK_RCTRL:
             case SDLK_LCTRL:
                 op = OP_MARK;

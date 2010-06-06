@@ -17,8 +17,8 @@ Currently it is being developed by Jakob Gruber.
 Picross is a number logic game in which cells in a grid have to be colored or left 
 blank according to numbers given at the side of the grid to reveal a hidden picture. 
 
-Minesweeper is a single-player video game. The object of the game is to clear an
-abstract minefield  without detonating a mine.
+Minesweeper is a classic puzzle game. The object of the game is to clear an
+abstract minefield without detonating a mine.
 
 
 Features
@@ -35,51 +35,22 @@ Features
   affected tiles are cleared OR marked, not both
 
 * basic minesweeper gameplay
+* guaranteed solvable boards (logic only, no guessing)
 
 * statistics / highscore tracking
 
 
-Global Controls
+Controls
 -------------------
 
-    r: retry. only enabled while in game over screen.
-    p: (un)pause game
-    esc: quit game
-
-
-Picross Controls
--------------------
-
-mouse controls:
-    left click: expose a tile
-    right click: mark/unmark a tile
-
-keyboard controls:
-    arrow keys: move
-    ctrl: (un)mark a tile
-    space: expose a tile
-
-
-Minesweeper Controls
--------------------
-
-mouse controls:
-    left click (on an unexposed tile): expose a tile
-    left click (on an exposed tile): expose all neighboring tiles
-    right click: (un)mark a tile
-    middle click: tentatively (un)mark a tile
-
-keyboard controls:
-    arrow keys: move
-    ctrl: (un)mark a tile
-    space (on an unexposed tile): expose a tile
-    space (on an exposed tile): expose all neighboring tiles
+The ingame help provides information about game controls.
 
 
 License
 -------------------
 
-Picmi is licensed under the terms of the GNU General Public License version 2.
+Picmi is licensed under the terms of the GNU General Public License version 2, or
+(at your option) any later version.
 
 
 Contact / More Information
@@ -99,5 +70,7 @@ Sources
 Font: ttf-liberation ( https://fedorahosted.org/liberation-fonts/ )
 Default picross background: Air by Nuno Pinheiro (included in the KDE wallpapers collection)
 Mine icon: Human O2 Iconset ( http://schollidesign.deviantart.com/art/Human-O2-Iconset-105344123 )
+Minesweeper board generation with help from Simon Tatham's Mines generator:
+                              (http://www.chiark.greenend.org.uk/~sgtatham/puzzles/)
 
 Enjoy!
