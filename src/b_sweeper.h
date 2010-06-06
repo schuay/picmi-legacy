@@ -74,7 +74,7 @@ private:
     /* creates an array of all target points in targetArray and returns nr of neighbors */
     /* the caller is responsible for freeing the array */
     /* if noDiagonals is true, diagonal neighbors are not returned */
-    shared_array<Point> GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) const;
+    std::vector<int> GetNeighborCoords(Point &p, bool noDiagonals) const;
 
     /* exposing tiles is a recursive operation. expose all clear tiles connected to original tile. */
     void ExposeTile(Point &p, int *state);
@@ -117,8 +117,8 @@ private:
     void SlvMarkAllUnknownInSet(Set &s, int mark);
     void SlvMark(int coord, int mark);
     void SlvUpdateSolverState();
-    void SlvHandleChangeMarked(Point &neighbor);
-    void SlvHandleChangeExposed(Point &neighbor);
+    void SlvHandleChangeMarked(int x, int y);
+    void SlvHandleChangeExposed(int x, int y);
     bool SlvGlobalDeductions();
     bool SlvWingDeductions(Set &s);
     void SlvPerturbSetAt(Point &p, int op, bool radicalPerturbs);

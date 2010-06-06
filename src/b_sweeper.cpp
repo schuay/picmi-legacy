@@ -86,12 +86,11 @@ void Sweeper::RandomPuzzle(const Point &clicked_location) {
 int Sweeper::CalcBombCount(Point &p) const {
     unsigned int bombCount = 0;
 
-    int neighborCount = 0;
-    boost::shared_array<Point> neighbors =
-            GetNeighborCoords(p, neighborCount, false);
+    std::vector<int> neighbors =
+            GetNeighborCoords(p, false);
 
-    for (int i=0; i<neighborCount; i++) {
-        if (map[CToI(neighbors[i].x, neighbors[i].y)] == mapBomb)
+    for (unsigned int i = 0; i < neighbors.size(); i++) {
+        if (map[neighbors[i]] == mapBomb)
             bombCount++;
     }
 
@@ -290,43 +289,31 @@ void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) const {
-    bool pos[3][3];
-    int nrOfNeighborTiles = 8,
-        i,j,
-        dx,dy;
+std::vector<int> Sweeper::GetNeighborCoords(Point &p, bool noDiagonals) const {
+    int
+            i,j,
+            dx,dy;
+    std::vector<int>
+            neighbors;
 
-    targetCount = 0;
-
-    for (i = 0; i < 3; i++)
-        for (j = 0; j < 3; j++)
-            pos[i][j]=true;
-
-    /* self */
-    pos[1][1] = false;
-
-    /* off the board / diagonals */
     for (dx = -1, i = 0; dx <= 1; dx++, i++) {
         for (dy = -1, j = 0; dy <= 1; dy++, j++) {
 
-            if ((noDiagonals && abs(dx) == 1 && abs(dy) == 1) ||
-                (!IsInBounds(p.x + dx, p.y + dy))) {
+            if (dx == 0 && dy == 0)
+                /* skip self */;
 
-                pos[i][j] = false;
-                nrOfNeighborTiles--;
-            }
+            else if (!IsInBounds(p.x + dx, p.y + dy))
+                /* skip out of bounds */;
+
+            else if (noDiagonals && abs(dx) == 1 && abs(dy) == 1)
+                /* optionally skip diagonals */;
+
+            else
+                neighbors.push_back(CToI(p.x + dx, p.y + dy));
         }
     }
 
-    shared_array<Point> targetArray(
-            new Point[nrOfNeighborTiles]);
-
-    for (dx = -1, i = 0; dx <= 1; dx++, i++)
-        for (dy = -1, j = 0; dy <= 1; dy++, j++)
-            if (pos[i][j])
-                targetArray[targetCount++] = Point(p.x + dx, p.y + dy);
-
-    return targetArray;
+    return neighbors;
 }
 
 void Sweeper::ExposeNeighborTiles() {
@@ -337,19 +324,25 @@ void Sweeper::ExposeNeighborTiles() {
     if (currentTile == mapBomb || currentTile == mapNone)
         return;
 
-    int neighborCount = 0;
-    boost::shared_array<Point> neighbors =
-            GetNeighborCoords(location, neighborCount, false);
+    std::vector<int> neighbors =
+            GetNeighborCoords(location, false);
 
-    for (int i=0; i<neighborCount; i++) {
-        if (boardState[CToI(neighbors[i].x, neighbors[i].y)] == boardMarked)
+    for (unsigned int i = 0; i < neighbors.size(); i++) {
+        if (boardState[neighbors[i]] == boardMarked)
             markCount++;
     }
 
-    if (markCount == currentTile)
-        for (int i = 0; i < neighborCount; i++)
-            if (boardState[CToI(neighbors[i].x, neighbors[i].y)] != boardMarked)
-                ExposeTile(neighbors[i]);
+    if (markCount != currentTile)
+        return;
+
+    Point p;
+    for (unsigned int i = 0; i < neighbors.size(); i++) {
+        if (boardState[neighbors[i]] != boardMarked) {
+            p.x = neighbors[i] % width;
+            p.y = neighbors[i] / width;
+            ExposeTile(p);
+        }
+    }
 }
 void Sweeper::ExposeTile(Point &p, int *state) {
     state[CToI(p)] = boardExposed;
@@ -361,13 +354,17 @@ void Sweeper::ExposeTile(Point &p, int *state) {
 
     /* recurse over all neighbor tiles */
 
-    int neighborCount = 0;
-    boost::shared_array<Point> neighbors =
-            GetNeighborCoords(p, neighborCount, false);
+    std::vector<int> neighbors =
+            GetNeighborCoords(p, false);
 
-    for (int i=0; i<neighborCount; i++)
-        if (state[CToI(neighbors[i])] != boardExposed)
-            ExposeTile(neighbors[i], state);
+    Point q;
+    for (unsigned int i = 0; i < neighbors.size(); i++) {
+        if (state[neighbors[i]] != boardExposed) {
+            q.x = neighbors[i] % width;
+            q.y = neighbors[i] / width;
+            ExposeTile(q, state);
+        }
+    }
 }
 void Sweeper::ExposeTile(Point &p) {
     ExposeTile(p, boardState);
@@ -637,12 +634,11 @@ void Sweeper::SlvPerturbSetAt(Point &p, int op, bool radicalPerturbs) {
 
     /* note: only the state of uncleared tiles is changed. */
 
-    int neighborCount = 0;
-    boost::shared_array<Point> neighbors =
-            GetNeighborCoords(p, neighborCount, false);
+    std::vector<int> neighbors =
+            GetNeighborCoords(p, false);
 
-    for (int j = 0; j < neighborCount; j++) {
-        int coord = CToI(neighbors[j]);
+    for (unsigned int j = 0; j < neighbors.size(); j++) {
+        int coord = neighbors[j];
 
         if (radicalPerturbs) {
             if (map[coord] == mapBomb) {
@@ -667,8 +663,8 @@ void Sweeper::SlvPerturbSetAt(Point &p, int op, bool radicalPerturbs) {
 
     /* update the map hints */
     Point q;
-    for (q.x=0; q.x<width; q.x++)
-        for (q.y=0; q.y<height; q.y++)
+    for (q.x = 0; q.x < width; q.x++)
+        for (q.y = 0; q.y < height; q.y++)
             if (map[CToI(q)] != mapBomb)
                 map[q.y*width + q.x] = CalcBombCount(q);
 
@@ -808,6 +804,7 @@ void Sweeper::SlvUpdateSolverState() {
      */
 
     std::vector<int> changes = solver->GetStateChanges();
+    int x, y;
 
     for (unsigned int i = 0; i < changes.size(); i++) {
 
@@ -817,16 +814,18 @@ void Sweeper::SlvUpdateSolverState() {
 
         /* first, update state of all neighboring sets */
 
-        int neighborCount = 0;
-        boost::shared_array<Point> neighbors =
-                GetNeighborCoords(p, neighborCount, false);
+        std::vector<int> neighbors =
+                GetNeighborCoords(p, false);
 
-        for (int j = 0; j < neighborCount; j++) {
+        for (unsigned int j = 0; j < neighbors.size(); j++) {
+
+            x = neighbors[j] % width;
+            y = neighbors[j] / width;
 
             if (solver->BoardState[coord] == boardMarked)
-                SlvHandleChangeMarked(neighbors[j]);
+                SlvHandleChangeMarked(x, y);
             else if (solver->BoardState[coord] == boardExposed)
-                SlvHandleChangeExposed(neighbors[j]);
+                SlvHandleChangeExposed(x, y);
         }
 
 
@@ -835,8 +834,8 @@ void Sweeper::SlvUpdateSolverState() {
         SlvUpdateSet(p.x, p.y);
     }
 }
-void Sweeper::SlvHandleChangeExposed(Point &neighbor) {
-    int neighborCoord = CToI(neighbor);
+void Sweeper::SlvHandleChangeExposed(int x, int y) {
+    int neighborCoord = CToI(x, y);
 
     /* tile has been exposed, so each neighboring tile has one less unknown neighbor */
     solver->Sets[neighborCoord].DecrNeighbors();
@@ -846,12 +845,12 @@ void Sweeper::SlvHandleChangeExposed(Point &neighbor) {
     if (solver->Sets[neighborCoord].Exposed()) {
         solver->TodoSets.insert(neighborCoord);
 #ifdef SOLVERDEBUG
-        std::cout << "b. TODO x,y: " << neighbor.x << "," << neighbor.y << std::endl;
+        std::cout << "b. TODO x,y: " << x << "," << y << std::endl;
 #endif
     }
 }
-void Sweeper::SlvHandleChangeMarked(Point &neighbor) {
-    int neighborCoord = CToI(neighbor);
+void Sweeper::SlvHandleChangeMarked(int x, int y) {
+    int neighborCoord = CToI(x, y);
 
     /* tile has been marked, so each neighboring tile has one less unknown mine
        and needs to be added to the todo list.
@@ -860,7 +859,7 @@ void Sweeper::SlvHandleChangeMarked(Point &neighbor) {
         solver->Sets[neighborCoord].DecrMines();
         solver->TodoSets.insert(neighborCoord);
 #ifdef SOLVERDEBUG
-        std::cout << "a. TODO x,y: " << neighbor.x << "," << neighbor.y << std::endl;
+        std::cout << "a. TODO x,y: " << x << "," << y << std::endl;
 #endif
     }
 
@@ -886,9 +885,8 @@ void Sweeper::SlvUpdateSet(int x, int y) {
     else {
         Point p(x,y);
 
-        int neighborCount = 0;
-        boost::shared_array<Point> neighbors =
-                GetNeighborCoords(p, neighborCount, false);
+        std::vector<int> neighbors =
+                GetNeighborCoords(p, false);
 
         int
                 totalMines,
@@ -909,8 +907,8 @@ void Sweeper::SlvUpdateSet(int x, int y) {
 
            Solution: Use Sets.Marked to calc Minecount.
          */
-        for (int i = 0; i < neighborCount; i++)
-            if (solver->Sets[CToI(neighbors[i])].Marked())
+        for (unsigned int i = 0; i < neighbors.size(); i++)
+            if (solver->Sets[neighbors[i]].Marked())
                 knownMines++;
 
         solver->Sets[CToI(x,y)].SetExposed(knownMines, totalMines);
@@ -927,15 +925,11 @@ void Sweeper::SlvMarkAllUnknownInSet(Set &s, int mark) {
 
     Point p(s.X(), s.Y());
 
-    int neighborCount = 0;
-    boost::shared_array<Point> neighbors =
-            GetNeighborCoords(p, neighborCount, false);
+    std::vector<int> neighbors =
+            GetNeighborCoords(p, false);
 
-    for (int i = 0; i < neighborCount; i++) {
-        int coord = CToI(neighbors[i]);
-
-        SlvMark(coord, mark);
-    }
+    for (unsigned int i = 0; i < neighbors.size(); i++)
+        SlvMark(neighbors[i], mark);
 }
 void Sweeper::SlvMark(int coord, int mark) {
 
