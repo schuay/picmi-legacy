@@ -141,6 +141,11 @@ int Sweeper::GetStateAt(unsigned int x, unsigned int y) const {
     if (!IsInBounds(x, y))
         throw Exception("GetStateAt failed: Point not within puzzle dimensions.");
 
+    /* while the solver is working, return 'clean state' to prevent simultaneous access to
+       boardState[] from main thread and solver thread. */
+    if (solverWorking)
+        return S_BOARD_CLEAN;
+
     switch (boardState[y*width + x]) {
     case boardClean:
         return S_BOARD_CLEAN;
@@ -539,9 +544,9 @@ int Sweeper::SlvSolve(Point clickedLocation) {
 
 
     /* start game */
+    ExposeTile(clickedLocation);
     solverWorking = false;
     gameStarted = true;
-    ExposeTile(clickedLocation);
     timer.Start();
 
     return 0;
