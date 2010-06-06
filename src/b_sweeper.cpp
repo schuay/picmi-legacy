@@ -387,6 +387,9 @@ void Sweeper::RevealBoard() {
     }
 }
 void Sweeper::StartGame() {
+    unique_lock<mutex> lockG(mutexGameStarted);
+    unique_lock<mutex> lockS(mutexSolverWorking);
+
     solverWorking = false;
     gameStarted = true;
     timer.Start();
@@ -396,7 +399,10 @@ int Sweeper::SlvSolve(Point clickedLocation) {
 
     /* this solver is ported from simon tathams 'mines' */
 
+    unique_lock<mutex> lockS(mutexSolverWorking);
     solverWorking = true;
+    lockS.unlock();
+
 
     int perturbs = 0;
     unsigned int startingMinecount = bombCount;

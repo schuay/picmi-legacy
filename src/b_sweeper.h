@@ -15,6 +15,8 @@
 #include <vector>
 #include <boost/shared_array.hpp>
 #include <boost/thread.hpp>
+#include <boost/thread/locks.hpp>
+#include <boost/thread/mutex.hpp>
 #include <iostream>
 
 #include "b_sweepdefines.h"
@@ -26,6 +28,8 @@
 using boost::shared_ptr;
 using boost::shared_array;
 using boost::thread;
+using boost::unique_lock;
+using boost::mutex;
 
 namespace BoardGame {
 class Sweeper : public BoardGame
@@ -53,8 +57,8 @@ public:
 
     shared_ptr<StatsElement> GetStats() const;
 
-    bool IsStarted() const { return gameStarted; }
-    bool IsWorking() const { return solverWorking; }
+    bool IsStarted() const { unique_lock<mutex> lock(mutexGameStarted); return gameStarted; }
+    bool IsWorking() const { unique_lock<mutex> lock(mutexSolverWorking); return solverWorking; }
 
     void SetResolution(GameResolutionEnum r) {
         solverThread.interrupt(); solverThread.join(); BoardGame::SetResolution(r); }
@@ -96,6 +100,10 @@ private:
             gameStarted,
             solverWorking,
             solverEnabled;
+
+    mutable mutex
+            mutexSolverWorking,
+            mutexGameStarted;
 
     unsigned int bombCount;
 
