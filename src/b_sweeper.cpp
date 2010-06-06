@@ -20,6 +20,7 @@ Sweeper::Sweeper(BoardSettings &s) : BoardGame(), map(NULL), boardState(NULL)
     bombCount = width*height*s.Difficulty/100;
 
     gameStarted = false;
+    solverWorking = false;
 
     /* initialize map and board state */
 
@@ -79,10 +80,6 @@ void Sweeper::RandomPuzzle(const Point &clicked_location) {
         for (p.y=0; p.y<height; p.y++)
             if (map[CToI(p)] != mapBomb)
                 map[p.y*width + p.x] = CalcBombCount(p);
-
-    /* start game */
-    gameStarted = true;
-    timer.Start();
 }
 int Sweeper::CalcBombCount(Point &p) const {
     unsigned int bombCount = 0;
@@ -231,6 +228,9 @@ void Sweeper::DoOpAt(Point &p, int op) {
     if (paused)
         return;
 
+    if (solverWorking)
+        return;
+
     if (op == S_OP_NONE)
         return;
 
@@ -240,7 +240,8 @@ void Sweeper::DoOpAt(Point &p, int op) {
     /* initialize game state depending on click location */
     if (!gameStarted) {
         RandomPuzzle(p);
-        SlvSolve(p);
+        solverThread = thread(&Sweeper::SlvSolve, this, p);
+        return;
     }
 
     int
@@ -376,9 +377,11 @@ void Sweeper::SolveBoard() {
     }
 }
 
-int Sweeper::SlvSolve(Point &clickedLocation) {
+int Sweeper::SlvSolve(Point clickedLocation) {
 
     /* this solver is ported from simon tathams 'mines' */
+
+    solverWorking = true;
 
     int perturbs = 0;
     unsigned int startingMinecount = bombCount;
@@ -401,6 +404,8 @@ int Sweeper::SlvSolve(Point &clickedLocation) {
 
     /* Main deductive loop. */
     while (1) {
+
+        boost::this_thread::interruption_point();
 
 #ifdef SOLVERDEBUG
         loopCount++;
@@ -528,8 +533,16 @@ int Sweeper::SlvSolve(Point &clickedLocation) {
     }
 
 #ifdef SOLVERDEBUG
-    std::cout << std::endl << "LOOPS: " << loopCount << " PERTURBS: " << perturbCount << " RANDOMS: " << randomCount;
+    std::cout << std::endl << "LOOPS: " << loopCount << " PERTURBS: " << perturbCount << " RANDOMS: " << randomCount
+              << std::endl;
 #endif
+
+
+    /* start game */
+    solverWorking = false;
+    gameStarted = true;
+    ExposeTile(clickedLocation);
+    timer.Start();
 
     return 0;
 }

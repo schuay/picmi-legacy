@@ -64,7 +64,8 @@ HEADERS += src/b_picross.h \
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \
-    -lSDL_ttf
+    -lSDL_ttf \
+    -lboost_thread-mt
 OTHER_FILES += README \
     PKGBUILD \
     AUTHORS \

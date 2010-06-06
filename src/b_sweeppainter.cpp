@@ -94,6 +94,19 @@ namespace BoardGame {
         /* info -> black bg */
         SDL_FillRect(screen.get(), &to, SDL_MapRGB(screen->format, 0, 0, 0));
 
+        /* game not started - display instructions and exit */
+        if (!game->IsStarted()) {
+            out.str("");
+            if (game->IsWorking())
+                out << "Generating board, please wait...";
+            else
+                out << "Click on any tile to start the game...";
+
+            p.x = (game->Width() * game->CellLength()) / 2;
+            txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_CENTER);
+            return;
+        }
+
         /* retrieve infos */
         int totalBombCount = game->TotalBombCount();
         int markedBombCount = game->MarkedBombCount();

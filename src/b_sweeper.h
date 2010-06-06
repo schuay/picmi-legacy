@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <vector>
 #include <boost/shared_array.hpp>
+#include <boost/thread.hpp>
 #include <iostream>
 
 #include "b_sweepdefines.h"
@@ -24,6 +25,7 @@
 
 using boost::shared_ptr;
 using boost::shared_array;
+using boost::thread;
 
 namespace BoardGame {
 class Sweeper : public BoardGame
@@ -50,6 +52,12 @@ public:
     unsigned int TotalBombCount() const { return bombCount; }
 
     shared_ptr<StatsElement> GetStats() const;
+
+    bool IsStarted() const { return gameStarted; }
+    bool IsWorking() const { return solverWorking; }
+
+    void SetResolution(GameResolutionEnum r) {
+        solverThread.interrupt(); solverThread.join(); BoardGame::SetResolution(r); }
 
 private:
 
@@ -82,7 +90,9 @@ private:
             boardMarked = 2,
             boardTentative = 3;
 
-    bool gameStarted;
+    bool
+            gameStarted,
+            solverWorking;
 
     unsigned int bombCount;
 
@@ -91,7 +101,7 @@ private:
 
     /* BEGIN Solver members */
 
-    int SlvSolve(Point &clickedLocation);
+    int SlvSolve(Point clickedLocation);
     void SlvUpdateSet(int x, int y);
     void SlvMarkAllUnknownInSet(Set &s, int mark);
     void SlvMark(int coord, int mark);
@@ -103,6 +113,8 @@ private:
     void SlvPerturbSetAt(Point &p, int op, bool radicalPerturbs);
     void SlvVisualizeStates() const;
 
+    /* does the actual work, sets gameStarted = true, solverWorking = false when done */
+    thread solverThread;
 
     /* solver stores our temporary objects (board state, todo list, etc */
     shared_ptr<SweepSolver> solver;
