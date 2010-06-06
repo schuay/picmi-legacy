@@ -1,0 +1,9 @@
+highscores are broken because they depend on the exact minecount. makethem depend on requested 
+minecount instead.
+allow cancellation of puzzle solver
+show some indication that something is being done
+flush event queue on solver completion
+dont show minecount beforesolver is done (it could change)
+add option to enable/disable perfect puzzles
+change difficulty presets
+clean up solver code..

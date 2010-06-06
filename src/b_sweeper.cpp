@@ -49,6 +49,9 @@ unsigned int Sweeper::MarkedBombCount() const {
 
 void Sweeper::RandomPuzzle(const Point &clicked_location) {
 
+    for (unsigned int i = 0; i < width * height; i++)
+        map[i] = mapNone;
+
     /* fill list with all possible bomb locations, excluding click
        location and all neighboring tiles */
 
@@ -235,8 +238,10 @@ void Sweeper::DoOpAt(Point &p, int op) {
         throw Exception("DoOpAt failed: Incorrect operation passed.");
 
     /* initialize game state depending on click location */
-    if (!gameStarted)
+    if (!gameStarted) {
         RandomPuzzle(p);
+        SlvSolve(p);
+    }
 
     int
             state = boardState[CToI(p)];
@@ -274,7 +279,7 @@ void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) const {
+shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount, bool noDiagonals) const {
     bool pos[3][3];
     int nrOfNeighborTiles = 8,
         i,j,
@@ -302,7 +307,7 @@ boost::shared_array<Point> Sweeper::GetNeighborCoords(Point &p, int &targetCount
         }
     }
 
-    boost::shared_array<Point> targetArray(
+    shared_array<Point> targetArray(
             new Point[nrOfNeighborTiles]);
 
     for (dx = -1, i = 0; dx <= 1; dx++, i++)
@@ -335,9 +340,8 @@ void Sweeper::ExposeNeighborTiles() {
             if (boardState[CToI(neighbors[i].x, neighbors[i].y)] != boardMarked)
                 ExposeTile(neighbors[i]);
 }
-void Sweeper::ExposeTile(Point &p) {
-
-    boardState[CToI(p)] = boardExposed;
+void Sweeper::ExposeTile(Point &p, int *state) {
+    state[CToI(p)] = boardExposed;
 
     /* if maptile is NOT empty, stop recursion */
 
@@ -351,8 +355,11 @@ void Sweeper::ExposeTile(Point &p) {
             GetNeighborCoords(p, neighborCount, false);
 
     for (int i=0; i<neighborCount; i++)
-        if (boardState[CToI(neighbors[i])] != boardExposed)
-            ExposeTile(neighbors[i]);
+        if (state[CToI(neighbors[i])] != boardExposed)
+            ExposeTile(neighbors[i], state);
+}
+void Sweeper::ExposeTile(Point &p) {
+    ExposeTile(p, boardState);
 }
 
 void Sweeper::SolveBoard() {
@@ -368,4 +375,553 @@ void Sweeper::SolveBoard() {
         }
     }
 }
+
+int Sweeper::SlvSolve(Point &clickedLocation) {
+
+    /* this solver is ported from simon tathams 'mines' */
+
+    int perturbs = 0;
+    unsigned int startingMinecount = bombCount;
+
+    solver.reset(new SweepSolver(width, height));
+
+    for (unsigned int i = 0; i < width * height; i++)
+        solver->OldState[i] = solver->BoardState[i] = boardClean;
+
+    /* recursively expose our initial area */
+    ExposeTile(clickedLocation, solver->BoardState);
+
+#ifdef SOLVERDEBUG
+    int
+            loopCount = 0,
+            randomCount = 0,
+            perturbCount = 0;
+    SlvVisualizeStates();
+#endif
+
+    /* Main deductive loop. */
+    while (1) {
+
+#ifdef SOLVERDEBUG
+        loopCount++;
+#endif
+
+        /* update solver state -> create and update sets, fill todo list */
+        SlvUpdateSolverState();
+
+
+        /* pick the first set off the todo list and run deductions based on it */
+        if (!solver->TodoSets.empty()) {
+
+            std::set<int>::iterator it = solver->TodoSets.begin();
+            Set &s = solver->Sets[*it];
+            solver->TodoSets.erase(it);
+
+            /* skip completed sets */
+            if (s.Done())
+                continue;
+
+            /* skip unexposed sets */
+            if (!s.Exposed())
+                continue;
+
+#ifdef SOLVERDEBUG
+            std::cout << std::endl << "POP set x,y: " << *it % width << "," << *it / width << ", mines:" << s.UnknownMines() << ", neighbors: "
+                    << s.UnknownNeighbors();
+#endif
+
+            /* begin with the easiest case: either no mines exist around set or all unknown
+               fields are mines. */
+            if (s.UnknownMines() == 0 || s.UnknownMines() == s.UnknownNeighbors()) {
+
+                int mark;
+                if (s.UnknownMines() == 0)
+                    mark = boardExposed;
+                else mark = boardMarked;
+
+                SlvMarkAllUnknownInSet(s, mark);
+
+#ifdef SOLVERDEBUG
+                std::cout << std::endl << "ACTION mark all around x,y " << s.X() << "," << s.Y() << " as " << mark;
+                SlvVisualizeStates();
+#endif
+
+                continue;
+            }
+            /* no deductions based on our set alone are possible.
+               get all overlapping sets and see if we can get results based on our set + an overlapping set. */
+
+            if (SlvWingDeductions(s))
+                continue;
+        }
+        else {
+
+            /* We've run out of sets on our todo list.
+               Check if any global deductions are possible */
+
+            if (SlvGlobalDeductions())
+                continue;
+
+            /* If the board is solved,
+               we are done. */
+            if (solver->Done)
+                break;
+
+
+
+            /* Otherwise, pick a random unfinished exposed sets,
+               and randomly either set all unfinished neighbors as mines or as NOT mines.
+               Update the global minecount and all affected sets, add affected tiles to todo list
+               and go back to loop start.
+               After 50 tries, give up and create a new random puzzle */
+
+            if (perturbs < 50) {
+
+#ifdef SOLVERDEBUG
+                perturbCount++;
+#endif
+                perturbs++;
+
+                /* perform the actual perturbation on a random unfinished set */
+
+                bool radicalPerturbs = false;
+                int randSetIndex = solver->GetRandomUnfinishedSet(clickedLocation);
+                if (randSetIndex == -1) {
+                    randSetIndex = solver->GetRandomUntouchedSet(clickedLocation);
+                    radicalPerturbs = true;
+                }
+                Point p;
+                if (randSetIndex != -1) {
+                    p.x = solver->Sets[randSetIndex].X();
+                    p.y = solver->Sets[randSetIndex].Y();
+                }
+                else {  /* no usable set found, stop perturbation and generate a new random board */
+                    perturbs = 50;
+                    continue;
+                }
+                int op;
+                if (bombCount < startingMinecount) op = mapBomb; else op = mapNone;
+
+                SlvPerturbSetAt(p, op, radicalPerturbs);
+            }
+            else {
+                /* With a new random puzzle, we need to start our deductions over. */
+
+#ifdef SOLVERDEBUG
+                randomCount++;
+#endif
+                RandomPuzzle(clickedLocation);
+
+                perturbs = 0;
+
+                solver.reset(new SweepSolver(width, height));
+
+                for (unsigned int i = 0; i < width * height; i++)
+                    solver->OldState[i] = solver->BoardState[i] = boardClean;
+
+                /* recursively expose our initial area */
+                ExposeTile(clickedLocation, solver->BoardState);
+
+                continue;
+            }
+        }
+    }
+
+#ifdef SOLVERDEBUG
+    std::cout << std::endl << "LOOPS: " << loopCount << " PERTURBS: " << perturbCount << " RANDOMS: " << randomCount;
+#endif
+
+    return 0;
+}
+bool Sweeper::SlvWingDeductions(Set &s) {
+
+    std::vector<int> overlaps = solver->GetOverlappingSets(s);
+
+#ifdef SOLVERDEBUG
+    std::cout << std::endl << "FETCH sets around x,y: " << s.X() << "," << s.Y()
+            << " COUNT: " << overlaps.size();
+#endif
+
+    for (unsigned int i = 0; i < overlaps.size(); i++) {
+
+        Set &s2 = solver->Sets[overlaps[i]];
+
+        std::set<int> swing = solver->GetSetWing(s, s2);
+        std::set<int> s2wing = solver->GetSetWing(s2, s);
+
+#ifdef SOLVERDEBUG
+        std::cout << std::endl << "COMPARE  1) x,y " << s.X() << "," << s.Y()
+                << " unknown mines " << s.UnknownMines() << " wing size " << swing.size();
+        std::cout << std::endl << "    with 2) x,y " << s2.X() << "," << s2.Y()
+                << " unknown mines " << s2.UnknownMines() << " wing size " << s2wing.size();
+#endif
+        /* Again we start with the easiest case:
+           Size of Wing A = Unknown Mines A - Unknown Mines B
+           -> mark all tiles in Wing A and expose all in Wing B
+
+           or vice versa
+
+           For example:
+           A has 3 unknown mines
+           B has 1 unknown mine
+           . are exposed tiles
+           x are clear (unmarked and unexposed) tiles
+           O are the marks we can set as result of this deduction
+
+           ......    ......
+           ...Ax. -> ...AO.
+           ..Bxx.    ..BxO.
+           .xxx..    ......
+
+         */
+        if (swing.size() == s.UnknownMines() - s2.UnknownMines() ||
+            s2wing.size() == s2.UnknownMines() - s.UnknownMines()) {
+
+            std::set<int>::iterator wingIt;
+            std::set<int> *wToMark, *wToExpose;
+
+            wToMark =   ((swing.size() == s.UnknownMines() - s2.UnknownMines()) ? &swing : &s2wing);
+            wToExpose = ((swing.size() == s.UnknownMines() - s2.UnknownMines()) ? &s2wing : &swing);
+
+            for (wingIt = wToMark->begin(); wingIt != wToMark->end(); wingIt++)
+                SlvMark(*wingIt, boardMarked);
+
+            for (wingIt = wToExpose->begin(); wingIt != wToExpose->end(); wingIt++)
+                SlvMark(*wingIt, boardExposed);
+
+#ifdef SOLVERDEBUG
+        std::cout << std::endl << "ACTION mark wings 1) x,y " << s.X() << "," << s.Y()
+                << ", 2) x,y " << s2.X() << "," << s2.Y();
+        SlvVisualizeStates();
+#endif
+
+            return true;
+        }
+    }
+    return false;
+}
+
+void Sweeper::SlvPerturbSetAt(Point &p, int op, bool radicalPerturbs) {
+
+    /* note: only the state of uncleared tiles is changed. */
+
+    int neighborCount = 0;
+    boost::shared_array<Point> neighbors =
+            GetNeighborCoords(p, neighborCount, false);
+
+    for (int j = 0; j < neighborCount; j++) {
+        int coord = CToI(neighbors[j]);
+
+        if (radicalPerturbs) {
+            if (map[coord] == mapBomb) {
+                bombCount--;
+                map[coord] = mapNone;
+            }
+            else {
+                bombCount++;
+                map[coord] = mapBomb;
+            }
+        }
+        else {
+            if (solver->BoardState[coord] == boardClean) {
+                if (map[coord] != mapBomb && op == mapBomb)
+                    bombCount++;
+                else if (map[coord] == mapBomb && op == mapNone)
+                    bombCount--;
+                map[coord] = op;
+            }
+        }
+    }
+
+    /* update the map hints */
+    Point q;
+    for (q.x=0; q.x<width; q.x++)
+        for (q.y=0; q.y<height; q.y++)
+            if (map[CToI(q)] != mapBomb)
+                map[q.y*width + q.x] = CalcBombCount(q);
+
+    /* Reset the board state of all tiles affected by the set. This will be all tiles within 2 spaces of
+       the set's center tile:
+
+       ssat.    S: Set center
+       Ssat.    s: set neighbor
+       ssat.    a: affected tile
+       aaat.    t: todo tile
+
+       'S', 's', and 'a' tiles need to be: cleared in BoardState[] and reset in Sets[]
+       't' tiles can keep their Exposed/Marked/Clean state, need to be reinitialized,
+           added to the todo list, and have their UnknownNeighbors property updated.
+
+    */
+
+    for (int dx = -2; dx <= 2; dx++) {
+        for (int dy = -2; dy <= 2; dy++) {
+
+            if (!IsInBounds(p.x + dx, p.y + dy))
+                continue;
+
+            int coord = CToI(p.x + dx, p.y + dy);
+
+
+            /* 'S', 's', 'a' tiles */
+            solver->BoardState[coord] = boardClean;
+            solver->Sets[coord].Reset();
+            solver->Sets[coord].Initialize(p.x + dx, p.y + dy, width, height);
+        }
+    }
+    for (int dx = -3; dx <= 3; dx++) {
+        for (int dy = -3; dy <= 3; dy++) {
+
+            if (!IsInBounds(p.x + dx, p.y + dy))
+                continue;
+
+            int coord = CToI(p.x + dx, p.y + dy);
+
+            /* update known mines, unknown neighbors, done state */
+            solver->UpdateNrOfNeighbors(p.x + dx, p.y + dy);
+
+            /* and add 't' tiles to todo list */
+            if (abs(dx) == 3 || abs(dy) == 3)
+                solver->TodoSets.insert(coord);
+        }
+    }
+
+
+#ifdef SOLVERDEBUG
+    std::cout << std::endl << "PERTURB x,y " << p.x << "," << p.y
+            << " OP " << op;
+    SlvVisualizeStates();
+#endif
+}
+
+#ifdef SOLVERDEBUG
+void Sweeper::SlvVisualizeStates() const {
+
+    int state;
+
+    std::cout << std::endl << std::endl << "Map  -  State:" << std::endl << std::endl;
+
+    //std::cout << "01234567890123456789  -  01234567890123456789" << std::endl << std::endl;
+    std::cout << "0123456789  -  0123456789" << std::endl << std::endl;
+
+    for (unsigned int y = 0; y < height; y++) {
+        for (unsigned int x = 0; x < width; x++) {
+            state = map[CToI(x, y)];
+            if (state == mapBomb)
+                std::cout << 'O';
+            else std::cout << '.';
+        }
+
+        std::cout << "  -  ";
+
+        for (unsigned int x = 0; x < width; x++) {
+            state = solver->BoardState[CToI(x, y)];
+            std::cout << ((state == boardClean) ? 'X' : (state == boardMarked) ? 'O' : '.');
+        }
+
+        std::cout << " " << y;
+
+        std::cout << std::endl;
+    }
+}
+#endif
+bool Sweeper::SlvGlobalDeductions() {
+    /* returns true if we did anything */
+
+    int cleanTiles = 0;
+    int markedTiles = 0;
+
+    for (unsigned int i = 0; i < width * height; i++) {
+        if (solver->BoardState[i] == boardClean)
+            cleanTiles++;
+        else if (solver->BoardState[i] == boardMarked)
+            markedTiles++;
+    }
+
+    /* all tiles either marked or exposed -> all done! */
+    if (cleanTiles == 0) {
+        solver->Done = true;
+        return false;
+    }
+
+    int remainingMines = bombCount - markedTiles;
+
+    /* all remaining tiles are mined or all remaining tiles are clear */
+    if (cleanTiles == remainingMines ||
+        remainingMines == 0) {
+
+        for (unsigned int i = 0; i < width * height; i++) {
+            if (solver->BoardState[i] == boardClean) {
+                if (remainingMines == 0)
+                    solver->BoardState[i] = boardExposed;
+                else
+                    solver->BoardState[i] = boardMarked;
+            }
+        }
+
+        return true;
+    }
+
+    return false;
+}
+void Sweeper::SlvUpdateSolverState() {
+    /* to be run each iteration of the main solving loop
+
+       goes through entire state and checks for changes
+       all changed tiles are added to todo list
+
+       possible changes:
+        * clean -> marked: update all existing neighbor sets
+        * clean -> exposed: create new set and update all neighbors
+     */
+
+    std::vector<int> changes = solver->GetStateChanges();
+
+    for (unsigned int i = 0; i < changes.size(); i++) {
+
+        int coord = changes[i];
+        Point p(coord % width, coord / width);
+
+
+        /* first, update state of all neighboring sets */
+
+        int neighborCount = 0;
+        boost::shared_array<Point> neighbors =
+                GetNeighborCoords(p, neighborCount, false);
+
+        for (int j = 0; j < neighborCount; j++) {
+
+            if (solver->BoardState[coord] == boardMarked)
+                SlvHandleChangeMarked(neighbors[j]);
+            else if (solver->BoardState[coord] == boardExposed)
+                SlvHandleChangeExposed(neighbors[j]);
+        }
+
+
+        /* finally, update changed set itself */
+
+        SlvUpdateSet(p.x, p.y);
+    }
+}
+void Sweeper::SlvHandleChangeExposed(Point &neighbor) {
+    int neighborCoord = CToI(neighbor);
+
+    /* tile has been exposed, so each neighboring tile has one less unknown neighbor */
+    solver->Sets[neighborCoord].DecrNeighbors();
+
+
+    /* if neighboring tile is exposed itself, add it to the todo list */
+    if (solver->Sets[neighborCoord].Exposed()) {
+        solver->TodoSets.insert(neighborCoord);
+#ifdef SOLVERDEBUG
+        std::cout << "b. TODO x,y: " << neighbor.x << "," << neighbor.y << std::endl;
+#endif
+    }
+}
+void Sweeper::SlvHandleChangeMarked(Point &neighbor) {
+    int neighborCoord = CToI(neighbor);
+
+    /* tile has been marked, so each neighboring tile has one less unknown mine
+       and needs to be added to the todo list.
+       only set this if the neighboring tile is exposed. */
+    if (solver->Sets[neighborCoord].Exposed()) {
+        solver->Sets[neighborCoord].DecrMines();
+        solver->TodoSets.insert(neighborCoord);
+#ifdef SOLVERDEBUG
+        std::cout << "a. TODO x,y: " << neighbor.x << "," << neighbor.y << std::endl;
+#endif
+    }
+
+    /* of course marking the tile also decrements unknown neighbors in all neighboring tiles.
+       this needs to be done AFTER decrementing mines, because a Set is marked 'Done' if unknown neighbors reaches 0. */
+    solver->Sets[neighborCoord].DecrNeighbors();
+}
+void Sweeper::SlvUpdateSet(int x, int y) {
+
+    /* dont change anything for already finalized sets.
+       if this is true, there is probably a bug somewhere */
+    if (solver->Sets[CToI(x,y)].Done())
+        throw Exception("Tried to update a finalized set.");
+
+    if (solver->BoardState[CToI(x,y)] == boardClean)
+        return;
+
+    /* a mine set - dont do anything except mark it as Marked and Done */
+    if (solver->BoardState[CToI(x,y)] == boardMarked) {
+        solver->Sets[CToI(x,y)].SetMarked();
+    }
+    /* an exposed set - initialize UnknownMines, mark it as Exposed, add to TodoSets */
+    else {
+        Point p(x,y);
+
+        int neighborCount = 0;
+        boost::shared_array<Point> neighbors =
+                GetNeighborCoords(p, neighborCount, false);
+
+        int
+                totalMines,
+                knownMines = 0;
+
+        /* get the tile's minecount */
+        totalMines = CalcBombCount(p);
+
+        /* and decrement it for every marked neighbor tile */
+        /* important: we calculate knownMines by looking at *SETS*.
+           using boardState leads to inconsistencies in the following situation:
+
+           Sets A, B. B has been marked as a mine and A has been exposed (in the same loop iteration).
+           We are now in SlvUpdateSolverState. A is processed first - since it is initialized, the minecount is calculated.
+           Using BoardState, the actual current minecount is set.
+           B is processed next. Since it is marked, all neighboring Sets.Minecount are decremented. Decrementing A.Minecount
+           is INCORRECT in this situation.
+
+           Solution: Use Sets.Marked to calc Minecount.
+         */
+        for (int i = 0; i < neighborCount; i++)
+            if (solver->Sets[CToI(neighbors[i])].Marked())
+                knownMines++;
+
+        solver->Sets[CToI(x,y)].SetExposed(knownMines, totalMines);
+
+        solver->TodoSets.insert(CToI(x,y));
+#ifdef SOLVERDEBUG
+        std::cout << std::endl << "a. TODO x,y: " << x << "," << y << std::endl;
+#endif
+    }
+}
+void Sweeper::SlvMarkAllUnknownInSet(Set &s, int mark) {
+
+    // mark all unknown tiles around set s with mark
+
+    Point p(s.X(), s.Y());
+
+    int neighborCount = 0;
+    boost::shared_array<Point> neighbors =
+            GetNeighborCoords(p, neighborCount, false);
+
+    for (int i = 0; i < neighborCount; i++) {
+        int coord = CToI(neighbors[i]);
+
+        SlvMark(coord, mark);
+    }
+}
+void Sweeper::SlvMark(int coord, int mark) {
+
+    int state = solver->BoardState[coord];
+    Point p(coord % width, coord / width);
+
+    if (state == boardClean) {
+        if (mark == boardMarked) {
+            if (map[coord] != mapBomb)
+                throw Exception("Incorrect deduction! Boom.");
+            solver->BoardState[coord] = mark;
+        }
+        else if (mark == boardExposed) {
+            if (map[coord] == mapBomb)
+                throw Exception("Incorrect deduction! Boom.");
+            ExposeTile(p, solver->BoardState);
+        }
+    }
+}
+
 }

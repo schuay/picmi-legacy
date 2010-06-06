@@ -4,6 +4,7 @@
 TARGET = picmi
 QT += xml
 TEMPLATE = app
+DEFINES += SOLVERDEBUG
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
     src/b_picstreak.cpp \
@@ -28,7 +29,8 @@ SOURCES += src/f_main.cpp \
     src/b_statselement.cpp \
     src/b_sweepstatselement.cpp \
     src/b_picstatselement.cpp \
-    src/f_qthelp.cpp
+    src/f_qthelp.cpp \
+    src/b_sweepsolver.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -57,7 +59,8 @@ HEADERS += src/b_picross.h \
     src/b_enums.h \
     src/b_picstatselement.h \
     src/b_statscollection.h \
-    src/f_qthelp.h
+    src/f_qthelp.h \
+    src/b_sweepsolver.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \
@@ -71,19 +74,22 @@ OTHER_FILES += README \
 FORMS += src/f_qtmainwindow.ui \
     src/f_qtsettings.ui \
     src/f_qthelp.ui
-
-setpath.commands = $(SED) -i \'s_define FILEPREFIX.*_define FILEPREFIX \"/usr/share/picmi/\"_\' src/b_painter.h || return 1
-
+setpath.commands = $(SED) \
+    -i \
+    \'s_define \
+    FILEPREFIX.*_define \
+    FILEPREFIX \
+    \"/usr/share/picmi/\"_\' \
+    src/b_painter.h \
+    || \
+    return \
+    1
 QMAKE_EXTRA_TARGETS += setpath
-
 gfx.path = /usr/share/picmi/gfx
 gfx.files = gfx/*
-
 desktop.path = /usr/share/applications
 desktop.files = src/picmi.desktop
-
 target.path = /usr/bin
-
 INSTALLS += gfx \
     desktop \
     target
