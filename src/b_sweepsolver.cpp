@@ -207,6 +207,28 @@ int SweepSolver::GetRandomUnfinishedSet(Point &except_here) const {
 
     return unfinishedSets[r];
 }
+int SweepSolver::GetRandomMediumPerturbSet(Point &except_here, Point &and_here) const {
+
+    std::vector<int> potentialSets;
+
+    for (int x = 0; x < _width; x++) {
+        for (int y = 0; y < _height; y++) {
+            int coord = y * _width + x;
+            if (Sets[coord].Exposed() && !Sets[coord].Done() &&
+                (abs(except_here.x - x) > 2 || abs(except_here.y - y) > 2) &&
+                (abs(and_here.x - x) > 2 || abs(and_here.y - y) > 2) &&
+                Sets[coord].UnknownMines() > 0)
+                potentialSets.push_back(coord);
+        }
+    }
+
+    if (potentialSets.size() == 0)
+        return -1;
+
+    int r = rand() % potentialSets.size();
+
+    return potentialSets[r];
+}
 int SweepSolver::GetRandomUntouchedSet(Point &except_here) const {
 
     std::vector<int> untouchedSets;

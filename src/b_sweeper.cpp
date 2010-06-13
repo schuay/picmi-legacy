@@ -418,7 +418,6 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
 
     int perturbs = 0;
-    unsigned int startingMinecount = bombCount;
 
     solver.reset(new SweepSolver(width, height));
 
@@ -502,10 +501,13 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
                 continue;
 
             /* Terminate conditions */
-            if (!perturbsAllowed)
+            if (!perturbsAllowed) {
                 /* we are in sanity checking mode, no second changes.
                    if we can't fully solve the board in one try, return false == failure */
-                return solver->Done;
+                if (solver->Done)
+                    return true;
+                else return false;  /* this should never happen! */
+            }
 
             else if (solver->Done)
                 /* we are in regular mode. if the board is reported to be solved,
@@ -519,10 +521,7 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
 
 
-            /* Otherwise, pick a random unfinished exposed sets,
-               and randomly either set all unfinished neighbors as mines or as NOT mines.
-               Update the global minecount and all affected sets, add affected tiles to todo list
-               and go back to loop start.
+            /* Otherwise, try making changes to the board (without changing the minecount).
                After 50 tries, give up and create a new random puzzle */
 
             if (perturbs < 50) {
@@ -534,25 +533,11 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
                 /* perform the actual perturbation on a random unfinished set */
 
-                bool radicalPerturbs = false;
-                int randSetIndex = solver->GetRandomUnfinishedSet(clickedLocation);
-                if (randSetIndex == -1) {
-                    randSetIndex = solver->GetRandomUntouchedSet(clickedLocation);
-                    radicalPerturbs = true;
-                }
-                Point p;
-                if (randSetIndex != -1) {
-                    p.x = solver->Sets[randSetIndex].X();
-                    p.y = solver->Sets[randSetIndex].Y();
-                }
-                else {  /* no usable set found, stop perturbation and generate a new random board */
-                    perturbs = 50;
-                    continue;
-                }
-                int op;
-                if (bombCount < startingMinecount) op = mapBomb; else op = mapNone;
+                bool perturbSuccessful = SlvPerturbSetAt(clickedLocation);
 
-                SlvPerturbSetAt(p, op, radicalPerturbs);
+                /* no usable set found, stop perturbation and generate a new random board */
+                if (!perturbSuccessful)
+                    perturbs = 50;
             }
             else return false;
         }
@@ -633,35 +618,87 @@ bool Sweeper::SlvWingDeductions(Set &s) {
     return false;
 }
 
-void Sweeper::SlvPerturbSetAt(Point &p, int op, bool radicalPerturbs) {
+bool Sweeper::SlvPerturbSetAt(Point& clickedLocation) {
+
+    /* perturb initialization - find out which kind of perturbs to perform and get all
+       necessary coordinates */
+
+    int randSetIndex = solver->GetRandomUnfinishedSet(clickedLocation);
+
+    Point p;
+    if (randSetIndex != -1) {
+        p.x = solver->Sets[randSetIndex].X();
+        p.y = solver->Sets[randSetIndex].Y();
+    }
+    else return false;  /* TODO: hard perturbs */
+
 
     /* note: only the state of uncleared tiles is changed. */
+
+    /* store the coordinates of sets we have changed so we can reset boardstate at the end */
+    std::vector<int> toReset;
+    toReset.push_back(CToI(p));
 
     std::vector<int> neighbors =
             GetNeighborCoords(p, false);
 
-    for (unsigned int j = 0; j < neighbors.size(); j++) {
-        int coord = neighbors[j];
+    std::vector<int> unknownNeighbors;
+    for (unsigned int j = 0; j < neighbors.size(); j++)
+        if (solver->BoardState[neighbors[j]] == boardClean)
+            unknownNeighbors.push_back(neighbors[j]);
 
-        if (radicalPerturbs) {
-            if (map[coord] == mapBomb) {
-                bombCount--;
+    Set &s = solver->Sets[CToI(p)];
+    if (s.UnknownNeighbors() > 1) {
+
+        /* rotate the state of all unknown neighbors in current set */
+
+        int firstValue = -1;
+        for (unsigned int j = 0; j < unknownNeighbors.size(); j++) {
+            int coord = unknownNeighbors[j];
+            int nextCoord = unknownNeighbors[(j + 1) % unknownNeighbors.size()];
+
+            if (j == 0)
+                firstValue = map[coord];
+
+            if (j == unknownNeighbors.size() - 1)
+                map[coord] = firstValue;
+            else
+                map[coord] = map[nextCoord];
+        }
+    }
+    else if (s.UnknownNeighbors() == 1) {
+
+        /* move 1 mine between 2 exposed but unfinished sets */
+
+        int partnerCoord = solver->GetRandomMediumPerturbSet(clickedLocation,p);
+
+        if (partnerCoord == -1)
+            return false;   /* TODO: goto hard perturbs here */
+
+        toReset.push_back(partnerCoord);
+        Point partnerP(partnerCoord % width, partnerCoord / width);
+
+        std::vector<int> partnerNeighbors =
+                GetNeighborCoords(partnerP, false);
+
+        for (unsigned int j = 0; j < partnerNeighbors.size(); j++) {
+            int coord = partnerNeighbors[j];
+            if (solver->BoardState[coord] == boardClean &&
+                map[coord] == mapBomb) {
                 map[coord] = mapNone;
+                break;
             }
-            else {
-                bombCount++;
+        }
+
+        for (unsigned int j = 0; j < unknownNeighbors.size(); j++) {
+            int coord = unknownNeighbors[j];
+
+            if (map[coord] != mapBomb) {
                 map[coord] = mapBomb;
+                break;
             }
         }
-        else {
-            if (solver->BoardState[coord] == boardClean) {
-                if (map[coord] != mapBomb && op == mapBomb)
-                    bombCount++;
-                else if (map[coord] == mapBomb && op == mapNone)
-                    bombCount--;
-                map[coord] = op;
-            }
-        }
+
     }
 
     /* update the map hints */
@@ -671,58 +708,67 @@ void Sweeper::SlvPerturbSetAt(Point &p, int op, bool radicalPerturbs) {
             if (map[CToI(q)] != mapBomb)
                 map[q.y*width + q.x] = CalcBombCount(q);
 
-    /* Reset the board state of all tiles affected by the set. This will be all tiles within 2 spaces of
-       the set's center tile:
 
-       ssat.    S: Set center
-       Ssat.    s: set neighbor
-       ssat.    a: affected tile
-       aaat.    t: todo tile
+    for (unsigned int i = 0; i < toReset.size(); i++) {
 
-       'S', 's', and 'a' tiles need to be: cleared in BoardState[] and reset in Sets[]
-       't' tiles can keep their Exposed/Marked/Clean state, need to be reinitialized,
-           added to the todo list, and have their UnknownNeighbors property updated.
+        /* Reset the board state of all tiles affected by the set. This will be all tiles within 2 spaces of
+           the set's center tile:
 
-    */
+           ssat.    S: Set center
+           Ssat.    s: set neighbor
+           ssat.    a: affected tile
+           aaat.    t: todo tile
 
-    for (int dx = -2; dx <= 2; dx++) {
-        for (int dy = -2; dy <= 2; dy++) {
+           'S', 's', and 'a' tiles need to be: cleared in BoardState[] and reset in Sets[]
+           't' tiles can keep their Exposed/Marked/Clean state, need to be reinitialized,
+               added to the todo list, and have their UnknownNeighbors property updated.
 
-            if (!IsInBounds(p.x + dx, p.y + dy))
-                continue;
+        */
 
-            int coord = CToI(p.x + dx, p.y + dy);
+        int x = toReset[i] % width;
+        int y = toReset[i] / width;
+
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dy = -2; dy <= 2; dy++) {
+
+                if (!IsInBounds(x + dx, y + dy))
+                    continue;
+
+                int coord = CToI(x + dx, y + dy);
 
 
-            /* 'S', 's', 'a' tiles */
-            solver->BoardState[coord] = boardClean;
-            solver->Sets[coord].Reset();
-            solver->Sets[coord].Initialize(p.x + dx, p.y + dy, width, height);
+                /* 'S', 's', 'a' tiles */
+                solver->BoardState[coord] = boardClean;
+                solver->Sets[coord].Reset();
+                solver->Sets[coord].Initialize(x + dx, y + dy, width, height);
+            }
         }
-    }
-    for (int dx = -3; dx <= 3; dx++) {
-        for (int dy = -3; dy <= 3; dy++) {
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dy = -3; dy <= 3; dy++) {
 
-            if (!IsInBounds(p.x + dx, p.y + dy))
-                continue;
+                if (!IsInBounds(x + dx, y + dy))
+                    continue;
 
-            int coord = CToI(p.x + dx, p.y + dy);
+                int coord = CToI(x + dx, y + dy);
 
-            /* update known mines, unknown neighbors, done state */
-            solver->UpdateNrOfNeighbors(p.x + dx, p.y + dy);
+                /* update known mines, unknown neighbors, done state */
+                solver->UpdateNrOfNeighbors(x + dx, y + dy);
 
-            /* and add 't' tiles to todo list */
-            if (abs(dx) == 3 || abs(dy) == 3)
-                solver->TodoSets.insert(coord);
+                /* and add 't' tiles to todo list */
+                if (abs(dx) == 3 || abs(dy) == 3)
+                    solver->TodoSets.insert(coord);
+            }
         }
+
     }
 
 
 #ifdef SOLVERDEBUG
-    std::cout << std::endl << "PERTURB x,y " << p.x << "," << p.y
-            << " OP " << op;
+    std::cout << std::endl << "PERTURB x,y " << p.x << "," << p.y;
     SlvVisualizeStates();
 #endif
+
+    return true;
 }
 
 #ifdef SOLVERDEBUG

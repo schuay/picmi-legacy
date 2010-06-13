@@ -58,6 +58,8 @@ public:
             GetRandomUnfinishedSet(Point &except_here) const;
     int
             GetRandomUntouchedSet(Point &except_here) const;
+    int
+            GetRandomMediumPerturbSet(Point &except_here, Point &and_here) const;
 
     void                    /* called from perturb functions.  */
             UpdateNrOfNeighbors(int x, int y);
