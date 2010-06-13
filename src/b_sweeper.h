@@ -112,7 +112,8 @@ private:
 
     /* BEGIN Solver members */
 
-    int SlvSolve(Point clickedLocation);
+    void SlvSolve(Point clickedLocation);
+    bool SlvTrySolve(Point clickedLocation, bool perturbsAllowed);
     void SlvUpdateSet(int x, int y);
     void SlvMarkAllUnknownInSet(Set &s, int mark);
     void SlvMark(int coord, int mark);

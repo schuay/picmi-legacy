@@ -245,12 +245,14 @@ void Sweeper::DoOpAt(Point &p, int op) {
 
     /* initialize game state depending on click location */
     if (!gameStarted) {
-        RandomPuzzle(p);
         if (solverEnabled) {
             solverThread = thread(&Sweeper::SlvSolve, this, p);
             return;
         }
-        else StartGame();
+        else {
+            RandomPuzzle(p);
+            StartGame();
+        }
     }
 
     int
@@ -392,9 +394,23 @@ void Sweeper::StartGame() {
     timer.Start();
 }
 
-int Sweeper::SlvSolve(Point clickedLocation) {
+void Sweeper::SlvSolve(Point clickedLocation) {
+    do {
+        RandomPuzzle(clickedLocation);
+    }
+    while (!SlvTrySolve(clickedLocation, true));
+
+    /* start game */
+    ExposeTile(clickedLocation);
+    StartGame();
+}
+
+bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
     /* this solver is ported from simon tathams 'mines' */
+
+    /* return values: true on success ( == fully solvable puzzle ),
+                      false on failure */
 
     unique_lock<mutex> lockS(mutexSolverWorking);
     solverWorking = true;
@@ -485,10 +501,21 @@ int Sweeper::SlvSolve(Point clickedLocation) {
             if (SlvGlobalDeductions())
                 continue;
 
-            /* If the board is solved,
-               we are done. */
-            if (solver->Done)
-                break;
+            /* Terminate conditions */
+            if (!perturbsAllowed)
+                /* we are in sanity checking mode, no second changes.
+                   if we can't fully solve the board in one try, return false == failure */
+                return solver->Done;
+
+            else if (solver->Done)
+                /* we are in regular mode. if the board is reported to be solved,
+                   perform a sanity check if we can fully solve the board with no perturbs.
+                   we do this because i'm not sure if perturbs sometimes generate an illogical board:
+                   in turn X, area A is opened because deductions from set 1. in turn Y, set 1 is perturbed
+                   in a way that would have prevented area A being opened in turn X. however, since we don't start
+                   deductions over from the beginning, area A is still opened and we use deductions from area A to
+                   solve the board -> unsolvable puzzle */
+                return SlvTrySolve(clickedLocation, false);
 
 
 
@@ -527,26 +554,7 @@ int Sweeper::SlvSolve(Point clickedLocation) {
 
                 SlvPerturbSetAt(p, op, radicalPerturbs);
             }
-            else {
-                /* With a new random puzzle, we need to start our deductions over. */
-
-#ifdef SOLVERDEBUG
-                randomCount++;
-#endif
-                RandomPuzzle(clickedLocation);
-
-                perturbs = 0;
-
-                solver.reset(new SweepSolver(width, height));
-
-                for (unsigned int i = 0; i < width * height; i++)
-                    solver->OldState[i] = solver->BoardState[i] = boardClean;
-
-                /* recursively expose our initial area */
-                ExposeTile(clickedLocation, solver->BoardState);
-
-                continue;
-            }
+            else return false;
         }
     }
 
@@ -555,12 +563,7 @@ int Sweeper::SlvSolve(Point clickedLocation) {
               << std::endl;
 #endif
 
-
-    /* start game */
-    ExposeTile(clickedLocation);
-    StartGame();
-
-    return 0;
+    return false;
 }
 bool Sweeper::SlvWingDeductions(Set &s) {
 
