@@ -64,11 +64,6 @@ void SweepSolver::UpdateNrOfNeighbors(int x, int y) {
 
     if (Sets[coord].Exposed())
         Sets[coord]._done = false;
-
-#ifdef SOLVERDEBUG
-                std::cout << std::endl << "NROFNEIGHBORS  x,y " << x << "," << y
-                        << ": " << nrOfUnknownNeighbors << "KNOWNMINES: " << nrOfKnownMines;
-#endif
 }
 std::vector<int> SweepSolver::GetOverlappingSets(Set &s) const {
 
@@ -229,15 +224,19 @@ int SweepSolver::GetRandomMediumPerturbSet(Point &except_here, Point &and_here) 
 
     return potentialSets[r];
 }
-int SweepSolver::GetRandomUntouchedSet(Point &except_here) const {
+int SweepSolver::GetRandomUntouchedSet(Point &except_here, Point &and_here) const {
+
+    /* eligible: the set and all of its neighbors are unexposed and unmarked */
 
     std::vector<int> untouchedSets;
 
     for (int x = 0; x < _width; x++) {
         for (int y = 0; y < _height; y++) {
             int coord = y * _width + x;
-            if (!Sets[coord].Exposed() && !Sets[coord].Marked() &&
-                (abs(except_here.x - x) > 2 || abs(except_here.y - y) > 2))
+            Set &s = Sets[coord];
+            if (!s.Exposed() && !s.Marked() && // s._neighbors == s._unknownNeighbors &&
+                (abs(except_here.x - x) > 2 || abs(except_here.y - y) > 2) &&
+                (abs(and_here.x - x) > 2 || abs(and_here.y - y) > 2))
                 untouchedSets.push_back(coord);
         }
     }

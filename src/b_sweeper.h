@@ -122,7 +122,10 @@ private:
     void SlvHandleChangeExposed(int x, int y);
     bool SlvGlobalDeductions();
     bool SlvWingDeductions(Set &s);
-    bool SlvPerturbSetAt(Point& clicked_location);
+    bool SlvPerturbSet(Point& clicked_location);
+    void SlvPerturbRotate(Point &mainP, bool unknownOnly);
+    void SlvPerturbTransfer(Point &mainP, Point &partnerP);
+    void SlvFinalizePerturbs(std::vector<int> &toReset);
     void SlvVisualizeStates() const;
 
     /* does the actual work, sets gameStarted = true, solverWorking = false when done */

@@ -522,9 +522,9 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
 
             /* Otherwise, try making changes to the board (without changing the minecount).
-               After 50 tries, give up and create a new random puzzle */
+               After 100 tries, give up and create a new random puzzle */
 
-            if (perturbs < 50) {
+            if (perturbs < 250) {
 
 #ifdef SOLVERDEBUG
                 perturbCount++;
@@ -533,11 +533,11 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
                 /* perform the actual perturbation on a random unfinished set */
 
-                bool perturbSuccessful = SlvPerturbSetAt(clickedLocation);
+                bool perturbSuccessful = SlvPerturbSet(clickedLocation);
 
                 /* no usable set found, stop perturbation and generate a new random board */
                 if (!perturbSuccessful)
-                    perturbs = 50;
+                    perturbs = 250;
             }
             else return false;
         }
@@ -618,88 +618,130 @@ bool Sweeper::SlvWingDeductions(Set &s) {
     return false;
 }
 
-bool Sweeper::SlvPerturbSetAt(Point& clickedLocation) {
+bool Sweeper::SlvPerturbSet(Point& clickedLocation) {
+
+    int
+            mainSetIndex,
+            partnerSetIndex;
+    Point
+            mainP,
+            partnerP;
+
+
+    /* store the coordinates of sets we have changed so we can reset boardstate at the end */
+    std::vector<int> toReset;
+
 
     /* perturb initialization - find out which kind of perturbs to perform and get all
        necessary coordinates */
 
-    int randSetIndex = solver->GetRandomUnfinishedSet(clickedLocation);
+    mainSetIndex = solver->GetRandomUnfinishedSet(clickedLocation);
 
-    Point p;
-    if (randSetIndex != -1) {
-        p.x = solver->Sets[randSetIndex].X();
-        p.y = solver->Sets[randSetIndex].Y();
+    if (mainSetIndex != -1) {
+
+        mainP.x = solver->Sets[mainSetIndex].X();
+        mainP.y = solver->Sets[mainSetIndex].Y();
+        Set &s = solver->Sets[CToI(mainP)];
+
+        partnerSetIndex = solver->GetRandomMediumPerturbSet(clickedLocation, mainP);
+        if (partnerSetIndex != -1) { /* perturb var #2; do work and exit */
+            partnerP.x = solver->Sets[partnerSetIndex].X();
+            partnerP.y = solver->Sets[partnerSetIndex].Y();
+            toReset.push_back(CToI(mainP));
+            toReset.push_back(CToI(partnerP));
+            SlvPerturbTransfer(mainP, partnerP);
+            SlvFinalizePerturbs(toReset);
+#ifdef SOLVERDEBUG
+            SlvVisualizeStates();
+#endif
+            return true;
+        }
+
+//        if (s.UnknownNeighbors() > 1) { /* perturb var #1; do work and exit*/
+//            toReset.push_back(CToI(mainP));
+//            SlvPerturbRotate(mainP);
+//            SlvFinalizePerturbs(toReset);
+//#ifdef SOLVERDEBUG
+//            SlvVisualizeStates();
+//#endif
+//            return true;
+//        }
     }
-    else return false;  /* TODO: hard perturbs */
 
+    mainSetIndex = solver->GetRandomUntouchedSet(clickedLocation, clickedLocation);
+    if (mainSetIndex != -1) { /* perturb var #3; do work and exit */
+        mainP.x = solver->Sets[mainSetIndex].X();
+        mainP.y = solver->Sets[mainSetIndex].Y();
+        toReset.push_back(CToI(mainP));
+        SlvPerturbRotate(mainP, false);
+        SlvFinalizePerturbs(toReset);
+#ifdef SOLVERDEBUG
+        SlvVisualizeStates();
+#endif
+        return true;
+    }
 
-    /* note: only the state of uncleared tiles is changed. */
-
-    /* store the coordinates of sets we have changed so we can reset boardstate at the end */
-    std::vector<int> toReset;
-    toReset.push_back(CToI(p));
+    return false;
+}
+void Sweeper::SlvPerturbRotate(Point &mainP, bool unknownOnly) {
 
     std::vector<int> neighbors =
-            GetNeighborCoords(p, false);
+            GetNeighborCoords(mainP, false);
+
+    for (std::vector<int>::iterator it = neighbors.begin(); it != neighbors.end(); it++)
+        if (solver->BoardState[*it] != boardClean && unknownOnly)
+            neighbors.erase(it);
+
+    /* rotate the state of all unknown neighbors in current set */
+
+    int firstValue = -1;
+    for (unsigned int j = 0; j < neighbors.size(); j++) {
+        int coord = neighbors[j];
+        int nextCoord = neighbors[(j + 1) % neighbors.size()];
+
+        if (j == 0)
+            firstValue = map[coord];
+
+        if (j == neighbors.size() - 1)
+            map[coord] = firstValue;
+        else
+            map[coord] = map[nextCoord];
+    }
+}
+void Sweeper::SlvPerturbTransfer(Point &mainP, Point &partnerP) {
+
+    std::vector<int> neighbors =
+            GetNeighborCoords(mainP, false);
 
     std::vector<int> unknownNeighbors;
     for (unsigned int j = 0; j < neighbors.size(); j++)
         if (solver->BoardState[neighbors[j]] == boardClean)
             unknownNeighbors.push_back(neighbors[j]);
 
-    Set &s = solver->Sets[CToI(p)];
-    if (s.UnknownNeighbors() > 1) {
+    /* move 1 mine between 2 exposed but unfinished sets */
 
-        /* rotate the state of all unknown neighbors in current set */
+    std::vector<int> partnerNeighbors =
+            GetNeighborCoords(partnerP, false);
 
-        int firstValue = -1;
-        for (unsigned int j = 0; j < unknownNeighbors.size(); j++) {
-            int coord = unknownNeighbors[j];
-            int nextCoord = unknownNeighbors[(j + 1) % unknownNeighbors.size()];
-
-            if (j == 0)
-                firstValue = map[coord];
-
-            if (j == unknownNeighbors.size() - 1)
-                map[coord] = firstValue;
-            else
-                map[coord] = map[nextCoord];
+    for (unsigned int j = 0; j < partnerNeighbors.size(); j++) {
+        int coord = partnerNeighbors[j];
+        if (solver->BoardState[coord] == boardClean &&
+            map[coord] == mapBomb) {
+            map[coord] = mapNone;
+            break;
         }
     }
-    else if (s.UnknownNeighbors() == 1) {
 
-        /* move 1 mine between 2 exposed but unfinished sets */
+    for (unsigned int j = 0; j < unknownNeighbors.size(); j++) {
+        int coord = unknownNeighbors[j];
 
-        int partnerCoord = solver->GetRandomMediumPerturbSet(clickedLocation,p);
-
-        if (partnerCoord == -1)
-            return false;   /* TODO: goto hard perturbs here */
-
-        toReset.push_back(partnerCoord);
-        Point partnerP(partnerCoord % width, partnerCoord / width);
-
-        std::vector<int> partnerNeighbors =
-                GetNeighborCoords(partnerP, false);
-
-        for (unsigned int j = 0; j < partnerNeighbors.size(); j++) {
-            int coord = partnerNeighbors[j];
-            if (solver->BoardState[coord] == boardClean &&
-                map[coord] == mapBomb) {
-                map[coord] = mapNone;
-                break;
-            }
+        if (map[coord] != mapBomb) {
+            map[coord] = mapBomb;
+            break;
         }
-
-        for (unsigned int j = 0; j < unknownNeighbors.size(); j++) {
-            int coord = unknownNeighbors[j];
-
-            if (map[coord] != mapBomb) {
-                map[coord] = mapBomb;
-                break;
-            }
-        }
-
     }
+}
+void Sweeper::SlvFinalizePerturbs(std::vector<int> &toReset) {
 
     /* update the map hints */
     Point q;
@@ -761,14 +803,6 @@ bool Sweeper::SlvPerturbSetAt(Point& clickedLocation) {
         }
 
     }
-
-
-#ifdef SOLVERDEBUG
-    std::cout << std::endl << "PERTURB x,y " << p.x << "," << p.y;
-    SlvVisualizeStates();
-#endif
-
-    return true;
 }
 
 #ifdef SOLVERDEBUG

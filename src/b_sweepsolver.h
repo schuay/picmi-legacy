@@ -57,7 +57,7 @@ public:
     int
             GetRandomUnfinishedSet(Point &except_here) const;
     int
-            GetRandomUntouchedSet(Point &except_here) const;
+            GetRandomUntouchedSet(Point &except_here, Point &and_here) const;
     int
             GetRandomMediumPerturbSet(Point &except_here, Point &and_here) const;
 
@@ -89,6 +89,7 @@ public:
         _x = 0;
         _y = 0;
         _unknownNeighbors = 8;
+        _neighbors = 8;
         _knownMines = 0;
         _totalMines = 0;
         _exposed = false;
@@ -157,18 +158,19 @@ public:
 
     void Initialize(int x, int y, int width, int height) {
 
-        int unknownNeighbors = 8;
+        int neighbors = 8;
 
         if ((x == 0 && y == 0) ||
             (x == width - 1 && y == height - 1))
-            unknownNeighbors -= 5;
+            neighbors -= 5;
         else if (x == 0 || y == 0 ||
                  x == width - 1 || y == height - 1)
-            unknownNeighbors -= 3;
+            neighbors -= 3;
 
         _x = x;
         _y = y;
-        _unknownNeighbors = unknownNeighbors;
+        _neighbors = neighbors;
+        _unknownNeighbors = neighbors;
     }
 
 private:
@@ -176,6 +178,7 @@ private:
     unsigned int
             _x,                  /* Position of current set */
             _y,
+            _neighbors,
             _unknownNeighbors,   /* Nr of unknown neighbor tiles surrounding current set.
                                    (= Nr of neighbors ::3 in corner, 5 at side, 8 everywhere else::
                                        - Nr of marked or exposed neighbors ) */
