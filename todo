@@ -1,3 +1,0 @@
-highscores are broken because they depend on the exact minecount. makethem depend on requested 
-minecount instead.
-clean up solver code..
