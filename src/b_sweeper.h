@@ -127,6 +127,7 @@ private:
     void SlvPerturbTransfer(Point &mainP, Point &partnerP);
     void SlvFinalizePerturbs(std::vector<int> &toReset);
     void SlvVisualizeStates() const;
+    void SlvAssertCorrectState() const;
 
     /* does the actual work, sets gameStarted = true, solverWorking = false when done */
     thread solverThread;

@@ -60,10 +60,11 @@ void SweepSolver::UpdateNrOfNeighbors(int x, int y) {
     int coord = y * _width + x;
 
     Sets[coord]._unknownNeighbors = nrOfUnknownNeighbors;
-    Sets[coord]._knownMines = nrOfKnownMines;
 
-    if (Sets[coord].Exposed())
+    if (Sets[coord].Exposed()) {
         Sets[coord]._done = false;
+        Sets[coord]._knownMines = nrOfKnownMines;
+    }
 }
 std::vector<int> SweepSolver::GetOverlappingSets(Set &s) const {
 

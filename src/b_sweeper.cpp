@@ -446,6 +446,9 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
         /* update solver state -> create and update sets, fill todo list */
         SlvUpdateSolverState();
+#ifdef SOLVERDEBUG
+        SlvAssertCorrectState();
+#endif
 
 
         /* pick the first set off the todo list and run deductions based on it */
@@ -641,7 +644,6 @@ bool Sweeper::SlvPerturbSet(Point& clickedLocation) {
 
         mainP.x = solver->Sets[mainSetIndex].X();
         mainP.y = solver->Sets[mainSetIndex].Y();
-        Set &s = solver->Sets[CToI(mainP)];
 
         partnerSetIndex = solver->GetRandomMediumPerturbSet(clickedLocation, mainP);
         if (partnerSetIndex != -1) { /* perturb var #2; do work and exit */
@@ -694,10 +696,14 @@ void Sweeper::SlvPerturbRotate(Point &mainP, bool unknownOnly) {
 
     /* rotate the state of all unknown neighbors in current set */
 
-    int firstValue = -1;
+    int
+            firstValue = -1,
+            coord,
+            nextCoord;
+
     for (unsigned int j = 0; j < neighbors.size(); j++) {
-        int coord = neighbors[j];
-        int nextCoord = neighbors[(j + 1) % neighbors.size()];
+        coord = neighbors[j];
+        nextCoord = neighbors[(j + 1) % neighbors.size()];
 
         if (j == 0)
             firstValue = map[coord];
@@ -707,6 +713,11 @@ void Sweeper::SlvPerturbRotate(Point &mainP, bool unknownOnly) {
         else
             map[coord] = map[nextCoord];
     }
+
+
+#ifdef SOLVERDEBUG
+        std::cout << std::endl << "PERTURB ROTATE: " << mainP.y * width + mainP.x << std::endl;
+#endif
 }
 void Sweeper::SlvPerturbTransfer(Point &mainP, Point &partnerP) {
 
@@ -728,6 +739,9 @@ void Sweeper::SlvPerturbTransfer(Point &mainP, Point &partnerP) {
         if (solver->BoardState[coord] == boardClean &&
             map[coord] == mapBomb) {
             map[coord] = mapNone;
+#ifdef SOLVERDEBUG
+            std::cout << std::endl << "PERTURB TRANSFER FROM: " << coord;
+#endif
             break;
         }
     }
@@ -737,6 +751,9 @@ void Sweeper::SlvPerturbTransfer(Point &mainP, Point &partnerP) {
 
         if (map[coord] != mapBomb) {
             map[coord] = mapBomb;
+#ifdef SOLVERDEBUG
+            std::cout << " TO: " << coord;
+#endif
             break;
         }
     }
@@ -752,6 +769,11 @@ void Sweeper::SlvFinalizePerturbs(std::vector<int> &toReset) {
 
 
     for (unsigned int i = 0; i < toReset.size(); i++) {
+
+
+#ifdef SOLVERDEBUG
+        std::cout << std::endl << "PERTURB FINALIZE : " << toReset[i] << std::endl;
+#endif
 
         /* Reset the board state of all tiles affected by the set. This will be all tiles within 2 spaces of
            the set's center tile:
@@ -806,6 +828,45 @@ void Sweeper::SlvFinalizePerturbs(std::vector<int> &toReset) {
 }
 
 #ifdef SOLVERDEBUG
+void Sweeper::SlvAssertCorrectState() const {
+
+    Point p;
+
+    for (p.y = 0; p.y < height; p.y++) {
+        for (p.x = 0; p.x < width; p.x++) {
+
+
+            Set &s = solver->Sets[CToI(p.x, p.y)];
+            std::vector<int> neighbors =
+                    GetNeighborCoords(p, false);
+
+            if (s.Marked()) continue;
+
+            unsigned int
+                    unknownNeighbors = neighbors.size(),
+                    unknownMines = map[CToI(p.x, p.y)];
+
+            if (unknownMines > 8 || unknownMines < 0) unknownMines = 0;
+
+            for (unsigned int i = 0; i < neighbors.size(); i++) {
+                int coord = neighbors[i];
+
+                if (solver->Sets[coord].Exposed())
+                    unknownNeighbors--;
+                else if (solver->Sets[coord].Marked()) {
+                    unknownMines--;
+                    unknownNeighbors--;
+                }
+            }
+
+            if (!s.Exposed()) unknownMines = 0;
+
+            if (unknownMines != s.UnknownMines() ||
+                unknownNeighbors != s.UnknownNeighbors())
+                std::cout << std::endl << "ERROR: incorrect stats at " << p.x << "," << p.y;
+        }
+    }
+}
 void Sweeper::SlvVisualizeStates() const {
 
     int state;
@@ -998,7 +1059,7 @@ void Sweeper::SlvUpdateSet(int x, int y) {
 
         solver->TodoSets.insert(CToI(x,y));
 #ifdef SOLVERDEBUG
-        std::cout << std::endl << "a. TODO x,y: " << x << "," << y << std::endl;
+        std::cout << std::endl << "c. TODO x,y: " << x << "," << y << std::endl;
 #endif
     }
 }

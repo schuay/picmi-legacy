@@ -160,11 +160,11 @@ public:
 
         int neighbors = 8;
 
-        if ((x == 0 && y == 0) ||
-            (x == width - 1 && y == height - 1))
+        if ((x % (width - 1) == 0) &&
+            (y % (height- 1) == 0))
             neighbors -= 5;
-        else if (x == 0 || y == 0 ||
-                 x == width - 1 || y == height - 1)
+        else if ((x % (width - 1) == 0) ||
+                 (y % (height- 1) == 0))
             neighbors -= 3;
 
         _x = x;
