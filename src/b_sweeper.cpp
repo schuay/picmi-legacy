@@ -419,8 +419,8 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
     int perturbs = 0;
 
+    /* initialize our solver object */
     solver.reset(new SweepSolver(width, height));
-
     for (unsigned int i = 0; i < width * height; i++)
         solver->OldState[i] = solver->BoardState[i] = boardClean;
 
@@ -458,12 +458,13 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
             Set &s = solver->Sets[*it];
             solver->TodoSets.erase(it);
 
-            /* skip completed sets */
-            if (s.Done())
-                continue;
 
             /* skip unexposed sets */
             if (!s.Exposed())
+                continue;
+
+            /* skip completed sets */
+            if (s.Done())
                 continue;
 
 #ifdef SOLVERDEBUG
@@ -525,7 +526,7 @@ bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
 
 
             /* Otherwise, try making changes to the board (without changing the minecount).
-               After 100 tries, give up and create a new random puzzle */
+               After x tries, give up and create a new random puzzle */
 
             if (perturbs < 250) {
 

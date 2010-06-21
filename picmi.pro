@@ -4,7 +4,7 @@
 TARGET = picmi
 QT += xml
 TEMPLATE = app
-DEFINES += SOLVERDEBUG
+#DEFINES += SOLVERDEBUG
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
     src/b_picstreak.cpp \
