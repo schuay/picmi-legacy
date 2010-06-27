@@ -4,7 +4,8 @@
 TARGET = picmi
 QT += xml
 TEMPLATE = app
-#DEFINES += SOLVERDEBUG
+
+# DEFINES += SOLVERDEBUG
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
     src/b_picstreak.cpp \
@@ -30,7 +31,11 @@ SOURCES += src/f_main.cpp \
     src/b_sweepstatselement.cpp \
     src/b_picstatselement.cpp \
     src/f_qthelp.cpp \
-    src/b_sweepsolver.cpp
+    src/b_sweepsolver.cpp \
+    src/b_tetris.cpp \
+    src/b_tetrispiece.cpp \
+    src/b_tetrisinputhandler.cpp \
+    src/b_tetrispainter.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -60,7 +65,12 @@ HEADERS += src/b_picross.h \
     src/b_picstatselement.h \
     src/b_statscollection.h \
     src/f_qthelp.h \
-    src/b_sweepsolver.h
+    src/b_sweepsolver.h \
+    src/b_tetris.h \
+    src/b_tetrisdefines.h \
+    src/b_tetrispiece.h \
+    src/b_tetrisinputhandler.h \
+    src/b_tetrispainter.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \
