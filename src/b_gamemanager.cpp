@@ -89,6 +89,12 @@ void GameManager::Initialize(BoardSettings &s) {
         painter = new SweepPainter(game, s);
         inputhandler = new SweepInputHandler(game);
     }
+    else if (s.GameType == GT_TETRIS) {
+        game = new Tetris(s);
+        painter = new TetrisPainter(game, s);
+        inputhandler = new TetrisInputHandler(game);
+
+    }
 }
 
 GameManager::GameManager() {

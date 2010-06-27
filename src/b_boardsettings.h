@@ -65,7 +65,13 @@ private:
     void HandleConfLine(const std::string line);
 
     void SetDefaultValues();
-    static std::string TypeToStr(GameTypeEnum t) { if (t == GT_PICROSS) return "picross"; else return "minesweeper"; }
+    static std::string TypeToStr(GameTypeEnum t) {
+        switch (t) {
+        case GT_PICROSS: return "picross";
+        case GT_MINESWEEPER: return "minesweeper";
+        case GT_TETRIS: return "tetris";
+        }
+    }
 
     std::string
             basePath,

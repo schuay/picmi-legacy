@@ -30,9 +30,13 @@ namespace BoardGame {
 class TetrisInputHandler : public InputHandler
 {
 public:
-    TetrisInputHandler();
+    TetrisInputHandler(BoardGame *p);
 
     void HandleInput();
+
+private:
+
+    Tetris *game;
 };
 
 }

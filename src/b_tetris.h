@@ -27,6 +27,7 @@
 #include <queue>
 
 #include "b_boardgame.h"
+#include "b_boardsettings.h"
 #include "b_tetrispiece.h"
 #include "b_tetrisdefines.h"
 
@@ -39,8 +40,7 @@ namespace BoardGame {
 class Tetris : public BoardGame
 {
 public:
-    Tetris();
-
+    Tetris(BoardSettings &s);
 
 
     /* virtual members of BoardGame */
@@ -71,6 +71,9 @@ private:
 
     shared_ptr<TetrisPiece>
             currentPiece;
+
+    static const unsigned int
+            stagingAreaHeight = 4;
 };
 
 }

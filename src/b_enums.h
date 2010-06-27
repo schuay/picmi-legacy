@@ -43,7 +43,8 @@ enum TextJustifyEnum {
 
 enum GameTypeEnum {
     GT_PICROSS,
-    GT_MINESWEEPER
+    GT_MINESWEEPER,
+    GT_TETRIS
 };
 
 enum GameResolutionEnum {

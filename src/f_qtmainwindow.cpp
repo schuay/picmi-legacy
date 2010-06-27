@@ -47,15 +47,19 @@ QTMainWindow::QTMainWindow(QWidget *parent) :
     connect(ui->bSettings, SIGNAL(clicked()), this, SLOT(showSettings()));
     connect(ui->bHelp, SIGNAL(clicked()), this, SLOT(showHelp()));
     connect(ui->rbPicross, SIGNAL(toggled(bool)), this, SLOT(gameTypeToogled()));
+    connect(ui->rbMinesweeper, SIGNAL(toggled(bool)), this, SLOT(gameTypeToogled()));
+    connect(ui->rbTetris, SIGNAL(toggled(bool)), this, SLOT(gameTypeToogled()));
     connect(&t, SIGNAL(finished()), this, SLOT(unlockGui()));
     connect(&t, SIGNAL(ExceptionThrown(QString)), this, SLOT(displayException(QString)));
 
     /* set game preview images */
     QImage srcPicross(      FILEPREFIX "gfx/scr_picross.png");
     QImage srcMinesweeper(  FILEPREFIX "gfx/scr_minesweeper.png");
+    QImage srcTetris(  FILEPREFIX "gfx/scr_tetris.png");
 
     ui->lPicross->setPixmap(QPixmap::fromImage(srcPicross));
     ui->lMinesweeper->setPixmap(QPixmap::fromImage(srcMinesweeper));
+    ui->lTetris->setPixmap(QPixmap::fromImage(srcTetris));
 
     gameType = GT_PICROSS;
 }
@@ -78,19 +82,27 @@ void QTMainWindow::changeEvent(QEvent *e)
 }
 
 void QTMainWindow::gameTypeToogled() {
-    bool picrossEnabled;
+    bool
+            picrossEnabled = false,
+            minesweeperEnabled = false,
+            tetrisEnabled = false;
 
     if (ui->rbPicross->isChecked()) {
         picrossEnabled = true;
         gameType = GT_PICROSS;
     }
-    else {
-        picrossEnabled = false;
+    else if (ui->rbMinesweeper->isChecked()) {
+        minesweeperEnabled = true;
         gameType = GT_MINESWEEPER;
+    }
+    else {
+        tetrisEnabled = true;
+        gameType = GT_TETRIS;
     }
 
     ui->lPicross->setEnabled(picrossEnabled);
-    ui->lMinesweeper->setEnabled(!picrossEnabled);
+    ui->lMinesweeper->setEnabled(minesweeperEnabled);
+    ui->lTetris->setEnabled(tetrisEnabled);
 }
 
 void QTMainWindow::quit() {

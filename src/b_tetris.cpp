@@ -23,10 +23,10 @@
 
 namespace BoardGame {
 
-Tetris::Tetris()
+Tetris::Tetris(BoardSettings &s)
 {
-    width = 10;
-    height = 20 + 4;    /* 20 real height, 4 invisible staging area */
+    width = s.x;
+    height = s.y + stagingAreaHeight;
 
     /* initialize field */
     boardState.reset(new unsigned int[width * height]);

@@ -27,9 +27,15 @@
 #include "b_sweeper.h"
 #include "b_sweeppainter.h"
 #include "b_sweepinputhandler.h"
+
 #include "b_picinputhandler.h"
 #include "b_picross.h"
 #include "b_picpainter.h"
+
+#include "b_tetris.h"
+#include "b_tetrispainter.h"
+#include "b_tetrisinputhandler.h"
+
 #include "b_statsmanager.h"
 
 namespace BoardGame {

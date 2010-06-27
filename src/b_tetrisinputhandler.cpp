@@ -23,8 +23,11 @@
 
 namespace BoardGame {
 
-TetrisInputHandler::TetrisInputHandler()
+TetrisInputHandler::TetrisInputHandler(BoardGame *p)
 {
+    game = dynamic_cast<Tetris*>(p);
+    if (!game)
+        throw Exception("Game object not set");
 }
 
 void TetrisInputHandler::HandleInput() {

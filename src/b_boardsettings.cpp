@@ -58,6 +58,17 @@ void BoardSettings::SetDefaultValues() {
         x = 20;
         y = 20;
     }
+    else if (GameType == GT_TETRIS) {
+        Map = "";
+        BackgroundPath = "";
+
+        Difficulty = 20;
+
+        NoHintsMode = false;
+
+        x = 10;
+        y = 20;
+    }
 }
 
 bool BoardSettings::Validate() const {

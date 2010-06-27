@@ -23,14 +23,20 @@
 
 namespace BoardGame {
 
-TetrisPainter::TetrisPainter()
+TetrisPainter::TetrisPainter(BoardGame *p, BoardSettings &s)
 {
+    game = dynamic_cast<Tetris*>(p);
+    if (!game)
+        throw Exception("Game object not set");
 }
 
 void TetrisPainter::Paint() {
     /* TODO */
 }
 std::string TetrisPainter::GetGameOverText(StatsCollection c) {
+    /* TODO */
+}
+void TetrisPainter::LoadSprites() {
     /* TODO */
 }
 

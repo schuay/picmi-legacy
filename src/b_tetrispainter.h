@@ -30,13 +30,16 @@ namespace BoardGame {
 class TetrisPainter : public Painter
 {
 public:
-    TetrisPainter();
+    TetrisPainter(BoardGame *p, BoardSettings &s);
 
     void Paint();
 
 protected:
 
     std::string GetGameOverText(StatsCollection c);
+    void LoadSprites();
+
+    Tetris *game;
 };
 
 }
