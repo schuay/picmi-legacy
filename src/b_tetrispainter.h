@@ -37,9 +37,22 @@ public:
 protected:
 
     std::string GetGameOverText(StatsCollection c);
+
+    void InitSystems();
     void LoadSprites();
 
     Tetris *game;
+
+    SDLSprite
+            sprIcon,
+            sprBackgroundTile,
+            sprITile,
+            sprJTile,
+            sprLTile,
+            sprOTile,
+            sprSTile,
+            sprTTile,
+            sprZTile;
 };
 
 }

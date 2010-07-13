@@ -23,10 +23,13 @@
 
 namespace BoardGame {
 
-Tetris::Tetris(BoardSettings &s)
+Tetris::Tetris(BoardSettings &s) : BoardGame()
 {
     width = s.x;
     height = s.y + stagingAreaHeight;
+
+    puzzleLocation.x = 20;
+    puzzleLocation.y = 20;
 
     /* initialize field */
     boardState.reset(new unsigned int[width * height]);

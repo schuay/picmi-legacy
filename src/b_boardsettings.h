@@ -70,6 +70,7 @@ private:
         case GT_PICROSS: return "picross";
         case GT_MINESWEEPER: return "minesweeper";
         case GT_TETRIS: return "tetris";
+        default: throw Exception("Invalid game type specified.");
         }
     }
 
