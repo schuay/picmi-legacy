@@ -11,7 +11,7 @@ At compile time:
 sdl_gfx, sdl_image, sdl_ttf, qt, boost
 
 At run time:
-sdl_gfx, sdl_image, sdl_ttf, qt
+sdl_gfx, sdl_image, sdl_ttf, qt, boost-thread
 
 
 The default installation directories are
@@ -19,22 +19,34 @@ The default installation directories are
 /usr/share/picmi        (gfx)
 /usr/bin                (executable)
 /usr/share/applications (.desktop file)
-
+~/.config/picmi/	(user configurations and highscores, created at runtime)
 
 
 Installation from AUR (Archlinux)
 -------------------
+
+Install using your favorite AUR helper or manually with wget && makepkg && pacman -U.
 
 Package Name: picmi
 URL: http://aur.archlinux.org/packages.php?ID=36179
 
 
 
-Installation on Ubuntu (and other Debian derivatives)
+Installation on Ubuntu
 -------------------
 
-Download and install the newest .deb from http://github.com/schuay/picmi/downloads.
+Packages are now available from my personal package archive, located at
 
+ppa:jakob-gruber/picmi
+
+To install, open a terminal and enter:
+
+sudo add-apt-repository ppa:jakob-gruber/picmi
+sudo apt-get update
+sudo apt-get install picmi
+
+For more information on adding ppas to your source list, 
+see https://launchpad.net/+help/soyuz/ppa-sources-list.html
 
 
 Manual Installation (easier but less customizable)
