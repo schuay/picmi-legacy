@@ -22,6 +22,8 @@
 #ifndef B_TETRISINPUTHANDLER_H
 #define B_TETRISINPUTHANDLER_H
 
+#include <SDL/SDL.h>
+
 #include "b_inputhandler.h"
 #include "b_tetris.h"
 

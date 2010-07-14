@@ -30,8 +30,72 @@ TetrisInputHandler::TetrisInputHandler(BoardGame *p)
         throw Exception("Game object not set");
 }
 
+/*  Implement custom key repeats here (use key pressed instead of key down event and check
+    the amount of time passed since last action was taken).
+ */
+
 void TetrisInputHandler::HandleInput() {
-    /* TODO */
+    SDL_Event ev;
+
+    while (SDL_PollEvent(&ev) == 1) {
+        int dx = 0, op = OP_NONE;
+
+        /* get input... */
+
+        switch (ev.type) {
+        case SDL_KEYDOWN:
+            switch (ev.key.keysym.sym) {
+            case SDLK_ESCAPE:
+                game->SetResolution(GR_ABORTED);
+                break;
+            case SDLK_p:
+                game->SetPaused(!game->GetPaused());
+                break;
+            case SDLK_KP4:
+            case SDLK_h:
+            case SDLK_LEFT:
+                dx = -1;
+                break;
+            case SDLK_KP6:
+            case SDLK_l:
+            case SDLK_RIGHT:
+                dx = 1;
+                break;
+            case SDLK_KP8:
+            case SDLK_k:
+            case SDLK_UP:
+                op = T_OP_DROPDOWN;
+                break;
+            case SDLK_KP2:
+            case SDLK_j:
+            case SDLK_DOWN:
+                op = T_OP_STEPDOWN;
+                break;
+            case SDLK_x:
+                op = T_OP_ROTATELEFT;
+                break;
+            case SDLK_c:
+                op = T_OP_ROTATERIGHT;
+                break;
+            default:
+                break;
+            }
+            break;
+        case SDL_QUIT:
+            game->SetResolution(GR_ABORTED);
+            break;
+        default:
+            break;
+        }
+
+        /* perform actual logic... */
+
+        if (dx)
+            game->TrySetLocationRel(dx, 0);
+
+        if (op != OP_NONE)
+            game->DoOp(op);
+    }
 }
 
 }
