@@ -31,9 +31,12 @@
 #define T_BOARD_T             6
 #define T_BOARD_NONE          7
 
-#define T_OP_ROTATELEFT       0
-#define T_OP_ROTATERIGHT      1
-#define T_OP_STEPDOWN         2
-#define T_OP_DROPDOWN         3
+#define T_OP_NONE             0
+#define T_OP_ROTATELEFT       1
+#define T_OP_ROTATERIGHT      2
+#define T_OP_STEPDOWN         3
+#define T_OP_DROPDOWN         4
+#define T_OP_MOVELEFT         5
+#define T_OP_MOVERIGHT        6
 
 #endif // B_TETRISDEFINES_H

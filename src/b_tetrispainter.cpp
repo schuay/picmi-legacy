@@ -90,23 +90,7 @@ void TetrisPainter::PaintInfoArea() {
             /* cell frame */
             sprBackgroundTile.Blit(screen, p);
 
-            /* tile states */
-            int state = game->GetStateAt(q);
-
-            if (state == T_BOARD_I)
-                sprITile.Blit(screen, p);
-            else if (state == T_BOARD_J)
-                sprJTile.Blit(screen, p);
-            else if (state == T_BOARD_L)
-                sprLTile.Blit(screen, p);
-            else if (state == T_BOARD_O)
-                sprOTile.Blit(screen, p);
-            else if (state == T_BOARD_S)
-                sprSTile.Blit(screen, p);
-            else if (state == T_BOARD_T)
-                sprTTile.Blit(screen, p);
-            else if (state == T_BOARD_Z)
-                sprZTile.Blit(screen, p);
+            /* painting next piece: TODO */
         }
     }
 }

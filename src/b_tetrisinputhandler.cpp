@@ -38,7 +38,7 @@ void TetrisInputHandler::HandleInput() {
     SDL_Event ev;
 
     while (SDL_PollEvent(&ev) == 1) {
-        int dx = 0, op = OP_NONE;
+        int op = T_OP_NONE;
 
         /* get input... */
 
@@ -54,12 +54,12 @@ void TetrisInputHandler::HandleInput() {
             case SDLK_KP4:
             case SDLK_h:
             case SDLK_LEFT:
-                dx = -1;
+                op = T_OP_MOVELEFT;
                 break;
             case SDLK_KP6:
             case SDLK_l:
             case SDLK_RIGHT:
-                dx = 1;
+                op = T_OP_MOVERIGHT;
                 break;
             case SDLK_KP8:
             case SDLK_k:
@@ -90,10 +90,7 @@ void TetrisInputHandler::HandleInput() {
 
         /* perform actual logic... */
 
-        if (dx)
-            game->TrySetLocationRel(dx, 0);
-
-        if (op != OP_NONE)
+        if (op != T_OP_NONE)
             game->DoOp(op);
     }
 }

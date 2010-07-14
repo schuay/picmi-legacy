@@ -23,8 +23,11 @@
 
 namespace BoardGame {
 
-TetrisPiece::TetrisPiece()
+TetrisPiece::TetrisPiece(int x, int y)
 {
+    _currentX = x - _arraySize / 2;
+    _currentY = y;
+
     _shape = rand() % T_BOARD_NONE;
 
     /* init state array */
@@ -85,12 +88,40 @@ TetrisPiece::TetrisPiece()
         RotateClockwise();
 }
 
-bool TetrisPiece::GetStateAt(unsigned int x, unsigned int y) const {
+bool TetrisPiece::IsCovering(unsigned int x, unsigned int y) const {
+
+    /* convert board to piece coordinates */
+
+    x -= _currentX;
+    y -= _currentY;
+
+    /* and check if the piece is covering specified coord */
 
     if (x >= _arraySize || y >= _arraySize)
-        throw Exception("Out of bounds.");
+        return false;
 
     return _state[x][y];
+}
+
+void TetrisPiece::Move(MovementDirectionEnum dir) {
+
+    switch (dir) {
+    case MD_DOWN:
+        _currentY++;
+        break;
+    case MD_UP:
+        _currentY--;
+        break;
+    case MD_LEFT:
+        _currentX--;
+        break;
+    case MD_RIGHT:
+        _currentX++;
+        break;
+    default:
+        break;
+    }
+
 }
 
 void TetrisPiece::RotateClockwise() {

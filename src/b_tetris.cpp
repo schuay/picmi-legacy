@@ -37,7 +37,7 @@ Tetris::Tetris(BoardSettings &s) : BoardGame()
     for (unsigned int i = 0; i < width * height; i++)
         boardState[i] = T_BOARD_NONE;
 
-    currentPiece.reset(new TetrisPiece());
+    currentPiece.reset(new TetrisPiece(width / 2, 0));
 }
 
 bool Tetris::GameWon() {
@@ -58,11 +58,42 @@ int Tetris::GetStateAt(unsigned int x, unsigned int y) const {
     if (!IsInBounds(x, y))
         throw Exception("GetStateAt failed: Point not within board dimensions.");
 
-    return boardState[CToI(x, y)];
+    if (currentPiece->IsCovering(x, y))
+        return currentPiece->GetShape();
+    else
+        return boardState[CToI(x, y)];
 }
 
 void Tetris::DoOp(int op) {
-    /* TODO */
+
+    if (paused)
+        return;
+
+    if (op == T_OP_NONE)
+        return;
+
+    switch (op) {
+    case T_OP_ROTATELEFT:
+        currentPiece->RotateCounterclockwise();
+        break;
+    case T_OP_ROTATERIGHT:
+        currentPiece->RotateClockwise();
+        break;
+    case T_OP_MOVELEFT:
+        currentPiece->Move(MD_LEFT);
+        break;
+    case T_OP_MOVERIGHT:
+        currentPiece->Move(MD_RIGHT);
+        break;
+    case T_OP_STEPDOWN:
+        currentPiece->Move(MD_DOWN);
+        break;
+    case T_OP_DROPDOWN:
+        /* TODO */
+        break;
+    default:
+        break;
+    }
 }
 
 shared_ptr<StatsElement> Tetris::GetStats() const {

@@ -24,6 +24,7 @@
 
 #include <cstdlib>
 
+#include "b_enums.h"
 #include "b_exception.h"
 #include "b_tetrisdefines.h"
 
@@ -32,15 +33,25 @@ namespace BoardGame {
 class TetrisPiece
 {
 public:
-    TetrisPiece();
+    TetrisPiece(int x, int y);
 
     int GetShape() const { return _shape; }
-    bool GetStateAt(unsigned int x, unsigned int y) const;
+
+    /* x and y are in BOARD coordinates. if the piece covers the specified coord,
+       return true, else false */
+    bool IsCovering(unsigned int x, unsigned int y) const;
 
     void RotateClockwise();
     void RotateCounterclockwise();
 
+    void Move(MovementDirectionEnum dir);
+
 private:
+
+    /* location of left upper corner in board coordinates */
+    int
+            _currentX,
+            _currentY;
 
     static const unsigned int _arraySize = 4;
 

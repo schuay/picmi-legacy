@@ -54,4 +54,11 @@ enum GameResolutionEnum {
     GR_WON
 };
 
+enum MovementDirectionEnum {
+    MD_LEFT,
+    MD_RIGHT,
+    MD_DOWN,
+    MD_UP
+};
+
 #endif // B_ENUMS_H
