@@ -34,7 +34,7 @@ Tetris::Tetris(BoardSettings &s) : BoardGame()
     /* initialize field */
     boardState.reset(new unsigned int[width * height]);
     for (unsigned int i = 0; i < width * height; i++)
-        boardState[i] = BOARD_NONE;
+        boardState[i] = T_BOARD_NONE;
 }
 
 bool Tetris::GameWon() {

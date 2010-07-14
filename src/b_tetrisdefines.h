@@ -22,18 +22,18 @@
 #ifndef B_TETRISDEFINES_H
 #define B_TETRISDEFINES_H
 
-#define BOARD_NONE          0
-#define BOARD_I             1
-#define BOARD_J             2
-#define BOARD_L             3
-#define BOARD_O             4
-#define BOARD_S             5
-#define BOARD_T             6
-#define BOARD_Z             7
+#define T_BOARD_NONE          0
+#define T_BOARD_I             1
+#define T_BOARD_J             2
+#define T_BOARD_L             3
+#define T_BOARD_O             4
+#define T_BOARD_S             5
+#define T_BOARD_T             6
+#define T_BOARD_Z             7
 
-#define OP_ROTATELEFT       0
-#define OP_ROTATERIGHT      1
-#define OP_STEPDOWN         2
-#define OP_DROPDOWN         3
+#define T_OP_ROTATELEFT       0
+#define T_OP_ROTATERIGHT      1
+#define T_OP_STEPDOWN         2
+#define T_OP_DROPDOWN         3
 
 #endif // B_TETRISDEFINES_H
