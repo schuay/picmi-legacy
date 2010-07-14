@@ -22,10 +22,32 @@
 #ifndef B_TETRISPIECE_H
 #define B_TETRISPIECE_H
 
+#include <cstdlib>
+
+#include "b_exception.h"
+#include "b_tetrisdefines.h"
+
+namespace BoardGame {
+
 class TetrisPiece
 {
 public:
     TetrisPiece();
+
+    int GetShape() const { return _shape; }
+    bool GetStateAt(unsigned int x, unsigned int y) const;
+
+    void RotateClockwise();
+    void RotateCounterclockwise();
+
+private:
+
+    static const unsigned int _arraySize = 4;
+
+    int _shape;
+    bool _state[_arraySize][_arraySize];
 };
+
+}
 
 #endif // B_TETRISPIECE_H

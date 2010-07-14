@@ -21,6 +21,95 @@
 
 #include "b_tetrispiece.h"
 
+namespace BoardGame {
+
 TetrisPiece::TetrisPiece()
 {
+    _shape = rand() % T_BOARD_NONE;
+
+    /* init state array */
+
+    switch (_shape) {
+    case T_BOARD_I:
+        _state = { { 0, 1, 0, 0},
+                   { 0, 1, 0, 0},
+                   { 0, 1, 0, 0},
+                   { 0, 1, 0, 0} };
+        break;
+    case T_BOARD_J:
+        _state = { { 0, 0, 0, 0},
+                   { 0, 0, 1, 0},
+                   { 0, 0, 1, 0},
+                   { 0, 1, 1, 0} };
+        break;
+    case T_BOARD_L:
+        _state = { { 0, 0, 0, 0},
+                   { 0, 1, 0, 0},
+                   { 0, 1, 0, 0},
+                   { 0, 1, 1, 0} };
+        break;
+    case T_BOARD_O:
+        _state = { { 0, 0, 0, 0},
+                   { 0, 0, 0, 0},
+                   { 0, 1, 1, 0},
+                   { 0, 1, 1, 0} };
+        break;
+    case T_BOARD_S:
+        _state = { { 0, 0, 0, 0},
+                   { 0, 1, 0, 0},
+                   { 0, 1, 1, 0},
+                   { 0, 0, 1, 0} };
+        break;
+    case T_BOARD_T:
+        _state = { { 0, 0, 0, 0},
+                   { 0, 0, 0, 0},
+                   { 0, 0, 1, 0},
+                   { 0, 1, 1, 1} };
+        break;
+    case T_BOARD_Z:
+        _state = { { 0, 0, 0, 0},
+                   { 0, 0, 1, 0},
+                   { 0, 1, 1, 0},
+                   { 0, 1, 0, 0} };
+        break;
+    default:
+        throw Exception("Invalid shape selected.");
+    }
+
+
+    /* determine random rotation */
+
+    int rotation = rand() % 4;
+
+    for (int i = 0; i < rotation; i++)
+        RotateClockwise();
+}
+
+bool TetrisPiece::GetStateAt(unsigned int x, unsigned int y) const {
+
+    if (x >= _arraySize || y >= _arraySize)
+        throw Exception("Out of bounds.");
+
+    return _state[x][y];
+}
+
+void TetrisPiece::RotateClockwise() {
+
+    int rotatedState[_arraySize][_arraySize];
+
+    for (unsigned int i = 0; i < _arraySize; i++)
+        for (unsigned int j = 0; j < _arraySize; j++)
+            rotatedState[i][j] = _state[_arraySize - j - 1][i];
+
+    for (unsigned int i = 0; i < _arraySize; i++)
+        for (unsigned int j = 0; j < _arraySize; j++)
+            _state[i][j] = rotatedState[i][j];
+}
+void TetrisPiece::RotateCounterclockwise() {
+
+    for (int i = 0; i < 3; i++)
+        RotateClockwise();
+
+}
+
 }

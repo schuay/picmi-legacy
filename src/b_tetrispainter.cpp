@@ -23,7 +23,7 @@
 
 namespace BoardGame {
 
-TetrisPainter::TetrisPainter(BoardGame *p, BoardSettings /* unused parameter &s */) :
+TetrisPainter::TetrisPainter(BoardGame *p, BoardSettings& /* unused parameter s */) :
     Painter(), game(NULL)
 {
     game = dynamic_cast<Tetris*>(p);

@@ -32,9 +32,12 @@ Tetris::Tetris(BoardSettings &s) : BoardGame()
     puzzleLocation.y = 20;
 
     /* initialize field */
+
     boardState.reset(new unsigned int[width * height]);
     for (unsigned int i = 0; i < width * height; i++)
         boardState[i] = T_BOARD_NONE;
+
+    currentPiece.reset(new TetrisPiece());
 }
 
 bool Tetris::GameWon() {

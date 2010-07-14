@@ -5,6 +5,8 @@ TARGET = picmi
 QT += xml
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c++0x
+
 # DEFINES += SOLVERDEBUG
 SOURCES += src/f_main.cpp \
     src/b_picross.cpp \
