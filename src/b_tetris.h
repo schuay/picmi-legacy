@@ -30,6 +30,7 @@
 #include "b_boardsettings.h"
 #include "b_tetrispiece.h"
 #include "b_tetrisdefines.h"
+#include "b_tetrisstatselement.h"
 
 using boost::shared_ptr;
 using boost::shared_array;

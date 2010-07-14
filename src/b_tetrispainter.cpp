@@ -23,7 +23,7 @@
 
 namespace BoardGame {
 
-TetrisPainter::TetrisPainter(BoardGame *p, BoardSettings &s) :
+TetrisPainter::TetrisPainter(BoardGame *p, BoardSettings /* unused parameter &s */) :
     Painter(), game(NULL)
 {
     game = dynamic_cast<Tetris*>(p);
@@ -77,7 +77,7 @@ void TetrisPainter::PaintInfoArea() {
     xOffset = game->PixOffsetX() * game->Zoom() * 2 + game->Width() * game->CellLength() * game->Zoom();
     yOffset = game->PixOffsetY() * game->Zoom();
 
-    const int infoSize = 6;
+    const unsigned int infoSize = 6;
 
     for (i = 0; i < infoSize; i++) {
         for (j = 0; j < infoSize; j++) {

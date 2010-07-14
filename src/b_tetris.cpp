@@ -58,33 +58,34 @@ int Tetris::GetStateAt(unsigned int x, unsigned int y) const {
     return boardState[CToI(x, y)];
 }
 
-int Tetris::GetMapAt(Point &p) const {
-    return GetMapAt(p.x, p.y);
-}
-int Tetris::GetMapAt(unsigned int x, unsigned int y) const {
-
-    /* we don't need / use the map in tetris */
-
-    return GetStateAt(x, y);
-}
-
-void Tetris::DoOpAt(Point& /* unused parameter p*/, int op) {
-
-    /* operations location is always determined by position of active piece */
-
-    DoOp(op);
-}
 void Tetris::DoOp(int op) {
     /* TODO */
-}
-
-void Tetris::SetStateAt(Point& /* unused parameter p */, int /* unused parameter state */) {
-    throw Exception("Setting states is handled internally in tetris.");
 }
 
 shared_ptr<StatsElement> Tetris::GetStats() const {
     /* TODO */
 
-    throw Exception("Not implemented yet.");
+    return shared_ptr<StatsElement>(new TetrisStatsElement());
+}
+
+/* unused / disabled functions */
+
+void Tetris::DoOpAt(Point& /* unused parameter p*/, int /* unused parameter op */) {
+
+    throw Exception("Operations location is always determined by position of active piece.");
+
+}
+void Tetris::SetStateAt(Point& /* unused parameter p */, int /* unused parameter state */) {
+
+    throw Exception("Setting states is handled internally.");
+
+}
+int Tetris::GetMapAt(Point &p) const {
+    return GetMapAt(p.x, p.y);
+}
+int Tetris::GetMapAt(unsigned int /* unused parameter x */, unsigned int /* unused parameter y */) const {
+
+    throw Exception("Map is unneeded in tetris.");
+
 }
 }

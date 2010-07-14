@@ -35,7 +35,8 @@ SOURCES += src/f_main.cpp \
     src/b_tetris.cpp \
     src/b_tetrispiece.cpp \
     src/b_tetrisinputhandler.cpp \
-    src/b_tetrispainter.cpp
+    src/b_tetrispainter.cpp \
+    src/b_tetrisstatselement.cpp
 HEADERS += src/b_picross.h \
     src/b_picstreak.h \
     src/b_picdefines.h \
@@ -70,7 +71,8 @@ HEADERS += src/b_picross.h \
     src/b_tetrisdefines.h \
     src/b_tetrispiece.h \
     src/b_tetrisinputhandler.h \
-    src/b_tetrispainter.h
+    src/b_tetrispainter.h \
+    src/b_tetrisstatselement.h
 unix:LIBS += -lSDL \
     -lSDL_image \
     -lSDL_gfx \
