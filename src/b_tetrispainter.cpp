@@ -35,8 +35,94 @@ TetrisPainter::TetrisPainter(BoardGame *p, BoardSettings &s) :
     LoadSprites();
 }
 
+void TetrisPainter::PaintBoardArea() {
+    unsigned int i, j;
+    Point p, q;
+
+    for (i = 0; i < game->Width(); i++) {
+        for (j = 0; j < game->Height(); j++) {
+            p.x = game->PixOffsetX() * game->Zoom() + i * game->CellLength() * game->Zoom();
+            p.y = game->PixOffsetY() * game->Zoom() + j * game->CellLength() * game->Zoom();
+
+            q.x = i;
+            q.y = j;
+
+            /* cell frame */
+            sprBackgroundTile.Blit(screen, p);
+
+            /* tile states */
+            int state = game->GetStateAt(q);
+
+            if (state == T_BOARD_I)
+                sprITile.Blit(screen, p);
+            else if (state == T_BOARD_J)
+                sprJTile.Blit(screen, p);
+            else if (state == T_BOARD_L)
+                sprLTile.Blit(screen, p);
+            else if (state == T_BOARD_O)
+                sprOTile.Blit(screen, p);
+            else if (state == T_BOARD_S)
+                sprSTile.Blit(screen, p);
+            else if (state == T_BOARD_T)
+                sprTTile.Blit(screen, p);
+            else if (state == T_BOARD_Z)
+                sprZTile.Blit(screen, p);
+        }
+    }
+}
+void TetrisPainter::PaintInfoArea() {
+    unsigned int i, j, xOffset, yOffset;
+    Point p, q;
+
+    xOffset = game->PixOffsetX() * game->Zoom() * 2 + game->Width() * game->CellLength() * game->Zoom();
+    yOffset = game->PixOffsetY() * game->Zoom();
+
+    const int infoSize = 6;
+
+    for (i = 0; i < infoSize; i++) {
+        for (j = 0; j < infoSize; j++) {
+            p.x = xOffset + i * game->CellLength() * game->Zoom();
+            p.y = yOffset + j * game->CellLength() * game->Zoom();
+
+            q.x = i;
+            q.y = j;
+
+            /* cell frame */
+            sprBackgroundTile.Blit(screen, p);
+
+            /* tile states */
+            int state = game->GetStateAt(q);
+
+            if (state == T_BOARD_I)
+                sprITile.Blit(screen, p);
+            else if (state == T_BOARD_J)
+                sprJTile.Blit(screen, p);
+            else if (state == T_BOARD_L)
+                sprLTile.Blit(screen, p);
+            else if (state == T_BOARD_O)
+                sprOTile.Blit(screen, p);
+            else if (state == T_BOARD_S)
+                sprSTile.Blit(screen, p);
+            else if (state == T_BOARD_T)
+                sprTTile.Blit(screen, p);
+            else if (state == T_BOARD_Z)
+                sprZTile.Blit(screen, p);
+        }
+    }
+}
+
 void TetrisPainter::Paint() {
-    /* TODO */
+    if (game->GetPaused()) {
+        PaintPauseScreen();
+        SDL_Flip(screen.get());
+        return;
+    }
+
+    PaintBackground();
+    PaintBoardArea();
+    PaintInfoArea();
+
+    SDL_Flip(screen.get());
 }
 std::string TetrisPainter::GetGameOverText(StatsCollection c) {
     /* TODO */

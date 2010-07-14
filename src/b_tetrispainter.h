@@ -38,6 +38,9 @@ protected:
 
     std::string GetGameOverText(StatsCollection c);
 
+    void PaintBoardArea();
+    void PaintInfoArea();
+
     void InitSystems();
     void LoadSprites();
 
