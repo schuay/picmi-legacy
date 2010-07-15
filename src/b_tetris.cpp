@@ -40,6 +40,20 @@ Tetris::Tetris(BoardSettings &s) : BoardGame()
     currentPiece.reset(new TetrisPiece(width / 2, 0));
 }
 
+void Tetris::HandleLogic() {
+
+    /* if ticks since last action are above a certain threshhold (depending on level),
+       the current piece is moved down a step.
+       if moving down is impossible (collision detection), move the pieces components to boardState,
+       check for losing condition (piece not entirely in visible field)
+       and spawn a new current piece. if this occurs, no further actions are possible in this turn,
+       so mark it somehow
+
+       as levelups are also time dependent, we also need to handle them here
+     */
+
+}
+
 bool Tetris::GameWon() {
 
     /* can't win at tetris */

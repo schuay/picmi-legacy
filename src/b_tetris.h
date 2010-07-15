@@ -46,6 +46,8 @@ public:
 
     /* virtual members of BoardGame */
 
+    void HandleLogic();
+
     bool GameWon();
     bool GameLost();
 

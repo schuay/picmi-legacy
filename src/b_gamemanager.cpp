@@ -54,6 +54,7 @@ void GameManager::GameOver() {
 void GameManager::MainLoop() {
 
     while (!game->GetQuit()) {
+        game->HandleLogic();
         inputhandler->HandleInput();
         painter->Paint();
 

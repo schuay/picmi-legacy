@@ -22,6 +22,7 @@
 #include "b_timer.h"
 
 namespace BoardGame {
+
 Timer::Timer()
 {
     started = false;
@@ -82,4 +83,9 @@ unsigned int Timer::GetRealTime() const {
 unsigned int Timer::GetPenaltyTime() const {
     return penaltyTime;
 }
+
+unsigned int Timer::GetTicks() const {
+    return SDL_GetTicks();
+}
+
 }

@@ -68,6 +68,8 @@ public:
     bool TrySetLocation(Point &p);
     bool TrySetLocationRel(int dx, int dy);
 
+    /* process any time based logic (for example piece movement in tetris) */
+    virtual void HandleLogic() { }
 
     /* perform operation (HIT/MARK) at p */
     virtual void DoOpAt(Point &p, int op) = 0;

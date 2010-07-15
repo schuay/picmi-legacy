@@ -22,8 +22,11 @@
 #ifndef B_PICTIMER_H
 #define B_PICTIMER_H
 
-#include <time.h>
+#include <ctime>
+#include <SDL/SDL.h>
+
 namespace BoardGame {
+
 class Timer
 {
 public:
@@ -38,6 +41,8 @@ public:
     unsigned int GetTime() const;
     unsigned int GetRealTime() const;
     unsigned int GetPenaltyTime() const;
+
+    unsigned int GetTicks() const;
 
 private:
     bool
@@ -55,5 +60,6 @@ private:
     static const unsigned int
             basePenaltyTime = 120;
 };
+
 }
 #endif // B_PICTIMER_H
