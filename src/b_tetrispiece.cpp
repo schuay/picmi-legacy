@@ -25,7 +25,7 @@ namespace BoardGame {
 
 TetrisPiece::TetrisPiece(int x, int y)
 {
-    _currentX = x - _arraySize / 2;
+    _currentX = x - ArraySize / 2;
     _currentY = y;
 
     _shape = rand() % T_BOARD_NONE;
@@ -88,7 +88,7 @@ TetrisPiece::TetrisPiece(int x, int y)
         RotateClockwise();
 }
 
-bool TetrisPiece::IsCovering(unsigned int x, unsigned int y) const {
+bool TetrisPiece::IsCovering(int x, int y) const {
 
     /* convert board to piece coordinates */
 
@@ -97,7 +97,7 @@ bool TetrisPiece::IsCovering(unsigned int x, unsigned int y) const {
 
     /* and check if the piece is covering specified coord */
 
-    if (x >= _arraySize || y >= _arraySize)
+    if (x >= ArraySize || y >= ArraySize)
         return false;
 
     return _state[x][y];
@@ -124,16 +124,22 @@ void TetrisPiece::Move(MovementDirectionEnum dir) {
 
 }
 
+void TetrisPiece::Rotate(RotationDirectionEnum rot) {
+    if (rot == RD_CLOCKWISE)
+        RotateClockwise();
+    else
+        RotateCounterclockwise();
+}
 void TetrisPiece::RotateClockwise() {
 
-    int rotatedState[_arraySize][_arraySize];
+    int rotatedState[ArraySize][ArraySize];
 
-    for (unsigned int i = 0; i < _arraySize; i++)
-        for (unsigned int j = 0; j < _arraySize; j++)
-            rotatedState[i][j] = _state[_arraySize - j - 1][i];
+    for (unsigned int i = 0; i < ArraySize; i++)
+        for (unsigned int j = 0; j < ArraySize; j++)
+            rotatedState[i][j] = _state[ArraySize - j - 1][i];
 
-    for (unsigned int i = 0; i < _arraySize; i++)
-        for (unsigned int j = 0; j < _arraySize; j++)
+    for (unsigned int i = 0; i < ArraySize; i++)
+        for (unsigned int j = 0; j < ArraySize; j++)
             _state[i][j] = rotatedState[i][j];
 }
 void TetrisPiece::RotateCounterclockwise() {

@@ -31,6 +31,9 @@ Tetris::Tetris(BoardSettings &s) : BoardGame()
     puzzleLocation.x = 20;
     puzzleLocation.y = 20;
 
+    tickForNextAction = 0;
+    SkipLogic = false;
+
     /* initialize field */
 
     boardState.reset(new unsigned int[width * height]);
@@ -52,6 +55,102 @@ void Tetris::HandleLogic() {
        as levelups are also time dependent, we also need to handle them here
      */
 
+    if (SkipLogic)
+        SkipLogic = false;
+
+    const unsigned int
+            ticksBetweenActions = 500,
+            currentTicks = SDL_GetTicks();
+
+    /* initialize tickForNextAction */
+    if (tickForNextAction == 0)
+        tickForNextAction = currentTicks - 1;
+
+    if (currentTicks > tickForNextAction) {
+        TryMove(MD_DOWN);
+        tickForNextAction += ticksBetweenActions;
+    }
+}
+
+bool Tetris::IsCollision() const {
+    /* collisions occur both if a coordinate is filled and if a piece is out of bounds */
+
+    int
+            x = currentPiece->GetCurrentX(),
+            y = currentPiece->GetCurrentY(),
+            curX, curY;
+
+    for (unsigned int dx = 0; dx < TetrisPiece::ArraySize; dx++) {
+        for (unsigned int dy = 0; dy < TetrisPiece::ArraySize; dy++) {
+
+            curX = x + dx;
+            curY = y + dy;
+
+            if (currentPiece->IsCovering(curX, curY)) {
+
+                if (!IsInBounds(curX, curY))
+                    return true;
+                else if (boardState[curY * width + curX] != T_BOARD_NONE)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void Tetris::TryRotate(RotationDirectionEnum rot) {
+
+    currentPiece->Rotate(rot);
+
+    if (IsCollision()) {
+
+        RotationDirectionEnum oppositeRot =
+                rot == RD_CLOCKWISE ?
+                RD_COUNTERCLOCKWISE :
+                RD_CLOCKWISE;
+
+        currentPiece->Rotate(oppositeRot);
+    }
+}
+void Tetris::TryMove(MovementDirectionEnum dir) {
+
+    /* simple collision detection consists of actually moving a piece and checking if
+       any coords overlap with boardState. if they do, move the piece back */
+
+    currentPiece->Move(dir);
+
+    if (IsCollision()) {
+        MovementDirectionEnum oppositeDir =
+                (MovementDirectionEnum)((dir + 2) % 4);
+
+        currentPiece->Move(oppositeDir);
+
+        if (dir == MD_DOWN)
+            PieceToBoardState();
+    }
+}
+void Tetris::PieceToBoardState() {
+
+    int
+            x = currentPiece->GetCurrentX(),
+            y = currentPiece->GetCurrentY(),
+            curX, curY;
+
+    for (unsigned int dx = 0; dx < TetrisPiece::ArraySize; dx++) {
+        for (unsigned int dy = 0; dy < TetrisPiece::ArraySize; dy++) {
+
+            curX = x + dx;
+            curY = y + dy;
+
+            if (currentPiece->IsCovering(curX, curY))
+                boardState[curY * width + curX] = currentPiece->GetShape();
+        }
+    }
+
+    currentPiece.reset(new TetrisPiece(width / 2, 0));
+
+    SkipLogic = true;
 }
 
 bool Tetris::GameWon() {
@@ -88,19 +187,19 @@ void Tetris::DoOp(int op) {
 
     switch (op) {
     case T_OP_ROTATELEFT:
-        currentPiece->RotateCounterclockwise();
+        TryRotate(RD_COUNTERCLOCKWISE);
         break;
     case T_OP_ROTATERIGHT:
-        currentPiece->RotateClockwise();
+        TryRotate(RD_CLOCKWISE);
         break;
     case T_OP_MOVELEFT:
-        currentPiece->Move(MD_LEFT);
+        TryMove(MD_LEFT);
         break;
     case T_OP_MOVERIGHT:
-        currentPiece->Move(MD_RIGHT);
+        TryMove(MD_RIGHT);
         break;
     case T_OP_STEPDOWN:
-        currentPiece->Move(MD_DOWN);
+        TryMove(MD_DOWN);
         break;
     case T_OP_DROPDOWN:
         /* TODO */

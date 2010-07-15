@@ -36,15 +36,18 @@ public:
     TetrisPiece(int x, int y);
 
     int GetShape() const { return _shape; }
+    int GetCurrentX() const { return _currentX; }
+    int GetCurrentY() const { return _currentY; }
 
     /* x and y are in BOARD coordinates. if the piece covers the specified coord,
        return true, else false */
-    bool IsCovering(unsigned int x, unsigned int y) const;
+    bool IsCovering(int x, int y) const;
 
-    void RotateClockwise();
-    void RotateCounterclockwise();
+    void Rotate(RotationDirectionEnum rot);
 
     void Move(MovementDirectionEnum dir);
+
+    static const unsigned int ArraySize = 4;
 
 private:
 
@@ -53,10 +56,11 @@ private:
             _currentX,
             _currentY;
 
-    static const unsigned int _arraySize = 4;
-
     int _shape;
-    bool _state[_arraySize][_arraySize];
+    bool _state[ArraySize][ArraySize];
+
+    void RotateClockwise();
+    void RotateCounterclockwise();
 };
 
 }

@@ -54,11 +54,18 @@ enum GameResolutionEnum {
     GR_WON
 };
 
+/* directions are arranged in such a way that (dir + 2) % 4 always results
+   in the opposite direction */
 enum MovementDirectionEnum {
-    MD_LEFT,
-    MD_RIGHT,
-    MD_DOWN,
-    MD_UP
+    MD_LEFT = 0,
+    MD_RIGHT = 2,
+    MD_DOWN = 1,
+    MD_UP = 3
+};
+
+enum RotationDirectionEnum {
+    RD_CLOCKWISE,
+    RD_COUNTERCLOCKWISE
 };
 
 #endif // B_ENUMS_H

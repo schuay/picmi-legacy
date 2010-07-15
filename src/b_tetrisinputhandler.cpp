@@ -88,6 +88,10 @@ void TetrisInputHandler::HandleInput() {
             break;
         }
 
+        /* we just dropped a piece, skip all game commands for this turn */
+        if (game->SkipLogic)
+            return;
+
         /* perform actual logic... */
 
         if (op != T_OP_NONE)

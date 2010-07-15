@@ -65,6 +65,8 @@ public:
 
     void SetStateAt(Point &p, int state);
 
+    bool SkipLogic;
+
 private:
     shared_array<unsigned int>
             boardState;
@@ -77,6 +79,19 @@ private:
 
     static const unsigned int
             stagingAreaHeight = 4;
+
+    unsigned int
+            tickForNextAction;
+
+    /* perform collision detection and move */
+    void TryMove(MovementDirectionEnum dir);
+    void TryRotate(RotationDirectionEnum rot);
+
+    bool IsCollision() const;
+
+    /* piece has hit something while moving downwards, move it to boardState
+       and spawn a new currentPiece */
+    void PieceToBoardState();
 };
 
 }
