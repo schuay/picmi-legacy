@@ -72,6 +72,30 @@ void Tetris::HandleLogic() {
     }
 }
 
+void Tetris::DeleteCompletedLines() {
+
+    /* check all rows for completeness. delete those and move all remaining rows down.
+       score also needs to be calculated here */
+
+    bool rowComplete;
+    for (unsigned int i = 0; i < height; i++) {
+
+        rowComplete = true;
+
+        for (unsigned int j = 0; j < width; j++)
+            if (boardState[i * width + j] == T_BOARD_NONE)
+                rowComplete = false;
+
+        if (!rowComplete)
+            continue;
+
+        /* row is complete - move all rows above it down */
+
+        for (int k = i; k > 0; k--)
+            for (unsigned int l = 0; l < width; l++)
+                boardState[k * width + l] = boardState[ (k - 1) * width + l];
+    }
+}
 bool Tetris::IsCollision() const {
     /* collisions occur both if a coordinate is filled and if a piece is out of bounds */
 
@@ -126,8 +150,10 @@ void Tetris::TryMove(MovementDirectionEnum dir) {
 
         currentPiece->Move(oppositeDir);
 
-        if (dir == MD_DOWN)
+        if (dir == MD_DOWN) {
             PieceToBoardState();
+            DeleteCompletedLines();
+        }
     }
 }
 void Tetris::PieceToBoardState() {
@@ -168,13 +194,16 @@ int Tetris::GetStateAt(Point &p) const {
     return GetStateAt(p.x, p.y);
 }
 int Tetris::GetStateAt(unsigned int x, unsigned int y) const {
-    if (!IsInBounds(x, y))
+
+    unsigned int internalY = y + stagingAreaHeight;
+
+    if (!IsInBounds(x, internalY))
         throw Exception("GetStateAt failed: Point not within board dimensions.");
 
-    if (currentPiece->IsCovering(x, y))
+    if (currentPiece->IsCovering(x, internalY))
         return currentPiece->GetShape();
     else
-        return boardState[CToI(x, y)];
+        return boardState[CToI(x, internalY)];
 }
 
 void Tetris::DoOp(int op) {

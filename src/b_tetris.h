@@ -46,6 +46,8 @@ public:
 
     /* virtual members of BoardGame */
 
+    unsigned int Height() const { return height - stagingAreaHeight; }
+
     void HandleLogic();
 
     bool GameWon();
@@ -88,6 +90,8 @@ private:
     void TryRotate(RotationDirectionEnum rot);
 
     bool IsCollision() const;
+
+    void DeleteCompletedLines();
 
     /* piece has hit something while moving downwards, move it to boardState
        and spawn a new currentPiece */

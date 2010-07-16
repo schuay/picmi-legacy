@@ -86,8 +86,8 @@ public:
     /* sets game resolution (aborted/won/lost) and stops timer */
     virtual void SetResolution(GameResolutionEnum r) { resolution = r; timer.Stop(); quit = true; }
 
-    unsigned int Width() const { return width; }
-    unsigned int Height() const { return height; }
+    virtual unsigned int Width() const { return width; }
+    virtual unsigned int Height() const { return height; }
 
     unsigned int PixOffsetX() const { return puzzleLocation.x; }
     unsigned int PixOffsetY() const { return puzzleLocation.y; }
