@@ -42,6 +42,7 @@ public:
     /* x and y are in BOARD coordinates. if the piece covers the specified coord,
        return true, else false */
     bool IsCovering(int x, int y) const;
+    bool IsCoveringInPieceCoords(int x, int y) const;
 
     void Rotate(RotationDirectionEnum rot);
 

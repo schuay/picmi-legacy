@@ -42,6 +42,7 @@ class Tetris : public BoardGame
 {
 public:
     Tetris(BoardSettings &s);
+    ~Tetris();
 
 
     /* virtual members of BoardGame */
@@ -69,18 +70,21 @@ public:
 
     bool SkipLogic;
 
+    TetrisPiece* NextPiece() { return nextPieces.front(); }
+
 private:
     shared_array<unsigned int>
             boardState;
 
-    queue<shared_ptr<TetrisPiece> >
+    queue<TetrisPiece*>
             nextPieces;
 
     shared_ptr<TetrisPiece>
             currentPiece;
 
     static const unsigned int
-            stagingAreaHeight = 4;
+            stagingAreaHeight = 4,
+            nrOfNextPieces = 4;
 
     unsigned int
             tickForNextAction;
@@ -96,6 +100,8 @@ private:
     /* piece has hit something while moving downwards, move it to boardState
        and spawn a new currentPiece */
     void PieceToBoardState();
+
+    void GetNextCurrentPiece();
 };
 
 }

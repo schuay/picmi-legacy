@@ -73,6 +73,8 @@ void TetrisPainter::PaintBoardArea() {
 void TetrisPainter::PaintInfoArea() {
     unsigned int i, j, xOffset, yOffset;
     Point p, q;
+    TetrisPiece *nextPiece = game->NextPiece();
+    int state = nextPiece->GetShape();
 
     xOffset = game->PixOffsetX() * game->Zoom() * 2 + game->Width() * game->CellLength() * game->Zoom();
     yOffset = game->PixOffsetY() * game->Zoom();
@@ -90,7 +92,25 @@ void TetrisPainter::PaintInfoArea() {
             /* cell frame */
             sprBackgroundTile.Blit(screen, p);
 
-            /* painting next piece: TODO */
+            /* painting next piece */
+
+            if (!nextPiece->IsCoveringInPieceCoords(i - 1, j - 1))
+                continue;
+
+            if (state == T_BOARD_I)
+                sprITile.Blit(screen, p);
+            else if (state == T_BOARD_J)
+                sprJTile.Blit(screen, p);
+            else if (state == T_BOARD_L)
+                sprLTile.Blit(screen, p);
+            else if (state == T_BOARD_O)
+                sprOTile.Blit(screen, p);
+            else if (state == T_BOARD_S)
+                sprSTile.Blit(screen, p);
+            else if (state == T_BOARD_T)
+                sprTTile.Blit(screen, p);
+            else if (state == T_BOARD_Z)
+                sprZTile.Blit(screen, p);
         }
     }
 }

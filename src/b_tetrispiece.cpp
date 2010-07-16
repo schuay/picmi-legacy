@@ -96,8 +96,10 @@ bool TetrisPiece::IsCovering(int x, int y) const {
     y -= _currentY;
 
     /* and check if the piece is covering specified coord */
-
-    if (x >= ArraySize || y >= ArraySize)
+    return IsCoveringInPieceCoords(x, y);
+}
+bool TetrisPiece::IsCoveringInPieceCoords(int x, int y) const {
+    if ((unsigned int)x >= ArraySize || (unsigned int)y >= ArraySize)
         return false;
 
     return _state[x][y];

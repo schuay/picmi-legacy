@@ -25,6 +25,8 @@ namespace BoardGame {
 
 Tetris::Tetris(BoardSettings &s) : BoardGame()
 {
+    srand(time(NULL));
+
     width = s.x;
     height = s.y + stagingAreaHeight;
 
@@ -40,7 +42,16 @@ Tetris::Tetris(BoardSettings &s) : BoardGame()
     for (unsigned int i = 0; i < width * height; i++)
         boardState[i] = T_BOARD_NONE;
 
-    currentPiece.reset(new TetrisPiece(width / 2, 0));
+    for (unsigned int i = 0; i < nrOfNextPieces; i++)
+        nextPieces.push(new TetrisPiece(width / 2, 0));
+
+    GetNextCurrentPiece();
+}
+Tetris::~Tetris() {
+    while (!nextPieces.empty()) {
+          delete nextPieces.front();
+          nextPieces.pop();
+    }
 }
 
 void Tetris::HandleLogic() {
@@ -123,6 +134,17 @@ bool Tetris::IsCollision() const {
     return false;
 }
 
+void Tetris::GetNextCurrentPiece() {
+
+    if (nextPieces.empty())
+        throw Exception("nextPieces is empty");
+
+    currentPiece.reset(nextPieces.front());
+    nextPieces.pop();
+    nextPieces.push(new TetrisPiece(width / 2, 0));
+
+}
+
 void Tetris::TryRotate(RotationDirectionEnum rot) {
 
     currentPiece->Rotate(rot);
@@ -174,7 +196,7 @@ void Tetris::PieceToBoardState() {
         }
     }
 
-    currentPiece.reset(new TetrisPiece(width / 2, 0));
+    GetNextCurrentPiece();
 
     SkipLogic = true;
 }
