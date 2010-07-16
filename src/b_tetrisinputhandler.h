@@ -39,6 +39,9 @@ public:
 private:
 
     Tetris *game;
+
+    Timer timer;
+    unsigned int timeOfLastAction;
 };
 
 }

@@ -36,9 +36,14 @@ TetrisInputHandler::TetrisInputHandler(BoardGame *p)
 
 void TetrisInputHandler::HandleInput() {
     SDL_Event ev;
+    int op;
+
+    unsigned int now = timer.GetTicks();
+    Uint8 *keystate = SDL_GetKeyState(NULL);
 
     while (SDL_PollEvent(&ev) == 1) {
-        int op = T_OP_NONE;
+
+        op = T_OP_NONE;
 
         /* get input... */
 
@@ -51,25 +56,20 @@ void TetrisInputHandler::HandleInput() {
             case SDLK_p:
                 game->SetPaused(!game->GetPaused());
                 break;
-            case SDLK_KP4:
-            case SDLK_h:
             case SDLK_LEFT:
                 op = T_OP_MOVELEFT;
+                timeOfLastAction = now;
                 break;
-            case SDLK_KP6:
-            case SDLK_l:
             case SDLK_RIGHT:
                 op = T_OP_MOVERIGHT;
+                timeOfLastAction = now;
                 break;
-            case SDLK_KP8:
-            case SDLK_k:
             case SDLK_UP:
                 op = T_OP_DROPDOWN;
                 break;
-            case SDLK_KP2:
-            case SDLK_j:
             case SDLK_DOWN:
                 op = T_OP_STEPDOWN;
+                timeOfLastAction = now;
                 break;
             case SDLK_x:
                 op = T_OP_ROTATELEFT;
@@ -97,6 +97,37 @@ void TetrisInputHandler::HandleInput() {
         if (op != T_OP_NONE)
             game->DoOp(op);
     }
+
+    /* custom keyrepeat */
+
+    op = T_OP_NONE;
+    const unsigned int repeatInterval = 100;
+
+    /* only applies if the specified repeatInterval has passed*/
+    if (now - timeOfLastAction < repeatInterval)
+        return;
+
+    if (keystate[SDLK_RIGHT]) {
+        op = T_OP_MOVERIGHT;
+        timeOfLastAction = now;
+    }
+    else if (keystate[SDLK_LEFT]) {
+        op = T_OP_MOVELEFT;
+        timeOfLastAction = now;
+    }
+    else if (keystate[SDLK_DOWN]) {
+        op = T_OP_STEPDOWN;
+        timeOfLastAction = now;
+    }
+
+    /* we just dropped a piece, skip all game commands for this turn */
+    if (game->SkipLogic)
+        return;
+
+    /* perform actual logic... */
+
+    if (op != T_OP_NONE)
+        game->DoOp(op);
 }
 
 }
