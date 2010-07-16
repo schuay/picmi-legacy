@@ -113,6 +113,34 @@ void TetrisPainter::PaintInfoArea() {
                 sprZTile.Blit(screen, p);
         }
     }
+
+    /* display level */
+
+    std::stringstream displayLine;
+    SDL_Color c = { 0, 0, 0 };
+
+    p.y += game->CellLength() * game->Zoom() * 2;
+    p.x = xOffset;
+
+    displayLine << "LEVEL";
+    txt.Blit(screen, displayLine.str(), p, c, FT_BOLD );
+
+    displayLine.str("");
+    displayLine << game->Level();
+    p.y += game->CellLength() * game->Zoom() / 2;
+    txt.Blit(screen, displayLine.str(), p, c, FT_NORMAL );
+
+    /* display score */
+
+    displayLine.str("");
+    displayLine << "SCORE";
+    p.y += game->CellLength() * game->Zoom() * 2;
+    txt.Blit(screen, displayLine.str(), p, c, FT_BOLD );
+
+    displayLine.str("");
+    displayLine << game->Score();
+    p.y += game->CellLength() * game->Zoom() / 2;
+    txt.Blit(screen, displayLine.str(), p, c, FT_NORMAL );
 }
 
 void TetrisPainter::Paint() {

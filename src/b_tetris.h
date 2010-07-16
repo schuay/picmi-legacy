@@ -72,6 +72,9 @@ public:
 
     TetrisPiece* NextPiece() { return nextPieces.front(); }
 
+    unsigned int Score() const { return _currentScore; }
+    unsigned int Level() const { return _deletedLines / 10; }
+
 private:
     shared_array<unsigned int>
             boardState;
@@ -102,6 +105,12 @@ private:
     void PieceToBoardState();
 
     void GetNextCurrentPiece();
+
+    unsigned int _deletedLines;
+    unsigned int _currentScore;
+
+    /* returns nr of ticks between drops depending on level */
+    unsigned int HeartBeat() const;
 };
 
 }

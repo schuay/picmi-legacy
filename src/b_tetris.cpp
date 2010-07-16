@@ -36,6 +36,9 @@ Tetris::Tetris(BoardSettings &s) : BoardGame()
     tickForNextAction = 0;
     SkipLogic = false;
 
+    _deletedLines = 0;
+    _currentScore = 0;
+
     /* initialize field */
 
     boardState.reset(new unsigned int[width * height]);
@@ -54,6 +57,14 @@ Tetris::~Tetris() {
     }
 }
 
+unsigned int Tetris::HeartBeat() const {
+
+    if (Level() > 18)
+        return 50;
+
+    return 800 - Level() * 40;
+}
+
 void Tetris::HandleLogic() {
 
     /* if ticks since last action are above a certain threshhold (depending on level),
@@ -70,7 +81,6 @@ void Tetris::HandleLogic() {
         SkipLogic = false;
 
     const unsigned int
-            ticksBetweenActions = 500,
             currentTicks = SDL_GetTicks();
 
     /* initialize tickForNextAction */
@@ -79,7 +89,7 @@ void Tetris::HandleLogic() {
 
     if (currentTicks > tickForNextAction) {
         TryMove(MD_DOWN);
-        tickForNextAction += ticksBetweenActions;
+        tickForNextAction += HeartBeat();
     }
 }
 
@@ -87,6 +97,9 @@ void Tetris::DeleteCompletedLines() {
 
     /* check all rows for completeness. delete those and move all remaining rows down.
        score also needs to be calculated here */
+
+    int scoreMultiplier = 0;
+    const int baseScore = 100;
 
     bool rowComplete;
     for (unsigned int i = 0; i < height; i++) {
@@ -102,10 +115,15 @@ void Tetris::DeleteCompletedLines() {
 
         /* row is complete - move all rows above it down */
 
+        _deletedLines++;
+        scoreMultiplier++;
+
         for (int k = i; k > 0; k--)
             for (unsigned int l = 0; l < width; l++)
                 boardState[k * width + l] = boardState[ (k - 1) * width + l];
     }
+
+    _currentScore += scoreMultiplier * scoreMultiplier * baseScore;
 }
 bool Tetris::IsCollision() const {
     /* collisions occur both if a coordinate is filled and if a piece is out of bounds */
@@ -208,7 +226,14 @@ bool Tetris::GameWon() {
     return false;
 }
 bool Tetris::GameLost() {
-    /* TODO! */
+
+    for (unsigned int y = 0; y < stagingAreaHeight; y++)
+        for (unsigned int x = 0; x < width; x++)
+            if (boardState[y * width + x] != T_BOARD_NONE) {
+                SetResolution(GR_LOST);
+                return true;
+            }
+
     return false;
 }
 
