@@ -193,7 +193,7 @@ void StatsManager::Sort() {
 
     do {
         nrOfOps = 0;
-        for (unsigned int i = 0; i < elements.size() - 1; i++)
+        for (unsigned int i = 0; i + 1 < elements.size(); i++)
             if (elements[i]->playedTime > elements[i+1]->playedTime) {
                 tmp = elements[i];
                 elements[i] = elements[i+1];
