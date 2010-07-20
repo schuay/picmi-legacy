@@ -55,7 +55,8 @@ namespace BoardGame {
 
         std::string infoText = GetGameOverText(c);
 
-        Point p(app->GetWidth() / 2, (app->GetHeight() - txt.HeightOf(infoText)) / 2);
+        Point p( app->GetDefaultView().GetRect().GetWidth() / 2,
+                (app->GetDefaultView().GetRect().GetHeight() - txt.HeightOf(infoText)) / 2);
 
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {

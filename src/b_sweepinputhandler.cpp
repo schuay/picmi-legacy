@@ -32,9 +32,11 @@ namespace BoardGame {
 
     int SweepInputHandler::HandleMouseEvent(int x, int y, sf::Mouse::Button btn, sf::Event::EventType event) {
 
+        sf::Vector2f mousePos = app->ConvertCoords(x, y);
+
         Point newLocation(
-                (x - game->PixOffsetX()) / game->CellLength(),
-                (y - game->PixOffsetY()) / game->CellLength());
+                (mousePos.x - game->PixOffsetX()) / game->CellLength(),
+                (mousePos.y - game->PixOffsetY()) / game->CellLength());
 
         /* only handle mouse events in game board area */
         if (!game->IsInBounds(newLocation))
