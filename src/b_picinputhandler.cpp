@@ -31,65 +31,84 @@ PicInputHandler::PicInputHandler(shared_ptr<sf::RenderWindow> &application, shar
 
     dragDirection = DRAG_UNDEF;
     dragOperation = DRAG_UNDEF;
+    lmbPressed = false;
+    rmbPressed = false;
+
 }
 
-int PicInputHandler::HandleMouseEvent(int x, int y, int btn, int event) {
-//    Point newLocation(
-//            (x - game->PixOffsetX()) / game->CellLength(),
-//            (y - game->PixOffsetY()) / game->CellLength());
+int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn, const sf::Event::EventType event) {
+    Point newLocation(
+            (x - game->PixOffsetX()) / game->CellLength(),
+            (y - game->PixOffsetY()) / game->CellLength());
 
-//    /* only handle mouse events in game board area */
-//    if (!game->IsInBounds(newLocation))
-//        return OP_NONE;
+    /* only handle mouse events in game board area */
+    if (!game->IsInBounds(newLocation))
+        return OP_NONE;
 
-//    switch (event) {
-//    case SDL_MOUSEBUTTONDOWN:
-//        lastClickLocation = newLocation;    /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
-//        dragDirection = DRAG_UNDEF;         /* reset drag direction */
-//        dragOperation =                     /* set drag operation */
-//                game->GetStateAt(newLocation) == BOARD_CLEAN ? OP_FORCE_MARK : OP_FORCE_CLEAR;
-//        lastDragLocation = newLocation;     /* remember last handled tile so we only to a single op per tile on drags */
-//        break;
-//    case SDL_MOUSEMOTION:
-//        if (btn == SDL_BUTTON_LEFT || btn == SDL_BUTTON_RIGHT) {    /* only run drag logic if a mousebutton is pressed, otherwise only set location */
-//            if ( newLocation != lastClickLocation && dragDirection == DRAG_UNDEF ) { /* calc drag direction */
-//                unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
-//                unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
-//                if (diffX < diffY)
-//                    dragDirection = DRAG_VER;
-//                else if (diffX > diffY)
-//                    dragDirection = DRAG_HOR;
-//                else
-//                    dragDirection = DRAG_HOR;
-//            }
+    switch (event) {
+    case sf::Event::MouseButtonPressed:
+        lastClickLocation = newLocation;    /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
+        dragDirection = DRAG_UNDEF;         /* reset drag direction */
+        dragOperation =                     /* set drag operation */
+                game->GetStateAt(newLocation) == BOARD_CLEAN ? OP_FORCE_MARK : OP_FORCE_CLEAR;
+        lastDragLocation = newLocation;     /* remember last handled tile so we only to a single op per tile on drags */
 
-//            if (dragDirection == DRAG_HOR)   /* adjust newLocation according to dragDirection */
-//                newLocation.y = game->GetLocation().y;
-//            else if (dragDirection == DRAG_VER)
-//                newLocation.x = game->GetLocation().x;
+        if (btn == sf::Mouse::Left)
+            lmbPressed = true;
+        else if (btn == sf::Mouse::Right)
+            rmbPressed = true;
 
-//            if (lastDragLocation == newLocation)
-//                return OP_NONE; /* tile already handled, nothing to be done */
-//            else {
-//                lastDragLocation = newLocation;
-//            }
-//        }
-//        break;
-//    default:
-//        break;
-//    }
+        break;
+    case sf::Event::MouseButtonReleased:
+        if (btn == sf::Mouse::Left)
+            lmbPressed = false;
+        else if (btn == sf::Mouse::Right)
+            rmbPressed = false;
 
-//    game->TrySetLocation(newLocation);
+        return OP_NONE;
 
-//    if (btn == SDL_BUTTON_LEFT)
-//        return OP_HIT;
-//    else if (btn == SDL_BUTTON_RIGHT)
-//        return dragOperation;
+        break;
+    case sf::Event::MouseMoved:
+        if (btn == sf::Mouse::Left || btn == sf::Mouse::Right) {    /* only run drag logic if a mousebutton is pressed, otherwise only set location */
+            if ( newLocation != lastClickLocation && dragDirection == DRAG_UNDEF ) { /* calc drag direction */
+                unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
+                unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
+                if (diffX < diffY)
+                    dragDirection = DRAG_VER;
+                else if (diffX > diffY)
+                    dragDirection = DRAG_HOR;
+                else
+                    dragDirection = DRAG_HOR;
+            }
+
+            if (dragDirection == DRAG_HOR)   /* adjust newLocation according to dragDirection */
+                newLocation.y = game->GetLocation().y;
+            else if (dragDirection == DRAG_VER)
+                newLocation.x = game->GetLocation().x;
+
+            if (lastDragLocation == newLocation)
+                return OP_NONE; /* tile already handled, nothing to be done */
+            else {
+                lastDragLocation = newLocation;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+
+    game->TrySetLocation(newLocation);
+
+    if (btn == sf::Mouse::Left)
+        return OP_HIT;
+    else if (btn == sf::Mouse::Right)
+        return dragOperation;
 
     return OP_NONE;
 }
 void PicInputHandler::HandleInput() {
     sf::Event ev;
+    sf::Mouse::Button btn;
 
     while (app->GetEvent(ev)) {
         int dx = 0, dy = 0, op = OP_NONE;
@@ -162,21 +181,25 @@ void PicInputHandler::HandleInput() {
                 break;
             }
             break;
-//        case SDL_MOUSEBUTTONDOWN:
-//            op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button, ev.type);
-//            break;
-//        case SDL_MOUSEMOTION:
-//            if (ev.motion.state & SDL_BUTTON(1))
-//                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_LEFT, ev.type);
-//            else if (ev.motion.state & SDL_BUTTON(3))
-//                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_RIGHT, ev.type);
-//            else HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE, ev.type);
-//            break;
-//         case SDL_QUIT:
-//            game->SetResolution(GR_ABORTED);
-//            break;
-//         default:
-//            break;
+        case sf::Event::MouseButtonPressed:
+        case sf::Event::MouseButtonReleased:
+            op = HandleMouseEvent(ev.MouseButton.X, ev.MouseButton.Y, ev.MouseButton.Button, ev.Type);
+            break;
+        case sf::Event::MouseMoved:;
+
+            if (lmbPressed)
+                btn = sf::Mouse::Left;
+            else if (rmbPressed)
+                btn = sf::Mouse::Right;
+            else btn = sf::Mouse::ButtonCount;
+
+            op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, btn, ev.Type);
+            break;
+         case sf::Event::Closed:
+            game->SetResolution(GR_ABORTED);
+            break;
+         default:
+            break;
         }
 
         /* perform actual logic... */

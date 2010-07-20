@@ -30,23 +30,27 @@ namespace BoardGame {
             throw Exception("Game object not set");
     }
 
-    int SweepInputHandler::HandleMouseEvent(int x, int y, int btn) {
-//        Point newLocation(
-//                (x - game->PixOffsetX()) / game->CellLength(),
-//                (y - game->PixOffsetY()) / game->CellLength());
+    int SweepInputHandler::HandleMouseEvent(int x, int y, sf::Mouse::Button btn, sf::Event::EventType event) {
 
-//        /* only handle mouse events in game board area */
-//        if (!game->IsInBounds(newLocation))
-//            return OP_NONE;
+        Point newLocation(
+                (x - game->PixOffsetX()) / game->CellLength(),
+                (y - game->PixOffsetY()) / game->CellLength());
 
-//        game->TrySetLocation(newLocation);
+        /* only handle mouse events in game board area */
+        if (!game->IsInBounds(newLocation))
+            return OP_NONE;
 
-//        if (btn == SDL_BUTTON_LEFT)
-//            return S_OP_EXPOSE;
-//        else if (btn == SDL_BUTTON_RIGHT)
-//            return S_OP_MARK;
-//        else if (btn == SDL_BUTTON_MIDDLE)
-//            return S_OP_TENTATIVE;
+        game->TrySetLocation(newLocation);
+
+        if (event == sf::Event::MouseMoved)
+            return OP_NONE;
+
+        if (btn == sf::Mouse::Left)
+            return S_OP_EXPOSE;
+        else if (btn == sf::Mouse::Right)
+            return S_OP_MARK;
+        else if (btn == sf::Mouse::Middle)
+            return S_OP_TENTATIVE;
 
         return OP_NONE;
     }
@@ -124,12 +128,12 @@ namespace BoardGame {
                     break;
                 }
                 break;
-//            case SDL_MOUSEBUTTONDOWN:
-//                op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
-//                break;
-//            case SDL_MOUSEMOTION:
-//                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE);
-//                break;
+            case sf::Event::MouseButtonPressed:
+                op = HandleMouseEvent(ev.MouseButton.X, ev.MouseButton.Y, ev.MouseButton.Button, ev.Type);
+                break;
+            case sf::Event::MouseMoved:
+                op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, sf::Mouse::Left, ev.Type);
+                break;
             case sf::Event::Closed:
                 game->SetResolution(GR_ABORTED);
                 break;

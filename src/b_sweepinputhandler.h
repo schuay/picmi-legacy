@@ -35,7 +35,7 @@ namespace BoardGame {
 
     private:
 
-        int HandleMouseEvent(const int x, const int y, const int btn);
+        int HandleMouseEvent(int x, int y, sf::Mouse::Button btn, sf::Event::EventType event);
 
         Sweeper* game;
     };

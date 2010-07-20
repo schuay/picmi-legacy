@@ -41,7 +41,7 @@ public:
 
 private:
 
-    int HandleMouseEvent(const int x, const int y, const int btn, const int event);
+    int HandleMouseEvent(const int x, const int y, const sf::Mouse::Button btn, const sf::Event::EventType event);
 
     Point
         lastClickLocation,
@@ -51,6 +51,10 @@ private:
         dragOperation;
 
     Picross* game;
+
+    bool
+            lmbPressed,
+            rmbPressed;
 };
 }
 #endif // B_PICINPUTHANDLER_H

@@ -87,11 +87,11 @@ void GameManager::Initialize(BoardSettings &s) {
         painter.reset(new PicPainter(app, game, s));
         inputhandler.reset(new PicInputHandler(app, game));
     }
-//    else if (s.GameType == GT_MINESWEEPER) {
-//        game.reset(new Sweeper(s));
-//        painter.reset(new SweepPainter(app, game, s));
-//        inputhandler.reset(new SweepInputHandler(app, game));
-//    }
+    else if (s.GameType == GT_MINESWEEPER) {
+        game.reset(new Sweeper(s));
+        painter.reset(new SweepPainter(app, game, s));
+        inputhandler.reset(new SweepInputHandler(app, game));
+    }
 }
 
 }
