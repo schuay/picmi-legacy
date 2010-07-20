@@ -39,7 +39,8 @@ PicPainter::PicPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<Boa
 void PicPainter::LoadSprites() {
     txt.Load(FILEPREFIX "gfx/LiberationMono-Regular.ttf",
              FILEPREFIX "gfx/LiberationMono-Bold.ttf",
-             FILEPREFIX "gfx/LiberationMono-Italic.ttf");
+             FILEPREFIX "gfx/LiberationMono-Italic.ttf",
+             14);
 
     sprIcon.Load(FILEPREFIX "gfx/icon.png", 0);
     sprIcon.SetAsIcon(app);
@@ -186,10 +187,10 @@ void PicPainter::PaintStreakArea() {
             out.str("");
             out << s.GetLength() << ' ';
 
+            streakLength += txt.WidthOf(out.str()) + 2;
+
             p.x = game->PixOffsetX() - 2 - streakLength;
             p.y = game->PixOffsetY() + i * game->CellLength();
-
-            streakLength += txt.WidthOf(out.str()) + 2;
 
             txt.Blit(   app,
                         out.str(),

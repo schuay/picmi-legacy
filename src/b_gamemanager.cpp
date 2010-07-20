@@ -34,22 +34,25 @@ void GameManager::GameOver() {
     m.Write();
 
     /* empty event loop */
-//    SDL_Event ev;
-//    while (SDL_PollEvent(&ev) == 1) {}
+    sf::Event ev;
+    while (app->GetEvent(ev)) { }
 
-//    /* display stats */
-//    painter->PaintGameOverScreen(m.AggregateStats());
+    /* display stats */
+    painter->PaintGameOverScreen(m.AggregateStats());
 
-//    /* wait for user input */
-//    while (true) {
-//        SDL_WaitEvent(&ev);
-//        if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_r) {
-//            retry = true;
-//            break;
-//        }
-//        else if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
-//            break;
-//    }
+    /* wait for user input */
+    while (true) {
+        while (!app->GetEvent(ev))
+            sf::Sleep(0.1f);
+
+        if (ev.Type == sf::Event::KeyPressed ||
+            ev.Type == sf::Event::MouseButtonPressed ||
+            ev.Type == sf::Event::Closed)
+            break;
+    }
+
+    if (ev.Type == sf::Event::KeyPressed && ev.Key.Code == sf::Key::R)
+        retry = true;
 }
 
 void GameManager::MainLoop() {

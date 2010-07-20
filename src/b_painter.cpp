@@ -42,70 +42,48 @@ namespace BoardGame {
     }
     void Painter::PaintGameOverScreen(StatsCollection c) {
 
-//        /* clone original state of screen */
-//        shared_ptr<SDL_Surface> originalScreen(
-//                SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
-//                                     screen->format->BitsPerPixel,
-//                                     screen->format->Rmask,
-//                                     screen->format->Gmask,
-//                                     screen->format->Bmask,
-//                                     screen->format->Amask),
-//                SDL_FreeSurface);
+        /* clone original state of screen */
+        sf::Image img = app->Capture();
+        sf::Sprite originalScreen(img);
 
-//        SDL_BlitSurface(screen.get(), NULL, originalScreen.get(), NULL);
+        /* construct a shade overlay */
 
-//        /* construct a shade overlay */
-//        shared_ptr<SDL_Surface> shadeOverlay(
-//                SDL_CreateRGBSurface(screen->flags, screen->w, screen->h,
-//                                     screen->format->BitsPerPixel,
-//                                     screen->format->Rmask,
-//                                     screen->format->Gmask,
-//                                     screen->format->Bmask,
-//                                     screen->format->Amask),
-//                SDL_FreeSurface);
+        sf::Shape shadeOverlay = sf::Shape::Rectangle(
+                0, 0, app->GetWidth(), app->GetHeight(), sf::Color::Black);
 
-//        /* using a transparent text layer does not work since sdl cannot correclty blit
-//           one alpha image to another (so blitting TTF_RenderText_Blended to another alpha image DST
-//           keeps DST's alpha channel, making the entire surface transparent)
 
-//           we give up 100% opaque text display to have smoother antialiased fonts on game over screen
-//         */
 
-//        SDL_Color col;
-//        col.r = col.g = col.b = 255;
+        std::string infoText = GetGameOverText(c);
 
-//        std::string infoText = GetGameOverText(c);
+        Point p(app->GetWidth() / 2, (app->GetHeight() - txt.HeightOf(infoText)) / 2);
 
-//        Point p(shadeOverlay->w / 2, (shadeOverlay->h - txt.HeightOf(infoText)) / 2);
+        /* fade in text overlay over 100 frames */
+        for (int i = 1; i < 100; i++) {
 
-//        txt.Blit(shadeOverlay, infoText, p, col, FT_BOLD, TJ_CENTER);
+            /* check for user input during fade to allow early fade abort */
+            /* ugly because 'painter' shouldn't know about input..  */
+            /* necessary because game over has its own loop within the main loop.. this should be fixed sometime */
+            sf::Event ev;
+            while (app->GetEvent(ev))
+                if (ev.Type == sf::Event::KeyPressed || ev.Type == sf::Event::MouseButtonPressed || ev.Type == sf::Event::Closed)
+                    return;
 
-//        /* fade in text overlay over 100 frames */
-//        for (int i = 1; i < 100; i++) {
+            shadeOverlay.SetColor(sf::Color(255, 255, 255, i * 2));
 
-//            /* check for user input during fade to allow early fade abort */
-//            /* ugly because 'painter' shouldn't know about input..  */
-//            /* necessary because game over has its own loop within the main loop.. this should be fixed sometime */
-//            SDL_Event ev;
-//            while (SDL_PollEvent(&ev) == 1)
-//                if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT) {
-//                    SDL_PushEvent(&ev);
-//                    return;
-//                }
+            app->Draw(originalScreen);
+            app->Draw(shadeOverlay);
+            txt.Blit(app, infoText, p, sf::Color(255, 255, 255, (( i * 127 ) / 100) * 2 ));
 
-//            SDL_SetAlpha(shadeOverlay.get(), SDL_SRCALPHA, i * 2);
-//            SDL_BlitSurface(originalScreen.get(), NULL, screen.get(), NULL);
-//            SDL_BlitSurface(shadeOverlay.get(), NULL, screen.get(), NULL);
-//            SDL_Flip(screen.get());
-//        }
+            app->Display();
+        }
     }
     void Painter::PaintPauseScreen() {
 
-//        Point p(screen->w / 2, screen->h / 2);
-//        SDL_Color col;
-//        col.r = col.g = col.b = 255;
+        Point p(app->GetWidth() / 2, app->GetHeight() / 2);
 
-//        SDL_FillRect(screen.get(), NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-//        txt.Blit(screen, "PAUSED (press p to continue)", p, col, FT_BOLD, TJ_CENTER);
+        app->Draw(sf::Shape::Rectangle(
+                0, 0, app->GetWidth(), app->GetHeight(), sf::Color::Black));
+
+        txt.Blit(app, "PAUSED (press p to continue)", p, sf::Color::White);
     }
 }

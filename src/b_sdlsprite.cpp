@@ -37,6 +37,8 @@ void SDLSprite::Load(std::string Filename, unsigned int Angle) {
         throw Exception("Loading sprite failed.");
 
     Rotation = Angle;
+    Image.SetSmooth(false);
+
 
     Surface.reset(new sf::Sprite(Image));
 

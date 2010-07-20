@@ -32,6 +32,7 @@ void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItali
         !fontItalic.LoadFromFile(fnItalic, size))
         throw Exception("Loading fonts failed.");
 
+    string.SetFont(fontNormal);
     string.SetSize(size);
 }
 
