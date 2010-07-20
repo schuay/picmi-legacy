@@ -121,6 +121,10 @@ void QTMainWindow::unlockGui() {
     setGuiLocked(false);
 }
 void QTMainWindow::setGuiLocked(bool locked) {
+
+    if (locked) this->hide();
+    else this->show();
+
     ui->rbMinesweeper->setEnabled(!locked);
     ui->rbPicross->setEnabled(!locked);
     ui->bQuit->setEnabled(!locked);
