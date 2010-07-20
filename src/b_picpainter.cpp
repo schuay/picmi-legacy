@@ -107,7 +107,16 @@ void PicPainter::PaintInfoArea() {
     color.r = color.g = color.b = 255;
 
 
-    SDL_FillRect(screen.get(), &to, SDL_MapRGB(screen->format, 0, 0, 0)); /* info -> black bg */
+    shared_ptr<SDL_Surface> shadeOverlay(
+            SDL_CreateRGBSurface(screen->flags, to.w, to.h,
+                                 screen->format->BitsPerPixel,
+                                 screen->format->Rmask,
+                                 screen->format->Gmask,
+                                 screen->format->Bmask,
+                                 SDL_BYTEORDER == SDL_BIG_ENDIAN ? 0x000000ff : 0xff000000),
+            SDL_FreeSurface);
+    SDL_FillRect(shadeOverlay.get(), &to, SDL_MapRGBA(shadeOverlay->format, 0, 0, 0, 200)); /* info -> black bg */
+    SDL_BlitSurface(shadeOverlay.get(), NULL, screen.get(), NULL);
 
     /* draw text */
     out << std::fixed << std::setprecision(0);
