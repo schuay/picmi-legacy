@@ -19,8 +19,8 @@
 
  ***************************************************************************/
 
-#ifndef B_SDLPAINTER_H
-#define B_SDLPAINTER_H
+#ifndef B_PICPAINTER_H
+#define B_PICPAINTER_H
 
 #include "b_painter.h"
 #include "b_picross.h"
@@ -41,13 +41,13 @@ private:
 
     virtual std::string GetGameOverText(StatsCollection c);
 
-    /* (initialize sdl video systems */
+    /* (initialize video systems */
     void InitSystems();
 
     void LoadSprites();
 
     /* all sprites used in the game */
-    SDLSprite
+    Sprite
             sprCellFrame,
             sprBoxTile,
             sprMarkTile,
@@ -66,4 +66,4 @@ private:
     Picross *game;
 };
 }
-#endif // B_SDLPAINTER_H
+#endif // B_PICPAINTER_H

@@ -29,8 +29,6 @@
 #define DRAG_HOR 0
 #define DRAG_VER 1
 
-#define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
-
 namespace BoardGame {
 class PicInputHandler : public InputHandler
 {

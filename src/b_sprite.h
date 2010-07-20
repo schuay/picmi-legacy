@@ -19,47 +19,33 @@
 
  ***************************************************************************/
 
-#ifndef TEXT_H
-#define TEXT_H
+#ifndef SPRITE_H
+#define SPRITE_H
 
 #include <SFML/Graphics.hpp>
-#include <string>
 #include <boost/shared_ptr.hpp>
 
-#include "b_enums.h"
 #include "b_point.h"
 #include "b_exception.h"
+#include "b_enums.h"
 
 using boost::shared_ptr;
 
 namespace BoardGame {
-class SDLText
+class Sprite
 {
 public:
 
-    void Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int pt = 12);
-
-    /* multiline text writing */
-    void Blit(shared_ptr<sf::RenderWindow> dst, std::string txt, Point &p, const sf::Color &c = sf::Color::Black,
-              FontTypeEnum fontType = FT_NORMAL, TextJustifyEnum justify = TJ_LEFT);
-
-    int WidthOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
-    int HeightOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
+    void Load(std::string Filename, unsigned int Angle);
+    void Blit(shared_ptr<sf::RenderWindow> target, Point p);
+    void SetAsIcon(shared_ptr<sf::RenderWindow> target) const;
 
 private:
 
-    void SetFontType(FontTypeEnum fontType);
+    shared_ptr<sf::Sprite> Surface;
+    sf::Image Image;
 
-    unsigned int
-            size;
-
-    sf::String
-            string;
-
-    sf::Font
-            fontNormal,
-            fontBold,
-            fontItalic;
+    int Rotation;
 };
 }
-#endif // TEXT_H
+#endif // SPRITE_H

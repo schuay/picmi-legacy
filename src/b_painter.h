@@ -26,8 +26,8 @@
 #include <sstream>
 #include <iomanip>
 
-#include "b_sdlsprite.h"
-#include "b_sdltext.h"
+#include "b_sprite.h"
+#include "b_text.h"
 #include "b_statscollection.h"
 #include "boost/shared_ptr.hpp"
 
@@ -60,9 +60,9 @@ protected:
     shared_ptr<sf::RenderWindow> app;
 
     /* text object  */
-    SDLText txt;
+    Text txt;
 
-    SDLSprite sprBackground;
+    Sprite sprBackground;
 };
 }
 #endif // B_PAINTER_H

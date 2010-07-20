@@ -27,8 +27,8 @@
 
 #include "b_painter.h"
 #include "b_sweeper.h"
-#include "b_sdlsprite.h"
-#include "b_sdltext.h"
+#include "b_sprite.h"
+#include "b_text.h"
 
 namespace BoardGame {
 
@@ -50,7 +50,7 @@ protected:
     void InitSystems();
 
     /* all sprites used in the game */
-    SDLSprite
+    Sprite
             sprCellFrame,
             sprActiveTile,
             sprClearTile,

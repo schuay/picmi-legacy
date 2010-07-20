@@ -19,11 +19,11 @@
 
  ***************************************************************************/
 
-#include "b_sdltext.h"
+#include "b_text.h"
 
 namespace BoardGame {
 
-void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int pt) {
+void Text::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int pt) {
 
     size = pt;
 
@@ -36,7 +36,7 @@ void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItali
     string.SetSize(size);
 }
 
-int SDLText::WidthOf(std::string txt, FontTypeEnum fontType) {
+int Text::WidthOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
     string.SetText(txt);
@@ -44,7 +44,7 @@ int SDLText::WidthOf(std::string txt, FontTypeEnum fontType) {
     return string.GetRect().GetWidth();
 }
 
-int SDLText::HeightOf(std::string txt, FontTypeEnum fontType) {
+int Text::HeightOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
     string.SetText(txt);
@@ -52,7 +52,7 @@ int SDLText::HeightOf(std::string txt, FontTypeEnum fontType) {
     return string.GetRect().GetHeight();
 }
 
-void SDLText::SetFontType(FontTypeEnum fontType) {
+void Text::SetFontType(FontTypeEnum fontType) {
 
     if (fontType == FT_NORMAL)
         string.SetFont(fontNormal);
@@ -63,7 +63,7 @@ void SDLText::SetFontType(FontTypeEnum fontType) {
 
 }
 
-void SDLText::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, Point &p, const sf::Color &c,
+void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, Point &p, const sf::Color &c,
                    FontTypeEnum fontType, TextJustifyEnum justify) {
 
     SetFontType(fontType);

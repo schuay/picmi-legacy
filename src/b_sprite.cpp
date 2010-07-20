@@ -19,10 +19,10 @@
 
  ***************************************************************************/
 
-#include "b_sdlsprite.h"
+#include "b_sprite.h"
 namespace BoardGame {
 
-void SDLSprite::SetAsIcon(shared_ptr<sf::RenderWindow> target) const {
+void Sprite::SetAsIcon(shared_ptr<sf::RenderWindow> target) const {
 
     target->SetIcon(
             Image.GetWidth(),
@@ -31,7 +31,7 @@ void SDLSprite::SetAsIcon(shared_ptr<sf::RenderWindow> target) const {
 
 }
 
-void SDLSprite::Load(std::string Filename, unsigned int Angle) {
+void Sprite::Load(std::string Filename, unsigned int Angle) {
 
     if (!Image.LoadFromFile(Filename))
         throw Exception("Loading sprite failed.");
@@ -45,7 +45,7 @@ void SDLSprite::Load(std::string Filename, unsigned int Angle) {
     Surface->SetRotation(Rotation);
 }
 
-void SDLSprite::Blit(shared_ptr<sf::RenderWindow> target, Point p) {
+void Sprite::Blit(shared_ptr<sf::RenderWindow> target, Point p) {
 
     /* rotation is done around pt 0,0, so we need to draw with offsets */
 

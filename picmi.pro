@@ -12,8 +12,8 @@ SOURCES += src/f_main.cpp \
     src/f_qtpicthread.cpp \
     src/b_boardgame.cpp \
     src/b_picpainter.cpp \
-    src/b_sdltext.cpp \
-    src/b_sdlsprite.cpp \
+    src/b_text.cpp \
+    src/b_sprite.cpp \
     src/b_picinputhandler.cpp \
     src/b_gamemanager.cpp \
     src/b_sweeper.cpp \
@@ -39,8 +39,8 @@ HEADERS += src/b_picross.h \
     src/b_boardgame.h \
     src/b_painter.h \
     src/b_picpainter.h \
-    src/b_sdlsprite.h \
-    src/b_sdltext.h \
+    src/b_sprite.h \
+    src/b_text.h \
     src/b_inputhandler.h \
     src/b_picinputhandler.h \
     src/b_gamemanager.h \
