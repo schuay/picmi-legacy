@@ -31,6 +31,9 @@ namespace BoardGame {
         if (!game)
             throw Exception("Game object not set");
 
+        nativeWidth = game->PixOffsetX() + game->Width() * game->CellLength() + 5;
+        nativeHeight = game->PixOffsetY() + game->Height() * game->CellLength() + 5;
+
         InitSystems();
         LoadSprites();
 
@@ -110,7 +113,7 @@ namespace BoardGame {
                 out << "Click on any tile to start the game...";
 
             p.x = (game->Width() * game->CellLength()) / 2;
-            txt.Blit(app, out.str(), p, color, FT_BOLD);
+            txt.Blit(app, out.str(), p, color, FT_BOLD, TJ_CENTER);
             return;
         }
 
@@ -159,10 +162,7 @@ namespace BoardGame {
 
     void SweepPainter::InitSystems() {
 
-        app->Create(sf::VideoMode(
-                game->PixOffsetX() + game->Width() * game->CellLength() + 5,
-                game->PixOffsetY() + game->Height() * game->CellLength() + 5),
-                WINDOWTITLE);
+        app->Create(sf::VideoMode(nativeWidth, nativeHeight), WINDOWTITLE);
 
     }
 

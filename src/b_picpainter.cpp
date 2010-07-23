@@ -29,6 +29,9 @@ PicPainter::PicPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<Boa
     if (!game)
         throw Exception("Game object not set");
 
+    nativeWidth = game->PixOffsetX() + game->Width() * game->CellLength() + 5;
+    nativeHeight = game->PixOffsetY() + game->Height() * game->CellLength() + 5;
+
     InitSystems();
     LoadSprites();
 
@@ -65,10 +68,8 @@ void PicPainter::LoadSprites() {
 
 void PicPainter::InitSystems() {
 
-    app->Create(sf::VideoMode(
-            game->PixOffsetX() + game->Width() * game->CellLength() + 5,
-            game->PixOffsetY() + game->Height() * game->CellLength() + 5),
-            WINDOWTITLE);
+    app->Create(sf::VideoMode(nativeWidth, nativeHeight), WINDOWTITLE);
+
 }
 
 void PicPainter::Paint() {
@@ -115,7 +116,7 @@ void PicPainter::PaintInfoArea() {
     out.str("");
     out << "Real: " << game->GetElapsedRealTime() / 60 << "m " << game->GetElapsedRealTime() % 60 << "s" << std::endl;
     txt.Blit(app, out.str(), p, color, FT_ITALIC);
-    p.y += txt.HeightOf(out.str());
+    p.y += txt.HeightOf(out.str()) * 3;
 
     out.str("");
     out << "Completed";
@@ -217,13 +218,14 @@ void PicPainter::PaintStreakArea() {
                   + 10;                     /* and centre within column */
             p.y = game->PixOffsetY()        /* puzzle starting position */
                   - streakLength            /* stack numbers above each other */
-                  - 2;                      /* and adjust the whole stack upwards */
+                  - 5;                      /* and adjust the whole stack upwards */
 
             txt.Blit(   app,
                         out.str(),
                         p,
                         s.Solved ? colorSolved : colorUnsolved,
-                        s.Solved ? FT_ITALIC : FT_BOLD);
+                        s.Solved ? FT_ITALIC : FT_BOLD,
+                        TJ_CENTER);
         }
     }
 }

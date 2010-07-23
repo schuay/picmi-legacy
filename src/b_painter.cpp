@@ -43,20 +43,20 @@ namespace BoardGame {
     void Painter::PaintGameOverScreen(StatsCollection c) {
 
         /* clone original state of screen */
+
         sf::Image img = app->Capture();
         sf::Sprite originalScreen(img);
 
         /* construct a shade overlay */
 
         sf::Shape shadeOverlay = sf::Shape::Rectangle(
-                0, 0, app->GetWidth(), app->GetHeight(), sf::Color::Black);
+                0, 0, nativeWidth, nativeHeight, sf::Color::Black);
 
 
 
         std::string infoText = GetGameOverText(c);
 
-        Point p( app->GetDefaultView().GetRect().GetWidth() / 2,
-                (app->GetDefaultView().GetRect().GetHeight() - txt.HeightOf(infoText)) / 2);
+        Point p( nativeWidth / 2, (nativeHeight - txt.HeightOf(infoText)) / 2);
 
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {
@@ -73,18 +73,18 @@ namespace BoardGame {
 
             app->Draw(originalScreen);
             app->Draw(shadeOverlay);
-            txt.Blit(app, infoText, p, sf::Color(255, 255, 255, (( i * 127 ) / 100) * 2 ));
+            txt.Blit(app, infoText, p, sf::Color(255, 255, 255, (( i * 127 ) / 100) * 2 ), FT_NORMAL, TJ_CENTER);
 
             app->Display();
         }
     }
     void Painter::PaintPauseScreen() {
 
-        Point p(app->GetWidth() / 2, app->GetHeight() / 2);
+        Point p(nativeWidth / 2, nativeHeight / 2);
 
         app->Draw(sf::Shape::Rectangle(
-                0, 0, app->GetWidth(), app->GetHeight(), sf::Color::Black));
+                0, 0, nativeWidth, nativeHeight, sf::Color::Black));
 
-        txt.Blit(app, "PAUSED (press p to continue)", p, sf::Color::White);
+        txt.Blit(app, "PAUSED (press p to continue)", p, sf::Color::White, FT_BOLD, TJ_CENTER);
     }
 }

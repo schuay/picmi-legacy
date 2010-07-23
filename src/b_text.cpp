@@ -36,7 +36,7 @@ void Text::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, 
     string.SetSize(size);
 }
 
-int Text::WidthOf(std::string txt, FontTypeEnum fontType) {
+unsigned int Text::WidthOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
     string.SetText(txt);
@@ -44,7 +44,7 @@ int Text::WidthOf(std::string txt, FontTypeEnum fontType) {
     return string.GetRect().GetWidth();
 }
 
-int Text::HeightOf(std::string txt, FontTypeEnum fontType) {
+unsigned int Text::HeightOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
     string.SetText(txt);
@@ -67,12 +67,27 @@ void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, Point &p, co
                    FontTypeEnum fontType, TextJustifyEnum justify) {
 
     SetFontType(fontType);
+    string.SetColor(c);
+
+    /* justification only works on entire string, not line by line */
+
+    int x;
+    switch (justify) {
+    case TJ_LEFT:
+        x = p.x;
+        break;
+    case TJ_CENTER:
+        x = p.x - WidthOf(txt, fontType) / 2;
+        break;
+    case TJ_RIGHT:
+        x = p.x - WidthOf(txt, fontType);
+        break;
+    }
+
+    string.SetX(x);
+    string.SetY(p.y);
 
     string.SetText(txt);
-
-    string.SetX(p.x);
-    string.SetY(p.y);
-    string.SetColor(c);
 
     dest->Draw(string);
 }

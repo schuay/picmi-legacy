@@ -25,11 +25,11 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iomanip>
+#include <boost/shared_ptr.hpp>
 
 #include "b_sprite.h"
 #include "b_text.h"
 #include "b_statscollection.h"
-#include "boost/shared_ptr.hpp"
 
 using boost::shared_ptr;
 
@@ -56,8 +56,11 @@ protected:
 
     virtual void LoadSprites() = 0;
 
-    /* the screen surface - everything is blitted to this */
     shared_ptr<sf::RenderWindow> app;
+
+    unsigned int
+            nativeWidth,
+            nativeHeight;
 
     /* text object  */
     Text txt;

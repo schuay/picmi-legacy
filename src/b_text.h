@@ -43,8 +43,8 @@ public:
     void Blit(shared_ptr<sf::RenderWindow> dst, std::string txt, Point &p, const sf::Color &c = sf::Color::Black,
               FontTypeEnum fontType = FT_NORMAL, TextJustifyEnum justify = TJ_LEFT);
 
-    int WidthOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
-    int HeightOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
+    unsigned int WidthOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
+    unsigned int HeightOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
 
 private:
 
