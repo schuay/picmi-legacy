@@ -29,32 +29,17 @@ void SDLSprite::SetAsIcon() {
     SDL_WM_SetIcon(Surface.get(), NULL);
 }
 
-void SDLSprite::Load(std::string Filename, unsigned int ZoomFactor, unsigned int Rotation) {
+void SDLSprite::Load(std::string Filename, unsigned int Rotation) {
 
     Surface.reset(IMG_Load(Filename.c_str()), SDL_FreeSurface);
 
     if (!Surface)
         throw Exception("Loading sprite failed.");
 
-    if (ZoomFactor != 1)
-        Zoom(ZoomFactor);
-
     if (Rotation != 0)
         Rotate(Rotation);
 }
 
-void SDLSprite::Zoom(unsigned int ZoomFactor) {
-    if (!Surface)
-        return;
-
-    shared_ptr<SDL_Surface> tmpSurface(
-            zoomSurface(Surface.get(), ZoomFactor, ZoomFactor, 0), SDL_FreeSurface);
-
-    if (!tmpSurface)
-        throw Exception("Zooming sprite %s failed.");
-    else
-        Surface = tmpSurface;
-}
 void SDLSprite::Rotate(unsigned int Rotation) {
 
     if (!Surface)

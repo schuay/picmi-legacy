@@ -28,8 +28,6 @@ BoardGame::BoardGame()
     puzzleLocation.x = 200;
     puzzleLocation.y = 200;
 
-    zoom = 1;
-
     resolution = GR_INPROGRESS;
 
     quit = false;

@@ -33,7 +33,7 @@ namespace BoardGame {
     }
 
     void Painter::LoadCustomBackground(std::string path) {
-        sprBackground.Load( path, 1, 0);
+        sprBackground.Load( path, 0);
     }
 
     void Painter::PaintBackground() {

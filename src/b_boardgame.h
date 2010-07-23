@@ -90,7 +90,6 @@ public:
     unsigned int PixOffsetX() const { return puzzleLocation.x; }
     unsigned int PixOffsetY() const { return puzzleLocation.y; }
     unsigned int CellLength() const { return celllength; }
-    unsigned int Zoom() const { return zoom; }
 
     bool GetQuit() const { return quit; }
 
@@ -129,10 +128,6 @@ protected:
     /* size of tiles in pixels */
     unsigned int
             celllength;
-
-    /* zoom */
-    unsigned int
-            zoom;
 
     /* game state - in progress, aborted, won, lost */
     GameResolutionEnum

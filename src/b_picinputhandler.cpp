@@ -40,8 +40,8 @@ void PicInputHandler::InitSystems() {
 
 int PicInputHandler::HandleMouseEvent(int x, int y, int btn, int event) {
     Point newLocation(
-            (x - game->PixOffsetX() * game->Zoom()) / (game->CellLength() * game->Zoom()),
-            (y - game->PixOffsetY() * game->Zoom()) / (game->CellLength() * game->Zoom()));
+            (x - game->PixOffsetX()) / game->CellLength(),
+            (y - game->PixOffsetY()) / game->CellLength());
 
     /* only handle mouse events in game board area */
     if (!game->IsInBounds(newLocation))

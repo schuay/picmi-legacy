@@ -59,8 +59,8 @@ namespace BoardGame {
 
         for (i = 0; i < game->Width(); i++) {
             for (j = 0; j < game->Height(); j++) {
-                p.x = game->PixOffsetX()*game->Zoom() + i*game->CellLength()*game->Zoom();
-                p.y = game->PixOffsetY()*game->Zoom() + j*game->CellLength()*game->Zoom();
+                p.x = game->PixOffsetX() + i*game->CellLength();
+                p.y = game->PixOffsetY() + j*game->CellLength();
 
                 q.x = i;
                 q.y = j;
@@ -95,11 +95,10 @@ namespace BoardGame {
         Point p;
 
         to.x = to.y = 0;
-        to.w = game->Width() * game->CellLength() * game->Zoom();
-        to.h = game->PixOffsetY() * game->Zoom();
+        to.w = game->Width() * game->CellLength();
+        to.h = game->PixOffsetY();
 
-        p.x = 10 * game->Zoom();
-        p.y = 10 * game->Zoom();
+        p.x = p.y = 10;
 
         color.r = color.g = color.b = 255;
 
@@ -161,23 +160,23 @@ namespace BoardGame {
 
         /* draw text */
         txt.Blit(screen, strTime, p, color, FT_BOLD, TJ_LEFT);
-        p.y = 10 * game->Zoom();
+        p.y = 10;
 
         if (!lowWidth) {
             p.x = (game->Width() * game->CellLength()) / 2;
             txt.Blit(screen, strEfficiency, p, color, FT_BOLD, TJ_CENTER);
-            p.y = 10 * game->Zoom();
+            p.y = 10;
         }
 
-        p.x = (game->Width() * game->CellLength() - 10) * game->Zoom();
+        p.x = (game->Width() * game->CellLength() - 10);
         txt.Blit(screen, strRemaining, p, color, FT_BOLD, TJ_RIGHT);
     }
 
     void SweepPainter::InitSystems() {
 
         screen.reset(SDL_SetVideoMode(
-                (game->PixOffsetX() + game->Width() * game->CellLength() + 5) * game->Zoom(),
-                (game->PixOffsetY() + game->Height() * game->CellLength() + 5) * game->Zoom(),
+                game->PixOffsetX() + game->Width() * game->CellLength() + 5,
+                game->PixOffsetY() + game->Height() * game->CellLength() + 5,
                 24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF),
                 SDL_FreeSurface);
 
@@ -190,26 +189,26 @@ namespace BoardGame {
                  FILEPREFIX "gfx/LiberationMono-Bold.ttf",
                  FILEPREFIX "gfx/LiberationMono-Italic.ttf", 12);
 
-        sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
+        sprIcon.Load(FILEPREFIX "gfx/icon.png", 0);
         sprIcon.SetAsIcon();
 
-        sprCellFrame.Load(      FILEPREFIX "gfx/ms_cellframe.png", game->Zoom(), 0);
-        sprActiveTile.Load(     FILEPREFIX "gfx/ms_activecell.png", game->Zoom(), 0);
-        sprClearTile.Load(      FILEPREFIX "gfx/ms_box.png", game->Zoom(), 0);
-        sprMarkedTile.Load(     FILEPREFIX "gfx/ms_marked.png", game->Zoom(), 0);
-        sprTentativeTile.Load(  FILEPREFIX "gfx/ms_tentative.png", game->Zoom(), 0);
-        sprBomb.Load(           FILEPREFIX "gfx/ms_bomb.png", game->Zoom(), 0);
+        sprCellFrame.Load(      FILEPREFIX "gfx/ms_cellframe.png", 0);
+        sprActiveTile.Load(     FILEPREFIX "gfx/ms_activecell.png", 0);
+        sprClearTile.Load(      FILEPREFIX "gfx/ms_box.png", 0);
+        sprMarkedTile.Load(     FILEPREFIX "gfx/ms_marked.png", 0);
+        sprTentativeTile.Load(  FILEPREFIX "gfx/ms_tentative.png", 0);
+        sprBomb.Load(           FILEPREFIX "gfx/ms_bomb.png", 0);
 
-        sprNumbers[0].Load(FILEPREFIX "gfx/ms_1.png", game->Zoom(), 0);
-        sprNumbers[1].Load(FILEPREFIX "gfx/ms_2.png", game->Zoom(), 0);
-        sprNumbers[2].Load(FILEPREFIX "gfx/ms_3.png", game->Zoom(), 0);
-        sprNumbers[3].Load(FILEPREFIX "gfx/ms_4.png", game->Zoom(), 0);
-        sprNumbers[4].Load(FILEPREFIX "gfx/ms_5.png", game->Zoom(), 0);
-        sprNumbers[5].Load(FILEPREFIX "gfx/ms_6.png", game->Zoom(), 0);
-        sprNumbers[6].Load(FILEPREFIX "gfx/ms_7.png", game->Zoom(), 0);
-        sprNumbers[7].Load(FILEPREFIX "gfx/ms_8.png", game->Zoom(), 0);
+        sprNumbers[0].Load(FILEPREFIX "gfx/ms_1.png", 0);
+        sprNumbers[1].Load(FILEPREFIX "gfx/ms_2.png", 0);
+        sprNumbers[2].Load(FILEPREFIX "gfx/ms_3.png", 0);
+        sprNumbers[3].Load(FILEPREFIX "gfx/ms_4.png", 0);
+        sprNumbers[4].Load(FILEPREFIX "gfx/ms_5.png", 0);
+        sprNumbers[5].Load(FILEPREFIX "gfx/ms_6.png", 0);
+        sprNumbers[6].Load(FILEPREFIX "gfx/ms_7.png", 0);
+        sprNumbers[7].Load(FILEPREFIX "gfx/ms_8.png", 0);
 
-        sprBackground.Load(FILEPREFIX "gfx/ms_background.jpg", game->Zoom(), 0);
+        sprBackground.Load(FILEPREFIX "gfx/ms_background.jpg", 0);
     }
 
     std::string SweepPainter::GetGameOverText(StatsCollection c) {

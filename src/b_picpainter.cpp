@@ -41,32 +41,32 @@ void PicPainter::LoadSprites() {
              FILEPREFIX "gfx/LiberationMono-Bold.ttf",
              FILEPREFIX "gfx/LiberationMono-Italic.ttf");
 
-    sprIcon.Load(FILEPREFIX "gfx/icon.png", 1, 0);
+    sprIcon.Load(FILEPREFIX "gfx/icon.png", 0);
     sprIcon.SetAsIcon();
 
-    sprCellFrame.Load(FILEPREFIX    "gfx/p_cellframe.png", game->Zoom(), 0);
-    sprBoxTile.Load(FILEPREFIX      "gfx/p_box.png", game->Zoom(), 0);
-    sprMarkTile.Load(FILEPREFIX     "gfx/p_mark.png", game->Zoom(), 0);
-    sprActiveTile.Load(FILEPREFIX   "gfx/p_activecell.png", game->Zoom(), 0);
+    sprCellFrame.Load(FILEPREFIX    "gfx/p_cellframe.png", 0);
+    sprBoxTile.Load(FILEPREFIX      "gfx/p_box.png", 0);
+    sprMarkTile.Load(FILEPREFIX     "gfx/p_mark.png", 0);
+    sprActiveTile.Load(FILEPREFIX   "gfx/p_activecell.png", 0);
 
-    sprDividerR.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(),0);
-    sprDividerD.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(), 270);
-    sprDividerL.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(), 180);
-    sprDividerU.Load(FILEPREFIX "gfx/p_divider.png", game->Zoom(), 90);
+    sprDividerR.Load(FILEPREFIX "gfx/p_divider.png",0);
+    sprDividerD.Load(FILEPREFIX "gfx/p_divider.png", 270);
+    sprDividerL.Load(FILEPREFIX "gfx/p_divider.png", 180);
+    sprDividerU.Load(FILEPREFIX "gfx/p_divider.png", 90);
 
-    sprStreakAreaHorA.Load(FILEPREFIX "gfx/p_streakA.png", game->Zoom(), 0);
-    sprStreakAreaHorB.Load(FILEPREFIX "gfx/p_streakB.png", game->Zoom(), 0);
-    sprStreakAreaVerA.Load(FILEPREFIX "gfx/p_streakA.png", game->Zoom(), 270);
-    sprStreakAreaVerB.Load(FILEPREFIX "gfx/p_streakB.png", game->Zoom(), 270);
+    sprStreakAreaHorA.Load(FILEPREFIX "gfx/p_streakA.png", 0);
+    sprStreakAreaHorB.Load(FILEPREFIX "gfx/p_streakB.png", 0);
+    sprStreakAreaVerA.Load(FILEPREFIX "gfx/p_streakA.png", 270);
+    sprStreakAreaVerB.Load(FILEPREFIX "gfx/p_streakB.png", 270);
 
-    sprBackground.Load(FILEPREFIX "gfx/p_background.jpg", game->Zoom(), 0);
+    sprBackground.Load(FILEPREFIX "gfx/p_background.jpg", 0);
 }
 
 void PicPainter::InitSystems() {
 
     screen.reset(SDL_SetVideoMode(
-            (game->PixOffsetX() + game->Width() * game->CellLength() + 5) * game->Zoom(),
-            (game->PixOffsetY() + game->Height() * game->CellLength() + 5) * game->Zoom(),
+            game->PixOffsetX() + game->Width() * game->CellLength() + 5,
+            game->PixOffsetY() + game->Height() * game->CellLength() + 5,
             24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF),
             SDL_FreeSurface);
 
@@ -101,8 +101,7 @@ void PicPainter::PaintInfoArea() {
     to.w = game->PixOffsetX();
     to.h = game->PixOffsetY();
 
-    p.x = 10 * game->Zoom();
-    p.y = 10 * game->Zoom();
+    p.x = p.y = 10;
 
     color.r = color.g = color.b = 255;
 
@@ -156,27 +155,29 @@ void PicPainter::PaintStreakArea() {
     /* highlight active row/col - currently deactivated because streak gfx are not translucent*/
 
     if (!game->GameWon()) {
-        p.x = game->PixOffsetX()*game->Zoom() +
-              game->GetLocation().x*game->CellLength()*game->Zoom();
+
+        p.x = game->PixOffsetX() + game->GetLocation().x * game->CellLength();
+
         for (int i = 0; i * game->CellLength() < game->PixOffsetX(); i++) {
-            p.y = i*game->CellLength()*game->Zoom();
+            p.y = i * game->CellLength();
 
             sprActiveTile.Blit(screen, p);
         }
-        p.y = game->PixOffsetY()*game->Zoom() +
-              game->GetLocation().y*game->CellLength()*game->Zoom();
-        for (int j = 0; j * game->CellLength() < game->PixOffsetX(); j++) {
-        p.x = j*game->CellLength()*game->Zoom();
 
-        sprActiveTile.Blit(screen, p);
-    }
+        p.y = game->PixOffsetY() + game->GetLocation().y * game->CellLength();
+
+        for (int j = 0; j * game->CellLength() < game->PixOffsetX(); j++) {
+            p.x = j * game->CellLength();
+
+            sprActiveTile.Blit(screen, p);
+        }
     }
 
     /* streak areas */
 
     p.y = 0;
     for (i = 0; i < game->Width(); i++) {
-        p.x = game->PixOffsetX()*game->Zoom() + i*game->CellLength()*game->Zoom();
+        p.x = game->PixOffsetX() + i*game->CellLength();
         if (i%2 == 0)
             sprStreakAreaVerA.Blit(screen, p, SJ_LEFTBOTTOM);
         else
@@ -184,7 +185,7 @@ void PicPainter::PaintStreakArea() {
     }
     p.x = 0;
     for (j = 0; j < game->Height(); j++) {
-        p.y = game->PixOffsetY()*game->Zoom() + j*game->CellLength()*game->Zoom();
+        p.y = game->PixOffsetY() + j*game->CellLength();
         if (j%2 == 0)
             sprStreakAreaHorA.Blit(screen, p, SJ_RIGHTTOP);
         else
@@ -203,8 +204,8 @@ void PicPainter::PaintStreakArea() {
             out.str("");
             out << s.GetLength() << ' ';
 
-            p.x = game->PixOffsetX()*game->Zoom() - 2*game->Zoom() - streakLength;
-            p.y = game->PixOffsetY()*game->Zoom() + i*game->Zoom()*game->CellLength();
+            p.x = game->PixOffsetX() - 2 - streakLength;
+            p.y = game->PixOffsetY() + i * game->CellLength();
 
             streakLength += txt.WidthOf(out.str()) + 2;
 
@@ -229,12 +230,12 @@ void PicPainter::PaintStreakArea() {
 
             streakLength += txt.HeightOf(out.str()) + 2;    /* used in next statement, don't move */
 
-            p.x = game->PixOffsetX()*game->Zoom()     /* puzzle starting position */
-                  + i*game->Zoom()*game->CellLength()  /* plus the appropriate column position */
-                  + 10*game->Zoom();           /* and centre within column */
-            p.y = game->PixOffsetY()*game->Zoom()     /* puzzle starting position */
-                  - streakLength                      /* stack numbers above each other */
-                  - 2*game->Zoom();            /* and adjust the whole stack upwards */
+            p.x = game->PixOffsetX()        /* puzzle starting position */
+                  + i * game->CellLength()  /* plus the appropriate column position */
+                  + 10;                     /* and centre within column */
+            p.y = game->PixOffsetY()        /* puzzle starting position */
+                  - streakLength            /* stack numbers above each other */
+                  - 2;                      /* and adjust the whole stack upwards */
 
             txt.Blit(   screen,
                         out.str(),
@@ -251,8 +252,8 @@ void PicPainter::PaintBoardArea() {
 
     for (i = 0; i < game->Width(); i++) {
         for (j = 0; j < game->Height(); j++) {
-            p.x = game->PixOffsetX()*game->Zoom() + i*game->CellLength()*game->Zoom();
-            p.y = game->PixOffsetY()*game->Zoom() + j*game->CellLength()*game->Zoom();
+            p.x = game->PixOffsetX() + i*game->CellLength();
+            p.y = game->PixOffsetY() + j*game->CellLength();
 
             q.x = i;
             q.y = j;

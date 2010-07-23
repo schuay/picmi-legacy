@@ -40,12 +40,11 @@ public:
     SDLSprite();
 
     void SetAsIcon();
-    void Load(std::string Filename, unsigned int Zoom, unsigned int Rotation);
+    void Load(std::string Filename, unsigned int Rotation);
     void Blit(shared_ptr<SDL_Surface> , Point p, SpriteJustifyEnum justify = SJ_LEFTTOP);
 
 private:
 
-    void Zoom(unsigned int Zoom);
     void Rotate(unsigned int Rotation); /* customized for my needs, 90/180/270 degrees and square sprites only */
 
     shared_ptr<SDL_Surface> Surface;
