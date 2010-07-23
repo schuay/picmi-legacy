@@ -21,11 +21,22 @@
 
 #ifndef B_INPUTHANDLER_H
 #define B_INPUTHANDLER_H
+
+#include <SFML/Graphics.hpp>
+#include <boost/shared_ptr.hpp>
+
+using boost::shared_ptr;
+
 namespace BoardGame {
 class InputHandler
 {
 public:
+
+    InputHandler(shared_ptr<sf::RenderWindow> &application) : app(application) { }
+
     virtual void HandleInput() = 0;
+
+    shared_ptr<sf::RenderWindow> app;
 };
 }
 #endif // B_INPUTHANDLER_H

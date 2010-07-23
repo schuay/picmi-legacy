@@ -21,78 +21,52 @@
 
 #include "b_sdlsprite.h"
 namespace BoardGame {
-SDLSprite::SDLSprite()
-{
+
+void SDLSprite::SetAsIcon(shared_ptr<sf::RenderWindow> target) const {
+
+    target->SetIcon(
+            Image.GetWidth(),
+            Image.GetHeight(),
+            Image.GetPixelsPtr());
+
 }
 
-void SDLSprite::SetAsIcon() {
-    SDL_WM_SetIcon(Surface.get(), NULL);
-}
+void SDLSprite::Load(std::string Filename, unsigned int Angle) {
 
-void SDLSprite::Load(std::string Filename, unsigned int Rotation) {
-
-    Surface.reset(IMG_Load(Filename.c_str()), SDL_FreeSurface);
-
-    if (!Surface)
+    if (!Image.LoadFromFile(Filename))
         throw Exception("Loading sprite failed.");
 
-    if (Rotation != 0)
-        Rotate(Rotation);
+    Rotation = Angle;
+
+    Surface.reset(new sf::Sprite(Image));
+
+    Surface->SetRotation(Rotation);
 }
 
-void SDLSprite::Rotate(unsigned int Rotation) {
+void SDLSprite::Blit(shared_ptr<sf::RenderWindow> target, Point p) {
 
-    if (!Surface)
-        throw Exception("Rotating sprite failed: No sprite to rotate.");
-    if (!(Rotation < 360 && Rotation%90 == 0))
-        throw Exception("Rotating sprite failed: Invalid angle.");
+    /* rotation is done around pt 0,0, so we need to draw with offsets */
 
-    int turns = (360 - Rotation) / 90;
+    int
+            xOffset = 0,
+            yOffset = 0;
 
-    /* contrary to rotozoomSurface, rotatSurface90Degrees actually works for even sized images */
-    shared_ptr<SDL_Surface> tmpSurface(
-            rotateSurface90Degrees(Surface.get(), turns), SDL_FreeSurface);
-
-    if (!tmpSurface)
-        throw Exception("Rotating sprite failed.");
-    else
-        Surface = tmpSurface;
-}
-
-void SDLSprite::Blit(shared_ptr<SDL_Surface> target, Point p, SpriteJustifyEnum justify) {
-    SDL_Rect to, from;
-
-    to.x = p.x;
-    to.y = p.y;
-    to.w = Surface->w;
-    to.h = Surface->h;
-
-    switch (justify) {
-    case SJ_LEFTTOP:
-        from.x = from.y = 0;
+    switch (Rotation) {
+    case 90:
+        yOffset = Image.GetWidth();
         break;
-    case SJ_LEFTBOTTOM:
-        from.x = 0;
-        from.y = Surface->h > target->h ?
-                 Surface->h - target->h : 0;
+    case 180:
+        xOffset = Image.GetHeight();
+        yOffset = Image.GetWidth();
         break;
-     case SJ_RIGHTTOP:
-         from.x = Surface->w > target->w ?
-                  Surface->w - target->w : 0;
-         from.y = 0;
-         break;
-    case SJ_RIGHTBOTTOM:
-        from.x = Surface->w > target->w ?
-                 Surface->w - target->w : 0;
-        from.y = Surface->h > target->h ?
-                 Surface->h - target->h : 0;
+    case 270:
+        xOffset = Image.GetHeight();
         break;
     }
 
-    from.w = Surface->w;
-    from.h = Surface->h;
+    Surface->SetPosition(p.x + xOffset, p.y + yOffset);
 
-    if ( SDL_BlitSurface( Surface.get(), &from, target.get(), &to) < 0 )
-        throw Exception(SDL_GetError());
+    target->Draw(*Surface.get());
 }
+
 }

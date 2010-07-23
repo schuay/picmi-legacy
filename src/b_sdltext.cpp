@@ -20,102 +20,60 @@
  ***************************************************************************/
 
 #include "b_sdltext.h"
+
 namespace BoardGame {
-SDLText::SDLText()
-{
-    Size = 17;
-}
 
-void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int size) {
-    if (fontNormal)
-        throw Exception("Font already loaded, Text::Load cannot be called twice.");
+void SDLText::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int pt) {
 
-    Size = size;
+    size = pt;
 
-    fontNormal.reset(TTF_OpenFont(fnNormal.c_str(), Size), TTF_CloseFont);
-    fontBold.reset(TTF_OpenFont(fnBold.c_str(), Size), TTF_CloseFont);
-    fontItalic.reset(TTF_OpenFont(fnItalic.c_str(), Size), TTF_CloseFont);
+    if (!fontNormal.LoadFromFile(fnNormal, size) ||
+        !fontBold.LoadFromFile(fnBold, size) ||
+        !fontItalic.LoadFromFile(fnItalic, size))
+        throw Exception("Loading fonts failed.");
 
-    if (!fontNormal || !fontBold || !fontItalic)
-        throw Exception(TTF_GetError());
+    string.SetSize(size);
 }
 
 int SDLText::WidthOf(std::string txt, FontTypeEnum fontType) {
-    int w;
 
-    TTF_SizeText(GetFontForType(fontType).get(), txt.c_str(), &w, NULL);
+    SetFontType(fontType);
+    string.SetText(txt);
 
-    return w;
+    return string.GetRect().GetWidth();
 }
+
 int SDLText::HeightOf(std::string txt, FontTypeEnum fontType) {
-    int h;
 
-    TTF_SizeText(GetFontForType(fontType).get(), txt.c_str(), NULL, &h);
+    SetFontType(fontType);
+    string.SetText(txt);
 
-    /* get linecount */
-    unsigned int lineCount = 0;
-    size_t found = 0;
-
-    while (found != std::string::npos) {
-        lineCount++;
-        found = txt.find('\n', ++found);
-    }
-
-    return h * lineCount;
+    return string.GetRect().GetHeight();
 }
 
-void SDLText::BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, FontTypeEnum fontType, TextJustifyEnum justify) {
-    if (!fontNormal || !fontBold || !fontItalic)
-        throw Exception("Text::Blit failed, no font loaded.");
+void SDLText::SetFontType(FontTypeEnum fontType) {
 
-    if (txt.length() == 0)
-        return;
+    if (fontType == FT_NORMAL)
+        string.SetFont(fontNormal);
+    else if (fontType == FT_BOLD)
+        string.SetFont(fontBold);
+    else if (fontType == FT_ITALIC)
+        string.SetFont(fontItalic);
 
-    SDL_Rect to;
-    shared_ptr<SDL_Surface> s(
-            TTF_RenderText_Solid(GetFontForType(fontType).get(), txt.c_str(), c),
-            SDL_FreeSurface);
-
-    if (!s)
-        throw Exception("Text::Blit failed, TTF_RenderText failed");
-
-    to.w = to.h = 1000; //should be enough to draw all strings
-    to.y = p.y;
-    if (justify == TJ_RIGHT)
-        to.x = p.x - s->w;
-    else if (justify == TJ_CENTER)
-        to.x = p.x - s->w / 2;
-    else
-        to.x = p.x;
-
-    SDL_BlitSurface(s.get(), NULL, target.get(), &to);
 }
 
-shared_ptr<TTF_Font> SDLText::GetFontForType(unsigned int fontType) {
-    switch (fontType) {
-    case FT_NORMAL:
-        return fontNormal;
-    case FT_BOLD:
-        return fontBold;
-    case FT_ITALIC:
-    default:
-        return fontItalic;
-    }
+void SDLText::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, Point &p, const sf::Color &c,
+                   FontTypeEnum fontType, TextJustifyEnum justify) {
+
+    SetFontType(fontType);
+
+    string.SetText(txt);
+
+    string.SetX(p.x);
+    string.SetY(p.y);
+    string.SetColor(c);
+
+    dest->Draw(string);
 }
 
-void SDLText::Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, FontTypeEnum fontType, TextJustifyEnum justify) {
-
-    QString qtext(text.c_str());
-    QStringList qsplittext = qtext.split('\n');
-
-    if (qsplittext.count() == 0)
-        return;
-
-    unsigned int textHeight = HeightOf(qsplittext[0].toStdString(), fontType);
-
-    for (int i = 0; i < qsplittext.count(); i++) {
-        BlitLine(dst, qsplittext.at(i).toStdString(), p, c, fontType, justify);
-        p.y += textHeight;
-    }
-}
 }

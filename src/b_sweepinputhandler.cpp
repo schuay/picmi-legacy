@@ -21,121 +21,116 @@
 
 #include "b_sweepinputhandler.h"
 namespace BoardGame {
-    SweepInputHandler::SweepInputHandler(BoardGame *p)
+    SweepInputHandler::SweepInputHandler(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> &p) :
+            InputHandler(application)
     {
-        game = dynamic_cast<Sweeper*>(p);
+        game = dynamic_cast<Sweeper*>(p.get());
 
         if (!game)
             throw Exception("Game object not set");
-
-        InitSystems();
-    }
-
-    void SweepInputHandler::InitSystems() {
-        SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
     }
 
     int SweepInputHandler::HandleMouseEvent(int x, int y, int btn) {
-        Point newLocation(
-                (x - game->PixOffsetX()) / game->CellLength(),
-                (y - game->PixOffsetY()) / game->CellLength());
+//        Point newLocation(
+//                (x - game->PixOffsetX()) / game->CellLength(),
+//                (y - game->PixOffsetY()) / game->CellLength());
 
-        /* only handle mouse events in game board area */
-        if (!game->IsInBounds(newLocation))
-            return OP_NONE;
+//        /* only handle mouse events in game board area */
+//        if (!game->IsInBounds(newLocation))
+//            return OP_NONE;
 
-        game->TrySetLocation(newLocation);
+//        game->TrySetLocation(newLocation);
 
-        if (btn == SDL_BUTTON_LEFT)
-            return S_OP_EXPOSE;
-        else if (btn == SDL_BUTTON_RIGHT)
-            return S_OP_MARK;
-        else if (btn == SDL_BUTTON_MIDDLE)
-            return S_OP_TENTATIVE;
+//        if (btn == SDL_BUTTON_LEFT)
+//            return S_OP_EXPOSE;
+//        else if (btn == SDL_BUTTON_RIGHT)
+//            return S_OP_MARK;
+//        else if (btn == SDL_BUTTON_MIDDLE)
+//            return S_OP_TENTATIVE;
 
         return OP_NONE;
     }
     void SweepInputHandler::HandleInput() {
-        SDL_Event ev;
+        sf::Event ev;
 
-        while (SDL_PollEvent(&ev) == 1) {
+        while (app->GetEvent(ev)) {
             int dx = 0, dy = 0, op = OP_NONE;
 
             /* get input... */
 
-            switch (ev.type) {
-            case SDL_KEYDOWN:
-                switch (ev.key.keysym.sym) {
-                case SDLK_ESCAPE:
+            switch (ev.Type) {
+            case sf::Event::KeyPressed:
+                switch (ev.Key.Code) {
+                case sf::Key::Escape:
                     game->SetResolution(GR_ABORTED);
                     break;
-                case SDLK_p:
+                case sf::Key::P:
                     game->SetPaused(!game->GetPaused());
                     break;
-                case SDLK_KP7:
-                case SDLK_y:
+                case sf::Key::Num7:
+                case sf::Key::Y:
                     dx = -1;
                     dy = -1;
                     break;
-                case SDLK_KP9:
-                case SDLK_u:
+                case sf::Key::Num9:
+                case sf::Key::U:
                     dx = 1;
                     dy = -1;
                     break;
-                case SDLK_KP1:
-                case SDLK_b:
+                case sf::Key::Num1:
+                case sf::Key::B:
                     dx = -1;
                     dy = 1;
                     break;
-                case SDLK_KP3:
-                case SDLK_n:
+                case sf::Key::Num3:
+                case sf::Key::N:
                     dx = 1;
                     dy = 1;
                     break;
-                case SDLK_KP4:
-                case SDLK_h:
-                case SDLK_a:
-                case SDLK_LEFT:
+                case sf::Key::Num4:
+                case sf::Key::H:
+                case sf::Key::A:
+                case sf::Key::Left:
                     dx = -1;
                     break;
-                case SDLK_KP6:
-                case SDLK_l:
-                case SDLK_d:
-                case SDLK_RIGHT:
+                case sf::Key::Num6:
+                case sf::Key::L:
+                case sf::Key::D:
+                case sf::Key::Right:
                     dx = 1;
                     break;
-                case SDLK_KP8:
-                case SDLK_k:
-                case SDLK_w:
-                case SDLK_UP:
+                case sf::Key::Num8:
+                case sf::Key::K:
+                case sf::Key::W:
+                case sf::Key::Up:
                     dy = -1;
                     break;
-                case SDLK_KP2:
-                case SDLK_j:
-                case SDLK_s:
-                case SDLK_DOWN:
+                case sf::Key::Num2:
+                case sf::Key::J:
+                case sf::Key::S:
+                case sf::Key::Down:
                     dy = 1;
                     break;
-                case SDLK_KP5:
-                case SDLK_RCTRL:
-                case SDLK_LCTRL:
+                case sf::Key::Num5:
+                case sf::Key::LControl:
+                case sf::Key::RControl:
                     op = S_OP_MARK;
                     break;
-                case SDLK_KP0:
-                case SDLK_SPACE:
+                case sf::Key::Num0:
+                case sf::Key::Space:
                     op = S_OP_EXPOSE;
                     break;
                 default:
                     break;
                 }
                 break;
-            case SDL_MOUSEBUTTONDOWN:
-                op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
-                break;
-            case SDL_MOUSEMOTION:
-                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE);
-                break;
-            case SDL_QUIT:
+//            case SDL_MOUSEBUTTONDOWN:
+//                op = HandleMouseEvent(ev.button.x, ev.button.y, ev.button.button);
+//                break;
+//            case SDL_MOUSEMOTION:
+//                op = HandleMouseEvent(ev.motion.x, ev.motion.y, SDL_BUTTON_NONE);
+//                break;
+            case sf::Event::Closed:
                 game->SetResolution(GR_ABORTED);
                 break;
             default:

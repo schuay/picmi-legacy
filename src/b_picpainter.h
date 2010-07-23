@@ -29,7 +29,7 @@ namespace BoardGame {
 class PicPainter : public Painter
 {
 public:
-    PicPainter(BoardGame *p, BoardSettings &s);
+    PicPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> &p, BoardSettings &s);
 
     void Paint();
 

@@ -22,12 +22,9 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <QString>
-#include <QStringList>
 
 #include "b_enums.h"
 #include "b_point.h"
@@ -39,24 +36,27 @@ namespace BoardGame {
 class SDLText
 {
 public:
-    SDLText();
 
-    void Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int size = 17);
+    void Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int pt = 12);
 
     /* multiline text writing */
-    void Blit(shared_ptr<SDL_Surface> dst, std::string text, Point &p, SDL_Color &c, FontTypeEnum fontType, TextJustifyEnum justify = TJ_LEFT);
+    void Blit(shared_ptr<sf::RenderWindow> dst, std::string txt, Point &p, const sf::Color &c = sf::Color::Black,
+              FontTypeEnum fontType = FT_NORMAL, TextJustifyEnum justify = TJ_LEFT);
 
     int WidthOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
     int HeightOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);
 
 private:
-    unsigned int Size;
 
-    void BlitLine(shared_ptr<SDL_Surface> target, std::string txt, Point p, SDL_Color c, FontTypeEnum fontType, TextJustifyEnum justify);
+    void SetFontType(FontTypeEnum fontType);
 
-    shared_ptr<TTF_Font> GetFontForType(unsigned int fontType);
+    unsigned int
+            size;
 
-    shared_ptr<TTF_Font>
+    sf::String
+            string;
+
+    sf::Font
             fontNormal,
             fontBold,
             fontItalic;

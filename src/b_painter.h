@@ -22,11 +22,10 @@
 #ifndef B_PAINTER_H
 #define B_PAINTER_H
 
-#include <SDL/SDL.h>
+#include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iomanip>
 
-#include "SDL/SDL.h"
 #include "b_sdlsprite.h"
 #include "b_sdltext.h"
 #include "b_statscollection.h"
@@ -35,13 +34,13 @@
 using boost::shared_ptr;
 
 #define FILEPREFIX ""               /* set the location of gfx and fonts */
+#define WINDOWTITLE "picmi"
 
 namespace BoardGame {
 class Painter
 {
 public:
-    Painter();
-    virtual ~Painter();
+    Painter(shared_ptr<sf::RenderWindow> &application);
 
     virtual void Paint() = 0;
     virtual void PaintGameOverScreen(StatsCollection c);
@@ -58,7 +57,7 @@ protected:
     virtual void LoadSprites() = 0;
 
     /* the screen surface - everything is blitted to this */
-    shared_ptr<SDL_Surface> screen;
+    shared_ptr<sf::RenderWindow> app;
 
     /* text object  */
     SDLText txt;

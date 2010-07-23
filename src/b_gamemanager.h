@@ -22,7 +22,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <SDL/SDL.h>
+#include <SFML/Graphics.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "b_sweeper.h"
 #include "b_sweeppainter.h"
@@ -32,12 +33,11 @@
 #include "b_picpainter.h"
 #include "b_statsmanager.h"
 
+using boost::shared_ptr;
+
 namespace BoardGame {
 class GameManager {
 public:
-
-    GameManager();
-    ~GameManager();
 
     void MainLoop();
     void Initialize(BoardSettings &s);
@@ -52,9 +52,11 @@ private:
 
     bool retry;
 
-    BoardGame *game;
-    Painter *painter;
-    InputHandler *inputhandler;
+    shared_ptr<BoardGame> game;
+    shared_ptr<Painter> painter;
+    shared_ptr<InputHandler> inputhandler;
+
+    shared_ptr<sf::RenderWindow> app;
 };
 }
 #endif // GAME_H

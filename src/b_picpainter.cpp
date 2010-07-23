@@ -21,10 +21,10 @@
 
 #include "b_picpainter.h"
 namespace BoardGame {
-PicPainter::PicPainter(BoardGame *p, BoardSettings &s)
-    : Painter(), game(NULL)
+PicPainter::PicPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> &p, BoardSettings &s)
+    : Painter(application), game(NULL)
 {
-    game = dynamic_cast<Picross*>(p);
+    game = dynamic_cast<Picross*>(p.get());
 
     if (!game)
         throw Exception("Game object not set");
@@ -42,14 +42,14 @@ void PicPainter::LoadSprites() {
              FILEPREFIX "gfx/LiberationMono-Italic.ttf");
 
     sprIcon.Load(FILEPREFIX "gfx/icon.png", 0);
-    sprIcon.SetAsIcon();
+    sprIcon.SetAsIcon(app);
 
     sprCellFrame.Load(FILEPREFIX    "gfx/p_cellframe.png", 0);
     sprBoxTile.Load(FILEPREFIX      "gfx/p_box.png", 0);
     sprMarkTile.Load(FILEPREFIX     "gfx/p_mark.png", 0);
     sprActiveTile.Load(FILEPREFIX   "gfx/p_activecell.png", 0);
 
-    sprDividerR.Load(FILEPREFIX "gfx/p_divider.png",0);
+    sprDividerR.Load(FILEPREFIX "gfx/p_divider.png", 0);
     sprDividerD.Load(FILEPREFIX "gfx/p_divider.png", 270);
     sprDividerL.Load(FILEPREFIX "gfx/p_divider.png", 180);
     sprDividerU.Load(FILEPREFIX "gfx/p_divider.png", 90);
@@ -64,20 +64,16 @@ void PicPainter::LoadSprites() {
 
 void PicPainter::InitSystems() {
 
-    screen.reset(SDL_SetVideoMode(
+    app->Create(sf::VideoMode(
             game->PixOffsetX() + game->Width() * game->CellLength() + 5,
-            game->PixOffsetY() + game->Height() * game->CellLength() + 5,
-            24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF),
-            SDL_FreeSurface);
-
-    if (!screen)
-        throw Exception(SDL_GetError());
+            game->PixOffsetY() + game->Height() * game->CellLength() + 5),
+            WINDOWTITLE);
 }
 
 void PicPainter::Paint() {
     if (game->GetPaused()) {
         PaintPauseScreen();
-        SDL_Flip(screen.get());
+        app->Display();
         return;
     }
 
@@ -88,67 +84,53 @@ void PicPainter::Paint() {
     PaintStreakArea();
     PaintBoardArea();
 
-    SDL_Flip(screen.get());
+    app->Display();
 }
 
 void PicPainter::PaintInfoArea() {
-    SDL_Rect to;
-    SDL_Color color;
+
     std::stringstream out;
     Point p;
-
-    to.x = to.y = 0;
-    to.w = game->PixOffsetX();
-    to.h = game->PixOffsetY();
+    sf::Color color(sf::Color::White);
 
     p.x = p.y = 10;
 
-    color.r = color.g = color.b = 255;
-
-
-    shared_ptr<SDL_Surface> shadeOverlay(
-            SDL_CreateRGBSurface(screen->flags, to.w, to.h,
-                                 screen->format->BitsPerPixel,
-                                 screen->format->Rmask,
-                                 screen->format->Gmask,
-                                 screen->format->Bmask,
-                                 SDL_BYTEORDER == SDL_BIG_ENDIAN ? 0x000000ff : 0xff000000),
-            SDL_FreeSurface);
-    SDL_FillRect(shadeOverlay.get(), &to, SDL_MapRGBA(shadeOverlay->format, 0, 0, 0, 200)); /* info -> black bg */
-    SDL_BlitSurface(shadeOverlay.get(), NULL, screen.get(), NULL);
+    sf::Shape shape = sf::Shape::Rectangle(0, 0, game->PixOffsetX(), game->PixOffsetY(), sf::Color(0, 0, 0, 200));
+    app->Draw(shape);
 
     /* draw text */
     out << std::fixed << std::setprecision(0);
 
     out << "Elapsed Time";
-    txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_LEFT);
+    txt.Blit(app, out.str(), p, color, FT_BOLD);
+    p.y += txt.HeightOf(out.str());
 
     out.str("");
     out << "--------------" << std::endl
         << "Total: " << game->GetElapsedTime() / 60 << "m " << game->GetElapsedTime() % 60 << "s";
-    txt.Blit(screen, out.str(), p, color, FT_NORMAL, TJ_LEFT);
+    txt.Blit(app, out.str(), p, color, FT_NORMAL);
+    p.y += txt.HeightOf(out.str());
 
     out.str("");
     out << "Real: " << game->GetElapsedRealTime() / 60 << "m " << game->GetElapsedRealTime() % 60 << "s" << std::endl;
-    txt.Blit(screen, out.str(), p, color, FT_ITALIC, TJ_LEFT);
+    txt.Blit(app, out.str(), p, color, FT_ITALIC);
+    p.y += txt.HeightOf(out.str());
 
     out.str("");
     out << "Completed";
-    txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_LEFT);
+    txt.Blit(app, out.str(), p, color, FT_BOLD);
+    p.y += txt.HeightOf(out.str());
 
     out.str("");
     out << "--------------" << std::endl
         << game->GetCompletedPercentageBoxes() << " % done";
-    txt.Blit(screen, out.str(), p, color, FT_NORMAL, TJ_LEFT);
+    txt.Blit(app, out.str(), p, color, FT_NORMAL);
 }
 void PicPainter::PaintStreakArea() {
     unsigned int i, j;
     Point p;
-    SDL_Color colorSolved,
-              colorUnsolved;
-
-    colorSolved.r = colorSolved.g = colorSolved.b = 84;         /* dark gray */
-    colorUnsolved.r = colorUnsolved.g = colorUnsolved.b = 0;    /* black */
+    sf::Color colorSolved(84, 84, 84),
+              colorUnsolved(0, 0, 0);
 
     std::stringstream out;
 
@@ -161,7 +143,7 @@ void PicPainter::PaintStreakArea() {
         for (int i = 0; i * game->CellLength() < game->PixOffsetX(); i++) {
             p.y = i * game->CellLength();
 
-            sprActiveTile.Blit(screen, p);
+            sprActiveTile.Blit(app, p);
         }
 
         p.y = game->PixOffsetY() + game->GetLocation().y * game->CellLength();
@@ -169,7 +151,7 @@ void PicPainter::PaintStreakArea() {
         for (int j = 0; j * game->CellLength() < game->PixOffsetX(); j++) {
             p.x = j * game->CellLength();
 
-            sprActiveTile.Blit(screen, p);
+        sprActiveTile.Blit(app, p);
         }
     }
 
@@ -179,17 +161,17 @@ void PicPainter::PaintStreakArea() {
     for (i = 0; i < game->Width(); i++) {
         p.x = game->PixOffsetX() + i*game->CellLength();
         if (i%2 == 0)
-            sprStreakAreaVerA.Blit(screen, p, SJ_LEFTBOTTOM);
+            sprStreakAreaVerA.Blit(app, p);
         else
-            sprStreakAreaVerB.Blit(screen, p, SJ_LEFTBOTTOM);
+            sprStreakAreaVerB.Blit(app, p);
     }
     p.x = 0;
     for (j = 0; j < game->Height(); j++) {
         p.y = game->PixOffsetY() + j*game->CellLength();
         if (j%2 == 0)
-            sprStreakAreaHorA.Blit(screen, p, SJ_RIGHTTOP);
+            sprStreakAreaHorA.Blit(app, p);
         else
-            sprStreakAreaHorB.Blit(screen, p, SJ_RIGHTTOP);
+            sprStreakAreaHorB.Blit(app, p);
     }
 
     unsigned int streakLength;
@@ -200,7 +182,7 @@ void PicPainter::PaintStreakArea() {
 
         for (int js = game->RowStreaks[i].size() - 1; js >= 0; js--) {
             PicStreak s = game->RowStreaks[i][js];     /* note the reverse order of loop  */
-                                                            /* we need to do this to draw streaks in correct order */
+                                                       /* we need to do this to draw streaks in correct order */
             out.str("");
             out << s.GetLength() << ' ';
 
@@ -209,12 +191,11 @@ void PicPainter::PaintStreakArea() {
 
             streakLength += txt.WidthOf(out.str()) + 2;
 
-            txt.Blit(   screen,
+            txt.Blit(   app,
                         out.str(),
                         p,
                         s.Solved ? colorSolved : colorUnsolved,
-                        s.Solved ? FT_ITALIC : FT_BOLD,
-                        TJ_RIGHT);
+                        s.Solved ? FT_ITALIC : FT_BOLD);
         }
     }
 
@@ -237,12 +218,11 @@ void PicPainter::PaintStreakArea() {
                   - streakLength            /* stack numbers above each other */
                   - 2;                      /* and adjust the whole stack upwards */
 
-            txt.Blit(   screen,
+            txt.Blit(   app,
                         out.str(),
                         p,
                         s.Solved ? colorSolved : colorUnsolved,
-                        s.Solved ? FT_ITALIC : FT_BOLD,
-                        TJ_CENTER);
+                        s.Solved ? FT_ITALIC : FT_BOLD);
         }
     }
 }
@@ -261,31 +241,31 @@ void PicPainter::PaintBoardArea() {
             /* active cells (and entire row / column) */
             if (!game->GameWon() &&
                 ( q.x == game->GetLocation().x || q.y == game->GetLocation().y ))
-                sprActiveTile.Blit(screen, p);
+                sprActiveTile.Blit(app, p);
 
             /* cell frame */
-            sprCellFrame.Blit(screen, p);
+            sprCellFrame.Blit(app, p);
 
             /* dividers (mark 5x5 areas */
             if ((i+1)%5 == 0) {
-                sprDividerR.Blit(screen, p);
+                sprDividerR.Blit(app, p);
             }
             else if (i%5 == 0) {
-                sprDividerL.Blit(screen, p);
+                sprDividerL.Blit(app, p);
             }
             if ((j+1)%5 == 0) {
-                sprDividerD.Blit(screen, p);
+                sprDividerD.Blit(app, p);
             }
             else if (j%5 == 0) {
-                sprDividerU.Blit(screen, p);
+                sprDividerU.Blit(app, p);
             }
 
             /* box / marked tiles */
             if (game->GetStateAt(q) == BOARD_HIT) {
-                sprBoxTile.Blit(screen, p);
+                sprBoxTile.Blit(app, p);
             }
             else if (game->GetStateAt(q) == BOARD_MARKED) {
-                sprMarkTile.Blit(screen, p);
+                sprMarkTile.Blit(app, p);
             }
         }
     }

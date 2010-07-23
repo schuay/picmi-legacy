@@ -22,8 +22,6 @@
 #ifndef B_PICINPUTHANDLER_H
 #define B_PICINPUTHANDLER_H
 
-#include <SDL/SDL.h>
-
 #include "b_picross.h"
 #include "b_inputhandler.h"
 
@@ -37,13 +35,11 @@ namespace BoardGame {
 class PicInputHandler : public InputHandler
 {
 public:
-    PicInputHandler(BoardGame* p);
+    PicInputHandler(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> &p);
 
     void HandleInput();
 
 private:
-
-    void InitSystems();
 
     int HandleMouseEvent(const int x, const int y, const int btn, const int event);
 

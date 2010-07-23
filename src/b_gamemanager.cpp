@@ -22,6 +22,7 @@
 #include "b_gamemanager.h"
 
 namespace BoardGame {
+
 void GameManager::GameOver() {
 
     /* paint final game state */
@@ -33,22 +34,22 @@ void GameManager::GameOver() {
     m.Write();
 
     /* empty event loop */
-    SDL_Event ev;
-    while (SDL_PollEvent(&ev) == 1) {}
+//    SDL_Event ev;
+//    while (SDL_PollEvent(&ev) == 1) {}
 
-    /* display stats */
-    painter->PaintGameOverScreen(m.AggregateStats());
+//    /* display stats */
+//    painter->PaintGameOverScreen(m.AggregateStats());
 
-    /* wait for user input */
-    while (true) {
-        SDL_WaitEvent(&ev);
-        if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_r) {
-            retry = true;
-            break;
-        }
-        else if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
-            break;
-    }
+//    /* wait for user input */
+//    while (true) {
+//        SDL_WaitEvent(&ev);
+//        if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_r) {
+//            retry = true;
+//            break;
+//        }
+//        else if (ev.type == SDL_KEYDOWN || ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_QUIT)
+//            break;
+//    }
 }
 
 void GameManager::MainLoop() {
@@ -60,17 +61,16 @@ void GameManager::MainLoop() {
         game->GameLost();   /* todo: merge these and give them a reasonable name */
         game->GameWon();    /* they now set game.quit automatically */
 
-        SDL_Delay(30);  /* relinquish cpu time we don't need */
+        sf::Sleep(0.030f);
     }
 
     GameOver();
 }
 
 void GameManager::InitSystems() {
-    if (SDL_Init(SDL_INIT_VIDEO) == -1 )
-        throw Exception(SDL_GetError());
 
-    SDL_WM_SetCaption("picmi", NULL);
+    app.reset(new sf::RenderWindow());
+
 }
 void GameManager::Initialize(BoardSettings &s) {
 
@@ -80,30 +80,15 @@ void GameManager::Initialize(BoardSettings &s) {
 
     /* create game objects */
     if (s.GameType == GT_PICROSS) {
-        game = new Picross(s);
-        painter = new PicPainter(game, s);
-        inputhandler = new PicInputHandler(game);
+        game.reset(new Picross(s));
+        painter.reset(new PicPainter(app, game, s));
+        inputhandler.reset(new PicInputHandler(app, game));
     }
-    else if (s.GameType == GT_MINESWEEPER) {
-        game = new Sweeper(s);
-        painter = new SweepPainter(game, s);
-        inputhandler = new SweepInputHandler(game);
-    }
+//    else if (s.GameType == GT_MINESWEEPER) {
+//        game.reset(new Sweeper(s));
+//        painter.reset(new SweepPainter(app, game, s));
+//        inputhandler.reset(new SweepInputHandler(app, game));
+//    }
 }
 
-GameManager::GameManager() {
-    game = NULL;
-    painter = NULL;
-    inputhandler = NULL;
-}
-GameManager::~GameManager() {
-    if (game)
-        delete game;
-    if (painter)
-        delete painter;
-    if (inputhandler)
-        delete inputhandler;
-
-    SDL_Quit();
-}
 }

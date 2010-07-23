@@ -23,10 +23,10 @@
 
 namespace BoardGame {
 
-    SweepPainter::SweepPainter(BoardGame *p, BoardSettings &s) :
-            Painter(), game(NULL)
+    SweepPainter::SweepPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> p, BoardSettings &s) :
+            Painter(application), game(NULL)
     {
-        game = dynamic_cast<Sweeper*>(p);
+        game = dynamic_cast<Sweeper*>(p.get());
 
         if (!game)
             throw Exception("Game object not set");
@@ -41,7 +41,7 @@ namespace BoardGame {
     void SweepPainter::Paint() {
         if (game->GetPaused()) {
             PaintPauseScreen();
-            SDL_Flip(screen.get());
+            app->Display();
             return;
         }
 
@@ -49,7 +49,7 @@ namespace BoardGame {
         PaintBoardArea();
         PaintInfoArea();
 
-        SDL_Flip(screen.get());
+        app->Display();
     }
     void SweepPainter::PaintBoardArea() {
         unsigned int i, j;
@@ -66,55 +66,40 @@ namespace BoardGame {
                 q.y = j;
 
                 /* cell frame */
-                sprCellFrame.Blit(screen, p);
+                sprCellFrame.Blit(app, p);
 
                 /* active tile */
                 if (q == currentLocation)
-                    sprActiveTile.Blit(screen, p);
+                    sprActiveTile.Blit(app, p);
 
                 /* tile states */
                 int state = game->GetStateAt(q);
 
                 if (state == S_BOARD_MARKED)
-                    sprMarkedTile.Blit(screen, p);
+                    sprMarkedTile.Blit(app, p);
                 else if (state == S_BOARD_CLEAN)
-                    sprClearTile.Blit(screen, p);
+                    sprClearTile.Blit(app, p);
                 else if (state == S_BOARD_TENTATIVE)
-                    sprTentativeTile.Blit(screen, p);
+                    sprTentativeTile.Blit(app, p);
                 else if (state == S_BOARD_BOMB)
-                    sprBomb.Blit(screen, p);
+                    sprBomb.Blit(app, p);
                 else if (state >= S_BOARD_EXPOSED_1 && state <= S_BOARD_EXPOSED_8)
-                    sprNumbers[state-1].Blit(screen, p);
+                    sprNumbers[state-1].Blit(app, p);
             }
         }
     }
     void SweepPainter::PaintInfoArea() {
-        SDL_Rect to;
-        SDL_Color color;
+
+        sf::Color color(sf::Color::White);
         std::stringstream out;
         Point p;
 
-        to.x = to.y = 0;
-        to.w = game->Width() * game->CellLength();
-        to.h = game->PixOffsetY();
-
         p.x = p.y = 10;
-
-        color.r = color.g = color.b = 255;
 
         /* info -> black bg */
 
-        shared_ptr<SDL_Surface> shadeOverlay(
-                SDL_CreateRGBSurface(screen->flags, to.w, to.h,
-                                     screen->format->BitsPerPixel,
-                                     screen->format->Rmask,
-                                     screen->format->Gmask,
-                                     screen->format->Bmask,
-                                     SDL_BYTEORDER == SDL_BIG_ENDIAN ? 0x000000ff : 0xff000000),
-                SDL_FreeSurface);
-
-        SDL_FillRect(shadeOverlay.get(), &to, SDL_MapRGBA(shadeOverlay->format, 0, 0, 0, 200));
-        SDL_BlitSurface(shadeOverlay.get(), NULL, screen.get(), NULL);
+        sf::Shape shape = sf::Shape::Rectangle(0, 0, game->Width() * game->CellLength(), game->PixOffsetY(), sf::Color(0, 0, 0, 200));
+        app->Draw(shape);
 
         /* game not started - display instructions and exit */
         if (!game->IsStarted()) {
@@ -125,7 +110,7 @@ namespace BoardGame {
                 out << "Click on any tile to start the game...";
 
             p.x = (game->Width() * game->CellLength()) / 2;
-            txt.Blit(screen, out.str(), p, color, FT_BOLD, TJ_CENTER);
+            txt.Blit(app, out.str(), p, color, FT_BOLD);
             return;
         }
 
@@ -153,35 +138,32 @@ namespace BoardGame {
            since we do not display infos as a single string (time justified left, efficiency centered,
            remaining bombs right), we need to check if the strings INCLUDING formatting overlap
          */
-        if (     txt.WidthOf(strTime, FT_BOLD)      + txt.WidthOf(strEfficiency, FT_BOLD) / 2 + 25 > screen->w / 2)
+        if (     txt.WidthOf(strTime, FT_BOLD)      + txt.WidthOf(strEfficiency, FT_BOLD) / 2 + 25 > game->Width() * game->CellLength() / 2)
             lowWidth = true;
-        else if (txt.WidthOf(strRemaining, FT_BOLD) + txt.WidthOf(strEfficiency, FT_BOLD) / 2 + 25 > screen->w / 2)
+        else if (txt.WidthOf(strRemaining, FT_BOLD) + txt.WidthOf(strEfficiency, FT_BOLD) / 2 + 25 > game->Width() * game->CellLength() / 2)
             lowWidth = true;
 
         /* draw text */
-        txt.Blit(screen, strTime, p, color, FT_BOLD, TJ_LEFT);
+        txt.Blit(app, strTime, p, color, FT_BOLD, TJ_LEFT);
         p.y = 10;
 
         if (!lowWidth) {
             p.x = (game->Width() * game->CellLength()) / 2;
-            txt.Blit(screen, strEfficiency, p, color, FT_BOLD, TJ_CENTER);
+            txt.Blit(app, strEfficiency, p, color, FT_BOLD, TJ_CENTER);
             p.y = 10;
         }
 
         p.x = (game->Width() * game->CellLength() - 10);
-        txt.Blit(screen, strRemaining, p, color, FT_BOLD, TJ_RIGHT);
+        txt.Blit(app, strRemaining, p, color, FT_BOLD, TJ_RIGHT);
     }
 
     void SweepPainter::InitSystems() {
 
-        screen.reset(SDL_SetVideoMode(
+        app->Create(sf::VideoMode(
                 game->PixOffsetX() + game->Width() * game->CellLength() + 5,
-                game->PixOffsetY() + game->Height() * game->CellLength() + 5,
-                24, SDL_HWSURFACE | SDL_ANYFORMAT | SDL_DOUBLEBUF),
-                SDL_FreeSurface);
+                game->PixOffsetY() + game->Height() * game->CellLength() + 5),
+                WINDOWTITLE);
 
-        if (!screen)
-            throw Exception(SDL_GetError());
     }
 
     void SweepPainter::LoadSprites() {
@@ -190,7 +172,7 @@ namespace BoardGame {
                  FILEPREFIX "gfx/LiberationMono-Italic.ttf", 12);
 
         sprIcon.Load(FILEPREFIX "gfx/icon.png", 0);
-        sprIcon.SetAsIcon();
+        sprIcon.SetAsIcon(app);
 
         sprCellFrame.Load(      FILEPREFIX "gfx/ms_cellframe.png", 0);
         sprActiveTile.Load(     FILEPREFIX "gfx/ms_activecell.png", 0);

@@ -22,9 +22,7 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_rotozoom.h>
-#include <SDL/SDL_image.h>
+#include <SFML/Graphics.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "b_point.h"
@@ -37,17 +35,17 @@ namespace BoardGame {
 class SDLSprite
 {
 public:
-    SDLSprite();
 
-    void SetAsIcon();
-    void Load(std::string Filename, unsigned int Rotation);
-    void Blit(shared_ptr<SDL_Surface> , Point p, SpriteJustifyEnum justify = SJ_LEFTTOP);
+    void Load(std::string Filename, unsigned int Angle);
+    void Blit(shared_ptr<sf::RenderWindow> target, Point p);
+    void SetAsIcon(shared_ptr<sf::RenderWindow> target) const;
 
 private:
 
-    void Rotate(unsigned int Rotation); /* customized for my needs, 90/180/270 degrees and square sprites only */
+    shared_ptr<sf::Sprite> Surface;
+    sf::Image Image;
 
-    shared_ptr<SDL_Surface> Surface;
+    int Rotation;
 };
 }
 #endif // SPRITE_H

@@ -22,7 +22,6 @@
 #ifndef B_SWEEPPAINTER_H
 #define B_SWEEPPAINTER_H
 
-#include <SDL/SDL.h>
 #include <sstream>
 #include <iomanip>
 
@@ -36,7 +35,7 @@ namespace BoardGame {
 class SweepPainter : public Painter
 {
 public:
-    SweepPainter(BoardGame *p, BoardSettings &s);
+    SweepPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> p, BoardSettings &s);
 
     void Paint();
 

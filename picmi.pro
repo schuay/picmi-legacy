@@ -61,10 +61,9 @@ HEADERS += src/b_picross.h \
     src/b_statscollection.h \
     src/f_qthelp.h \
     src/b_sweepsolver.h
-unix:LIBS += -lSDL \
-    -lSDL_image \
-    -lSDL_gfx \
-    -lSDL_ttf \
+unix:LIBS += -lsfml-graphics \
+    -lsfml-window \
+    -lsfml-system \
     -lboost_thread-mt
 OTHER_FILES += README \
     PKGBUILD \

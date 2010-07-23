@@ -22,24 +22,18 @@
 #ifndef B_SWEEPINPUTHANDLER_H
 #define B_SWEEPINPUTHANDLER_H
 
-#include <SDL/SDL.h>
-
 #include "b_sweeper.h"
 #include "b_inputhandler.h"
-
-#define SDL_BUTTON_NONE -1      // used for handling mouse motion events with no buttons pressed
 
 namespace BoardGame {
     class SweepInputHandler : public InputHandler
     {
     public:
-        SweepInputHandler(BoardGame *p);
+        SweepInputHandler(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> &p);
 
         void HandleInput();
 
     private:
-
-        void InitSystems();
 
         int HandleMouseEvent(const int x, const int y, const int btn);
 
