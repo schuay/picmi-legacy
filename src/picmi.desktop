@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=picmi
 GenericName=Logic Game
-Comment=A number logic game
+Comment=A puzzle game collection
 Exec=/usr/bin/picmi
 Icon=/usr/share/picmi/gfx/icon.png
 Terminal=false
