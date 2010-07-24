@@ -201,7 +201,7 @@ Penalty time is disabled in this mode.</string>
                  </property>
                  <item>
                   <property name="text">
-                   <string>Easy</string>
+                   <string>Small</string>
                   </property>
                  </item>
                  <item>
@@ -211,7 +211,7 @@ Penalty time is disabled in this mode.</string>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Hard</string>
+                   <string>Large</string>
                   </property>
                  </item>
                 </widget>

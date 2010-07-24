@@ -99,7 +99,7 @@ void QTSettings::applySettings() {
             height;
 
     switch (ui->cbPreset->currentIndex()) {
-    case 0:     /* easy */
+    case 0:     /* small */
         width = height = 10;
         difficulty = 60;
         noHintsMode = false;
@@ -109,10 +109,10 @@ void QTSettings::applySettings() {
         difficulty = 55;
         noHintsMode = false;
         break;
-    case 2:     /* hard */
+    case 2:     /* large */
         width = height = 20;
-        difficulty = 50;
-        noHintsMode = true;
+        difficulty = 53;
+        noHintsMode = false;
         break;
     default:
         return;
