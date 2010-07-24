@@ -62,15 +62,6 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
             rmbPressed = true;
 
         break;
-    case sf::Event::MouseButtonReleased:
-        if (btn == sf::Mouse::Left)
-            lmbPressed = false;
-        else if (btn == sf::Mouse::Right)
-            rmbPressed = false;
-
-        return OP_NONE;
-
-        break;
     case sf::Event::MouseMoved:
         if (btn == sf::Mouse::Left || btn == sf::Mouse::Right) {    /* only run drag logic if a mousebutton is pressed, otherwise only set location */
             if ( newLocation != lastClickLocation && dragDirection == DRAG_UNDEF ) { /* calc drag direction */
@@ -185,8 +176,13 @@ void PicInputHandler::HandleInput() {
             }
             break;
         case sf::Event::MouseButtonPressed:
-        case sf::Event::MouseButtonReleased:
             op = HandleMouseEvent(ev.MouseButton.X, ev.MouseButton.Y, ev.MouseButton.Button, ev.Type);
+            break;
+        case sf::Event::MouseButtonReleased:
+            if (ev.MouseButton.Button == sf::Mouse::Left)
+                lmbPressed = false;
+            else if (ev.MouseButton.Button == sf::Mouse::Right)
+                rmbPressed = false;
             break;
         case sf::Event::MouseMoved:;
 
