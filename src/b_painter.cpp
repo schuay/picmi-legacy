@@ -46,6 +46,7 @@ namespace BoardGame {
 
         sf::Image img = app->Capture();
         sf::Sprite originalScreen(img);
+        originalScreen.SetScale(nativeWidth / (float)img.GetWidth(), nativeHeight / (float)img.GetHeight());
 
         /* construct a shade overlay */
 
