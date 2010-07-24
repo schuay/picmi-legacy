@@ -156,7 +156,8 @@ StatsCollection StatsManager::AggregateStats() const {
                 e->height       == latestElement->height &&
                 e->width        == latestElement->width &&
                 e->Difficulty() == latestElement->Difficulty() &&
-                e->playedTime    < latestElement->playedTime)
+                e != latestElement &&
+                e->playedTime    <= latestElement->playedTime)
 
                 rank++;
             if (e->resolution   == GR_WON &&
