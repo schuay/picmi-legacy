@@ -25,6 +25,7 @@
 #include <vector>
 #include <cstring>
 #include <cstdlib>
+#include <boost/shared_array.hpp>
 
 #include "b_boardgame.h"
 #include "b_boardsettings.h"
@@ -36,6 +37,8 @@
 #include "b_picstatselement.h"
 
 using boost::shared_ptr;
+using boost::shared_array;
+using std::vector;
 
 namespace BoardGame {
 class Picross : public BoardGame
@@ -62,7 +65,7 @@ public:
 
     shared_ptr<StatsElement> GetStats() const;
 
-    std::vector<PicStreak>
+    vector<PicStreak>
             *ColStreaks,    /* stores streaks */
             *RowStreaks;
 
@@ -73,25 +76,28 @@ private:
     int GetMapAt(Point &p) const;                      /* returns the state of map at p */
     int GetMapAt(unsigned int x, unsigned int y) const;
 
-    std::vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
-    std::vector<PicStreak> CalculateStreaksFromState(              /* startFromEnd: when true, starts calculation from end of row.*/
+    vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */
+    vector<PicStreak> CalculateStreaksFromState(                 /* startFromEnd: when true, starts calculation from end of row.*/
             bool horizontal, int lineIndex, bool startFromEnd); /* this matters because streaks from state need to be contigous*/
                                                                 /* lineIndex: which row/column to calc streaks for */
 
-    bool NoHintsMode;   /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
+    bool NoHintsMode;                       /* in this mode, allow incorrectly marking a tile as BOARD_HIT */
 
     void Initialize(BoardSettings &s);      /* check integrity and initialize class */
     void RandomPuzzle(BoardSettings &s);    /* generates random puzzle with given dimensions and sets map in settings */
 
-    unsigned int nrOfBoxes;          /* number of boxes in map - set only once in constructor */;
+    unsigned int nrOfBoxes;                 /* number of boxes in map - set only once in constructor */;
 
 
     /* stores the actual solved state of the puzzle */
-    char *map;
+    shared_array<char> map;
 
     /* stores the current state of the board visible to user */
-    char *boardState;
+    shared_array<char> boardState;
 
+    void popUndoQueue();
+    void pushUndoQueue();
+    vector<shared_array<char> > undoQueue;
 
     static const char
             mapFalse = '.',

@@ -171,6 +171,9 @@ void PicInputHandler::HandleInput() {
             case sf::Key::LControl:
                 op = OP_MARK;
                 break;
+            case sf::Key::Z:
+                op = OP_UNDO;
+                break;
             default:
                 break;
             }

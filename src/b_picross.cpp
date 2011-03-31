@@ -28,10 +28,6 @@ Picross::Picross(BoardSettings &s) : BoardGame(),
     Initialize(s);
 }
 Picross::~Picross() {
-    if (map)
-        delete[] map;
-    if (boardState)
-        delete[] boardState;
     if (ColStreaks)
         delete[] ColStreaks;
     if (RowStreaks)
@@ -232,6 +228,21 @@ void Picross::CalculateStreakSolvedState() {
     }
 }
 
+void Picross::pushUndoQueue() {
+    shared_array<char> s(new char[width * height]);
+    for (unsigned int i = 0; i < width * height; i++) {
+        s[i] = boardState[i];
+    }
+    undoQueue.push_back(s);
+}
+void Picross::popUndoQueue() {
+    if (undoQueue.empty()) {
+        return;
+    }
+    boardState = undoQueue.back();
+    undoQueue.pop_back();
+}
+
 void Picross::Initialize(BoardSettings &s) {
     if (!s.Validate())
         throw Exception("Settings validation failed");
@@ -239,8 +250,8 @@ void Picross::Initialize(BoardSettings &s) {
     width = s.x;
     height = s.y;
 
-    map = new char[width * height];
-    boardState = new char[width * height];
+    map.reset(new char[width * height]);
+    boardState.reset(new char[width * height]);
 
     nrOfBoxes = 0;
     for (unsigned int i = 0; i < width * height; i++) {
@@ -264,7 +275,6 @@ void Picross::Initialize(BoardSettings &s) {
         if (RowStreaks[i].size() == 0)
             for (unsigned int j = 0; j < width; j++)
                 boardState[i * width + j] = boardMarked;
-
 
     NoHintsMode = s.NoHintsMode;
     timer.Start();
@@ -344,6 +354,8 @@ void Picross::SetStateAt(Point &p, int state) {
         break;
     }
 
+    pushUndoQueue();
+
     boardState[p.y*width + p.x] = c;
 }
 
@@ -354,7 +366,7 @@ void Picross::DoOpAt(Point &p, int op) {
     if (op == OP_NONE)
         return;
 
-    if (op != OP_MARK && op != OP_HIT && op != OP_FORCE_CLEAR && op != OP_FORCE_MARK)
+    if (op != OP_MARK && op != OP_HIT && op != OP_FORCE_CLEAR && op != OP_FORCE_MARK && op != OP_UNDO)
         throw Exception("DoOpAt failed: Incorrect operation passed.");
 
     int
@@ -364,6 +376,9 @@ void Picross::DoOpAt(Point &p, int op) {
     switch (NoHintsMode) {
     case false:                 /* NoHintsMode DISABLED */
         switch (op) {
+        case OP_UNDO:
+            popUndoQueue();
+            break;
         case OP_FORCE_CLEAR:            /* OP_FORCE_CLEAR requested */
             switch (state) {
             case BOARD_CLEAN:           /* on CLEAN tile */
@@ -419,6 +434,9 @@ void Picross::DoOpAt(Point &p, int op) {
         break;
     case true:                  /* NoHintsMode ENABLED */
         switch (op) {
+        case OP_UNDO:
+            popUndoQueue();
+            break;
         case OP_FORCE_CLEAR:            /* OP_FORCE_CLEAR requested */
             switch (state) {
             case BOARD_CLEAN:           /* on CLEAN tile */
