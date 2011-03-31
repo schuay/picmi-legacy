@@ -71,16 +71,15 @@ void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, Point &p, co
 
     /* justification only works on entire string, not line by line */
 
-    int x;
+    int x = p.x;
     switch (justify) {
-    case TJ_LEFT:
-        x = p.x;
-        break;
     case TJ_CENTER:
         x = p.x - WidthOf(txt, fontType) / 2;
         break;
     case TJ_RIGHT:
         x = p.x - WidthOf(txt, fontType);
+        break;
+    default:
         break;
     }
 
