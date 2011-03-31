@@ -64,7 +64,7 @@ HEADERS += src/b_picross.h \
 unix:LIBS += -lsfml-graphics \
     -lsfml-window \
     -lsfml-system \
-    -lboost_thread-mt
+    -lboost_thread
 OTHER_FILES += README \
     PKGBUILD \
     AUTHORS \
