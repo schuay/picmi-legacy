@@ -22,18 +22,20 @@
 #ifndef B_PICDEFINES_H
 #define B_PICDEFINES_H
 
-#define MAP_FALSE       0 /* map state defines for interfacing with frontends */
-#define MAP_TRUE        1
+#define MAP_FALSE           0 /* map state defines for interfacing with frontends */
+#define MAP_TRUE            1
 
-#define BOARD_CLEAN     0 /* board state defines for interfacing with frontends */
-#define BOARD_MARKED    1
-#define BOARD_HIT       2
+#define BOARD_CLEAN         0 /* board state defines for interfacing with frontends */
+#define BOARD_MARKED        1
+#define BOARD_HIT           2
 
-#define OP_NONE         0 /* defines for game actions, NONE, HIT (uncover a tile), MARK (mark a tile as empty) */
-#define OP_HIT          1
-#define OP_MARK         2
-#define OP_FORCE_CLEAR  3 /* used for drag operation locking - only MARK -> CLEAR allowed */
-#define OP_FORCE_MARK   4 /* used for drag operation locking - only CLEAR -> MARK allowed */
-#define OP_UNDO         5
+#define OP_NONE             0 /* defines for game actions, NONE, HIT (uncover a tile), MARK (mark a tile as empty) */
+#define OP_HIT              1
+#define OP_MARK             2
+#define OP_FORCE_MARK2CLEAR 3 /* used for drag operation locking - only MARK -> CLEAR allowed */
+#define OP_FORCE_MARK       4 /* used for drag operation locking - only CLEAR -> MARK allowed */
+#define OP_UNDO             5
+#define OP_FORCE_HIT        6 /* used for drag operation locking - only CLEAR -> HIT allowed */
+#define OP_FORCE_HIT2CLEAR  7 /* used for drag operation locking - only HIT -> CLEAR allowed */
 
 #endif // B_PICDEFINES_H

@@ -52,14 +52,15 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
     case sf::Event::MouseButtonPressed:
         lastClickLocation = newLocation;    /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
         dragDirection = DRAG_UNDEF;         /* reset drag direction */
-        dragOperation =                     /* set drag operation */
-                game->GetStateAt(newLocation) == BOARD_CLEAN ? OP_FORCE_MARK : OP_FORCE_CLEAR;
         lastDragLocation = newLocation;     /* remember last handled tile so we only to a single op per tile on drags */
 
-        if (btn == sf::Mouse::Left)
+        if (btn == sf::Mouse::Left) {
+            dragOperation = (game->GetStateAt(newLocation) == BOARD_CLEAN) ? OP_FORCE_HIT : OP_FORCE_HIT2CLEAR;
             lmbPressed = true;
-        else if (btn == sf::Mouse::Right)
+        } else if (btn == sf::Mouse::Right) {
+            dragOperation = (game->GetStateAt(newLocation) == BOARD_CLEAN) ? OP_FORCE_MARK : OP_FORCE_MARK2CLEAR;
             rmbPressed = true;
+        }
 
         break;
     case sf::Event::MouseMoved:
@@ -93,10 +94,9 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
 
     game->TrySetLocation(newLocation);
 
-    if (btn == sf::Mouse::Left)
-        return OP_HIT;
-    else if (btn == sf::Mouse::Right)
+    if (btn == sf::Mouse::Left || btn == sf::Mouse::Right) {
         return dragOperation;
+    }
 
     return OP_NONE;
 }
