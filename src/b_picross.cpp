@@ -34,7 +34,7 @@ Picross::~Picross() {
         delete[] RowStreaks;
 }
 
-bool Picross::GameWon() {
+bool Picross::DetectAndHandleGameOver() {
     for (unsigned int i = 0; i < width * height; i++) {
         if (map[i] == mapTrue && boardState[i] != boardHit)
             return false;

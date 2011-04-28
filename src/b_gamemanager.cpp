@@ -61,8 +61,7 @@ void GameManager::MainLoop() {
         inputhandler->HandleInput();
         painter->Paint();
 
-        game->GameLost();   /* todo: merge these and give them a reasonable name */
-        game->GameWon();    /* they now set game.quit automatically */
+        game->DetectAndHandleGameOver();
 
         sf::Sleep(0.030f);
     }

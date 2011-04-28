@@ -41,16 +41,11 @@ public:
     BoardGame();
     virtual ~BoardGame();
 
-    /* returns true if the puzzle has been completely solved  */
-    virtual bool GameWon() = 0;
-
-    /* returns true if the puzzle has been lost  */
-    virtual bool GameLost() = 0;
-
     /* returns true if coordinate is in puzzle limits */
     bool IsInBounds(unsigned int x, unsigned int y) const;
     bool IsInBounds(Point &p) const;
 
+    virtual bool DetectAndHandleGameOver() = 0;
 
     /* returns the state of game board at p */
     virtual int GetStateAt(Point &p) const = 0;

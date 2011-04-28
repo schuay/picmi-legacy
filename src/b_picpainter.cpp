@@ -138,13 +138,12 @@ void PicPainter::PaintStreakArea() {
 
     /* highlight active row/col - currently deactivated because streak gfx are not translucent*/
 
-    if (!game->GameWon()) {
+    if (!game->GetQuit()) {
 
         p.x = game->PixOffsetX() + game->GetLocation().x * game->CellLength();
 
         for (int i = 0; i * game->CellLength() < game->PixOffsetX(); i++) {
             p.y = i * game->CellLength();
-
             sprActiveTile.Blit(app, p);
         }
 
@@ -152,8 +151,7 @@ void PicPainter::PaintStreakArea() {
 
         for (int j = 0; j * game->CellLength() < game->PixOffsetX(); j++) {
             p.x = j * game->CellLength();
-
-        sprActiveTile.Blit(app, p);
+            sprActiveTile.Blit(app, p);
         }
     }
 
@@ -242,9 +240,10 @@ void PicPainter::PaintBoardArea() {
             q.y = j;
 
             /* active cells (and entire row / column) */
-            if (!game->GameWon() &&
-                ( q.x == game->GetLocation().x || q.y == game->GetLocation().y ))
+            if (!game->GetQuit() &&
+                ( q.x == game->GetLocation().x || q.y == game->GetLocation().y )) {
                 sprActiveTile.Blit(app, p);
+            }
 
             /* cell frame */
             sprCellFrame.Blit(app, p);
@@ -252,22 +251,19 @@ void PicPainter::PaintBoardArea() {
             /* dividers (mark 5x5 areas */
             if ((i+1)%5 == 0) {
                 sprDividerR.Blit(app, p);
-            }
-            else if (i%5 == 0) {
+            } else if (i%5 == 0) {
                 sprDividerL.Blit(app, p);
             }
             if ((j+1)%5 == 0) {
                 sprDividerD.Blit(app, p);
-            }
-            else if (j%5 == 0) {
+            } else if (j%5 == 0) {
                 sprDividerU.Blit(app, p);
             }
 
             /* box / marked tiles */
             if (game->GetStateAt(q) == BOARD_HIT) {
                 sprBoxTile.Blit(app, p);
-            }
-            else if (game->GetStateAt(q) == BOARD_MARKED) {
+            } else if (game->GetStateAt(q) == BOARD_MARKED) {
                 sprMarkTile.Blit(app, p);
             }
         }

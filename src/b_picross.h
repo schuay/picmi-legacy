@@ -47,8 +47,7 @@ public:
     Picross(BoardSettings &s);
     ~Picross();
 
-    bool GameWon(); /* returns true if the puzzle has been completely solved  */
-    inline bool GameLost() { return false; }
+    bool DetectAndHandleGameOver();
 
     int GetStateAt(Point &p) const;                    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y) const;

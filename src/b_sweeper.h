@@ -50,8 +50,7 @@ public:
     Sweeper(BoardSettings &s);
     ~Sweeper();
 
-    bool GameWon();
-    bool GameLost();
+    bool DetectAndHandleGameOver();
 
     int GetStateAt(Point &p) const;
     int GetStateAt(unsigned int x, unsigned int y) const;
