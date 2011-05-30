@@ -35,15 +35,14 @@ void GameManager::GameOver() {
 
     /* empty event loop */
     sf::Event ev;
-    while (app->GetEvent(ev)) { }
+    while (app->PollEvent(ev)) { }
 
     /* display stats */
     painter->PaintGameOverScreen(m.AggregateStats());
 
     /* wait for user input */
     while (true) {
-        while (!app->GetEvent(ev))
-            sf::Sleep(0.1f);
+        app->WaitEvent(ev);
 
         if (ev.Type == sf::Event::KeyPressed ||
             ev.Type == sf::Event::MouseButtonPressed ||

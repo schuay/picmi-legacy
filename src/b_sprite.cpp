@@ -53,16 +53,18 @@ void Sprite::Blit(shared_ptr<sf::RenderWindow> target, Point p) {
             xOffset = 0,
             yOffset = 0;
 
+    /* brainfuck, more thought required */
     switch (Rotation) {
     case 90:
-        yOffset = Image.GetWidth();
+        xOffset = Image.GetHeight();
+        yOffset = - Image.GetWidth();
         break;
     case 180:
-        xOffset = Image.GetHeight();
-        yOffset = Image.GetWidth();
+        xOffset = Image.GetWidth();
+        yOffset = Image.GetHeight();
         break;
     case 270:
-        xOffset = Image.GetHeight();
+        yOffset = Image.GetWidth();
         break;
     }
 

@@ -136,7 +136,7 @@ void PicPainter::PaintStreakArea() {
 
     std::stringstream out;
 
-    /* highlight active row/col - currently deactivated because streak gfx are not translucent*/
+    /* highlight active row/col */
 
     if (!game->GetQuit()) {
 

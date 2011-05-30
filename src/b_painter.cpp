@@ -44,7 +44,9 @@ namespace BoardGame {
 
         /* clone original state of screen */
 
-        sf::Image img = app->Capture();
+        sf::Image img;
+        img.CopyScreen(*app.get());
+
         sf::Sprite originalScreen(img);
         originalScreen.SetScale(nativeWidth / (float)img.GetWidth(), nativeHeight / (float)img.GetHeight());
 
@@ -66,7 +68,7 @@ namespace BoardGame {
             /* ugly because 'painter' shouldn't know about input..  */
             /* necessary because game over has its own loop within the main loop.. this should be fixed sometime */
             sf::Event ev;
-            while (app->GetEvent(ev))
+            while (app->PollEvent(ev))
                 if (ev.Type == sf::Event::KeyPressed || ev.Type == sf::Event::MouseButtonPressed || ev.Type == sf::Event::Closed)
                     return;
 

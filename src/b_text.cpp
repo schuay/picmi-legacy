@@ -27,29 +27,29 @@ void Text::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, 
 
     size = pt;
 
-    if (!fontNormal.LoadFromFile(fnNormal, size) ||
-        !fontBold.LoadFromFile(fnBold, size) ||
-        !fontItalic.LoadFromFile(fnItalic, size))
+    if (!fontNormal.LoadFromFile(fnNormal) ||
+        !fontBold.LoadFromFile(fnBold) ||
+        !fontItalic.LoadFromFile(fnItalic))
         throw Exception("Loading fonts failed.");
 
     string.SetFont(fontNormal);
-    string.SetSize(size);
+    string.SetCharacterSize(size);
 }
 
 unsigned int Text::WidthOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
-    string.SetText(txt);
+    string.SetString(txt);
 
-    return string.GetRect().GetWidth();
+    return string.GetRect().Width;
 }
 
 unsigned int Text::HeightOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
-    string.SetText(txt);
+    string.SetString(txt);
 
-    return string.GetRect().GetHeight();
+    return string.GetRect().Height;
 }
 
 void Text::SetFontType(FontTypeEnum fontType) {
@@ -86,7 +86,7 @@ void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, Point &p, co
     string.SetX(x);
     string.SetY(p.y);
 
-    string.SetText(txt);
+    string.SetString(txt);
 
     dest->Draw(string);
 }

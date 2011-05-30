@@ -53,7 +53,7 @@ private:
     unsigned int
             size;
 
-    sf::String
+    sf::Text
             string;
 
     sf::Font

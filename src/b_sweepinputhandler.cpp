@@ -59,7 +59,7 @@ namespace BoardGame {
     void SweepInputHandler::HandleInput() {
         sf::Event ev;
 
-        while (app->GetEvent(ev)) {
+        while (app->PollEvent(ev)) {
             int dx = 0, dy = 0, op = OP_NONE;
 
             /* get input... */
