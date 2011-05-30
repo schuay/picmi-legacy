@@ -54,14 +54,14 @@ void PicPainter::LoadSprites() {
     sprActiveTile.Load(FILEPREFIX   "gfx/p_activecell.png", 0);
 
     sprDividerR.Load(FILEPREFIX "gfx/p_divider.png", 0);
-    sprDividerD.Load(FILEPREFIX "gfx/p_divider.png", 270);
+    sprDividerD.Load(FILEPREFIX "gfx/p_divider.png", 90);
     sprDividerL.Load(FILEPREFIX "gfx/p_divider.png", 180);
-    sprDividerU.Load(FILEPREFIX "gfx/p_divider.png", 90);
+    sprDividerU.Load(FILEPREFIX "gfx/p_divider.png", 270);
 
     sprStreakAreaHorA.Load(FILEPREFIX "gfx/p_streakA.png", 0);
     sprStreakAreaHorB.Load(FILEPREFIX "gfx/p_streakB.png", 0);
-    sprStreakAreaVerA.Load(FILEPREFIX "gfx/p_streakA.png", 270);
-    sprStreakAreaVerB.Load(FILEPREFIX "gfx/p_streakB.png", 270);
+    sprStreakAreaVerA.Load(FILEPREFIX "gfx/p_streakA.png", 90);
+    sprStreakAreaVerB.Load(FILEPREFIX "gfx/p_streakB.png", 90);
 
     sprBackground.Load(FILEPREFIX "gfx/p_background.jpg", 0);
 }
