@@ -518,6 +518,30 @@ Penalty time is disabled in this mode.</string>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>cbPreset</tabstop>
+  <tabstop>bApplyPreset</tabstop>
+  <tabstop>cbNoHintsMode</tabstop>
+  <tabstop>cbBackground</tabstop>
+  <tabstop>leBGPath</tabstop>
+  <tabstop>bBrowseBG</tabstop>
+  <tabstop>sbDifficulty</tabstop>
+  <tabstop>sbWidth</tabstop>
+  <tabstop>sbHeight</tabstop>
+  <tabstop>bClearStats</tabstop>
+  <tabstop>cbMSPreset</tabstop>
+  <tabstop>bMSApplyPreset</tabstop>
+  <tabstop>cbMSBackground</tabstop>
+  <tabstop>leMSBGPath</tabstop>
+  <tabstop>bMSBrowseBG</tabstop>
+  <tabstop>cbMSSolver</tabstop>
+  <tabstop>sbMSDifficulty</tabstop>
+  <tabstop>sbMSWidth</tabstop>
+  <tabstop>sbMSHeight</tabstop>
+  <tabstop>bMSClearStats</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
