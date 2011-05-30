@@ -223,8 +223,12 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>bQuit</tabstop>
   <tabstop>bStart</tabstop>
+  <tabstop>bSettings</tabstop>
+  <tabstop>bHelp</tabstop>
+  <tabstop>bQuit</tabstop>
+  <tabstop>rbPicross</tabstop>
+  <tabstop>rbMinesweeper</tabstop>
  </tabstops>
  <resources/>
  <connections/>
