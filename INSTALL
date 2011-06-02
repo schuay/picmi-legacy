@@ -8,10 +8,10 @@ General Information
 Picmi has the following dependencies:
 
 At compile time:
-sfml, qt, boost
+sfml2, qt, boost
 
 At run time:
-sfml, qt, boost-thread
+sfml2, qt, boost-thread
 
 
 The default installation directories are
