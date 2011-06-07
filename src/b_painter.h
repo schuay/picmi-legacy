@@ -30,10 +30,10 @@
 #include "b_sprite.h"
 #include "b_text.h"
 #include "b_statscollection.h"
+#include "config.h"
 
 using boost::shared_ptr;
 
-#define FILEPREFIX ""               /* set the location of gfx and fonts */
 #define WINDOWTITLE "picmi"
 
 namespace BoardGame {

@@ -4,6 +4,16 @@ project (picmi)
 set(Boost_USE_MULTITHREADED ON)
 set(QT_USE_QTXML TRUE)
 
+set(picmi_VERSION_MAJOR 1)
+set(picmi_VERSION_MINOR 3)
+set(picmi_VERSION_PATCH 2)
+set(picmi_FILEPREFIX \"/usr/share/picmi/\")
+
+configure_file(
+	"${PROJECT_SOURCE_DIR}/src/config.h.in"
+	"${PROJECT_BINARY_DIR}/config.h"
+)
+
 find_package(Qt4 REQUIRED)
 find_package(SFML 2 COMPONENTS graphics system window REQUIRED)
 find_package(Boost COMPONENTS thread REQUIRED)
