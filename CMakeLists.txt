@@ -1,0 +1,50 @@
+cmake_minimum_required (VERSION 2.8.0)
+project (picmi)
+
+set(Boost_USE_MULTITHREADED ON)
+set(QT_USE_QTXML TRUE)
+
+find_package(Qt4 REQUIRED)
+find_package(SFML 2 COMPONENTS graphics system window REQUIRED)
+find_package(Boost COMPONENTS thread REQUIRED)
+
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Wextra -O3 -pedantic -fPIC -std=c++0x")
+
+include(${QT_USE_FILE})
+add_definitions(${QT_DEFINITIONS})
+
+set(picmi_FORMS
+	${CMAKE_SOURCE_DIR}/src/f_qthelp.ui
+	${CMAKE_SOURCE_DIR}/src/f_qtmainwindow.ui
+	${CMAKE_SOURCE_DIR}/src/f_qtsettings.ui
+)
+qt4_wrap_ui(picmi_FORMS_HEADERS ${picmi_FORMS})
+
+set(picmi_QTHEADERS
+	${CMAKE_SOURCE_DIR}/src/f_qtmainwindow.h
+	${CMAKE_SOURCE_DIR}/src/f_qthelp.h
+	${CMAKE_SOURCE_DIR}/src/f_qtsettings.h
+	${CMAKE_SOURCE_DIR}/src/f_qtpicthread.h
+)
+qt4_wrap_cpp(picmi_QTHEADERS_MOC ${picmi_QTHEADERS})
+
+
+include_directories(
+	"${CMAKE_SOURCE_DIR}/src/"
+	${Boost_INCLUDE_DIRS}
+	${SFML_INCLUDE_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}
+)
+aux_source_directory(src/ sources)
+
+add_executable(picmi
+	${sources}
+	${picmi_FORMS_HEADERS}
+	${picmi_QTHEADERS_MOC}
+)
+
+target_link_libraries(picmi
+	${Boost_LIBRARIES}
+	${SFML_LIBRARIES}
+	${QT_LIBRARIES}
+)
