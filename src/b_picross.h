@@ -85,7 +85,7 @@ private:
     void Initialize(BoardSettings &s);      /* check integrity and initialize class */
     void RandomPuzzle(BoardSettings &s);    /* generates random puzzle with given dimensions and sets map in settings */
 
-    unsigned int nrOfBoxes;                 /* number of boxes in map - set only once in constructor */;
+    unsigned int nrOfBoxes;                 /* number of boxes in map - set only once in constructor */
 
 
     /* stores the actual solved state of the puzzle */
