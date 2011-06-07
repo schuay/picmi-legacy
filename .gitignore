@@ -1,6 +1,2 @@
-*.o
-picmi
-*.pro.user
-moc_*.cpp
-ui_*.h
+*.user
 build/
