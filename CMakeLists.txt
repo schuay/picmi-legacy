@@ -7,9 +7,7 @@ set(QT_USE_QTXML TRUE)
 set(picmi_VERSION_MAJOR 1)
 set(picmi_VERSION_MINOR 3)
 set(picmi_VERSION_PATCH 2)
-if(NOT DEFINED picmi_FILEPREFIX)
-	set(picmi_FILEPREFIX \"/usr/share/picmi/\")
-endif()
+set(picmi_FILEPREFIX \"${CMAKE_INSTALL_PREFIX}/share/picmi/\")
 
 configure_file(
 	"${PROJECT_SOURCE_DIR}/src/config.h.in"
@@ -60,3 +58,6 @@ target_link_libraries(picmi
 	${SFML_LIBRARIES}
 	${QT_LIBRARIES}
 )
+
+install(TARGETS picmi DESTINATION bin)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/gfx DESTINATION share/picmi)
