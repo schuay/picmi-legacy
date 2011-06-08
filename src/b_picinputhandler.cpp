@@ -26,8 +26,9 @@ PicInputHandler::PicInputHandler(shared_ptr<sf::RenderWindow> &application, shar
 {
     game = dynamic_cast<Picross*>(p.get());
 
-    if (!game)
+    if (!game) {
         throw Exception("Game object not set");
+    }
 
     dragDirection = DRAG_UNDEF;
     dragOperation = DRAG_UNDEF;
@@ -44,8 +45,9 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
             (mousePos.y - game->PixOffsetY()) / game->CellLength());
 
     /* only handle mouse events in game board area */
-    if (!game->IsInBounds(newLocation))
+    if (!game->IsInBounds(newLocation)) {
         return OP_NONE;
+    }
 
     switch (event) {
     case sf::Event::MouseButtonPressed:
@@ -67,22 +69,24 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
             if ( newLocation != lastClickLocation && dragDirection == DRAG_UNDEF ) { /* calc drag direction */
                 unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
                 unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
-                if (diffX < diffY)
+                if (diffX < diffY) {
                     dragDirection = DRAG_VER;
-                else if (diffX > diffY)
+                } else if (diffX > diffY) {
                     dragDirection = DRAG_HOR;
-                else
+                } else {
                     dragDirection = DRAG_HOR;
+                }
             }
 
-            if (dragDirection == DRAG_HOR)   /* adjust newLocation according to dragDirection */
+            if (dragDirection == DRAG_HOR) {  /* adjust newLocation according to dragDirection */
                 newLocation.y = game->GetLocation().y;
-            else if (dragDirection == DRAG_VER)
+            } else if (dragDirection == DRAG_VER) {
                 newLocation.x = game->GetLocation().x;
+            }
 
-            if (lastDragLocation == newLocation)
+            if (lastDragLocation == newLocation) {
                 return OP_NONE; /* tile already handled, nothing to be done */
-            else {
+            } else {
                 lastDragLocation = newLocation;
             }
         }
@@ -181,18 +185,21 @@ void PicInputHandler::HandleInput() {
             op = HandleMouseEvent(ev.MouseButton.X, ev.MouseButton.Y, ev.MouseButton.Button, ev.Type);
             break;
         case sf::Event::MouseButtonReleased:
-            if (ev.MouseButton.Button == sf::Mouse::Left)
+            if (ev.MouseButton.Button == sf::Mouse::Left) {
                 lmbPressed = false;
-            else if (ev.MouseButton.Button == sf::Mouse::Right)
+            } else if (ev.MouseButton.Button == sf::Mouse::Right) {
                 rmbPressed = false;
+            }
             break;
         case sf::Event::MouseMoved:;
 
-            if (lmbPressed)
+            if (lmbPressed) {
                 btn = sf::Mouse::Left;
-            else if (rmbPressed)
+            } else if (rmbPressed) {
                 btn = sf::Mouse::Right;
-            else btn = sf::Mouse::ButtonCount;
+            } else {
+                btn = sf::Mouse::ButtonCount;
+            }
 
             op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, btn, ev.Type);
             break;
@@ -205,11 +212,13 @@ void PicInputHandler::HandleInput() {
 
         /* perform actual logic... */
 
-        if (dx || dy)
+        if (dx || dy) {
             game->TrySetLocationRel(dx, dy);
+        }
 
-        if (op != OP_NONE)
+        if (op != OP_NONE) {
             game->DoOp(op);
+        }
     }
 }
 }
