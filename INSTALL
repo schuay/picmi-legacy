@@ -21,7 +21,7 @@ $prefix/bin                (executable)
 $prefix/share/applications (.desktop file)
 ~/.config/picmi/	(user configurations and highscores, created at runtime)
 
-$prefix can be configured by setting the CMAKE_INSTALL_PREFIX variable when running cmake.
+$prefix can be configured by setting the CMAKE_INSTALL_PREFIX variable when running cmake and defaults to /usr/local/ if not set.
 
 
 Installation from AUR (Archlinux)
@@ -58,16 +58,16 @@ Check above for archlinux and ubuntu installation packages.
 
 In the picmi directory containing CMakeLists.txt, execute:
 
-cmake -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="/usr" .
+cmake -DCMAKE_INSTALL_PREFIX="/usr" .
 make
-sudo make install
+make install
 
+CMAKE_INSTALL_PREFIX can be set as required.
 This will install to the default directories as specified above. For packaging,
 
-cmake -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="/your/packaging/dir/usr" -DPREFIX="/usr" .
+make DESTDIR="/your/packaging/dir" install
 
-will install to /your/packaging/dir (but the application will still be configured
-to run from default directories). This method is used in the Archlinux PKGBUILD (see above).
+will install to /your/packaging/dir.
 
 All done, execute picmi to run the game.
 

@@ -1,17 +1,17 @@
 cmake_minimum_required (VERSION 2.8.0)
 project (picmi)
 
+if (NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release)
+endif ()
+
 set(Boost_USE_MULTITHREADED ON)
 set(QT_USE_QTXML TRUE)
 
 set(picmi_VERSION_MAJOR 1)
 set(picmi_VERSION_MINOR 3)
 set(picmi_VERSION_PATCH 2)
-if(NOT DEFINED PREFIX)
-	set(picmi_FILEPREFIX \"${CMAKE_INSTALL_PREFIX}/share/picmi/\")
-else()
-	set(picmi_FILEPREFIX \"${PREFIX}/share/picmi/\")
-endif()
+set(picmi_FILEPREFIX \"${CMAKE_INSTALL_PREFIX}/share/picmi/\")
 
 configure_file(
 	"${PROJECT_SOURCE_DIR}/src/config.h.in"
