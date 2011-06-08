@@ -26,35 +26,55 @@ namespace BoardGame {
     {
         game = dynamic_cast<Sweeper*>(p.get());
 
-        if (!game)
+        if (!game) {
             throw Exception("Game object not set");
+        }
+
+        dragHelper.setLockToLine(false);
     }
 
     int SweepInputHandler::HandleMouseEvent(int x, int y, sf::Mouse::Button btn, sf::Event::EventType event) {
 
         sf::Vector2f mousePos = app->ConvertCoords(x, y);
-
         sf::Vector2i newLocation(
                 (mousePos.x - game->PixOffsetX()) / game->CellLength(),
                 (mousePos.y - game->PixOffsetY()) / game->CellLength());
+        int op = S_OP_NONE;
 
         /* only handle mouse events in game board area */
-        if (!game->IsInBounds(newLocation))
-            return OP_NONE;
+        if (!game->IsInBounds(newLocation)) {
+            return S_OP_NONE;
+        }
+
+        if (btn == sf::Mouse::Left) {
+            op = S_OP_EXPOSE;
+        } else if (btn == sf::Mouse::Right) {
+            op = S_OP_MARK;
+        } else if (btn == sf::Mouse::Middle) {
+            op = S_OP_TENTATIVE;
+        }
+
+        switch (event) {
+        case sf::Event::MouseButtonPressed:
+            dragHelper.begin(newLocation, btn, op);
+            break;
+        case sf::Event::MouseMoved:
+            if (btn == sf::Mouse::Right) {    /* only run drag logic if a mousebutton is pressed, otherwise only set location */
+                newLocation = dragHelper.update(newLocation);
+                if (dragHelper.nothingTobeDone()) {
+                    return S_OP_NONE;
+                }
+            } else {
+                op = S_OP_NONE;
+            }
+            break;
+        default:
+            break;
+        }
 
         game->TrySetLocation(newLocation);
 
-        if (event == sf::Event::MouseMoved)
-            return OP_NONE;
-
-        if (btn == sf::Mouse::Left)
-            return S_OP_EXPOSE;
-        else if (btn == sf::Mouse::Right)
-            return S_OP_MARK;
-        else if (btn == sf::Mouse::Middle)
-            return S_OP_TENTATIVE;
-
-        return OP_NONE;
+        return op;
     }
     void SweepInputHandler::HandleInput() {
         sf::Event ev;
@@ -133,8 +153,11 @@ namespace BoardGame {
             case sf::Event::MouseButtonPressed:
                 op = HandleMouseEvent(ev.MouseButton.X, ev.MouseButton.Y, ev.MouseButton.Button, ev.Type);
                 break;
+            case sf::Event::MouseButtonReleased:
+                dragHelper.reset();
+                break;
             case sf::Event::MouseMoved:
-                op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, sf::Mouse::Left, ev.Type);
+                op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, dragHelper.getButton(), ev.Type);
                 break;
             case sf::Event::Closed:
                 game->SetResolution(GR_ABORTED);
@@ -145,11 +168,13 @@ namespace BoardGame {
 
             /* perform actual logic... */
 
-            if (dx || dy)
+            if (dx || dy) {
                 game->TrySetLocationRel(dx, dy);
+            }
 
-            if (op != OP_NONE)
+            if (op != OP_NONE) {
                 game->DoOp(op);
+            }
         }
     }
 }

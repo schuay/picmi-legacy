@@ -24,6 +24,7 @@
 
 #include "b_sweeper.h"
 #include "b_inputhandler.h"
+#include "b_draghelper.h"
 
 namespace BoardGame {
     class SweepInputHandler : public InputHandler
@@ -38,6 +39,8 @@ namespace BoardGame {
         int HandleMouseEvent(int x, int y, sf::Mouse::Button btn, sf::Event::EventType event);
 
         Sweeper* game;
+
+        DragHelper dragHelper;
     };
 }
 #endif // B_SWEEPINPUTHANDLER_H
