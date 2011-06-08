@@ -29,12 +29,6 @@ PicInputHandler::PicInputHandler(shared_ptr<sf::RenderWindow> &application, shar
     if (!game) {
         throw Exception("Game object not set");
     }
-
-    dragDirection = DRAG_UNDEF;
-    dragOperation = DRAG_UNDEF;
-    lmbPressed = false;
-    rmbPressed = false;
-
 }
 
 int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn, const sf::Event::EventType event) {
@@ -43,6 +37,7 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
     sf::Vector2i newLocation(
             (mousePos.x - game->PixOffsetX()) / game->CellLength(),
             (mousePos.y - game->PixOffsetY()) / game->CellLength());
+    int op = OP_NONE;
 
     /* only handle mouse events in game board area */
     if (!game->IsInBounds(newLocation)) {
@@ -51,43 +46,18 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
 
     switch (event) {
     case sf::Event::MouseButtonPressed:
-        lastClickLocation = newLocation;    /* remember where the first click happened so we can limit movement to that row/column during mouse drags */
-        dragDirection = DRAG_UNDEF;         /* reset drag direction */
-        lastDragLocation = newLocation;     /* remember last handled tile so we only to a single op per tile on drags */
-
         if (btn == sf::Mouse::Left) {
-            dragOperation = (game->GetStateAt(newLocation) == BOARD_CLEAN) ? OP_FORCE_HIT : OP_FORCE_HIT2CLEAR;
-            lmbPressed = true;
+            op = (game->GetStateAt(newLocation) == BOARD_CLEAN) ? OP_FORCE_HIT : OP_FORCE_HIT2CLEAR;
         } else if (btn == sf::Mouse::Right) {
-            dragOperation = (game->GetStateAt(newLocation) == BOARD_CLEAN) ? OP_FORCE_MARK : OP_FORCE_MARK2CLEAR;
-            rmbPressed = true;
+            op = (game->GetStateAt(newLocation) == BOARD_CLEAN) ? OP_FORCE_MARK : OP_FORCE_MARK2CLEAR;
         }
-
+        dragHelper.begin(newLocation, btn, op);
         break;
     case sf::Event::MouseMoved:
         if (btn == sf::Mouse::Left || btn == sf::Mouse::Right) {    /* only run drag logic if a mousebutton is pressed, otherwise only set location */
-            if ( newLocation != lastClickLocation && dragDirection == DRAG_UNDEF ) { /* calc drag direction */
-                unsigned int diffX = abs(lastClickLocation.x - newLocation.x);
-                unsigned int diffY = abs(lastClickLocation.y - newLocation.y);
-                if (diffX < diffY) {
-                    dragDirection = DRAG_VER;
-                } else if (diffX > diffY) {
-                    dragDirection = DRAG_HOR;
-                } else {
-                    dragDirection = DRAG_HOR;
-                }
-            }
-
-            if (dragDirection == DRAG_HOR) {  /* adjust newLocation according to dragDirection */
-                newLocation.y = game->GetLocation().y;
-            } else if (dragDirection == DRAG_VER) {
-                newLocation.x = game->GetLocation().x;
-            }
-
-            if (lastDragLocation == newLocation) {
-                return OP_NONE; /* tile already handled, nothing to be done */
-            } else {
-                lastDragLocation = newLocation;
+            newLocation = dragHelper.update(newLocation);
+            if (dragHelper.nothingTobeDone()) {
+                return OP_NONE;
             }
         }
         break;
@@ -98,14 +68,13 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
     game->TrySetLocation(newLocation);
 
     if (btn == sf::Mouse::Left || btn == sf::Mouse::Right) {
-        return dragOperation;
+        return dragHelper.getOperation();
     }
 
     return OP_NONE;
 }
 void PicInputHandler::HandleInput() {
     sf::Event ev;
-    sf::Mouse::Button btn;
 
     while (app->PollEvent(ev)) {
         int dx = 0, dy = 0, op = OP_NONE;
@@ -185,23 +154,10 @@ void PicInputHandler::HandleInput() {
             op = HandleMouseEvent(ev.MouseButton.X, ev.MouseButton.Y, ev.MouseButton.Button, ev.Type);
             break;
         case sf::Event::MouseButtonReleased:
-            if (ev.MouseButton.Button == sf::Mouse::Left) {
-                lmbPressed = false;
-            } else if (ev.MouseButton.Button == sf::Mouse::Right) {
-                rmbPressed = false;
-            }
+            dragHelper.reset();
             break;
-        case sf::Event::MouseMoved:;
-
-            if (lmbPressed) {
-                btn = sf::Mouse::Left;
-            } else if (rmbPressed) {
-                btn = sf::Mouse::Right;
-            } else {
-                btn = sf::Mouse::ButtonCount;
-            }
-
-            op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, btn, ev.Type);
+        case sf::Event::MouseMoved:
+            op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, dragHelper.getButton(), ev.Type);
             break;
          case sf::Event::Closed:
             game->SetResolution(GR_ABORTED);

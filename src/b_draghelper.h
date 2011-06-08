@@ -19,28 +19,45 @@
 
  ***************************************************************************/
 
-#ifndef B_PICINPUTHANDLER_H
-#define B_PICINPUTHANDLER_H
+#ifndef B_DRAGHELPER_H
+#define B_DRAGHELPER_H
 
-#include "b_picross.h"
-#include "b_inputhandler.h"
-#include "b_draghelper.h"
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <cstdlib>
+
+enum DragDirection {
+    DRAG_UNDEF,
+    DRAG_HORIZONTAL,
+    DRAG_VERTICAL
+};
 
 namespace BoardGame {
-class PicInputHandler : public InputHandler
+class DragHelper
 {
 public:
-    PicInputHandler(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> &p);
 
-    void HandleInput();
+    DragHelper();
+
+    void begin(sf::Vector2i pos, sf::Mouse::Button button, int op);
+    void reset();
+    sf::Vector2i update(sf::Vector2i pos);
+
+    sf::Mouse::Button getButton() const { return button; }
+    int getOperation() const { return dragOp; }
+    sf::Vector2i getPosition() const { return last; }
+    bool nothingTobeDone() const { return !posChanged; }
+
+    void setLockToLine(bool b) { lockToLine = b; }
 
 private:
+    sf::Vector2i lastClick, last;
+    DragDirection direction;
+    sf::Mouse::Button button;
+    int dragOp;
+    bool posChanged;
 
-    int HandleMouseEvent(const int x, const int y, const sf::Mouse::Button btn, const sf::Event::EventType event);
-
-    Picross* game;
-
-    DragHelper dragHelper;
+    bool lockToLine;
 };
 }
-#endif // B_PICINPUTHANDLER_H
+#endif // B_DRAGHELPER_H
