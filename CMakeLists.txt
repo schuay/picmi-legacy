@@ -7,7 +7,11 @@ set(QT_USE_QTXML TRUE)
 set(picmi_VERSION_MAJOR 1)
 set(picmi_VERSION_MINOR 3)
 set(picmi_VERSION_PATCH 2)
-set(picmi_FILEPREFIX \"${CMAKE_INSTALL_PREFIX}/share/picmi/\")
+if(NOT DEFINED PREFIX)
+	set(picmi_FILEPREFIX \"${CMAKE_INSTALL_PREFIX}/share/picmi/\")
+else()
+	set(picmi_FILEPREFIX \"${PREFIX}/share/picmi/\")
+endif()
 
 configure_file(
 	"${PROJECT_SOURCE_DIR}/src/config.h.in"

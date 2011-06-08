@@ -8,7 +8,7 @@ General Information
 Picmi has the following dependencies:
 
 At compile time:
-sfml2, qt, boost
+sfml2, qt, boost, cmake
 
 At run time:
 sfml2, qt, boost-thread
@@ -16,10 +16,12 @@ sfml2, qt, boost-thread
 
 The default installation directories are
 
-/usr/share/picmi        (gfx)
-/usr/bin                (executable)
-/usr/share/applications (.desktop file)
+$prefix/share/picmi        (gfx)
+$prefix/bin                (executable)
+$prefix/share/applications (.desktop file)
 ~/.config/picmi/	(user configurations and highscores, created at runtime)
+
+$prefix can be configured by setting the CMAKE_INSTALL_PREFIX variable when running cmake.
 
 
 Installation from AUR (Archlinux)
@@ -52,56 +54,20 @@ see https://launchpad.net/+help/soyuz/ppa-sources-list.html
 Manual Installation (easier but less customizable)
 -------------------
 
-CAUTION: manual installation is NOT point and click!
 Check above for archlinux and ubuntu installation packages.
 
-In the picmi directory containing picmi.pro, execute:
+In the picmi directory containing CMakeLists.txt, execute:
 
-qmake
-make setpath
+cmake -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="/usr" .
 make
 sudo make install
 
 This will install to the default directories as specified above. For packaging,
 
-make INSTALL_ROOT=/your/packaging/dir install
+cmake -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="/your/packaging/dir/usr" -DPREFIX="/usr" .
 
 will install to /your/packaging/dir (but the application will still be configured
 to run from default directories). This method is used in the Archlinux PKGBUILD (see above).
-
-
-
-Manual Installation (harder)
--------------------
-
-CAUTION: manual installation is NOT point and click!
-Check above for archlinux and ubuntu installation packages.
-
-
-The first step is to decide where to install picmi.
-These instructions will assume you are using the default directories.
-
-
-Point picmi to the directory containing the graphics:
-
-1. edit src/b_painter.h and set the desired FILEPREFIX. For installation to /usr/share/picmi, the result will look as follows:
-
-#define FILEPREFIX "/usr/share/picmi/"
-
-
-To compile, enter the project directory and run
-
-1. qmake
-2. make
-
-
-Installation to /usr/share/picmi:
-
-mkdir -p /usr/{bin,share/{applications,picmi/gfx}}
-install -D -m755 picmi /usr/bin/
-install -D -m644 src/picmi.desktop /usr/share/applications/
-install -D -m644 gfx/* /usr/share/picmi/gfx/
-
 
 All done, execute picmi to run the game.
 
