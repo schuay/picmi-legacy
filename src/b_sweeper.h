@@ -52,15 +52,15 @@ public:
 
     bool DetectAndHandleGameOver();
 
-    int GetStateAt(Point &p) const;
+    int GetStateAt(sf::Vector2i &p) const;
     int GetStateAt(unsigned int x, unsigned int y) const;
 
-    int GetMapAt(Point &p) const;
+    int GetMapAt(sf::Vector2i &p) const;
     int GetMapAt(unsigned int x, unsigned int y) const;
 
-    void SetStateAt(Point &p, int state);
+    void SetStateAt(sf::Vector2i &p, int state);
 
-    void DoOpAt(Point &p, int op);
+    void DoOpAt(sf::Vector2i &p, int op);
     void DoOp(int op);
 
     unsigned int MarkedBombCount() const;
@@ -78,18 +78,18 @@ private:
 
     /* generates a random board based on starting point clicked_location */
     /* places mines randomly except on clicked_location and all neighbors */
-    void RandomPuzzle(const Point &clicked_location);
+    void RandomPuzzle(const sf::Vector2i &clicked_location);
 
-    int CalcBombCount(Point &p) const;
+    int CalcBombCount(sf::Vector2i &p) const;
 
     /* creates an array of all target points in targetArray and returns nr of neighbors */
     /* the caller is responsible for freeing the array */
     /* if noDiagonals is true, diagonal neighbors are not returned */
-    std::vector<int> GetNeighborCoords(Point &p, bool noDiagonals) const;
+    std::vector<int> GetNeighborCoords(sf::Vector2i &p, bool noDiagonals) const;
 
     /* exposing tiles is a recursive operation. expose all clear tiles connected to original tile. */
-    void ExposeTile(Point &p, int *state);
-    void ExposeTile(Point &p);
+    void ExposeTile(sf::Vector2i &p, int *state);
+    void ExposeTile(sf::Vector2i &p);
 
     /* this is called when clicking on an exposed tile. if the amount of marks matches the mapCount, start exposing all neighbors */
     void ExposeNeighborTiles();
@@ -123,8 +123,8 @@ private:
 
     /* BEGIN Solver members */
 
-    void SlvSolve(Point clickedLocation);
-    bool SlvTrySolve(Point clickedLocation, bool perturbsAllowed);
+    void SlvSolve(sf::Vector2i clickedLocation);
+    bool SlvTrySolve(sf::Vector2i clickedLocation, bool perturbsAllowed);
     void SlvUpdateSet(int x, int y);
     void SlvMarkAllUnknownInSet(Set &s, int mark);
     void SlvMark(int coord, int mark);
@@ -133,9 +133,9 @@ private:
     void SlvHandleChangeExposed(int x, int y);
     bool SlvGlobalDeductions();
     bool SlvWingDeductions(Set &s);
-    bool SlvPerturbSet(Point& clicked_location);
-    void SlvPerturbRotate(Point &mainP, bool unknownOnly);
-    void SlvPerturbTransfer(Point &mainP, Point &partnerP);
+    bool SlvPerturbSet(sf::Vector2i& clicked_location);
+    void SlvPerturbRotate(sf::Vector2i &mainP, bool unknownOnly);
+    void SlvPerturbTransfer(sf::Vector2i &mainP, sf::Vector2i &partnerP);
     void SlvFinalizePerturbs(std::vector<int> &toReset);
     void SlvVisualizeStates() const;
     void SlvAssertCorrectState() const;

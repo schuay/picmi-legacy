@@ -195,7 +195,7 @@ void SweepSolver::ResetOldState() {
     for (int i = 0; i < _width * _height; i++)
         OldState[i] = BoardState[i];
 }
-int SweepSolver::GetRandomUnfinishedSet(Point &except_here) const {
+int SweepSolver::GetRandomUnfinishedSet(sf::Vector2i &except_here) const {
 
     std::vector<int> unfinishedSets;
 
@@ -215,7 +215,7 @@ int SweepSolver::GetRandomUnfinishedSet(Point &except_here) const {
 
     return unfinishedSets[r];
 }
-int SweepSolver::GetRandomMediumPerturbSet(Point &except_here, Point &and_here) const {
+int SweepSolver::GetRandomMediumPerturbSet(sf::Vector2i &except_here, sf::Vector2i &and_here) const {
 
     std::vector<int> potentialSets;
 
@@ -237,7 +237,7 @@ int SweepSolver::GetRandomMediumPerturbSet(Point &except_here, Point &and_here) 
 
     return potentialSets[r];
 }
-int SweepSolver::GetRandomUntouchedSet(Point &except_here, Point &and_here) const {
+int SweepSolver::GetRandomUntouchedSet(sf::Vector2i &except_here, sf::Vector2i &and_here) const {
 
     /* eligible: the set and all of its neighbors are unexposed and unmarked */
 

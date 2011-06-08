@@ -37,7 +37,7 @@ namespace BoardGame {
 
     void Painter::PaintBackground() {
 
-        sprBackground.Blit(app, Point(0,0));
+        sprBackground.Blit(app, sf::Vector2i(0,0));
 
     }
     void Painter::PaintGameOverScreen(StatsCollection c) {
@@ -59,7 +59,7 @@ namespace BoardGame {
 
         std::string infoText = GetGameOverText(c);
 
-        Point p( nativeWidth / 2, (nativeHeight - txt.HeightOf(infoText)) / 2);
+        sf::Vector2i p( nativeWidth / 2, (nativeHeight - txt.HeightOf(infoText)) / 2);
 
         /* fade in text overlay over 100 frames */
         for (int i = 1; i < 100; i++) {
@@ -83,7 +83,7 @@ namespace BoardGame {
     }
     void Painter::PaintPauseScreen() {
 
-        Point p(nativeWidth / 2, nativeHeight / 2);
+        sf::Vector2i p(nativeWidth / 2, nativeHeight / 2);
 
         app->Draw(sf::Shape::Rectangle(
                 0, 0, nativeWidth, nativeHeight, sf::Color::Black));

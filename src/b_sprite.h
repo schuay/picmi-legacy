@@ -25,7 +25,6 @@
 #include <SFML/Graphics.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "b_point.h"
 #include "b_exception.h"
 #include "b_enums.h"
 
@@ -37,7 +36,7 @@ class Sprite
 public:
 
     void Load(std::string Filename, unsigned int Angle);
-    void Blit(shared_ptr<sf::RenderWindow> target, Point p);
+    void Blit(shared_ptr<sf::RenderWindow> target, sf::Vector2i p);
     void SetAsIcon(shared_ptr<sf::RenderWindow> target) const;
 
 private:

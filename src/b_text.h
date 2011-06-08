@@ -27,7 +27,6 @@
 #include <boost/shared_ptr.hpp>
 
 #include "b_enums.h"
-#include "b_point.h"
 #include "b_exception.h"
 
 using boost::shared_ptr;
@@ -40,7 +39,7 @@ public:
     void Load(std::string fnNormal, std::string fnBold, std::string fnItalic, unsigned int pt = 12);
 
     /* multiline text writing */
-    void Blit(shared_ptr<sf::RenderWindow> dst, std::string txt, Point &p, const sf::Color &c = sf::Color::Black,
+    void Blit(shared_ptr<sf::RenderWindow> dst, std::string txt, sf::Vector2i &p, const sf::Color &c = sf::Color::Black,
               FontTypeEnum fontType = FT_NORMAL, TextJustifyEnum justify = TJ_LEFT);
 
     unsigned int WidthOf(std::string txt, FontTypeEnum fontType = FT_NORMAL);

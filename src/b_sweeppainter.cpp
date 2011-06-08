@@ -56,7 +56,7 @@ namespace BoardGame {
     }
     void SweepPainter::PaintBoardArea() {
         unsigned int i, j;
-        Point p, q, currentLocation;
+        sf::Vector2i p, q, currentLocation;
 
         currentLocation = game->GetLocation();
 
@@ -95,7 +95,7 @@ namespace BoardGame {
 
         sf::Color color(sf::Color::White);
         std::stringstream out;
-        Point p;
+        sf::Vector2i p;
 
         p.x = p.y = 10;
 

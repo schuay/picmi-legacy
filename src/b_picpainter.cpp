@@ -92,7 +92,7 @@ void PicPainter::Paint() {
 void PicPainter::PaintInfoArea() {
 
     std::stringstream out;
-    Point p;
+    sf::Vector2i p;
     sf::Color color(sf::Color::White);
 
     p.x = p.y = 10;
@@ -130,7 +130,7 @@ void PicPainter::PaintInfoArea() {
 }
 void PicPainter::PaintStreakArea() {
     unsigned int i, j;
-    Point p;
+    sf::Vector2i p;
     sf::Color colorSolved(84, 84, 84),
               colorUnsolved(0, 0, 0);
 
@@ -229,7 +229,7 @@ void PicPainter::PaintStreakArea() {
 }
 void PicPainter::PaintBoardArea() {
     unsigned int i, j;
-    Point p, q;
+    sf::Vector2i p, q;
 
     for (i = 0; i < game->Width(); i++) {
         for (j = 0; j < game->Height(); j++) {

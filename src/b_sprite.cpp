@@ -45,7 +45,7 @@ void Sprite::Load(std::string Filename, unsigned int Angle) {
     Surface->SetRotation(Rotation);
 }
 
-void Sprite::Blit(shared_ptr<sf::RenderWindow> target, Point p) {
+void Sprite::Blit(shared_ptr<sf::RenderWindow> target, sf::Vector2i p) {
 
     /* rotation is done around pt 0,0, so we need to draw with offsets */
 

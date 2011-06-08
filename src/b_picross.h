@@ -30,7 +30,6 @@
 #include "b_boardgame.h"
 #include "b_boardsettings.h"
 #include "b_picstreak.h"
-#include "b_point.h"
 #include "b_exception.h"
 #include "b_picdefines.h"
 #include "b_timer.h"
@@ -49,10 +48,10 @@ public:
 
     bool DetectAndHandleGameOver();
 
-    int GetStateAt(Point &p) const;                    /* returns the state of game board at p */
+    int GetStateAt(sf::Vector2i &p) const;                    /* returns the state of game board at p */
     int GetStateAt(unsigned int x, unsigned int y) const;
 
-    void DoOpAt(Point &p, int op);   /* perform operation (HIT/MARK) at p */
+    void DoOpAt(sf::Vector2i &p, int op);   /* perform operation (HIT/MARK) at p */
     void DoOp(int op);                  /* or at current location */
 
     void CalculateStreakSolvedState();  /* call this to update streak.Solved states - ideally once before drawing each frame */
@@ -70,9 +69,9 @@ public:
 
 private:
 
-    void SetStateAt(Point &p, int state); /* set state of board at p */
+    void SetStateAt(sf::Vector2i &p, int state); /* set state of board at p */
 
-    int GetMapAt(Point &p) const;                      /* returns the state of map at p */
+    int GetMapAt(sf::Vector2i &p) const;                      /* returns the state of map at p */
     int GetMapAt(unsigned int x, unsigned int y) const;
 
     vector<PicStreak>* CalculateStreaksFromMap(bool horizontal); /* horizontal: true == row streaks, false == column streaks */

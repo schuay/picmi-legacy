@@ -63,7 +63,7 @@ void Text::SetFontType(FontTypeEnum fontType) {
 
 }
 
-void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, Point &p, const sf::Color &c,
+void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, sf::Vector2i &p, const sf::Color &c,
                    FontTypeEnum fontType, TextJustifyEnum justify) {
 
     SetFontType(fontType);

@@ -27,9 +27,9 @@
 #include <set>
 #include <vector>
 #include <iostream>
+#include <SFML/System/Vector2.hpp>
 
 #include "b_exception.h"
-#include "b_point.h"
 
 using boost::shared_array;
 using boost::shared_ptr;
@@ -67,11 +67,11 @@ public:
             GetStateChanges();
 
     int
-            GetRandomUnfinishedSet(Point &except_here) const;
+            GetRandomUnfinishedSet(sf::Vector2i &except_here) const;
     int
-            GetRandomUntouchedSet(Point &except_here, Point &and_here) const;
+            GetRandomUntouchedSet(sf::Vector2i &except_here, sf::Vector2i &and_here) const;
     int
-            GetRandomMediumPerturbSet(Point &except_here, Point &and_here) const;
+            GetRandomMediumPerturbSet(sf::Vector2i &except_here, sf::Vector2i &and_here) const;
 
     void                    /* called from perturb functions.  */
             UpdateNrOfNeighbors(int x, int y);

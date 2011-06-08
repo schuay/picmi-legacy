@@ -306,7 +306,7 @@ void Picross::RandomPuzzle(BoardSettings &s) {
     s.Map = map;
 }
 
-int Picross::GetMapAt(Point &p) const {
+int Picross::GetMapAt(sf::Vector2i &p) const {
     return GetMapAt(p.x, p.y);
 }
 int Picross::GetMapAt(unsigned int x, unsigned int y) const {
@@ -318,7 +318,7 @@ int Picross::GetMapAt(unsigned int x, unsigned int y) const {
     else
         return MAP_FALSE;
 }
-int Picross::GetStateAt(Point &p) const {
+int Picross::GetStateAt(sf::Vector2i &p) const {
     return GetStateAt(p.x, p.y);
 }
 int Picross::GetStateAt(unsigned int x, unsigned int y) const {
@@ -333,7 +333,7 @@ int Picross::GetStateAt(unsigned int x, unsigned int y) const {
         return BOARD_MARKED;
 }
 
-void Picross::SetStateAt(Point &p, int state) {
+void Picross::SetStateAt(sf::Vector2i &p, int state) {
     if (state != BOARD_CLEAN && state != BOARD_HIT && state != BOARD_MARKED)
         throw Exception("SetStateAt failed: invalid state passed");
     if (!IsInBounds(p))
@@ -359,7 +359,7 @@ void Picross::SetStateAt(Point &p, int state) {
     boardState[p.y*width + p.x] = c;
 }
 
-void Picross::DoOpAt(Point &p, int op) {
+void Picross::DoOpAt(sf::Vector2i &p, int op) {
     if (paused)
         return;
 

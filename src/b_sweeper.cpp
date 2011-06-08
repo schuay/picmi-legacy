@@ -62,7 +62,7 @@ unsigned int Sweeper::MarkedBombCount() const {
     return markedCount;
 }
 
-void Sweeper::RandomPuzzle(const Point &clicked_location) {
+void Sweeper::RandomPuzzle(const sf::Vector2i &clicked_location) {
 
     for (unsigned int i = 0; i < width * height; i++)
         map[i] = mapNone;
@@ -89,13 +89,13 @@ void Sweeper::RandomPuzzle(const Point &clicked_location) {
 
     /* calculate and set hints */
 
-    Point p;
+    sf::Vector2i p;
     for (p.x=0; p.x<width; p.x++)
         for (p.y=0; p.y<height; p.y++)
             if (map[CToI(p)] != mapBomb)
                 map[p.y*width + p.x] = CalcBombCount(p);
 }
-int Sweeper::CalcBombCount(Point &p) const {
+int Sweeper::CalcBombCount(sf::Vector2i &p) const {
     unsigned int bombCount = 0;
 
     std::vector<int> neighbors =
@@ -157,7 +157,7 @@ shared_ptr<StatsElement> Sweeper::GetStats() const {
     return stats;
 }
 
-int Sweeper::GetStateAt(Point &p) const {
+int Sweeper::GetStateAt(sf::Vector2i &p) const {
     return GetStateAt(p.x, p.y);
 }
 int Sweeper::GetStateAt(unsigned int x, unsigned int y) const {
@@ -217,7 +217,7 @@ int Sweeper::GetStateAt(unsigned int x, unsigned int y) const {
     }
 }
 
-int Sweeper::GetMapAt(Point &p) const {
+int Sweeper::GetMapAt(sf::Vector2i &p) const {
     return GetMapAt(p.x, p.y);
 }
 int Sweeper::GetMapAt(unsigned int x, unsigned int y) const {
@@ -241,7 +241,7 @@ int Sweeper::GetMapAt(unsigned int x, unsigned int y) const {
     }
 }
 
-void Sweeper::SetStateAt(Point &p, int state) {
+void Sweeper::SetStateAt(sf::Vector2i &p, int state) {
     if (!IsInBounds(p.x, p.y))
         throw Exception("SetStateAt failed: Point not within puzzle dimensions.");
 
@@ -252,7 +252,7 @@ void Sweeper::SetStateAt(Point &p, int state) {
     boardState[p.y*width + p.x] = state;
 }
 
-void Sweeper::DoOpAt(Point &p, int op) {
+void Sweeper::DoOpAt(sf::Vector2i &p, int op) {
     if (paused)
         return;
 
@@ -313,7 +313,7 @@ void Sweeper::DoOp(int op) {
     DoOpAt(location, op);
 }
 
-std::vector<int> Sweeper::GetNeighborCoords(Point &p, bool noDiagonals) const {
+std::vector<int> Sweeper::GetNeighborCoords(sf::Vector2i &p, bool noDiagonals) const {
     int
             i,j,
             dx,dy;
@@ -359,7 +359,7 @@ void Sweeper::ExposeNeighborTiles() {
     if (markCount != currentTile)
         return;
 
-    Point p;
+    sf::Vector2i p;
     for (unsigned int i = 0; i < neighbors.size(); i++) {
         if (boardState[neighbors[i]] != boardMarked) {
             p.x = neighbors[i] % width;
@@ -368,7 +368,7 @@ void Sweeper::ExposeNeighborTiles() {
         }
     }
 }
-void Sweeper::ExposeTile(Point &p, int *state) {
+void Sweeper::ExposeTile(sf::Vector2i &p, int *state) {
     state[CToI(p)] = boardExposed;
 
     /* if maptile is NOT empty, stop recursion */
@@ -381,7 +381,7 @@ void Sweeper::ExposeTile(Point &p, int *state) {
     std::vector<int> neighbors =
             GetNeighborCoords(p, false);
 
-    Point q;
+    sf::Vector2i q;
     for (unsigned int i = 0; i < neighbors.size(); i++) {
         if (state[neighbors[i]] != boardExposed) {
             q.x = neighbors[i] % width;
@@ -390,7 +390,7 @@ void Sweeper::ExposeTile(Point &p, int *state) {
         }
     }
 }
-void Sweeper::ExposeTile(Point &p) {
+void Sweeper::ExposeTile(sf::Vector2i &p) {
     ExposeTile(p, boardState);
 }
 
@@ -416,7 +416,7 @@ void Sweeper::StartGame() {
     timer.Start();
 }
 
-void Sweeper::SlvSolve(Point clickedLocation) {
+void Sweeper::SlvSolve(sf::Vector2i clickedLocation) {
     do {
         RandomPuzzle(clickedLocation);
     }
@@ -427,7 +427,7 @@ void Sweeper::SlvSolve(Point clickedLocation) {
     StartGame();
 }
 
-bool Sweeper::SlvTrySolve(Point clickedLocation, bool perturbsAllowed) {
+bool Sweeper::SlvTrySolve(sf::Vector2i clickedLocation, bool perturbsAllowed) {
 
     /* this solver is ported from simon tathams 'mines' */
 
@@ -644,12 +644,12 @@ bool Sweeper::SlvWingDeductions(Set &s) {
     return false;
 }
 
-bool Sweeper::SlvPerturbSet(Point& clickedLocation) {
+bool Sweeper::SlvPerturbSet(sf::Vector2i& clickedLocation) {
 
     int
             mainSetIndex,
             partnerSetIndex;
-    Point
+    sf::Vector2i
             mainP,
             partnerP;
 
@@ -708,7 +708,7 @@ bool Sweeper::SlvPerturbSet(Point& clickedLocation) {
 
     return false;
 }
-void Sweeper::SlvPerturbRotate(Point &mainP, bool unknownOnly) {
+void Sweeper::SlvPerturbRotate(sf::Vector2i &mainP, bool unknownOnly) {
 
     std::vector<int> neighbors =
             GetNeighborCoords(mainP, false);
@@ -742,7 +742,7 @@ void Sweeper::SlvPerturbRotate(Point &mainP, bool unknownOnly) {
         std::cout << std::endl << "PERTURB ROTATE: " << mainP.y * width + mainP.x << std::endl;
 #endif
 }
-void Sweeper::SlvPerturbTransfer(Point &mainP, Point &partnerP) {
+void Sweeper::SlvPerturbTransfer(sf::Vector2i &mainP, sf::Vector2i &partnerP) {
 
     std::vector<int> neighbors =
             GetNeighborCoords(mainP, false);
@@ -784,7 +784,7 @@ void Sweeper::SlvPerturbTransfer(Point &mainP, Point &partnerP) {
 void Sweeper::SlvFinalizePerturbs(std::vector<int> &toReset) {
 
     /* update the map hints */
-    Point q;
+    sf::Vector2i q;
     for (q.x = 0; q.x < width; q.x++)
         for (q.y = 0; q.y < height; q.y++)
             if (map[CToI(q)] != mapBomb)
@@ -853,7 +853,7 @@ void Sweeper::SlvFinalizePerturbs(std::vector<int> &toReset) {
 #ifdef SOLVERDEBUG
 void Sweeper::SlvAssertCorrectState() const {
 
-    Point p;
+    sf::Vector2i p;
 
     for (p.y = 0; p.y < height; p.y++) {
         for (p.x = 0; p.x < width; p.x++) {
@@ -976,7 +976,7 @@ void Sweeper::SlvUpdateSolverState() {
     for (unsigned int i = 0; i < changes.size(); i++) {
 
         int coord = changes[i];
-        Point p(coord % width, coord / width);
+        sf::Vector2i p(coord % width, coord / width);
 
 
         /* first, update state of all neighboring sets */
@@ -1050,7 +1050,7 @@ void Sweeper::SlvUpdateSet(int x, int y) {
     }
     /* an exposed set - initialize UnknownMines, mark it as Exposed, add to TodoSets */
     else {
-        Point p(x,y);
+        sf::Vector2i p(x,y);
 
         std::vector<int> neighbors =
                 GetNeighborCoords(p, false);
@@ -1090,7 +1090,7 @@ void Sweeper::SlvMarkAllUnknownInSet(Set &s, int mark) {
 
     // mark all unknown tiles around set s with mark
 
-    Point p(s.X(), s.Y());
+    sf::Vector2i p(s.X(), s.Y());
 
     std::vector<int> neighbors =
             GetNeighborCoords(p, false);
@@ -1101,7 +1101,7 @@ void Sweeper::SlvMarkAllUnknownInSet(Set &s, int mark) {
 void Sweeper::SlvMark(int coord, int mark) {
 
     int state = solver->BoardState[coord];
-    Point p(coord % width, coord / width);
+    sf::Vector2i p(coord % width, coord / width);
 
     if (state == boardClean) {
         if (mark == boardMarked) {

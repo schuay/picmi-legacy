@@ -41,7 +41,7 @@ private:
 
     int HandleMouseEvent(const int x, const int y, const sf::Mouse::Button btn, const sf::Event::EventType event);
 
-    Point
+    sf::Vector2i
         lastClickLocation,
         lastDragLocation;
 

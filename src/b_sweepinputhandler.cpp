@@ -34,7 +34,7 @@ namespace BoardGame {
 
         sf::Vector2f mousePos = app->ConvertCoords(x, y);
 
-        Point newLocation(
+        sf::Vector2i newLocation(
                 (mousePos.x - game->PixOffsetX()) / game->CellLength(),
                 (mousePos.y - game->PixOffsetY()) / game->CellLength());
 

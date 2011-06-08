@@ -35,17 +35,17 @@ BoardGame::BoardGame()
 }
 BoardGame::~BoardGame() {}
 
-bool BoardGame::IsInBounds(Point &p) const {
+bool BoardGame::IsInBounds(sf::Vector2i &p) const {
     return IsInBounds(p.x, p.y);
 }
 bool BoardGame::IsInBounds(unsigned int x, unsigned int y) const {
     return (x < width && y < height);
 }
 
-Point BoardGame::GetLocation() const {
-    return Point(&location);
+sf::Vector2i BoardGame::GetLocation() const {
+    return sf::Vector2i(location);
 }
-bool BoardGame::TrySetLocation(Point &p) {
+bool BoardGame::TrySetLocation(sf::Vector2i &p) {
     if (paused)
         return false;
 
@@ -60,7 +60,7 @@ bool BoardGame::TrySetLocationRel(int dx, int dy) {
     if (paused)
         return false;
 
-    Point p(location.x + dx, location.y + dy);
+    sf::Vector2i p(location.x + dx, location.y + dy);
 
     if (!IsInBounds(location.x + dx, location.y + dy))
         return false;

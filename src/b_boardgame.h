@@ -24,10 +24,10 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include "b_exception.h"
 #include "b_timer.h"
-#include "b_point.h"
 #include "b_enums.h"
 #include "b_statselement.h"
 
@@ -43,29 +43,29 @@ public:
 
     /* returns true if coordinate is in puzzle limits */
     bool IsInBounds(unsigned int x, unsigned int y) const;
-    bool IsInBounds(Point &p) const;
+    bool IsInBounds(sf::Vector2i &p) const;
 
     virtual bool DetectAndHandleGameOver() = 0;
 
     /* returns the state of game board at p */
-    virtual int GetStateAt(Point &p) const = 0;
+    virtual int GetStateAt(sf::Vector2i &p) const = 0;
     virtual int GetStateAt(unsigned int x, unsigned int y) const = 0;
 
     /* returns the state of map at p */
-    virtual int GetMapAt(Point &p) const = 0;
+    virtual int GetMapAt(sf::Vector2i &p) const = 0;
     virtual int GetMapAt(unsigned int x, unsigned int y) const = 0;
 
     /* get / set current location */
-    Point GetLocation() const;
+    sf::Vector2i GetLocation() const;
 
     /* try setting absolute / relative current location;
        returns true on success, false on failure */
-    bool TrySetLocation(Point &p);
+    bool TrySetLocation(sf::Vector2i &p);
     bool TrySetLocationRel(int dx, int dy);
 
 
     /* perform operation (HIT/MARK) at p */
-    virtual void DoOpAt(Point &p, int op) = 0;
+    virtual void DoOpAt(sf::Vector2i &p, int op) = 0;
 
     /* or at current location */
     virtual void DoOp(int op) = 0;
@@ -94,14 +94,14 @@ public:
 protected:
 
     /* convert coordinate to index */
-    int CToI(Point &p) const { return CToI(p.x, p.y); }
+    int CToI(sf::Vector2i &p) const { return CToI(p.x, p.y); }
     int CToI(unsigned int x, unsigned int y) const { return y*width + x; }
 
     /* set state of board at p */
-    virtual void SetStateAt(Point &p, int state) = 0;
+    virtual void SetStateAt(sf::Vector2i &p, int state) = 0;
 
     /* stores current location on board */
-    Point
+    sf::Vector2i
             location;
 
     /* game timer */
@@ -117,7 +117,7 @@ protected:
        painter + inputhandler need access to them */
 
     /* left upper corner of puzzle (in pixels) */
-    Point
+    sf::Vector2i
             puzzleLocation;
 
     /* size of tiles in pixels */
