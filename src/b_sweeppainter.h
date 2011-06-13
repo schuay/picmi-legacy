@@ -47,7 +47,6 @@ protected:
     virtual std::string GetGameOverText(StatsCollection c);
 
     void LoadSprites();
-    void InitSystems();
 
     /* all sprites used in the game */
     Sprite

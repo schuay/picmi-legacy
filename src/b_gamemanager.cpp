@@ -71,7 +71,6 @@ void GameManager::MainLoop() {
 void GameManager::InitSystems() {
 
     app.reset(new sf::RenderWindow());
-
 }
 void GameManager::Initialize(BoardSettings &s) {
 

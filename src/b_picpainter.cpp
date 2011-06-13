@@ -66,12 +66,6 @@ void PicPainter::LoadSprites() {
     sprBackground.Load(FILEPREFIX "gfx/p_background.jpg", 0);
 }
 
-void PicPainter::InitSystems() {
-
-    app->Create(sf::VideoMode(nativeWidth, nativeHeight), WINDOWTITLE);
-
-}
-
 void PicPainter::Paint() {
     if (game->GetPaused()) {
         PaintPauseScreen();

@@ -41,9 +41,6 @@ private:
 
     virtual std::string GetGameOverText(StatsCollection c);
 
-    /* (initialize video systems */
-    void InitSystems();
-
     void LoadSprites();
 
     /* all sprites used in the game */

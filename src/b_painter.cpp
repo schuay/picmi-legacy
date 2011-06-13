@@ -40,6 +40,17 @@ namespace BoardGame {
         sprBackground.Blit(app, sf::Vector2i(0,0));
 
     }
+
+    void Painter::InitSystems() {
+
+        app->Create(sf::VideoMode(nativeWidth, nativeHeight), WINDOWTITLE);
+
+        sf::VideoMode mode = sf::VideoMode::GetDesktopMode();
+
+        app->SetPosition((mode.Width - nativeWidth) / 2, (mode.Height - nativeHeight) / 2);
+
+    }
+
     void Painter::PaintGameOverScreen(StatsCollection c) {
 
         /* clone original state of screen */

@@ -56,6 +56,8 @@ protected:
 
     virtual void LoadSprites() = 0;
 
+    void InitSystems();
+
     shared_ptr<sf::RenderWindow> app;
 
     unsigned int

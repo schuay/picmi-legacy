@@ -160,12 +160,6 @@ namespace BoardGame {
         txt.Blit(app, strRemaining, p, color, FT_BOLD, TJ_RIGHT);
     }
 
-    void SweepPainter::InitSystems() {
-
-        app->Create(sf::VideoMode(nativeWidth, nativeHeight), WINDOWTITLE);
-
-    }
-
     void SweepPainter::LoadSprites() {
         txt.Load(FILEPREFIX "gfx/LiberationMono-Regular.ttf",
                  FILEPREFIX "gfx/LiberationMono-Bold.ttf",
