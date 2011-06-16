@@ -90,10 +90,13 @@ void Sweeper::RandomPuzzle(const sf::Vector2i &clicked_location) {
     /* calculate and set hints */
 
     sf::Vector2i p;
-    for (p.x=0; p.x<width; p.x++)
-        for (p.y=0; p.y<height; p.y++)
-            if (map[CToI(p)] != mapBomb)
+    for (p.x = 0; p.x < (int)width; p.x++) {
+        for (p.y = 0; p.y < (int)height; p.y++) {
+            if (map[CToI(p)] != mapBomb) {
                 map[p.y*width + p.x] = CalcBombCount(p);
+            }
+        }
+    }
 }
 int Sweeper::CalcBombCount(sf::Vector2i &p) const {
     unsigned int bombCount = 0;
@@ -785,11 +788,13 @@ void Sweeper::SlvFinalizePerturbs(std::vector<int> &toReset) {
 
     /* update the map hints */
     sf::Vector2i q;
-    for (q.x = 0; q.x < width; q.x++)
-        for (q.y = 0; q.y < height; q.y++)
-            if (map[CToI(q)] != mapBomb)
+    for (q.x = 0; q.x < (int)width; q.x++) {
+        for (q.y = 0; q.y < (int)height; q.y++) {
+            if (map[CToI(q)] != mapBomb) {
                 map[q.y*width + q.x] = CalcBombCount(q);
-
+            }
+        }
+    }
 
     for (unsigned int i = 0; i < toReset.size(); i++) {
 
