@@ -84,66 +84,66 @@ void PicInputHandler::HandleInput() {
         switch (ev.Type) {
         case sf::Event::KeyPressed:
             switch (ev.Key.Code) {
-            case sf::Key::Escape:
+            case sf::Keyboard::Escape:
                 game->SetResolution(GR_ABORTED);
                 break;
-            case sf::Key::P:
+            case sf::Keyboard::P:
                 game->SetPaused(!game->GetPaused());
                 break;
-            case sf::Key::Num7:
-            case sf::Key::Y:
+            case sf::Keyboard::Num7:
+            case sf::Keyboard::Y:
                 dx = -1;
                 dy = -1;
                 break;
-            case sf::Key::Num9:
-            case sf::Key::U:
+            case sf::Keyboard::Num9:
+            case sf::Keyboard::U:
                 dx = 1;
                 dy = -1;
                 break;
-            case sf::Key::Num1:
-            case sf::Key::B:
+            case sf::Keyboard::Num1:
+            case sf::Keyboard::B:
                 dx = -1;
                 dy = 1;
                 break;
-            case sf::Key::Num3:
-            case sf::Key::N:
+            case sf::Keyboard::Num3:
+            case sf::Keyboard::N:
                 dx = 1;
                 dy = 1;
                 break;
-            case sf::Key::Num4:
-            case sf::Key::H:
-            case sf::Key::A:
-            case sf::Key::Left:
+            case sf::Keyboard::Num4:
+            case sf::Keyboard::H:
+            case sf::Keyboard::A:
+            case sf::Keyboard::Left:
                 dx = -1;
                 break;
-            case sf::Key::Num6:
-            case sf::Key::L:
-            case sf::Key::D:
-            case sf::Key::Right:
+            case sf::Keyboard::Num6:
+            case sf::Keyboard::L:
+            case sf::Keyboard::D:
+            case sf::Keyboard::Right:
                 dx = 1;
                 break;
-            case sf::Key::Num8:
-            case sf::Key::K:
-            case sf::Key::W:
-            case sf::Key::Up:
+            case sf::Keyboard::Num8:
+            case sf::Keyboard::K:
+            case sf::Keyboard::W:
+            case sf::Keyboard::Up:
                 dy = -1;
                 break;
-            case sf::Key::Num2:
-            case sf::Key::J:
-            case sf::Key::S:
-            case sf::Key::Down:
+            case sf::Keyboard::Num2:
+            case sf::Keyboard::J:
+            case sf::Keyboard::S:
+            case sf::Keyboard::Down:
                 dy = 1;
                 break;
-            case sf::Key::Num0:
-            case sf::Key::Space:
+            case sf::Keyboard::Num0:
+            case sf::Keyboard::Space:
                 op = OP_HIT;
                 break;
-            case sf::Key::Num5:
-            case sf::Key::RControl:
-            case sf::Key::LControl:
+            case sf::Keyboard::Num5:
+            case sf::Keyboard::RControl:
+            case sf::Keyboard::LControl:
                 op = OP_MARK;
                 break;
-            case sf::Key::Z:
+            case sf::Keyboard::Z:
                 op = OP_UNDO;
                 break;
             default:

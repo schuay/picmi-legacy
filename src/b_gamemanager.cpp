@@ -50,7 +50,7 @@ void GameManager::GameOver() {
             break;
     }
 
-    if (ev.Type == sf::Event::KeyPressed && ev.Key.Code == sf::Key::R)
+    if (ev.Type == sf::Event::KeyPressed && ev.Key.Code == sf::Keyboard::R)
         retry = true;
 }
 
