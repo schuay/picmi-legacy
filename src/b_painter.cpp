@@ -55,11 +55,11 @@ namespace BoardGame {
 
         /* clone original state of screen */
 
-        sf::Image img;
-        img.CopyScreen(*app.get());
+        sf::Texture tex;
+        tex.Update(*app.get());
 
-        sf::Sprite originalScreen(img);
-        originalScreen.SetScale(nativeWidth / (float)img.GetWidth(), nativeHeight / (float)img.GetHeight());
+        sf::Sprite originalScreen(tex);
+        originalScreen.SetScale(nativeWidth / (float)tex.GetWidth(), nativeHeight / (float)tex.GetHeight());
 
         /* construct a shade overlay */
 

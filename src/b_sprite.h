@@ -42,7 +42,7 @@ public:
 private:
 
     shared_ptr<sf::Sprite> Surface;
-    sf::Image Image;
+    sf::Texture Texture;
 
     int Rotation;
 };

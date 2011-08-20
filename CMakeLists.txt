@@ -10,7 +10,7 @@ set(QT_USE_QTXML TRUE)
 
 set(picmi_VERSION_MAJOR 1)
 set(picmi_VERSION_MINOR 3)
-set(picmi_VERSION_PATCH 2)
+set(picmi_VERSION_PATCH 5)
 set(picmi_FILEPREFIX \"${CMAKE_INSTALL_PREFIX}/share/picmi/\")
 
 configure_file(
