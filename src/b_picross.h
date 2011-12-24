@@ -63,9 +63,8 @@ public:
 
     shared_ptr<StatsElement> GetStats() const;
 
-    vector<PicStreak>
-            *ColStreaks,    /* stores streaks */
-            *RowStreaks;
+    vector<PicStreak> GetRowStreak(int i) const;
+    vector<PicStreak> GetColStreak(int i) const;
 
 private:
 
@@ -92,6 +91,11 @@ private:
 
     /* stores the current state of the board visible to user */
     shared_array<char> boardState;
+
+    /* stores streaks */
+    vector<PicStreak>
+            *ColStreaks,
+            *RowStreaks;
 
     void popUndoQueue();
     void pushUndoQueue();

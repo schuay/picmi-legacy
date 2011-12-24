@@ -58,6 +58,22 @@ shared_ptr<StatsElement> Picross::GetStats() const {
     return stats;
 }
 
+vector<PicStreak> Picross::GetRowStreak(int i) const {
+    if (i < 0 || i >= height) {
+        throw Exception("Streak index out of bounds");
+    }
+
+    return RowStreaks[i];
+}
+
+vector<PicStreak> Picross::GetColStreak(int i) const {
+    if (i < 0 || i >= width) {
+        throw Exception("Streak index out of bounds");
+    }
+
+    return ColStreaks[i];
+}
+
 std::vector<PicStreak>* Picross::CalculateStreaksFromMap(bool horizontal) {
     /* note:    CalculateStreaksFromMap / CalculateStreaksFromState functions are very similar
                 when changing one, don't forget to change the other */

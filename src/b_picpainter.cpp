@@ -174,8 +174,9 @@ void PicPainter::PaintStreakArea() {
     for (i = 0; i < game->Height(); i++) {
         streakLength = 0;
 
-        for (int js = game->RowStreaks[i].size() - 1; js >= 0; js--) {
-            PicStreak s = game->RowStreaks[i][js];     /* note the reverse order of loop  */
+        vector<PicStreak> streaks = game->GetRowStreak(i);
+        for (int js = streaks.size() - 1; js >= 0; js--) {
+            PicStreak s = streaks[js];     /* note the reverse order of loop  */
                                                        /* we need to do this to draw streaks in correct order */
             out.str("");
             out << s.GetLength() << ' ';
@@ -197,8 +198,9 @@ void PicPainter::PaintStreakArea() {
     for (i = 0; i < game->Width(); i++) {
         streakLength = 0;
 
-        for (int js = game->ColStreaks[i].size() - 1; js >= 0; js--) {
-            PicStreak s = game->ColStreaks[i][js];
+        vector<PicStreak> streaks = game->GetColStreak(i);
+        for (int js = streaks.size() - 1; js >= 0; js--) {
+            PicStreak s = streaks[js];
 
             out.str("");    //clear the stream
             out << s.GetLength();
