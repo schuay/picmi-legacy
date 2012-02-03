@@ -41,12 +41,11 @@ public:
 
     void MainLoop();
     void Initialize(BoardSettings &s);
+    void PrepareGame(BoardSettings &s);
 
     bool Retry() { return retry; }
 
 private:
-
-    void InitSystems();
 
     void GameOver();
 

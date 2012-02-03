@@ -27,6 +27,7 @@
 #include <iomanip>
 #include <boost/shared_ptr.hpp>
 
+#include "b_boardgame.h"
 #include "b_sprite.h"
 #include "b_text.h"
 #include "b_statscollection.h"
@@ -45,6 +46,8 @@ public:
     virtual void Paint() = 0;
     virtual void PaintGameOverScreen(StatsCollection c);
     virtual void PaintPauseScreen();
+
+    virtual void ResetGame(shared_ptr<BoardGame> &p) = 0;
 
 protected:
 

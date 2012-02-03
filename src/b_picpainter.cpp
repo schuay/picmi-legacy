@@ -24,10 +24,7 @@ namespace BoardGame {
 PicPainter::PicPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<BoardGame> &p, BoardSettings &s)
     : Painter(application), game(NULL)
 {
-    game = dynamic_cast<Picross*>(p.get());
-
-    if (!game)
-        throw Exception("Game object not set");
+    ResetGame(p);
 
     nativeWidth = game->PixOffsetX() + game->Width() * game->CellLength() + 5;
     nativeHeight = game->PixOffsetY() + game->Height() * game->CellLength() + 5;
@@ -37,6 +34,13 @@ PicPainter::PicPainter(shared_ptr<sf::RenderWindow> &application, shared_ptr<Boa
 
     if (s.UseCustomBG && s.BackgroundPath.length() != 0)
         LoadCustomBackground(s.BackgroundPath);
+}
+
+void PicPainter::ResetGame(shared_ptr<BoardGame> &p) {
+    game = dynamic_cast<Picross*>(p.get());
+
+    if (!game)
+        throw Exception("Game object not set");
 }
 
 void PicPainter::LoadSprites() {

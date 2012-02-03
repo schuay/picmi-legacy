@@ -39,6 +39,8 @@ public:
 
     void Paint();
 
+    void ResetGame(shared_ptr<BoardGame> &p);
+
 protected:
 
     void PaintBoardArea();

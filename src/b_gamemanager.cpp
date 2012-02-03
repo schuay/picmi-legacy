@@ -68,27 +68,34 @@ void GameManager::MainLoop() {
     GameOver();
 }
 
-void GameManager::InitSystems() {
-
-    app.reset(new sf::RenderWindow());
-}
 void GameManager::Initialize(BoardSettings &s) {
 
-    InitSystems();
-
-    retry = false;
+    app.reset(new sf::RenderWindow());
 
     /* create game objects */
     if (s.GameType == GT_PICROSS) {
         game.reset(new Picross(s));
         painter.reset(new PicPainter(app, game, s));
-        inputhandler.reset(new PicInputHandler(app, game));
     }
     else if (s.GameType == GT_MINESWEEPER) {
         game.reset(new Sweeper(s));
         painter.reset(new SweepPainter(app, game, s));
+    }
+}
+void GameManager::PrepareGame(BoardSettings &s) {
+
+    retry = false;
+
+    if (s.GameType == GT_PICROSS) {
+        game.reset(new Picross(s));
+        inputhandler.reset(new PicInputHandler(app, game));
+    }
+    else if (s.GameType == GT_MINESWEEPER) {
+        game.reset(new Sweeper(s));
         inputhandler.reset(new SweepInputHandler(app, game));
     }
+
+    painter->ResetGame(game);
 }
 
 }

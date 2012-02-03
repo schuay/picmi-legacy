@@ -33,6 +33,8 @@ public:
 
     void Paint();
 
+    void ResetGame(shared_ptr<BoardGame> &p);
+
 private:
 
     void PaintInfoArea();
