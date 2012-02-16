@@ -23,7 +23,7 @@ find_package(SFML 2 COMPONENTS graphics system window REQUIRED)
 find_package(Boost COMPONENTS thread REQUIRED)
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Wextra -O3 -pedantic -fPIC -std=c++0x")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} -g -Wall -Wextra -O3 -pedantic -fPIC -std=c++0x")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -Wall -Wextra -pedantic -fPIC -std=c++0x")
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
