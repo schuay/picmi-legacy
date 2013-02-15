@@ -43,11 +43,11 @@ namespace BoardGame {
 
     void Painter::InitSystems() {
 
-        app->Create(sf::VideoMode(nativeWidth, nativeHeight), WINDOWTITLE);
+        app->create(sf::VideoMode(nativeWidth, nativeHeight), WINDOWTITLE);
 
-        sf::VideoMode mode = sf::VideoMode::GetDesktopMode();
+        sf::VideoMode mode = sf::VideoMode::getDesktopMode();
 
-        app->SetPosition((mode.Width - nativeWidth) / 2, (mode.Height - nativeHeight) / 2);
+        app->setPosition(sf::Vector2i((mode.width - nativeWidth) / 2, (mode.height - nativeHeight) / 2));
 
     }
 
@@ -56,15 +56,15 @@ namespace BoardGame {
         /* clone original state of screen */
 
         sf::Texture tex;
-        tex.Update(*app.get());
+        tex.update(*app.get());
 
         sf::Sprite originalScreen(tex);
-        originalScreen.SetScale(nativeWidth / (float)tex.GetWidth(), nativeHeight / (float)tex.GetHeight());
+        originalScreen.setScale(nativeWidth / (float)tex.getSize().x, nativeHeight / (float)tex.getSize().y);
 
         /* construct a shade overlay */
 
-        sf::Shape shadeOverlay = sf::Shape::Rectangle(
-                0, 0, nativeWidth, nativeHeight, sf::Color::Black);
+        sf::RectangleShape shadeOverlay = sf::RectangleShape(sf::Vector2f(nativeWidth, nativeHeight));
+        shadeOverlay.setFillColor(sf::Color::Black);
 
 
 
@@ -79,25 +79,26 @@ namespace BoardGame {
             /* ugly because 'painter' shouldn't know about input..  */
             /* necessary because game over has its own loop within the main loop.. this should be fixed sometime */
             sf::Event ev;
-            while (app->PollEvent(ev))
-                if (ev.Type == sf::Event::KeyPressed || ev.Type == sf::Event::MouseButtonPressed || ev.Type == sf::Event::Closed)
+            while (app->pollEvent(ev))
+                if (ev.type == sf::Event::KeyPressed || ev.type == sf::Event::MouseButtonPressed || ev.type == sf::Event::Closed)
                     return;
 
-            shadeOverlay.SetColor(sf::Color(255, 255, 255, i * 2));
+            shadeOverlay.setFillColor(sf::Color(255, 255, 255, i * 2));
 
-            app->Draw(originalScreen);
-            app->Draw(shadeOverlay);
+            app->draw(originalScreen);
+            app->draw(shadeOverlay);
             txt.Blit(app, infoText, p, sf::Color(255, 255, 255, (( i * 127 ) / 100) * 2 ), FT_NORMAL, TJ_CENTER);
 
-            app->Display();
+            app->display();
         }
     }
     void Painter::PaintPauseScreen() {
 
         sf::Vector2i p(nativeWidth / 2, nativeHeight / 2);
 
-        app->Draw(sf::Shape::Rectangle(
-                0, 0, nativeWidth, nativeHeight, sf::Color::Black));
+        sf::RectangleShape rect = sf::RectangleShape(sf::Vector2f(nativeWidth, nativeHeight));
+        rect.setFillColor(sf::Color::Black);
+        app->draw(rect);
 
         txt.Blit(app, "PAUSED (press p to continue)", p, sf::Color::White, FT_BOLD, TJ_CENTER);
     }

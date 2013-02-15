@@ -41,7 +41,7 @@ namespace BoardGame {
     void SweepPainter::Paint() {
         if (game->GetPaused()) {
             PaintPauseScreen();
-            app->Display();
+            app->display();
             return;
         }
 
@@ -49,7 +49,7 @@ namespace BoardGame {
         PaintBoardArea();
         PaintInfoArea();
 
-        app->Display();
+        app->display();
     }
 
     void SweepPainter::ResetGame(shared_ptr<BoardGame> &p) {
@@ -106,8 +106,9 @@ namespace BoardGame {
 
         /* info -> black bg */
 
-        sf::Shape shape = sf::Shape::Rectangle(0, 0, game->Width() * game->CellLength(), game->PixOffsetY(), sf::Color(0, 0, 0, 200));
-        app->Draw(shape);
+        sf::RectangleShape shape = sf::RectangleShape(sf::Vector2f(game->Width() * game->CellLength(), game->PixOffsetY()));
+        shape.setFillColor(sf::Color(0, 0, 0, 200));
+        app->draw(shape);
 
         /* game not started - display instructions and exit */
         if (!game->IsStarted()) {

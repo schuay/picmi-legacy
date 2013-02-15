@@ -24,26 +24,26 @@ namespace BoardGame {
 
 void Sprite::SetAsIcon(shared_ptr<sf::RenderWindow> target) const {
 
-    sf::Image img = Texture.CopyToImage();
-    target->SetIcon(
-            Texture.GetWidth(),
-            Texture.GetHeight(),
-            img.GetPixelsPtr());
+    sf::Image img = Texture.copyToImage();
+    target->setIcon(
+            Texture.getSize().x,
+            Texture.getSize().y,
+            img.getPixelsPtr());
 
 }
 
 void Sprite::Load(std::string Filename, unsigned int Angle) {
 
-    if (!Texture.LoadFromFile(Filename))
+    if (!Texture.loadFromFile(Filename))
         throw Exception("Loading sprite failed.");
 
     Rotation = Angle;
-    Texture.SetSmooth(false);
+    Texture.setSmooth(false);
 
 
     Surface.reset(new sf::Sprite(Texture));
 
-    Surface->SetRotation(Rotation);
+    Surface->setRotation(Rotation);
 }
 
 void Sprite::Blit(shared_ptr<sf::RenderWindow> target, sf::Vector2i p) {
@@ -54,22 +54,24 @@ void Sprite::Blit(shared_ptr<sf::RenderWindow> target, sf::Vector2i p) {
             xOffset = 0,
             yOffset = 0;
 
+    sf::Vector2u size = Texture.getSize();
+
     switch (Rotation) {
     case 90:
-        xOffset = Texture.GetHeight();
+        xOffset = size.y;
         break;
     case 180:
-        xOffset = Texture.GetWidth();
-        yOffset = Texture.GetHeight();
+        xOffset = size.x;
+        yOffset = size.y;
         break;
     case 270:
-        yOffset = Texture.GetWidth();
+        yOffset = size.x;
         break;
     }
 
-    Surface->SetPosition(p.x + xOffset, p.y + yOffset);
+    Surface->setPosition(p.x + xOffset, p.y + yOffset);
 
-    target->Draw(*Surface.get());
+    target->draw(*Surface.get());
 }
 
 }

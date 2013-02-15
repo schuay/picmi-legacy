@@ -73,7 +73,7 @@ void PicPainter::LoadSprites() {
 void PicPainter::Paint() {
     if (game->GetPaused()) {
         PaintPauseScreen();
-        app->Display();
+        app->display();
         return;
     }
 
@@ -84,7 +84,7 @@ void PicPainter::Paint() {
     PaintStreakArea();
     PaintBoardArea();
 
-    app->Display();
+    app->display();
 }
 
 void PicPainter::PaintInfoArea() {
@@ -95,8 +95,9 @@ void PicPainter::PaintInfoArea() {
 
     p.x = p.y = 10;
 
-    sf::Shape shape = sf::Shape::Rectangle(0, 0, game->PixOffsetX(), game->PixOffsetY(), sf::Color(0, 0, 0, 200));
-    app->Draw(shape);
+    sf::RectangleShape shape = sf::RectangleShape(sf::Vector2f(game->PixOffsetX(), game->PixOffsetY()));
+    shape.setFillColor(sf::Color(0, 0, 0, 200));
+    app->draw(shape);
 
     /* draw text */
     out << std::fixed << std::setprecision(0);

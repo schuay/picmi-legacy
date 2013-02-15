@@ -27,39 +27,39 @@ void Text::Load(std::string fnNormal, std::string fnBold, std::string fnItalic, 
 
     size = pt;
 
-    if (!fontNormal.LoadFromFile(fnNormal) ||
-        !fontBold.LoadFromFile(fnBold) ||
-        !fontItalic.LoadFromFile(fnItalic))
+    if (!fontNormal.loadFromFile(fnNormal) ||
+        !fontBold.loadFromFile(fnBold) ||
+        !fontItalic.loadFromFile(fnItalic))
         throw Exception("Loading fonts failed.");
 
-    string.SetFont(fontNormal);
-    string.SetCharacterSize(size);
+    string.setFont(fontNormal);
+    string.setCharacterSize(size);
 }
 
 unsigned int Text::WidthOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
-    string.SetString(txt);
+    string.setString(txt);
 
-    return string.GetRect().Width;
+    return string.getLocalBounds().width;
 }
 
 unsigned int Text::HeightOf(std::string txt, FontTypeEnum fontType) {
 
     SetFontType(fontType);
-    string.SetString(txt);
+    string.setString(txt);
 
-    return string.GetRect().Height;
+    return string.getLocalBounds().height;
 }
 
 void Text::SetFontType(FontTypeEnum fontType) {
 
     if (fontType == FT_NORMAL)
-        string.SetFont(fontNormal);
+        string.setFont(fontNormal);
     else if (fontType == FT_BOLD)
-        string.SetFont(fontBold);
+        string.setFont(fontBold);
     else if (fontType == FT_ITALIC)
-        string.SetFont(fontItalic);
+        string.setFont(fontItalic);
 
 }
 
@@ -67,7 +67,7 @@ void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, sf::Vector2i
                    FontTypeEnum fontType, TextJustifyEnum justify) {
 
     SetFontType(fontType);
-    string.SetColor(c);
+    string.setColor(c);
 
     /* justification only works on entire string, not line by line */
 
@@ -83,12 +83,10 @@ void Text::Blit(shared_ptr<sf::RenderWindow> dest, std::string txt, sf::Vector2i
         break;
     }
 
-    string.SetX(x);
-    string.SetY(p.y);
+    string.setPosition(x, p.y);
+    string.setString(txt);
 
-    string.SetString(txt);
-
-    dest->Draw(string);
+    dest->draw(string);
 }
 
 }

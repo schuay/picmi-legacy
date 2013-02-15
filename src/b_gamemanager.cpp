@@ -35,22 +35,22 @@ void GameManager::GameOver() {
 
     /* empty event loop */
     sf::Event ev;
-    while (app->PollEvent(ev)) { }
+    while (app->pollEvent(ev)) { }
 
     /* display stats */
     painter->PaintGameOverScreen(m.AggregateStats());
 
     /* wait for user input */
     while (true) {
-        app->WaitEvent(ev);
+        app->waitEvent(ev);
 
-        if (ev.Type == sf::Event::KeyPressed ||
-            ev.Type == sf::Event::MouseButtonPressed ||
-            ev.Type == sf::Event::Closed)
+        if (ev.type == sf::Event::KeyPressed ||
+            ev.type == sf::Event::MouseButtonPressed ||
+            ev.type == sf::Event::Closed)
             break;
     }
 
-    if (ev.Type == sf::Event::KeyPressed && ev.Key.Code == sf::Keyboard::R)
+    if (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::R)
         retry = true;
 }
 
@@ -62,7 +62,7 @@ void GameManager::MainLoop() {
 
         game->DetectAndHandleGameOver();
 
-        sf::Sleep(0.030f);
+        sf::sleep(sf::seconds(0.030f));
     }
 
     GameOver();

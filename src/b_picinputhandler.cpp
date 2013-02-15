@@ -33,7 +33,7 @@ PicInputHandler::PicInputHandler(shared_ptr<sf::RenderWindow> &application, shar
 
 int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn, const sf::Event::EventType event) {
 
-    sf::Vector2f mousePos = app->ConvertCoords(x, y);
+    sf::Vector2f mousePos = app->convertCoords(sf::Vector2i(x, y));
     sf::Vector2i newLocation(
             (mousePos.x - game->PixOffsetX()) / game->CellLength(),
             (mousePos.y - game->PixOffsetY()) / game->CellLength());
@@ -76,14 +76,14 @@ int PicInputHandler::HandleMouseEvent(int x, int y, const sf::Mouse::Button btn,
 void PicInputHandler::HandleInput() {
     sf::Event ev;
 
-    while (app->PollEvent(ev)) {
+    while (app->pollEvent(ev)) {
         int dx = 0, dy = 0, op = OP_NONE;
 
         /* get input... */
 
-        switch (ev.Type) {
+        switch (ev.type) {
         case sf::Event::KeyPressed:
-            switch (ev.Key.Code) {
+            switch (ev.key.code) {
             case sf::Keyboard::Escape:
                 game->SetResolution(GR_ABORTED);
                 break;
@@ -151,13 +151,13 @@ void PicInputHandler::HandleInput() {
             }
             break;
         case sf::Event::MouseButtonPressed:
-            op = HandleMouseEvent(ev.MouseButton.X, ev.MouseButton.Y, ev.MouseButton.Button, ev.Type);
+            op = HandleMouseEvent(ev.mouseButton.x, ev.mouseButton.y, ev.mouseButton.button, ev.type);
             break;
         case sf::Event::MouseButtonReleased:
             dragHelper.reset();
             break;
         case sf::Event::MouseMoved:
-            op = HandleMouseEvent(ev.MouseMove.X, ev.MouseMove.Y, dragHelper.getButton(), ev.Type);
+            op = HandleMouseEvent(ev.mouseMove.x, ev.mouseMove.y, dragHelper.getButton(), ev.type);
             break;
          case sf::Event::Closed:
             game->SetResolution(GR_ABORTED);
